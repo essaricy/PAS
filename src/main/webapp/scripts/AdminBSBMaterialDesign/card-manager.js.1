@@ -1,0 +1,166 @@
+(function ( $ ) {
+
+  $.fn.cardManager=function( options ) {
+    var settings=$.extend({
+      type: null,
+      listUrl: null,
+      manageUrl: null,
+      deleteUrl: null,
+
+      itemsContainer: null,
+      listItemsUrl: null,
+
+      afterLoadCallback: null,
+      successCallback: null,
+      failedCallback: null,
+    }, options );
+
+    validateSettings();
+
+    function validateSettings() {
+      if (!settings.type1) {
+        throw "cardManager: settings.type is not provided";
+      }
+      if (!settings.listUrl) {
+        throw "cardManager: settings.listUrl is not provided";
+      }
+      if (!settings.manageUrl) {
+        throw "cardManager: settings.manageUrl is not provided";
+      }
+      /*if (!settings.itemsContainer) {
+        throw "cardManager: settings.itemsContainer is not provided";
+      }
+      if (!settings.listItemsUrl) {
+        throw "cardManager: settings.listItemsUrl is not provided";
+      }*/
+    }
+
+    if (settings.type == 'list') {
+      list(this);
+    }
+
+    function list(obj) {
+      var listUrl=settings.listUrl;
+      var manageUrl=settings.manageUrl;
+      var itemsContainer=settings.itemsContainer;
+      var listItemsUrl=settings.listItemsUrl;
+
+      var cardHeader=$(obj).find('.header');
+      var cardBody=$(obj).find('.body');
+      var listGroup=$(cardBody).find('.list-group');
+      var menu=$(cardHeader).find('.dropdown-menu');
+
+      $.get(listUrl, {sid: new Date().getTime()}, function() {})
+      .done(function(result) {
+        $(listGroup).empty();
+        console.log('result=' + result);
+        if (result) {
+          // Append items to the card
+          for (index=0; index<result.length;index++) {
+        	var item=result[index];
+        	console.log(JSON.stringify(item));
+        	var link=$('<a href="#" class="list-group-item">');
+        	$(link).attr('item-id', item['id']);
+        	$(link).attr('item-name', item['name']);
+        	$(link).text(item['name']);
+        	$(listGroup).append(link);
+       	  }
+          // ACtivate items on the card
+          $(listGroup).find('.list-group-item').click(function() {
+        	$(this).addClass('active').siblings().removeClass('active');
+        	var itemId=$(this).attr('item-id');
+
+        	if (itemsContainer && listItemsUrl) {
+        	  var listDetailCardBody=$(itemsContainer).find(".body");
+        	  $(listDetailCardBody).empty();
+        	  var ol=$("<ol>");
+
+        	  $.get(listItemsUrl + '/' + itemId, {sid: new Date().getTime()}, function() {})
+        	  .done(function(listResult) {
+        	    for (index=0; index<listResult.length;index++) {
+        	      var item=listResult[index];
+        	      $(ol).append('<li item-id="' + item.id + ' item-name="' + item.name + '">' + item.name + '</li>');
+        	    }
+        	    $(listDetailCardBody).append(ol);
+        	  });
+        	}
+          });
+          $(listGroup).find('.list-group-item:first').click();
+          // add "Add" menu item always
+          addMenuActions(obj, (result.length > 0), $(listGroup).find('.list-group-item'));
+        }
+      })
+      .fail(function(result) {
+        console.log('cardManager: list.fail=' + result);
+        if (settings.failedCallback) {
+          settings.failedCallback();
+        }
+      })
+      .always(function(result) {
+      });
+    };
+
+    function addMenuActions(obj, hasRecords, items) {
+      var cardHeader=$(obj).find('.header');
+      var menu=$(cardHeader).find('.dropdown-menu');
+      var manageUrl=settings.manageUrl;
+      var deleteUrl=settings.deleteUrl;
+
+      console.log('manageUrl=' + manageUrl);
+      if (manageUrl) {
+    	// Add Link
+    	var add_li=$('<li>');
+    	var add_link=$('<a class"add_link"><i class="material-icons">add</i> Add</a>');
+    	$(add_link).click(function(e) { e.preventDefault(); submitForm(manageUrl, 0); });
+    	$(add_li).append(add_link);
+    	$(menu).append(add_li);
+
+   		console.log('hasRecords=' + hasRecords);
+   		if (hasRecords) {
+		  // Update link
+    	  var update_li=$('<li>');
+    	  var update_link=$('<a class"update_link"><i class="material-icons">create</i> Update</a>');
+    	  $(update_link).click(function(e) {
+    		e.preventDefault();
+    		if ($(items).filter(".active" ).length == 1) {
+    		  var itemId=$(items).filter(".active").attr('item-id');
+    		  console.log('update itemId=' + itemId);
+    		  submitForm(manageUrl, itemId);
+    		}
+    	  });
+    	  $(update_li).append(update_link);
+    	  $(menu).append(update_li);
+    	}
+      }
+	  if (deleteUrl) {
+		// Delete link
+		var delete_li=$('<li>');
+		var delete_link=$('<a class"delete_link"><i class="material-icons">clear</i> Delete</a>');
+		$(delete_link).click(function(e) {
+		  e.preventDefault();
+		  swal({
+			title: "Are you sure?",
+			text: "You will not be able to recover this data!",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#DD6B55",
+			confirmButtonText: "Yes, delete it!",
+			closeOnConfirm: false
+		  }, function () {
+		    $.get(deleteUrl, {sid: new Date().getTime()}, function() {})
+		    .done(function(result) {
+			  swal({ title: "Deleted!", text: "Deleted successfully.", type: "success"}, function () {
+				  location.reload();
+			  });
+		    }).fail(function(result) {
+		      swal("Failed!", "Errors occured while deleting", "error");
+			}).always(function(result) {
+            });
+		  });
+		});
+		$(delete_li).append(delete_link);
+    	$(menu).append(delete_li);
+	  }
+    }
+  };
+}( jQuery ));

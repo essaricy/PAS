@@ -1,0 +1,287 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>Softvision | PMS</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/favicon.ico">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/fonts/google-Roboto.css">
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/fonts/google-Material-Icons.css">
+    <!-- Bootstrap Core Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
+    <!-- Waves Effect Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
+    <!-- Animation Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
+    <!-- Bootstrap Material Datetime Picker Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"/>
+    <!-- Bootstrap Select Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css">
+
+    <!-- Custom Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
+  </head>
+  <style>
+  .list-group-item {
+  	font-size: 13px;
+  }
+  </style>
+</head>
+
+<body class="theme-red">
+  <!-- Header -->
+  <%@include file="common/header.jsp" %>
+  <!-- =============================================== -->
+
+  <!-- Left side column. contains the sidebar -->
+  <%@include file="common/menu.jsp" %>
+  <!-- =============================================== -->
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="block-header">
+        <h2>Appraisal Cycle
+          <small>Add, Edit or Delete appraisal cycles, appraisal phases or eligibility criterion</small>
+        </h2>
+      </div>
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header">
+              <h2>Create Appraisal Cycle</h2>
+            </div>
+            <div class="body">
+              <form id="Appr_Cycle_Form" method="POST">
+                <h3>Create Cycle</h3>
+                <fieldset>
+                <select>
+  <option>Mustard</option>
+  <option>Ketchup</option>
+  <option>Relish</option>
+</select>
+                  <!-- <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                    <label for="AppraisalCycle_Name">Cycle Name</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+		            <div class="form-group form-float">
+		              <div class="form-line">
+		                <input type="text" id="AppraisalCycle_Name" class="form-control" name="minmaxlength" maxlength="10" minlength="3" required value="Some name">
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                    <label for="AppraisalCycle_StartDate">Start Date</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+		            <div class="form-group form-float">
+		              <div class="form-line">
+		                <input type="text" id="AppraisalCycle_StartDate" class="form-control datepicker" name="startDate" required value="01/01/2017">
+		              </div>
+		            </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                    <label for="AppraisalCycle_EndDate">End Date</label>
+                  </div>
+                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+		            <div class="form-group form-float">
+		              <div class="form-line">
+		                <input type="text" id="AppraisalCycle_EndDate" class="form-control datepicker" name="endDate" required value="31/12/2017">
+		              </div>
+		            </div>
+                  </div>
+                </fieldset>
+
+                <h3>Define Phases</h3>
+                <fieldset>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <input type="text" id="AppraisalPhase_Name" class="form-control" placeholder="Phase Name" autofocus value="Q1">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <input type="text" id="AppraisalPhase_StartDate" class="form-control datepicker" placeholder="Start Date" value="01/01/2017">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <input type="text" id="AppraisalPhase_EndDate" class="form-control datepicker" placeholder="End Date" value="31/03/2017">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <button type="button" id="AppraisalPhase_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                  </div>
+                  <table id="AppraisalPhase_Table" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Phase Name</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </fieldset>
+
+                <h3>Define Eligibility</h3>
+                <fieldset>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <!-- <select class="form-control" id="AppraisalEligibility_EmployeeType">
+                        <option value="">-- Please select --</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select> -->
+                    <select class="">
+  <option>Mustard</option>
+  <option>Ketchup</option>
+  <option>Relish</option>
+</select>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <div class="form-group">
+                      <div class="form-line">
+                        <input type="text" id="AppraisalEligibility_CutoffDate" class="form-control datepicker" placeholder="Cutoff Date">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
+                    <button type="button" id="AppraisalEligibility_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                  </div>
+                  <table id="AppraisalEligibility_Table" class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Employee Type</th>
+                        <th>Cutoff Date</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+  <!-- Jquery Core Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap Core Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
+  <!-- Select Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+  <!-- Slimscroll Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/dropzone/dropzone.js"></script>
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/multi-select/js/jquery.multi-select.js"></script>
+
+
+  <!-- Waves Effect Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
+  <!-- Autosize Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/autosize/autosize.js"></script>
+  <!-- Moment Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
+  <!-- Bootstrap Material Datetime Picker Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+  <!-- Jquery Validation Plugin Css -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+  <!-- JQuery Steps Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-steps/jquery.steps.js"></script>
+  <!-- Sweet Alert Plugin Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
+
+  <!-- Custom Js -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
+  <!-- <script src="AdminBSBMaterialDesign/js/pages/forms/basic-form-elements.js"></script> -->
+  <!-- Demo Js -->
+  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script> --%>
+
+  <script>
+  $(function () {
+	$('#Appr_Cycle_Form').formValidator();
+
+	$.getJSON("<%=request.getContextPath()%>/employee/types", function (employeeTypes) {
+        $.each(employeeTypes, function (index, employeeType) {
+        	console.log(employeeType);
+            // APPEND OR INSERT DATA TO SELECT ELEMENT.
+            //$('<option>').val(employeeType).text(employeeType).appendTo('#AppraisalEligibility_EmployeeType');     
+            $('#AppraisalEligibility_EmployeeType').append('<option value="' + employeeType + '">' + employeeType + '</option>');
+            //$("#AppraisalEligibility_EmployeeType").selectpicker("refresh");
+        });
+    });
+
+	$('.datepicker').bootstrapMaterialDatePicker({
+	  format: 'DD/MM/YYYY',
+	  clearButton: true,
+	  weekStart: 1,
+	  time: false
+	});
+
+	$('#AppraisalCycle_StartDate').change(function(e, date) {
+	  $('#AppraisalCycle_EndDate').bootstrapMaterialDatePicker('setMinDate', moment(date).add(1, 'day'));
+	});
+    $('#AppraisalPhase_StartDate').change(function(e, date) {
+      $('#AppraisalPhase_EndDate').bootstrapMaterialDatePicker('setMinDate', moment(date).add(1, 'day'));
+	});
+
+	$('#AppraisalPhase_Add').click(function() {
+	  // Validate the input fields
+	  var phaseName = $('#AppraisalPhase_Name').val();
+	  var startDate = $('#AppraisalPhase_StartDate').val();
+	  var endDate = $('#AppraisalPhase_EndDate').val();
+
+      var row=$('<tr>');
+	  row.append('<td>' + phaseName + '</td>');
+	  row.append('<td>' + startDate + '</td>');
+	  row.append('<td>' + endDate + '</td>');
+	  row.append('<td><i class="material-icons" style="cursor: pointer;" onclick="deleteContainingRow(this)">delete</i></td>');
+	  $('#AppraisalPhase_Table > tbody:last-child').append(row);
+      //$('#AppraisalPhase_Name').val('');
+	  if (endDate) {
+		$('#AppraisalPhase_StartDate').val(moment(endDate, 'DD/MM/YYYY').add(1, 'day').format('DD/MM/YYYY'));
+	  } else {
+	  	$('#AppraisalPhase_StartDate').val();
+	  }
+	  $('#AppraisalPhase_EndDate').val('');
+	});
+
+    $('#AppraisalEligibility_Add').click(function() {
+      // Validate the input fields
+      var employeeType = $('#AppraisalEligibility_EmployeeType').val();
+      var cutoffDate = $('#AppraisalEligibility_CutoffDate').val();
+      var row=$('<tr>');
+      row.append('<td>' + employeeType + '</td>');
+      row.append('<td>' + cutoffDate + '</td>');
+      row.append('<td><i class="material-icons" style="cursor: pointer;" onclick="deleteContainingRow(this)">delete</i></td>');
+      $('#AppraisalEligibility_Table > tbody:last-child').append(row);
+      // TODO clear selected employee types
+      $('#AppraisalEligibility_CutoffDate').val('');
+    });
+  });
+  </script>
+
+</html>
