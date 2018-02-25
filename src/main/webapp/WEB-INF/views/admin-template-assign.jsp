@@ -45,31 +45,104 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Competency Assessments
-          <small>Add and update organization level competency assessments and parameters</small>
+        <h2>Assign Competency Assessment Templates to Employees
+          <small>Assign templates to employee(s)</small>
         </h2>
       </div>
       <div class="row clearfix">
-        <!-- Linked Items -->
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <div class="card ca_card">
-            <div class="header">
-              <h2>Competency Assessment</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
+        <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
+          <div class="card">
             <div class="body">
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-          <div class="card ca_items_card">
-            <div class="header">
-              <h2>Parameters</h2>
-            </div>
-            <div class="body">
+              <div class="row clearfix">
+			    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                  <label for="Template_Name">Template Name</label>
+                </div>
+                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+		          <div class="form-group form-float">
+		            <div class="form-line">
+		              <input type="text" id="Template_Name" class="form-control" minlength="3" placeholder="Please enter the name" required autofocus value="Template 1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-md-3">
+                  <b>Employee Name</b>
+                  <div class="input-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control date" placeholder="Employee First or Last name">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <b>Project</b>
+                  <div class="input-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control date" placeholder="Project name">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <b>Designation</b>
+                  <div class="input-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control date" placeholder="Designation">
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <b>Band</b>
+                  <div class="input-group">
+                    <div class="form-line">
+                      <input type="text" class="form-control date" placeholder="Band">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-24">
+                  <div class="text-right">
+					<button type="button" class="btn btn-primary btn-sm m-l-15 waves-effect">Search</button>
+			      </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <div class="table-responsive">
+                  <table id="SearchTable" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Employment Type</th>
+                        <th>Band</th>
+                        <th>Designation</th>
+                        <th>Hired On</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1111</td>
+						<td>Atul</td>
+						<td>Kumar</td>
+						<td>Regular Employee</td>
+						<td>2Z</td>
+						<td>Software Engineer</td>
+						<td>2015/03/11</td>
+				      </tr>
+                      <tr>
+                        <td>1111</td>
+						<td>Atul</td>
+						<td>Kumar</td>
+						<td>Regular Employee</td>
+						<td>2Z</td>
+						<td>Software Engineer</td>
+						<td>2015/03/11</td>
+				      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -77,8 +150,6 @@
     </div>
   </section>
 </body>
-
-<!-- Jquery Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
@@ -105,16 +176,5 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
-$('.ca_card').cardManager({
-  type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/goal/list',
-  manageUrl: '<%=request.getContextPath()%>/admin/competency/manage',
-  deleteUrl: '<%=request.getContextPath()%>/admin/competency/manage',
-
-  menuActions: ["Add", "Update"],
-  renderConfigs: [
-    { type: 'list', fromNode: 'goalCaps', toContainer: '.ca_items_card .body' }
-  ]
-});
 </script>
 </html>

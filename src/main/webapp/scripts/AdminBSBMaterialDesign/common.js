@@ -5,6 +5,11 @@ $('.datepicker').bootstrapMaterialDatePicker({
   time: false
 });
 
+
+function formatDate(date) {
+  return moment(date).format("DD/MM/YYYY");
+}
+
 function submitForm(url, id) {
 	console.log('postData() url=' + url + ', id=' + id);
 	var form= document.createElement('form');
@@ -38,6 +43,26 @@ function setButtonWavesEffect(event) {
     $(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
     $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
 }
+
+var getJSON = function (url, successCallback, errorCallback) {
+  $.ajax({
+    type: 'GET',
+    url: url,
+    success: function(result) {
+      console.log(url + ': ' + JSON.stringify(result));
+      if (successCallback) {
+    	successCallback(result);
+ 	  }
+    },
+    error: function(error) {
+      console.log('error= ' + JSON.stringify(error));
+      if (errorCallback) {
+      	errorCallback(error);
+	  }
+ 	}
+  });
+}
+
 
 var postJSON = function (url, data, successCallback, failureCallback, errorCallback) {
 	sendAjax('POST',url, data, successCallback, failureCallback, errorCallback)

@@ -1,0 +1,9 @@
+select * from appr_cycle;
+
+select * from appr_phase;
+
+select * from template;
+
+select * from template_header;
+
+select * from template_detail;

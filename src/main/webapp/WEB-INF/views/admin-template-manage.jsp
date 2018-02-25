@@ -62,12 +62,12 @@
                 <h3>Details</h3>
                 <fieldset style="margin-top: 90px;">
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                    <label for="AppraisalCycle_Name">Employee Name</label>
+                    <label for="Template_Name">Template Name</label>
                   </div>
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
 		            <div class="form-group form-float">
 		              <div class="form-line">
-		                <input type="text" id="" class="form-control" name="minmaxlength"  minlength="3" required value="" placeholder="Please enter the name">
+		                <input type="text" id="Template_Name" class="form-control" minlength="3" placeholder="Please enter the name" required autofocus value="Template 1">
                       </div>
                     </div>
                   </div>
@@ -75,186 +75,84 @@
 
                 <h3>Competency Assessment</h3>
                 <fieldset>
-                 	<div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12" style="padding:0px">
-	                    <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
-	                        <div class="panel panel-primary">
-	                            <div class="panel-heading" role="tab" id="headingOne_1">
-	                                <h4 class="panel-title">
-	                                    <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseOne_1" aria-expanded="true" aria-controls="collapseOne_1">
-	                                        Client Orientation/Customer Focus
-	                                    </a>
-	                                </h4>
-	                            </div>
-	                            <div id="collapseOne_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_1">
-	                                <div class="panel-body">
-	                                    <div>
-		                                    <div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px;">
-								                Establishes and maintains effective relationship with both internal and external customers and gains their trust
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-							                	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Understands and Proactively addresses customer needs in a timely manner by following the Client/Softvision Process
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Knowledge of Softvision and Customer processes (software development processes)
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Number of customer accolades
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-							        	</div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <div class="panel panel-primary">
-	                            <div class="panel-heading" role="tab" id="headingTwo_1">
-	                                <h4 class="panel-title">
-	                                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapseTwo_1" aria-expanded="false"
-	                                       aria-controls="collapseTwo_1">
-	                                       Project Management
-	                                    </a>
-	                                </h4>
-	                            </div>
-	                            <div id="collapseTwo_1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_1">
-	                                <div class="panel-body">
-	                                <div class="clearfix"></div>
-	                                	<div>
-		                                    <div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Ability to identify, plan, procure and utilize resources within the scope of the project
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Ability to identify, mitigate and manage risks in the project. a) Planning and Control b) Resource Management
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Knowledge of PM basics like Initiation, Planning, Monitoring, Negotiation skills, budgeting,Tracking and Closure
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Concepts and application of PM disciplines like estimation, scope, time, cost and risk mgmt
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Application of Softvision PM Process and Client PM Process
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Process compliance in terms of non compliance
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Consitency in communicatoion - gaps btw onshore communication etc
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-								        	<div class="col-lg-11 col-md-11 col-sm-9 col-xs-8" style="margin-bottom: 0px;margin-top: 20px">
-								                Frequency of communication within the team - internal and external
-							                  </div>
-		                                    <div class="col-lg-1 col-md-1 col-sm-3 col-xs-4">
-		                                    	<div class="demo-switch">
-								                	<div class="demo-switch-title"></div>
-			                                        <div class="switch">
-			                                            <label><input type="checkbox" checked><span class="lever switch-col-green"></span></label>
-			                                        </div>
-		                                        </div>
-							                </div>
-								        	<div class="clearfix"></div>
-							        	</div>
-	                                </div>
-	                            </div>
-	                        </div>
+                  <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12" style="padding:0px">
+	                <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+	                  <div class="panel">
+	                    <div class="panel-heading" role="tab" id="heading_1">
+	                      <h4 class="panel-title">
+	                        <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
+	                          Client Orientation/Customer Focus
+	                        </a>
+	                      </h4>
 	                    </div>
+	                    <div id="collapse_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_1">
+	                      <div class="panel-body">
+	                        <table class="table table-striped table-hover">
+	                          <tbody>
+	                            <tr>
+	                              <td width="90%">Establishes and maintains effective relationship with both internal and external customers and gains their trust</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Understands and Proactively addresses customer needs in a timely manner by following the Client/Softvision Process</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Knowledge of Softvision and Customer processes (software development processes)</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Number of customer accolades</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                          </tbody>
+	                        </table>
+	                      </div>
+	                    </div>
+	                  </div>
+	                  <div class="panel">
+	                    <div class="panel-heading" role="tab" id="heading_2">
+	                      <h4 class="panel-title">
+	                        <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
+	                          Project Management
+	                        </a>
+	                      </h4>
+	                    </div>
+	                    <div id="collapse_2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_2">
+	                      <div class="panel-body">
+	                        <table class="table table-striped table-hover">
+	                          <tbody>
+	                            <tr>
+	                              <td width="90%">Ability to identify, plan, procure and utilize resources within the scope of the project</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Ability to identify, mitigate and manage risks in the project. a) Planning and Control b) Resource Management</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Knowledge of Softvision and Customer processes (software development processes)</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Knowledge of PM basics like Initiation, Planning, Monitoring, Negotiation skills, budgeting,Tracking and Closure</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Concepts and application of PM disciplines like estimation, scope, time, cost and risk mgmt</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                            <tr>
+	                              <td width="90%">Application of Softvision PM Process and Client PM Process</td>
+	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
+	                            </tr>
+	                          </tbody>
+	                        </table>
+	                      </div>
+	                    </div>
+	                  </div>
 	                </div>
+	              </div>
                 </fieldset>
               </form>
             </div>
@@ -309,7 +207,7 @@
       onFinishing: function () {
     	var apprCycle={};
     	var phases=[];
-    	apprCycle.name=$('#AppraisalCycle_Name').val();
+    	apprCycle.name=$('#Template_Name').val();
     	apprCycle.startDate=$('#AppraisalCycle_StartDate').val();
     	apprCycle.endDate=$('#AppraisalCycle_EndDate').val();
     	apprCycle.cutoffDate=$('#AppraisalCycle_EligibilityDate').val();
@@ -339,7 +237,7 @@
       .done(function(result) {
         if (result) {
           console.log(JSON.stringify(result));
-          $('#AppraisalCycle_Name').val(result.name);
+          $('#Template_Name').val(result.name);
           $('#AppraisalCycle_StartDate').val(result.startDate);
           $('#AppraisalCycle_EndDate').val(result.endDate);
           $('#AppraisalCycle_EligibilityDate').val(result.cutoffDate);

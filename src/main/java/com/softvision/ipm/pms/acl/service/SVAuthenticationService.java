@@ -1,12 +1,9 @@
 package com.softvision.ipm.pms.acl.service;
 
-import javax.naming.AuthenticationNotSupportedException;
-import javax.naming.CommunicationException;
-import javax.naming.NamingException;
+import java.net.ConnectException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +24,7 @@ public class SVAuthenticationService {
 
 	public User authenticate(String userid, String password) throws AuthenticationException {
 		try {
-			svLdapRepository.authenticate(userid, password);
+			//svLdapRepository.authenticate(userid, password);
 			Employee employee = svProjectRepository.getEmployee(userid);
 			System.out.println("employee=" + employee);
 			Employee findByLoginId = employeeRepository.findByLoginId(employee.getLoginId());
@@ -36,19 +33,23 @@ public class SVAuthenticationService {
 				employeeRepository.save(employee);
 			}
 			return getUser(employee);
-		} catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
+		}/* catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
 			throw new AuthenticationServiceException(authenticationNotSupportedException.getMessage(),
 					authenticationNotSupportedException);
 		} catch (NamingException namingException) {
-			//String message = namingException.getMessage();
 			if (namingException instanceof AuthenticationNotSupportedException) {
 				throw new AuthenticationServiceException(namingException.getMessage(), namingException);
 			} else if (namingException instanceof CommunicationException) {
 				throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
 			}
-			// javax.naming.CommunicationException
 			namingException.printStackTrace();
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
+		}*/ catch (Exception exception) {
+			String message = exception.getMessage();
+			if (message.contains("Connection timed out")) {
+				throw new AuthenticationServiceException("Unable to connect to svProject at this moment", exception);
+			}
+			throw new AuthenticationServiceException(exception.getMessage(), exception);
 		}
 	}
 

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
@@ -13,7 +12,6 @@ import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 
 @Service
-@Validated
 public class AppraisalService {
 
 	@Autowired

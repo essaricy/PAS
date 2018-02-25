@@ -57,7 +57,7 @@
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/competency/list">Assign Goals</a>
+              <a href="<%=request.getContextPath()%>/admin/template/assign">Assign Goals</a>
             </li>
           </ul>
         </li>

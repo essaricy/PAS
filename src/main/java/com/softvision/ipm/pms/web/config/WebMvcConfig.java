@@ -31,6 +31,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
+        registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
     }
 
     @Override
@@ -54,10 +55,4 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         	.addResourceLocations("classpath:/images")
             ;
     }
-
-    /*@Bean
-    public ServletListenerRegistrationBean<HttpSessionListener> httpSessionListener() {
-        return new ServletListenerRegistrationBean<HttpSessionListener>(new WebSessionListener());
-    }*/
-
 }

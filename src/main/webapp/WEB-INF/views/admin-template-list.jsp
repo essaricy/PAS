@@ -43,87 +43,96 @@
   <!-- =============================================== -->
 
   <section class="content">
-    <div class="row clearfix">
-      <!-- Linked Items -->
-      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-        <div class="card templates_card">
-          <div class="header">
-            <h2>Templates</h2>
-            <ul class="header-dropdown m-r--5">
-              <li class="dropdown">
-              </li>
-            </ul>
-          </div>
-          <div class="body">
-          </div>
-        </div>
+    <div class="container-fluid">
+      <div class="block-header">
+        <h2>Competency Assessment Templates
+          <small>Create or update the assessment templates that fits to your project or employee groups</small>
+        </h2>
       </div>
-      <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-        <div class="card template_header_card">
-          <div class="header">
-            <h2>Competency Assessments</h2>
-          </div>
-          <div class="body">
+      <div class="row clearfix">
+        <!-- Linked Items -->
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="card templates_card">
+            <div class="header">
+              <h2>Templates</h2>
+              <ul class="header-dropdown m-r--5">
+                <li class="dropdown">
+                </li>
+              </ul>
+            </div>
+            <div class="body">
+            </div>
           </div>
         </div>
-        <div class="card template_detail_card">
-          <div class="header">
-            <h2>Assessment Parameters</h2>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+          <div class="card template_header_card">
+            <div class="header">
+              <h2>Competency Assessments</h2>
+            </div>
+            <div class="body">
+            </div>
           </div>
-          <div class="body">
+          <div class="card template_detail_card">
+            <div class="header">
+              <h2>Assessment Parameters</h2>
+            </div>
+            <div class="body">
+            </div>
           </div>
         </div>
       </div>
     </div>
   </section>
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
-  <!-- Bootstrap Core Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
-  <!-- Select Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
-  <!-- Slimscroll Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <!-- Waves Effect Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
-  <!-- Autosize Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/autosize/autosize.js"></script>
-  <!-- Moment Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
-  <!-- Bootstrap Material Datetime Picker Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
-  <!-- SweetAlert Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
-  <!-- Validation Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
-  <!-- Custom Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
-  <!-- Demo Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-  <script>
-  $('.templates_card').cardManager({
-    type: 'list-with-links',
-    loadUrl: '<%=request.getContextPath()%>/appraisal/list',
-    manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
-    //deleteUrl: '<%=request.getContextPath()%>/template/delete',
-    menuActions: ["Add", "Update"],
-    /* renderConfigs: [
-        { 
-          type: 'collapsed-list',
-          fromNode: 'phases',
-          toContainer: '.template_header_card .body',
-        }
-      ], */
-    afterLoadCallback: function (items, data) {
-      var headerCardBody = $('.template_header_card .body')
-      $(headerCardBody).empty();
-      $(items).each(function(index, item) {
-        var ul=$('<ul class="list-group"><a href="#" class="list-group-item" item-id="1" item-name="2017-18">2017-18</a><a href="#" class="list-group-item active" item-id="2" item-name="2018">2018</a></ul>');
-        $(headerCardBody).append(ul);
-      });
-    }
-  });
-  </script>
 </body>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap Core Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
+<!-- Select Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
+<!-- Slimscroll Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+<!-- Waves Effect Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
+<!-- Autosize Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/autosize/autosize.js"></script>
+<!-- Moment Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
+<!-- Bootstrap Material Datetime Picker Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+<!-- SweetAlert Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
+<!-- Validation Plugin Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+<!-- Custom Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+<!-- Demo Js -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
+<script>
+$('.templates_card').cardManager({
+  type: 'list-with-links',
+  loadUrl: '<%=request.getContextPath()%>/template/list',
+  manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
+  //deleteUrl: '<%=request.getContextPath()%>/template/delete',
+  menuActions: ["Add", "Update"],
+  /* renderConfigs: [
+      { 
+        type: 'collapsed-list',
+        fromNode: 'phases',
+        toContainer: '.template_header_card .body',
+      }
+    ], */
+  afterLoadCallback: function (items, data) {
+    var headerCardBody = $('.template_header_card .body')
+    $(headerCardBody).empty();
+    var ul=$('<ul class="list-group"></ul>');
+    $(headerCardBody).append(ul);
+    $(items).each(function(index, item) {
+      //var ul=$('<ul class="list-group"><a href="#" class="list-group-item" item-id="1" item-name="2017-18">2017-18</a><a href="#" class="list-group-item active" item-id="2" item-name="2018">2018</a></ul>');
+      $(ul).append('<a href="#" class="list-group-item" item-id="' + item.id + '">2017-18</a>');
+    });
+  }
+});
+</script>
 </html>

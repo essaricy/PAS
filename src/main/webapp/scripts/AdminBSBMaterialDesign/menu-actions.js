@@ -1,27 +1,80 @@
 (function ( $ ) {
-  $.fn.cardManager=function( options ) {
+  $.fn.menuActions=function( options ) {
     var settings=$.extend({
-      type: null,
-      loadUrl: null,
-      manageUrl: null,
-      deleteUrl: null,
-      onClickCallback: null,
-
-      renderConfigs: [],
-      menuActions: [],
-
-      afterLoadCallback: null,
-      successCallback: null,
-      failedCallback: null,
+      dataset: null,
+      items: null,
+      menuConfig: [
+    	  {
+    		  name: "Add",
+    		  type: 'navigate',
+    		  url: null,
+    		  selectionRequired: false,
+    		  beforeCallback: null,
+    		  afterCallback: null
+    	  }, {
+    		  name: "Update",
+    		  type: 'navigate',
+    		  url: null,
+    		  selectionRequired: true,
+    		  beforeCallback: null,
+    		  afterCallback: null,
+    	  }
+      ]
     }, options );
-
-    validateSettings();
-
-    var loadUrl = settings.loadUrl;
 
     var obj=$(this);
     var cardHeader=$(obj).find('.header');
     var cardBody=$(obj).find('.body');
+
+    validateSettings();
+
+    function validateSettings() {
+      if (!settings.dataset) {
+        throw "menuActions: settings.dataset is not provided";
+      }
+      if (!settings.items) {
+        throw "menuActions: settings.items is not provided";
+      }
+      if (!settings.menuConfig) {
+        throw "menuActions: settings.menuConfig is not provided";
+      }
+      if (!settings.menuConfig) {
+        throw "menuActions: settings.menuConfig is not provided";
+      }
+      $(settings.menuConfig).each(function(index, menu) {
+    	if (!menu.name) {
+          throw "menuActions: settings.menuConfig.name is not provided @ " + index;
+        }
+    	if (!menu.type) {
+    	  throw "menuActions: settings.menuConfig.type is not provided @ " + index;
+        }
+    	if (!menu.url) {
+    	  throw "menuActions: settings.menuConfig.url is not provided @ " + index;
+        }
+      });
+    }
+
+    $(settings.menuConfig).each(function(index, menu) {
+    	var name=menu.name;
+    	var type=menu.type;
+    	var url=menu.url;
+    	var icon=menu.icon;
+    	var selectionRequired=(menu.selectionRequired) ? true:false;
+    	var beforeCallback=menu.beforeCallback;
+    	var afterCallback=menu.afterCallback;
+
+    	var menu_li=$('<li>');
+        var menu_link=$('<a href="' + (manageUrl + "?id=0") + '"><i class="material-icons">' + icon + '</i> Add</a>');
+        $(add_li).append(add_link);
+        $(actionsMenu).append(add_li);
+
+    	if (selectionRequired) {
+    		
+    	} else {
+    		
+    	}
+      
+    });
 
     console.log('Loading data from ' + loadUrl);
     // Retrieve data from URL
@@ -66,18 +119,6 @@
     .always(function(result) {
     });
 
-    function validateSettings() {
-      if (!settings.type) {
-        throw "cardManager: settings.type is not provided";
-      }
-      if (!settings.loadUrl) {
-        throw "cardManager: settings.loadUrl is not provided";
-      }
-      if (!settings.manageUrl) {
-        throw "cardManager: settings.manageUrl is not provided";
-      }
-    }
-
     function renderList(container, data, listingType) {
       $(container).empty();
       if (listingType == 'hyperlinks') {
@@ -86,8 +127,6 @@
     	  var link=$('<a href="#" class="list-group-item">');
     	  $(link).attr('item-id', item['id']);
     	  $(link).attr('item-name', item['name']);
-    	  //var heading=$('<h4 class="list-group-item-heading">' + item['name'] + '</h4>');
-    	  //$(link).append(heading);
     	  $(link).text(item['name']);
     	  $(container).append(link);
           $(link).click(function() {
@@ -95,9 +134,6 @@
             $(this).addClass('active').siblings().removeClass('active');
             // Show items in child container
             renderChildren(item);
-            if (settings.onClickCallback) {
-            	settings.onClickCallback(item);
-            }
           });
         });
       } else if (listingType==null) {

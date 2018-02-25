@@ -42,7 +42,7 @@ public class TestAuthenticationProvider implements AuthenticationProvider {
 		
 		User user = new User();
 		user.setBand("5Z");
-		user.setUsername("srikanth.kumar@softvision.com");
+		user.setUsername("srikanth.kumar@abc.com");
 		user.setEmployeeId(1136);
 		user.setUsername("srikanth.kumar");
 		user.setPassword("$oftvision@123");

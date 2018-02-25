@@ -6,6 +6,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.interceptor.annotations.AuditTransaction;
 
 @Repository
 public class SVProjectRepository {
@@ -19,6 +20,7 @@ public class SVProjectRepository {
 	@Value("${app.role.svproject.domain}")
 	private String domain;
 
+	@AuditTransaction
 	public Employee getEmployee(String userId) {
 		String email = userId + "@" + domain;
 		System.out.println("email=" + email);
