@@ -25,8 +25,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // Views with ADMIN privileges
         registry.addViewController("/admin/cycles/list").setViewName("admin-cycle-list");
         registry.addViewController("/admin/cycles/manage").setViewName("admin-cycle-manage");
-        registry.addViewController("/admin/competency/list").setViewName("admin-competency-list");
-        registry.addViewController("/admin/competency/manage").setViewName("admin-competency-manage");
+
+        registry.addViewController("/admin/goal/list").setViewName("admin-goal-list");
+        registry.addViewController("/admin/goal/manage").setViewName("admin-goal-manage");
+
         registry.addViewController("/admin/employee/manage").setViewName("admin-employee-manage");
 
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");

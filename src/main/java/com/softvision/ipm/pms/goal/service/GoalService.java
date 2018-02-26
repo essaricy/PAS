@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.goal.entity.GoalCa;
+import com.softvision.ipm.pms.goal.assembler.GoalAssembler;
+import com.softvision.ipm.pms.goal.entity.Goal;
+import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.repo.GoalCaDataRepository;
 
 @Service
@@ -17,23 +19,24 @@ public class GoalService {
 	@Autowired
 	private GoalCaDataRepository goalCaDataRepository;
 
-	public List<GoalCa> getGoals() {
-		return goalCaDataRepository.findAll();
+	public List<GoalDto> getGoals() {
+		return GoalAssembler.getGoals(goalCaDataRepository.findAll());
 	}
 
-	public GoalCa getGoal(Long id) {
-		return goalCaDataRepository.findById(id);
+	public GoalDto getGoal(Long id) {
+		return GoalAssembler.getGoal(goalCaDataRepository.findById(id));
 	}
 
-	public GoalCa update(GoalCa goalCa) throws ServiceException {
+	public GoalDto update(GoalDto goalDto) throws ServiceException {
 		try {
-			if (goalCa == null) {
-				throw new ServiceException("Competency Assessment information is not provided.");
+			if (goalDto == null) {
+				throw new ServiceException("No Goal is provided.");
 			}
-			ValidationUtil.validate(goalCa);
-			return goalCaDataRepository.save(goalCa);
+			ValidationUtil.validate(goalDto);
+			Goal goal = GoalAssembler.getGoal(goalDto);
+			return GoalAssembler.getGoal(goalCaDataRepository.save(goal));
 		} catch (Exception exception) {
-			String message = ExceptionUtil.getExcceptionMessage(exception);
+			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
 	}
@@ -42,7 +45,7 @@ public class GoalService {
 		try {
 			goalCaDataRepository.delete(id);
 		} catch (Exception exception) {
-			String message = ExceptionUtil.getExcceptionMessage(exception);
+			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
 	}

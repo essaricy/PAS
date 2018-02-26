@@ -13,7 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.softvision.ipm.pms.goal.entity.GoalCap;
+import com.softvision.ipm.pms.goal.entity.GoalParam;
 
 import lombok.Data;
 
@@ -31,5 +31,5 @@ public class TemplateDetail implements Serializable {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "cap_id", nullable = false)
-	private GoalCap goalCap;
+	private GoalParam goalCap;
 }

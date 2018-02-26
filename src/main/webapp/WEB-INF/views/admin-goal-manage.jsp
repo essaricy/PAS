@@ -133,6 +133,7 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
   
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
 
   <script>
@@ -142,22 +143,23 @@
 
     $('#Competency_Form').formValidator({
       onFinishing: function () {
-        var ca={};
-	    var goalCaps=[];
-	    ca.id=id;
-	    ca.name=$('#Competency_Name').val();
+        var goal={};
+	    var params=[];
+	    goal.id=id;
+	    goal.name=$('#Competency_Name').val();
 
      	$('#CompetencyParam_Table > tbody tr').each(function(index, row) {
       	  var $tds = $(this).find('td')
-          var cap={};
-     	  cap.id=$tds.eq(0).attr('item-id');
-      	  cap.name=$tds.eq(0).attr('item-name');
-          cap.apply=($tds.eq(1).find('input').is(':checked'))? 'Y' : 'N';
-          goalCaps[goalCaps.length]=cap;
+          var param={};
+      	  param.id=$tds.eq(0).attr('item-id');
+      	  param.name=$tds.eq(0).attr('item-name');
+      	  param.applicable=($tds.eq(1).find('input').is(':checked'))? 'Y' : 'N';
+          params[params.length]=param;
    		});
-      	ca.goalCaps=goalCaps;
-      	console.log('ca=' + JSON.stringify(ca));
-      	postJSON("<%=request.getContextPath()%>/goal/update", ca, null, null, null);
+     	goal.params=params;
+      	//console.log('goal=' + JSON.stringify(goal));
+      	$.fn.postJSON({url : '<%=request.getContextPath()%>/goal/update', data: goal});
+      	//postJSON("<%=request.getContextPath()%>/goal/update", goal, null, null, null);
       }
     });
 
@@ -168,31 +170,27 @@
         if (result) {
           console.log(result);
 	      $('#Competency_Name').val(result.name);
-	      $(result.goalCaps).each(function(index, goalCap) {
-	    	appendRow(table, goalCap);
+	      $(result.params).each(function(index, param) {
+	    	appendRow(table, param);
 	      });
        	}
       });
     }
 
     $('#CompetencyParam_Add').click(function() {
-      console.log('clicked CompetencyParam_Add');
 	  // Validate the input fields
-	  appendRow(table, {id:0, name: $('#CompetencyParam_Name').val(), apply: 'Y'});
+	  appendRow(table, {id:0, name: ""+$('#CompetencyParam_Name').val(), applicable: 'Y'});
    	  $('#CompetencyParam_Name').val('');
     });
 
-    function appendRow(tableSelector, goalCap) {
-      console.log('goalCap=' + JSON.stringify(goalCap));
+    function appendRow(tableSelector, param) {
+      console.log('param=' + JSON.stringify(param));
       var row=$('<tr>');
-      $(row).append('<td item-id=' + goalCap.id
-    		  + ' item-name=' + goalCap.name
-    		  + ' item-apply=' + goalCap.apply
-    		  + '>' + goalCap.name + '</td>');
-      if (goalCap.apply == 'Y') {
+      $(row).append('<td item-id="' + param.id + '" item-name="' + param.name + '" item-applicable="' + param.applicable + '">' + param.name + '</td>');
+      if (param.applicable == 'Y') {
         $(row).append('<td><div class="switch"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>');
       } else {
-    	  $(row).append('<td><div class="switch"><label><input type="checkbox"><span class="lever switch-col-green"></span></label></div></td>');
+    	$(row).append('<td><div class="switch"><label><input type="checkbox"><span class="lever switch-col-green"></span></label></div></td>');
       }
       $(tableSelector).find('tbody:last-child').append(row);
     }

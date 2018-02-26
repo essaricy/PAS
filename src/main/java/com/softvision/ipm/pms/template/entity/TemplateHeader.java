@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softvision.ipm.pms.common.validator.NotContainNull;
-import com.softvision.ipm.pms.goal.entity.GoalCa;
+import com.softvision.ipm.pms.goal.entity.Goal;
 
 import lombok.Data;
 
@@ -42,7 +42,7 @@ public class TemplateHeader implements Serializable {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.DETACH, orphanRemoval=true)
 	@JoinColumn(name = "ca_id", nullable = false)
-	private GoalCa goalCa;
+	private Goal goalCa;
 
 	@NotNull(message="Details are required. At least one detail should be provided")
 	@NotEmpty(message="At least one detail must be provided")

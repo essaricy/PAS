@@ -20,8 +20,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.softvision.ipm.pms.Application;
 import com.softvision.ipm.pms.common.exception.ServiceException;
-import com.softvision.ipm.pms.goal.entity.GoalCa;
-import com.softvision.ipm.pms.goal.entity.GoalCap;
+import com.softvision.ipm.pms.goal.model.GoalDto;
+import com.softvision.ipm.pms.goal.model.GoalParamDto;
 import com.softvision.ipm.pms.goal.service.GoalService;
 
 @RunWith(SpringRunner.class)
@@ -38,17 +38,17 @@ public class GoalCaTest {
 	@Test()
 	public void test1_getAll() {
 		System.out.println("test1_getAll");
-		List<GoalCa> goals = goalService.getGoals();
+		List<GoalDto> goals = goalService.getGoals();
 		assertNotNull(goals);
 		assertTrue(!goals.isEmpty());
-		GoalCa goalCa = goals.get(0);
+		GoalDto goalCa = goals.get(0);
 		assertNotNull(goalCa);
 		assertTrue(goalCa.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCa.getName()));
-		List<GoalCap> goalCaps = goalCa.getGoalCaps();
+		List<GoalParamDto> goalCaps = goalCa.getParams();
 		assertNotNull(goalCaps);
 		assertTrue(!goalCaps.isEmpty());
-		GoalCap goalCap = goalCaps.get(0);
+		GoalParamDto goalCap = goalCaps.get(0);
 		assertNotNull(goalCap);
 		assertTrue(goalCap.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCap.getName()));
@@ -57,30 +57,30 @@ public class GoalCaTest {
 	@Test
 	public void test2_create() throws ServiceException {
 		System.out.println("test2_create");
-		GoalCa goalCa = new GoalCa();
+		GoalDto goalCa = new GoalDto();
 		goalCa.setId((long)50);
 		goalCa.setName(GOAL_NAME);
-		List<GoalCap> goalCaps = new ArrayList<>();
-		GoalCap goalCap1 = new GoalCap();
+		List<GoalParamDto> goalCaps = new ArrayList<>();
+		GoalParamDto goalCap1 = new GoalParamDto();
 		goalCap1.setName("goalCa Param 1");
-		goalCap1.setApply("Y");
+		goalCap1.setApplicable("Y");
 		goalCaps.add(goalCap1);
 
-		GoalCap goalCap2 = new GoalCap();
+		GoalParamDto goalCap2 = new GoalParamDto();
 		goalCap2.setName("goalCa Param 2");
-		goalCap2.setApply("Y");
+		goalCap2.setApplicable("Y");
 		goalCaps.add(goalCap2);
 
-		goalCa.setGoalCaps(goalCaps);
+		goalCa.setParams(goalCaps);
 
-		GoalCa updated = goalService.update(goalCa);
+		GoalDto updated = goalService.update(goalCa);
 		System.out.println("Created GoalCA=" + updated);
 		assertNotNull(updated);
 		assertTrue(updated.getId()!=0);
 		assertTrue(updated.getName()==GOAL_NAME);
-		List<GoalCap> updatedGoalCaps = updated.getGoalCaps();
+		List<GoalParamDto> updatedGoalCaps = updated.getParams();
 		assertTrue(updatedGoalCaps.size()==2);
-		GoalCap updatedGoalCap = updatedGoalCaps.get(0);
+		GoalParamDto updatedGoalCap = updatedGoalCaps.get(0);
 		assertNotNull(updatedGoalCap);
 		assertTrue(updatedGoalCap.getId()!=0);
 		assertTrue(updatedGoalCap.getName()=="goalCa Param 1");
@@ -91,14 +91,14 @@ public class GoalCaTest {
 	@Test
 	public void test3_getById() {
 		System.out.println("test3_getById: " + id);
-		GoalCa goalCa = goalService.getGoal(id);
+		GoalDto goalCa = goalService.getGoal(id);
 		assertNotNull(goalCa);
 		assertTrue(goalCa.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCa.getName()));
-		List<GoalCap> goalCaps = goalCa.getGoalCaps();
+		List<GoalParamDto> goalCaps = goalCa.getParams();
 		assertNotNull(goalCaps);
 		assertTrue(!goalCaps.isEmpty());
-		GoalCap goalCap = goalCaps.get(0);
+		GoalParamDto goalCap = goalCaps.get(0);
 		assertNotNull(goalCap);
 		assertTrue(goalCap.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCap.getName()));
@@ -108,7 +108,7 @@ public class GoalCaTest {
 	public void test4_deleteById() throws ServiceException {
 		System.out.println("test4_deleteById: " + id);
 		goalService.delete(id);
-		GoalCa goalCa = goalService.getGoal(id);
+		GoalDto goalCa = goalService.getGoal(id);
 		assertNull(goalCa);
 	}
 }

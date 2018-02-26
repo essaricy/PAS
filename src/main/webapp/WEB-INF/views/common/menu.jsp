@@ -82,10 +82,10 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/admin/cycles/list">Appraisal Cycles</a>
+              <a href="<%=request.getContextPath()%>/admin/cycles/list">Manage Appraisal Cycles</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/competency/list">Competency Assessment</a>
+              <a href="<%=request.getContextPath()%>/admin/goal/list">Manage Competency Assessments</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
