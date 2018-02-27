@@ -12,7 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
 
 import lombok.Data;
@@ -26,10 +25,17 @@ public class TemplateDetail implements Serializable {
 	@Id
 	@SequenceGenerator(name="template_detail_id_seq",sequenceName="template_detail_id_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="template_detail_id_seq")
-	@JsonFormat
 	private Long id;
+
+	private String apply;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "cap_id", nullable = false)
-	private GoalParam goalCap;
+	private GoalParam goalParam;
+
+	@Override
+	public String toString() {
+		return "TemplateDetail [id=" + id + ", goalParam=" + goalParam + "]";
+	}
+
 }

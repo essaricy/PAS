@@ -89,11 +89,13 @@ CREATE TABLE template_detail (
 	ID				BIGINT NOT NULL,
 	HEADER_ID		BIGINT NOT NULL,
 	CAP_ID			SMALLINT NOT NULL,
+	APPLY			VARCHAR(1) NOT NULL DEFAULT 'Y',
 
 	PRIMARY KEY (ID),
 	FOREIGN KEY (HEADER_ID) REFERENCES template_header (ID),
 	FOREIGN KEY (CAP_ID) REFERENCES goal_caP (ID),
-	CHECK (ID > 0)
+	CHECK (ID > 0),
+	CHECK (APPLY IN ('Y', 'N'))
 );
 
 -- #######################################################

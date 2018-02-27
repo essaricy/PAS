@@ -12,36 +12,46 @@ import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
+import com.softvision.ipm.pms.template.repo.TemplateHeaderDataRepository;
 
 @Service
 public class TemplateService {
 
-	@Autowired
-	private TemplateDataRepository templateDataRepository;
+	@Autowired private TemplateDataRepository templateDataRepository;
+
+	@Autowired private TemplateHeaderDataRepository templateHeaderDataRepository;
 
 	public List<TemplateDto> getTemplates() {
-		List<TemplateDto> templates = TemplateAssembler.getTemplates(templateDataRepository.findAll());
-		for (TemplateDto template : templates) {
-			//template.setHeaders(templateDataRepository.findByTemplateId(template.getId()));
-		}
-		return templates;
+		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll());
 	}
 
-	public TemplateDto getTemplate(Long id) {
-		return TemplateAssembler.getTemplate(templateDataRepository.findById(id));
+	public TemplateDto getTemplate(long id) {
+		return TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
 	}
 
-	public Template update(Template template) throws ServiceException {
+	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
-			if (template == null) {
+			if (templateDto == null) {
 				throw new ServiceException("Competency Assessment information is not provided.");
 			}
-			ValidationUtil.validate(template);
-			return templateDataRepository.save(template);
+			System.out.println("##### templateDto=" + templateDto);
+			ValidationUtil.validate(templateDto);
+			Template template = TemplateAssembler.getTemplate(templateDto);
+			Template savedTemplate = templateDataRepository.save(template);
+			Long templateId = template.getId();
+			if (templateId == 0) {
+				// Create
+			} else {
+				// Update
+				// Delete the header and details.
+				templateHeaderDataRepository.deleteByTemplateId(templateId);
+			}
 		} catch (Exception exception) {
+			exception.printStackTrace();
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
+		return templateDto;
 	}
 
 	public void delete(Long id) throws ServiceException {

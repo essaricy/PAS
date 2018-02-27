@@ -3,6 +3,7 @@ package com.softvision.ipm.pms.appraisal.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -19,9 +20,9 @@ public class AppraisalPhaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Min(0)
     private long id;
 
-	@NotNull(message="Provide a name for cycle")
 	@NotBlank(message="Provide a name for cycle. It cannot be empty")
 	private String name;
 

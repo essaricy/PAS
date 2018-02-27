@@ -2,11 +2,10 @@ package com.softvision.ipm.pms.template.model;
 
 import java.io.Serializable;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import lombok.Data;
 
@@ -15,22 +14,23 @@ public class TemplateDetailDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Min(0)
 	private long id;
 
+	@Min(value=1, message="Param Id cannot be zero")
 	private long paramId;
 
-	@NotEmpty(message="Provide a name for template detail")
 	@NotBlank(message="Provide a name for template detail")
 	private String paramName;
 
-	@NotNull(message="Provide applicable flag for parameter")
+	@NotBlank(message="Provide applicable flag for parameter")
 	@Pattern(regexp = "Y|N", flags = Pattern.Flag.CASE_INSENSITIVE)
-	private String paramApply;
+	private String apply;
 
 	@Override
 	public String toString() {
-		return "TemplateDetailDto [id=" + id + ", paramId=" + paramId + ", paramName=" + paramName + ", paramApply="
-				+ paramApply + "]";
+		return "TemplateDetailDto [id=" + id + ", paramId=" + paramId + ", paramName=" + paramName + ", apply=" + apply
+				+ "]";
 	}
 
 }

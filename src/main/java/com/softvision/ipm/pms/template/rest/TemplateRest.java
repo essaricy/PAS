@@ -1,11 +1,14 @@
 package com.softvision.ipm.pms.template.rest;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,14 +36,18 @@ public class TemplateRest {
 		return templateService.getTemplate(id);
     }
 
-	@RequestMapping(value="update", method=RequestMethod.POST)
-    public Result update(@RequestBody(required=true) @NotNull TemplateDto template) {
+	@RequestMapping(value="save", method=RequestMethod.POST)
+    public Result save(@RequestBody(required=true) @NotNull TemplateDto template) {
 		Result result = new Result();
 		try {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			// TODO set updatedBy & updatedAt
+			template.setUpdatedBy(auth.getPrincipal().toString());
+			template.setUpdatedAt(new Date());
 			System.out.println("Template= " + template);
-			//TemplateDto updated = templateService.update(template);
+			TemplateDto updated = templateService.update(template);
 			result.setCode(Result.SUCCESS);
-			//result.setContent(updated);
+			result.setContent(updated);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());

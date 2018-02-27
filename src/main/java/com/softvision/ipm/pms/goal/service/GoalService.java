@@ -11,6 +11,7 @@ import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.goal.assembler.GoalAssembler;
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.model.GoalDto;
+import com.softvision.ipm.pms.goal.model.GoalParamDto;
 import com.softvision.ipm.pms.goal.repo.GoalCaDataRepository;
 
 @Service
@@ -21,6 +22,22 @@ public class GoalService {
 
 	public List<GoalDto> getGoals() {
 		return GoalAssembler.getGoals(goalCaDataRepository.findAll());
+	}
+
+	public List<GoalDto> getActiveGoals() {
+		List<GoalDto> goals = getGoals();
+		for (GoalDto goal : goals) {
+			List<GoalParamDto> params = goal.getParams();
+			for (int index = 0; index < params.size(); index++) {
+				GoalParamDto param = params.get(index);
+				String applicable = param.getApplicable();
+				if (applicable == null || !applicable.equalsIgnoreCase("Y")) {
+					params.remove(index);
+					index--;
+				}
+			}
+		}
+		return goals;
 	}
 
 	public GoalDto getGoal(Long id) {

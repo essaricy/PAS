@@ -29,6 +29,11 @@ public class GoalRest {
 		return goalService.getGoals();
     }
 
+	@RequestMapping(value="/apply-list", method=RequestMethod.GET)
+    public @ResponseBody List<GoalDto> getActiveGoals() {
+		return goalService.getActiveGoals();
+    }
+
 	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
     public @ResponseBody GoalDto getGoal(@PathVariable(required=true) @NotNull long id) {
 		return goalService.getGoal(id);

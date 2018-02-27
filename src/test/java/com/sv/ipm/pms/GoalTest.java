@@ -27,15 +27,15 @@ import com.softvision.ipm.pms.goal.service.GoalService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
-public class GoalCaTest {
+public class GoalTest {
 
 	private static final String GOAL_NAME = "goalCa-Test-" + System.currentTimeMillis();
 	private static Long id;
 
 	@Autowired GoalService goalService;
 
-	@Test()
+	@Test
+	@Ignore
 	public void test1_getAll() {
 		System.out.println("test1_getAll");
 		List<GoalDto> goals = goalService.getGoals();
@@ -55,6 +55,27 @@ public class GoalCaTest {
 	}
 
 	@Test
+	public void test5_getActiveGoals() {
+		System.out.println("test5_getActiveGoals");
+		List<GoalDto> goals = goalService.getActiveGoals();
+		System.out.println("goals= " + goals.size());
+		assertNotNull(goals);
+		assertTrue(!goals.isEmpty());
+		GoalDto goalCa = goals.get(0);
+		assertNotNull(goalCa);
+		assertTrue(goalCa.getId() != 0);
+		assertTrue(!StringUtils.isBlank(goalCa.getName()));
+		List<GoalParamDto> goalCaps = goalCa.getParams();
+		assertNotNull(goalCaps);
+		assertTrue(!goalCaps.isEmpty());
+		GoalParamDto goalCap = goalCaps.get(0);
+		assertNotNull(goalCap);
+		assertTrue(goalCap.getId() != 0);
+		assertTrue(!StringUtils.isBlank(goalCap.getName()));
+	}
+
+	@Test
+	@Ignore
 	public void test2_create() throws ServiceException {
 		System.out.println("test2_create");
 		GoalDto goalCa = new GoalDto();
@@ -89,6 +110,7 @@ public class GoalCaTest {
 	}
 
 	@Test
+	@Ignore
 	public void test3_getById() {
 		System.out.println("test3_getById: " + id);
 		GoalDto goalCa = goalService.getGoal(id);
@@ -105,6 +127,7 @@ public class GoalCaTest {
 	}
 
 	@Test
+	@Ignore
 	public void test4_deleteById() throws ServiceException {
 		System.out.println("test4_deleteById: " + id);
 		goalService.delete(id);
