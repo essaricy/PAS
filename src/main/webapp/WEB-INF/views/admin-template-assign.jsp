@@ -21,6 +21,10 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <!-- EasyAutocomplete-1.3.5 -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/easy-autocomplete.min.css"/>
+    <!-- Bootstrap Tagsinput Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -51,96 +55,39 @@
       </div>
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
-          <div class="card">
+          <div class="card template_assign_card">
             <div class="body">
               <div class="row clearfix">
-			    <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                   <label for="Template_Name">Template Name</label>
                 </div>
-                <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 		          <div class="form-group form-float">
 		            <div class="form-line">
-		              <input type="text" id="Template_Name" class="form-control" minlength="3" placeholder="Please enter the name" required autofocus value="Template 1">
+		              <input type="text" id="Template_Name" class="form-control" placeholder="Start enetering template name" required autofocus value="">
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row clearfix">
-                <div class="col-md-3">
-                  <b>Employee Name</b>
-                  <div class="input-group">
-                    <div class="form-line">
-                      <input type="text" class="form-control date" placeholder="Employee First or Last name">
-                    </div>
-                  </div>
+			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+                  <label for="Search_Employees">Select Employees</label>
                 </div>
-                <div class="col-md-3">
-                  <b>Project</b>
-                  <div class="input-group">
-                    <div class="form-line">
-                      <input type="text" class="form-control date" placeholder="Project name">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <b>Designation</b>
-                  <div class="input-group">
-                    <div class="form-line">
-                      <input type="text" class="form-control date" placeholder="Designation">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <b>Band</b>
-                  <div class="input-group">
-                    <div class="form-line">
-                      <input type="text" class="form-control date" placeholder="Band">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+		          <div class="form-group form-float">
+		            <div class="form-line">
+		              <input type="text" id="Search_Employees" class="form-control" placeholder="Start enetering employee name" value="">
                     </div>
                   </div>
                 </div>
               </div>
               <div class="row clearfix">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-24">
-                  <div class="text-right">
-					<button type="button" class="btn btn-primary btn-sm m-l-15 waves-effect">Search</button>
-			      </div>
+			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+                  <label for="Selected_Employees1">Selected Employees</label>
                 </div>
-              </div>
-              <div class="row clearfix">
-                <div class="table-responsive">
-                  <table id="SearchTable" class="table table-bordered table-striped table-hover dataTable">
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Employment Type</th>
-                        <th>Band</th>
-                        <th>Designation</th>
-                        <th>Hired On</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>1111</td>
-						<td>Atul</td>
-						<td>Kumar</td>
-						<td>Regular Employee</td>
-						<td>2Z</td>
-						<td>Software Engineer</td>
-						<td>2015/03/11</td>
-				      </tr>
-                      <tr>
-                        <td>1111</td>
-						<td>Atul</td>
-						<td>Kumar</td>
-						<td>Regular Employee</td>
-						<td>2Z</td>
-						<td>Software Engineer</td>
-						<td>2015/03/11</td>
-				      </tr>
-                    </tbody>
-                  </table>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+		          <ul class="list-group" id="Selected_Employees_List">
+                  </ul>
                 </div>
               </div>
             </div>
@@ -169,12 +116,97 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+<!-- EasyAutocomplete-1.3.5 -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
+<!-- EasyAutocomplete-1.3.5 -->
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
+$(function () {
+  var employeeAssign={};
+  employeeAssign.employeesIds=[];
+  employeeAssign.employeesNames=[];
+
+  $.fn.ajaxGet({
+	  url: '<%=request.getContextPath()%>/appraisal/get/active',
+	  onSuccess: onActiveAvailable,
+	  onError: onError
+  });
+
+   $("#Template_Name").easyAutocomplete({
+	url: function(phrase) {
+	  return "<%=request.getContextPath()%>/template/search/byName/" + phrase;
+	},
+	dataType: "json",
+	getValue: "name",
+	template: {
+	  type: "custom",
+	  method: function(value, item) {
+		return "<b>" + item.name + "</b><small> - Updated By <code>" + item.updatedBy + "</code> on <code>" + item.updatedAt + "</code></small>";
+	  }
+	},
+	list: {
+	  onClickEvent: function() {
+		employeeAssign.templateId=$("#Template_Name").getSelectedItemData().id;
+	  }	
+	}
+  });
+
+  $("#Search_Employees").easyAutocomplete({
+	url: function(phrase) {
+	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
+	},
+	dataType: "json",
+	getValue: function (item) { return item.FirstName + " " + item.LastName},
+	template: {
+	  type: "custom",
+	  method: function(value, item) {
+		return "<b>" + item.FirstName + " " + item.LastName + "</b> [<code>" + item.EmployeeId + "</code>]</small>";
+	  }
+	},
+	list: {
+	  onClickEvent: function() {
+		var data=$("#Search_Employees").getSelectedItemData();
+		//employeeAssign.employeesIds.push(data.id);
+		//employeeAssign.employeesNames.push(data.FirstName + " " + data.LastName);
+		//console.log(employeeAssign.employeesNames);
+
+		//$("input[data-role=tagsinput]").tagsinput('add', data.FirstName + " " + data.LastName);
+		$("#Selected_Employees").tagsinput('add', data.FirstName + " " + data.LastName);
+		/* $("input[data-role=tagsinput]").tagsinput('removeAll');
+		$(employeeAssign.employeesNames).each(function(index, value) {
+			$("input[data-role=tagsinput]").tagsinput('add', value);
+		}); */
+		$('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + data.EmployeeId + '">' + data.FirstName + " " + data.LastName + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="$(this).parent().parent().remove();">clear</i></span></li>');
+		$("#Search_Employees").val('');
+	  }	
+	}
+  });
+
+  $('#Search').click(function() {
+	  console.log(JSON.stringify(employeeAssign.templateId));
+  });
+
+  function onActiveAvailable(result) {
+    if (result== null || result=="" || result=="undefined") {
+	  onError("There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.");
+	  return;
+	}
+	console.log('onActiveAvailable result=' + result);
+  }
+  function onError(error) {
+	console.log('onError error=' + error);
+	$('.template_assign_card .body').empty();
+	$('.template_assign_card .body').append('<p class="font-bold col-pink">' + error + '</p>');
+  }
+});
+
+
 </script>
 </html>

@@ -29,7 +29,7 @@ public class TemplateDetailDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TemplateDetailDto [id=" + id + ", paramId=" + paramId + ", paramName=" + paramName + ", apply=" + apply
+		return "\n\tTemplateDetailDto [id=" + id + ", paramId=" + paramId + ", paramName=" + paramName + ", apply=" + apply
 				+ "]";
 	}
 

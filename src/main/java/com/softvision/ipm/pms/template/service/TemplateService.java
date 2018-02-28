@@ -2,24 +2,32 @@ package com.softvision.ipm.pms.template.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.model.TemplateDto;
+import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
-import com.softvision.ipm.pms.template.repo.TemplateHeaderDataRepository;
+import com.softvision.ipm.pms.template.repo.TemplateRepository;
+import com.softvision.ipm.pms.template.repo.TemplateSpecs;
 
 @Service
 public class TemplateService {
 
 	@Autowired private TemplateDataRepository templateDataRepository;
 
-	@Autowired private TemplateHeaderDataRepository templateHeaderDataRepository;
+	@Autowired private GoalService goalService;
+
+	@Autowired private TemplateRepository templateRepository;
 
 	public List<TemplateDto> getTemplates() {
 		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll());
@@ -29,6 +37,11 @@ public class TemplateService {
 		return TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
 	}
 
+	public TemplateDto getNewTemplate() {
+		return TemplateAssembler.getTemplateDto(goalService.getActiveGoals());
+	}
+
+	@Transactional
 	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
 			if (templateDto == null) {
@@ -36,16 +49,20 @@ public class TemplateService {
 			}
 			System.out.println("##### templateDto=" + templateDto);
 			ValidationUtil.validate(templateDto);
-			Template template = TemplateAssembler.getTemplate(templateDto);
-			Template savedTemplate = templateDataRepository.save(template);
-			Long templateId = template.getId();
-			if (templateId == 0) {
-				// Create
-			} else {
-				// Update
-				// Delete the header and details.
-				templateHeaderDataRepository.deleteByTemplateId(templateId);
+
+			List<TemplateHeaderDto> headers = templateDto.getHeaders();
+			int totalWeightage=0;
+			for (TemplateHeaderDto header : headers) {
+				totalWeightage += header.getWeightage();
 			}
+			if (totalWeightage != 100) {
+				throw new ValidationException("Total Weightage should accumulate to 100%. Its now " + totalWeightage + "%");
+			}
+			// TODO Weightage should not be zero if any apply='Y'.
+			// TODO Weightage should be zero if all apply='N'.
+			Template template = TemplateAssembler.getTemplate(templateDto);
+			templateRepository.save(template);
+			templateDto=TemplateAssembler.getTemplateDto(template);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			String message = ExceptionUtil.getExceptionMessage(exception);
@@ -61,6 +78,13 @@ public class TemplateService {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
+	}
+
+	public List<TemplateDto> searchName(String searchString) {
+		if (searchString != null) {
+			return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
+		}
+		return null;
 	}
 
 }

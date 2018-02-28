@@ -63,6 +63,9 @@ $.fn.ajaxWrapper = function(options) {
       if (options.onSuccess) {
     	options.onSuccess(result);
       }
+      if (options.onError) {
+      	options.onError(result);
+      }
     } else if (options.type == 'POST') {
       if (result != null && result.code != 'SUCCESS') {
  	  	if (options.onFail) {

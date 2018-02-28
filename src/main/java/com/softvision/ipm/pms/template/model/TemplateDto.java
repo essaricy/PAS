@@ -12,6 +12,10 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.softvision.ipm.pms.common.adapter.IndiaDateFormatDeserializer;
+import com.softvision.ipm.pms.common.adapter.IndiaDateFormatSerializer;
 import com.softvision.ipm.pms.common.validator.NotContainNull;
 
 import lombok.Data;
@@ -32,6 +36,8 @@ public class TemplateDto implements Serializable {
 	private String updatedBy;
 
 	@NotNull(message="Provide a updated at for template")
+	@JsonSerialize(using=IndiaDateFormatSerializer.class)
+	@JsonDeserialize(using=IndiaDateFormatDeserializer.class)
 	private Date updatedAt;
 
 	@NotEmpty(message="At least one header must be provided")

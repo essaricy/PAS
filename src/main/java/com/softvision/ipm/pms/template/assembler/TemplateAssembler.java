@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
+import com.softvision.ipm.pms.goal.model.GoalDto;
+import com.softvision.ipm.pms.goal.model.GoalParamDto;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateDetail;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -75,7 +77,7 @@ public class TemplateAssembler {
 			GoalParam goalParam = object.getGoalParam();
 			dto.setParamId(goalParam.getId());
 			dto.setParamName(goalParam.getName());
-			dto.setApply(goalParam.getApply());
+			dto.setApply(object.getApply());
 		}
 		return dto;
 	}
@@ -109,8 +111,8 @@ public class TemplateAssembler {
 			object.setWeightage(dto.getWeightage());
 
 			Goal goalCa = new Goal();
-			goalCa.setId(dto.getId());
-			goalCa.setName(dto.getGoalName());
+			goalCa.setId(dto.getGoalId());
+			//goalCa.setName(dto.getGoalName());
 			object.setGoalCa(goalCa);
 
 			object.setTemplateDetails(getTemplateDetails(dto.getDetails()));
@@ -131,15 +133,36 @@ public class TemplateAssembler {
 		if (dto != null) {
 			object = new TemplateDetail();
 			object.setId(dto.getId());
+			object.setApply(dto.getApply());
 
 			GoalParam goalParam = new GoalParam();
-			goalParam.setId(dto.getId());
-			//goalParam.setName(name);
-			//goalCa.setName(dto.getGoalName());
-			//object.setGoalCa(goalCa);
-			//object.setTemplateDetails(getTemplateDetails(dto.getDetails()));
+			goalParam.setId(dto.getParamId());
+			object.setGoalParam(goalParam);
 		}
 		return object;
+	}
+
+	public static TemplateDto getTemplateDto(List<GoalDto> goals) {
+		TemplateDto templateDto = new TemplateDto();
+		List<TemplateHeaderDto> headers = new ArrayList<>();
+		for (GoalDto goal : goals) {
+			TemplateHeaderDto templateHeaderDto = new TemplateHeaderDto();
+			templateHeaderDto.setGoalId(goal.getId());
+			templateHeaderDto.setGoalName(goal.getName());
+			headers.add(templateHeaderDto);
+
+			List<TemplateDetailDto> details = new ArrayList<>();
+			for (GoalParamDto goalParamDto : goal.getParams()) {
+				TemplateDetailDto templateDetailDto = new TemplateDetailDto();
+				templateDetailDto.setParamId(goalParamDto.getId());
+				templateDetailDto.setParamName(goalParamDto.getName());
+				templateDetailDto.setApply("Y");
+				details.add(templateDetailDto);
+			}
+			templateHeaderDto.setDetails(details);
+		}
+		templateDto.setHeaders(headers);
+		return templateDto;
 	}
 
 }

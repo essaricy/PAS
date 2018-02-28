@@ -76,15 +76,21 @@ public class AppraisalService {
 				throw new ServiceException("Appraisal Cycle is already a DRAFT");
 			} else if (status == AppraisalCycleStatus.ACTIVE) {
 				// Check if any other cycle is active. do not allow otherwise
-				List<AppraisalCycle> all = appraisalCycleDataRepository.findAll();
-				for (AppraisalCycle aCycle : all) {
-					if (aCycle.getId() != id) {
-						AppraisalCycleStatus anExistingStatus = AppraisalCycleStatus.get(aCycle.getStatus());
-						if (anExistingStatus == AppraisalCycleStatus.ACTIVE) {
-							throw new ServiceException("There is already an appraisal cycle ACTIVE. Mark it COMPLETE to activate another appraisal cycle");
-						}
-					}
+				
+				int count= appraisalCycleDataRepository.countOfActive(id);
+				
+				if(count >0){
+					throw new ServiceException("There is already an appraisal cycle ACTIVE. Mark it COMPLETE to activate another appraisal cycle");
 				}
+//				List<AppraisalCycle> all = appraisalCycleDataRepository.findAll();
+//				for (AppraisalCycle aCycle : all) {
+//					if (aCycle.getId() != id) {
+//						AppraisalCycleStatus anExistingStatus = AppraisalCycleStatus.get(aCycle.getStatus());
+//						if (anExistingStatus == AppraisalCycleStatus.ACTIVE) {
+//							throw new ServiceException("There is already an appraisal cycle ACTIVE. Mark it COMPLETE to activate another appraisal cycle");
+//						}
+//					}
+//				}
 				sendActivationEmail=true;
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
 				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE without making it ACTIVE");
@@ -123,6 +129,10 @@ public class AppraisalService {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
+	}
+
+	public AppraisalCycleDto getActiveCycle() {
+		return AppraisalAssembler.getCycle(appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString()));
 	}
 
 }

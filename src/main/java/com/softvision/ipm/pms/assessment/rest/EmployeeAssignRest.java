@@ -1,4 +1,4 @@
-package com.softvision.ipm.pms.template.rest;
+package com.softvision.ipm.pms.assessment.rest;
 
 import java.util.Date;
 import java.util.List;
@@ -16,41 +16,37 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.assessment.model.EmployeeAssignDto;
+import com.softvision.ipm.pms.assessment.service.EmployeeAssignService;
 import com.softvision.ipm.pms.common.model.Result;
-import com.softvision.ipm.pms.template.model.TemplateDto;
-import com.softvision.ipm.pms.template.service.TemplateService;
 
 @RestController
-@RequestMapping(value="template", produces=MediaType.APPLICATION_JSON_VALUE)
-public class TemplateRest {
+@RequestMapping(value="employeeAssign", produces=MediaType.APPLICATION_JSON_VALUE)
+public class EmployeeAssignRest {
 
-	@Autowired private TemplateService templateService;
+	@Autowired private EmployeeAssignService employeeAssignService;
 
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-    public @ResponseBody List<TemplateDto> geTemplates() {
-		return templateService.getTemplates();
+    public @ResponseBody List<EmployeeAssignDto> geTemplates() {
+		return employeeAssignService.getEmployeeAssigns();
     }
 
 	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
-    public @ResponseBody TemplateDto getTemplate(@PathVariable(required=true) @NotNull long id) {
-		return templateService.getTemplate(id);
-    }
-
-	@RequestMapping(value="/list/new", method=RequestMethod.GET)
-    public @ResponseBody TemplateDto getNewTemplate() {
-		return templateService.getNewTemplate();
+    public @ResponseBody EmployeeAssignDto getTemplate(@PathVariable(required=true) @NotNull long id) {
+		return null;
     }
 
 	@RequestMapping(value="save", method=RequestMethod.POST)
-    public Result save(@RequestBody(required=true) @NotNull TemplateDto template) {
+    public Result save(@RequestBody(required=true) @NotNull EmployeeAssignDto employeeAssignDto) {
 		Result result = new Result();
 		try {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			// set updatedBy & updatedAt
-			template.setUpdatedBy(auth.getPrincipal().toString());
-			template.setUpdatedAt(new Date());
-			System.out.println("Template= " + template);
-			TemplateDto updated = templateService.update(template);
+			employeeAssignDto.setAssignedBy(auth.getPrincipal().toString());	
+			employeeAssignDto.setAssignedAt(new Date());
+			
+			//TODO  validation
+			
+			EmployeeAssignDto updated = employeeAssignService.update(employeeAssignDto);
 			result.setCode(Result.SUCCESS);
 			result.setContent(updated);
 		} catch (Exception exception) {
@@ -59,12 +55,6 @@ public class TemplateRest {
 			result.setContent(exception);
 		}
 		return result;
-    }
-
-	@RequestMapping(value="/search/byName/{searchString}", method=RequestMethod.GET)
-	public @ResponseBody List<TemplateDto> search(
-    		@PathVariable(value="searchString", required=true) String searchString) {
-		return templateService.searchName(searchString);
     }
 
 }

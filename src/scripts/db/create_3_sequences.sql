@@ -23,3 +23,7 @@ CREATE SEQUENCE template_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 9
 -- #######################################################
 CREATE SEQUENCE emp_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 9223372036854775807	CACHE 1;
 CREATE SEQUENCE emp_assess_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 9223372036854775807	CACHE 1;
+-- #######################################################
+-- ROle Module
+-- #######################################################
+CREATE SEQUENCE emp_role_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 9223372036854775807	CACHE 1;

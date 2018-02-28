@@ -37,6 +37,30 @@ public class AppraisalRest {
 		return appraisalService.getCycle(id);
     }
 
+	@RequestMapping(value="/get/active", method=RequestMethod.GET)
+    public @ResponseBody AppraisalCycleDto getActiveCycle() {
+		return appraisalService.getActiveCycle();
+    }
+
+	/*@RequestMapping(value="/get/active", method=RequestMethod.GET)
+    public @ResponseBody Result getActiveCycle() {
+		Result result = new Result();
+		try {
+			System.out.println("update dto= ");
+			AppraisalCycleDto activeCycle = appraisalService.getActiveCycle();
+			if (activeCycle == null) {
+				throw new Exception("No Appraisal Cycle is ACTIVE currently.");
+			}
+			result.setCode(Result.SUCCESS);
+			result.setContent(activeCycle);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
+    }*/
+
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull AppraisalCycleDto dto) {
 		Result result = new Result();

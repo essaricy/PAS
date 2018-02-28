@@ -116,23 +116,61 @@ $('.templates_card').cardManager({
   manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
   //deleteUrl: '<%=request.getContextPath()%>/template/delete',
   menuActions: ["Add", "Update"],
-  /* renderConfigs: [
-      { 
-        type: 'collapsed-list',
-        fromNode: 'phases',
-        toContainer: '.template_header_card .body',
-      }
-    ], */
-  afterLoadCallback: function (items, data) {
-    var headerCardBody = $('.template_header_card .body')
-    $(headerCardBody).empty();
-    var ul=$('<ul class="list-group"></ul>');
-    $(headerCardBody).append(ul);
-    $(items).each(function(index, item) {
-      //var ul=$('<ul class="list-group"><a href="#" class="list-group-item" item-id="1" item-name="2017-18">2017-18</a><a href="#" class="list-group-item active" item-id="2" item-name="2018">2018</a></ul>');
-      $(ul).append('<a href="#" class="list-group-item" item-id="' + item.id + '">2017-18</a>');
-    });
-  }
+  onClickCallback: renderTemplateInformation,
 });
+
+var headerCard=$('.template_header_card');
+var detailCard=$('.template_detail_card');
+$(headerCard).hide();
+$(detailCard).hide();
+
+function renderTemplateInformation(template) {
+  console.log(JSON.stringify(template));
+
+  $(detailCard).hide();
+  $(headerCard).show();
+  $(headerCard).find('.header h2').empty();
+  $(headerCard).find('.body').empty();
+
+  $(headerCard).find('.header h2').append(template.name);
+  $(headerCard).find('.header h2').append('<small>Updated By <code>' + template.updatedBy + '</code> on ' + template.updatedAt +'</small>');
+
+  var table=$('<table class="table table-striped">');
+  $(table).append('<thead><tr><th>Competency Assessment</th><th>Weightage</th></tr></thead>');
+  var tbody=$('<tbody>');
+  $(table).append(tbody);
+  $(headerCard).find('.body').append(table);
+
+  $(template.headers).each(function (index, header) {
+	if (header.weightage != 0) {
+	  var row=$('<tr>');
+	  var goalNameTd=$('<td>');
+	  var goalNameLink=$('<a href="#">');
+	  $(goalNameLink).append(header.goalName);
+	  $(goalNameTd).append(goalNameLink);
+	  $(row).append(goalNameTd);
+	  $(row).append('<td><b>' + header.weightage + '%</b></td>');
+      $(tbody).append(row);
+      $(goalNameLink).click(function() {
+    	  $(detailCard).show();
+    	  $(detailCard).find('.header h2').empty();
+    	  $(detailCard).find('.body').empty();
+
+    	  $(detailCard).find('.header h2').append(header.goalName);
+    	  var detailTable=$('<table class="table table-striped">');
+    	  var detailTbody=$('<tbody>');
+    	  $(detailTable).append(detailTbody);
+    	  $(detailCard).find('.body').append(detailTable);
+    	  $(header.details).each(function (index, detail) {
+    		  if (detail.apply=='Y') {
+    		    $(detailTbody).append('<tr><td>' + detail.paramName + '</td><td><div class="switch pull-right"><label><input type="checkbox" disabled checked><span class="lever switch-col-green"></span></label></div></td></tr>');
+    		  } else {
+    		    $(detailTbody).append('<tr><td>' + detail.paramName + '</td><td><div class="switch pull-right"><label><input type="checkbox" disabled><span class="lever switch-col-green"></span></label></div></td></tr>');
+    		  }
+    	  });
+      });
+	}
+  });
+}
 </script>
 </html>
