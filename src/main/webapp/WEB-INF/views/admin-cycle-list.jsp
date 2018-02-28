@@ -1,4 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.softvision.ipm.pms.constant.AppraisalCycleStatus" %>
+
+<c:set var="DRAFT" value="<%=AppraisalCycleStatus.DRAFT%>"/>
+<c:set var="ACTIVE" value="<%=AppraisalCycleStatus.ACTIVE%>"/>
+<c:set var="COMPLETE" value="<%=AppraisalCycleStatus.COMPLETE%>"/>
 
 <!DOCTYPE html>
 <html>
@@ -68,6 +73,10 @@
           <div class="card appr_cycle_card">
             <div class="header">
               <h2>Cycle Information</h2>
+              <ul class="header-dropdown m-r--5">
+                <li class="dropdown">
+                </li>
+              </ul>
             </div>
             <div class="body">
             </div>
@@ -112,62 +121,6 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
 $(function () {
-  <%-- $.fn.ajaxGet({
-	url : '<%=request.getContextPath()%>/appraisal/list',
-	onSuccess: onSuccess,
-	onError: onError
-  });
-  function onSuccess(content) {
-    console.log('onSuccess=' + content);
-    var card = $('.appr_cycles_card');
-    if (content.length == 0) {
-      alert('No Content found.');
-    } else {
-      renderAsList(card, content);
-    }
-  }
-  function onError(error) {
-    console.log('onError=' + error);
-  }
-
-  function renderAsList(container, content) {
-    var cardHeader=$(container).find('.header');
-    var cardBody=$(container).find('.body');
-
-    var listGroup=$('<ul class="list-group">');
-    $(cardBody).append(listGroup);
-
-    $(content).each(function(index, item) {
-      var link=$('<a href="#" class="list-group-item">');
-	  $(listGroup).append(link);
-
-	  $(link).attr('item-id', item['id']);
-  	  $(link).attr('item-name', item['name']);
-  	  //var heading=$('<h4 class="list-group-item-heading">' + item['name'] + '</h4>');
-  	  //$(link).append(heading);
-  	  $(link).append(item['name']);
-
-      /* var table=$('<table class="table">');
-      var tbody=$('<tbody>');
-      $(tbody).append('<tr><td>Start Date</td><td>' + formatDate(item.startDate) + '</td></tr>');
-      $(tbody).append('<tr><td>End Date</td><td>' + formatDate(item.endDate) + '</td></tr>');
-      $(tbody).append('<tr><td>Eligibility Date</td><td>' + formatDate(item.cutoffDate) + '</td></tr>');
-      $(table).append(tbody);
-      $(link).append(table); */
-
-
-      $(link).click(function() {
-        console.log('Link clicked in list. Rendering children');
-        $(this).addClass('active').siblings().removeClass('active');
-        // Show items in child container
-        renderAsTable($('.appr_phases_card'), item.phases);
-      });
-    });
-  }
-  
-  function renderAsTable(container, content) {
-	  
-  } --%>
 });
 $('.appr_cycles_card').cardManager({
   type: 'list-with-links',
@@ -191,12 +144,12 @@ $('.appr_cycles_card').cardManager({
       console.log('item = ' + JSON.stringify(dataItem));
       var status=dataItem.status;
       var class1=null;
-      if (status == 'DRAFT') {
+      if (status == '${DRAFT}') {
       	class1='bg-amber';
-      } else if (status == 'ACTIVE') {
-      	class1='bg-red';
-      } else if (status == 'COMPLETE') {
-      	class1='bg-green';
+      } else if (status == '${ACTIVE}') {
+      	class1='bg-light-blue';
+      } else if (status == '${COMPLETE}') {
+      	class1='bg-grey';
       }
       $(this).append('<span class="badge ' + class1 + '">' + status + '</span>');
     });
@@ -209,11 +162,32 @@ function renderCycleInformation(item) {
   $('.appr_cycle_card .body').empty();
   var table=$('<table class="table">');
   var tbody=$('<tbody>');
-  $(tbody).append('<tr><td>Start Date</td><td>' + formatDate(item.startDate) + '</td></tr>');
-  $(tbody).append('<tr><td>End Date</td><td>' + formatDate(item.endDate) + '</td></tr>');
-  $(tbody).append('<tr><td>Eligibility Date</td><td>' + formatDate(item.cutoffDate) + '</td></tr>');
+  $(tbody).append('<tr><td>Start Date</td><td>' + (item.startDate) + '</td></tr>');
+  $(tbody).append('<tr><td>End Date</td><td>' + (item.endDate) + '</td></tr>');
+  $(tbody).append('<tr><td>Eligibility Date</td><td>' + (item.cutoffDate) + '</td></tr>');
   $(table).append(tbody);
   $('.appr_cycle_card .body').append(table);
+
+  var status=item.status;
+  $('.appr_cycle_card .header .dropdown').empty();
+  if (status == '${DRAFT}') {
+	var button=$('<button type="button" class="activate btn bg-light-blue waves-effect">Activate</button>');
+	$(button).click(function() {activate(item.id) });
+	$('.appr_cycle_card .header .dropdown').append(button);
+  } else if (status == '${ACTIVE}') {
+    var button=$('<button type="button" class="activate btn bg-light-blue waves-effect">Complete</button>');
+	$(button).click(function() {complete(item.id) });
+	$('.appr_cycle_card .header .dropdown').append(button);
+  } else if (status == '${COMPLETE}') {
+  	class1='bg-green';
+  }
+}
+
+function activate(itemId) {
+  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
+}
+function complete(itemId) {
+  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
 }
 
 </script>

@@ -108,13 +108,22 @@
 $('.ca_card').cardManager({
   type: 'list-with-links',
   loadUrl: '<%=request.getContextPath()%>/goal/list',
-  manageUrl: '<%=request.getContextPath()%>/admin/competency/manage',
-  deleteUrl: '<%=request.getContextPath()%>/admin/competency/manage',
+  manageUrl: '<%=request.getContextPath()%>/admin/goal/manage',
+  deleteUrl: '<%=request.getContextPath()%>/admin/goal/manage',
 
   menuActions: ["Add", "Update"],
   renderConfigs: [
-    { type: 'list', fromNode: 'goalCaps', toContainer: '.ca_items_card .body' }
-  ]
+    { type: 'list', fromNode: 'params', toContainer: '.ca_items_card .body' }
+  ],
+  onClickCallback: function (item) {
+    var params=item.params;
+    console.log(item);
+    $(params).each(function(index, param) {
+      if (param.applicable!='Y') {
+        $('.ca_items_card .body ol li[item-id=' + param.id +']').remove();
+      }
+    });
+  }
 });
 </script>
 </html>

@@ -17,7 +17,7 @@ public class NotContainNullValidator implements ConstraintValidator<NotContainNu
     public boolean isValid(Collection<? extends Object> objects, ConstraintValidatorContext context) {
         //return objects.stream().allMatch(nef -> nef!=null);
     	//return objects.stream().filter(p -> p != null).collect(Collectors.toList()).
-    	return objects.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == 0;
+    	return (objects != null) ? objects.stream().filter(Objects::isNull).collect(Collectors.toList()).size() == 0 : true;
     }
 
 }

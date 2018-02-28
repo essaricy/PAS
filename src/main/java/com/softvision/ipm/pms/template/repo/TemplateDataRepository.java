@@ -11,5 +11,5 @@ public interface TemplateDataRepository extends CrudRepository<Template, Long> {
 	List<Template> findAll();
 
 	Template findById(Long id);
-
+	
 }

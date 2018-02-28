@@ -2,7 +2,7 @@ package com.softvision.ipm.pms.common.util;
 
 public class ExceptionUtil {
 
-	public static String getExcceptionMessage(Throwable exception) {
+	public static String getExceptionMessage(Throwable exception) {
 		String message = exception.getMessage();
 		Throwable cause = exception.getCause();
 		System.out.println("Exception Class=" + exception.getClass().getName() + ", message=" + message);
@@ -15,7 +15,7 @@ public class ExceptionUtil {
 				}
 			}
 		} else {
-			return getExcceptionMessage(cause);
+			return getExceptionMessage(cause);
 		}
 		return message;
 	}

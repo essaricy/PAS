@@ -20,10 +20,11 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.softvision.ipm.pms.Application;
-import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
-import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
+import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
 import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.ipm.pms.constant.AppraisalCycleStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
@@ -38,17 +39,17 @@ public class AppraisalCycleTest {
 	@Test()
 	public void test1_getAll() {
 		System.out.println("test1_getAll");
-		List<AppraisalCycle> cycles = appraisalService.getCycles();
+		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
 		assertNotNull(cycles);
 		assertTrue(!cycles.isEmpty());
-		AppraisalCycle cycle = cycles.get(0);
+		AppraisalCycleDto cycle = cycles.get(0);
 		assertNotNull(cycle);
 		assertTrue(cycle.getId() != 0);
 		assertTrue(!StringUtils.isBlank(cycle.getName()));
-		List<AppraisalPhase> phases = cycle.getPhases();
+		List<AppraisalPhaseDto> phases = cycle.getPhases();
 		assertNotNull(phases);
 		assertTrue(!phases.isEmpty());
-		AppraisalPhase phase = phases.get(0);
+		AppraisalPhaseDto phase = phases.get(0);
 		assertNotNull(phase);
 		assertTrue(phase.getId() != 0);
 		assertTrue(!StringUtils.isBlank(phase.getName()));
@@ -58,17 +59,17 @@ public class AppraisalCycleTest {
 	public void test2_create() throws ServiceException {
 		Calendar calendar = Calendar.getInstance();
 		System.out.println("test2_create");
-		AppraisalCycle cycle = new AppraisalCycle();
+		AppraisalCycleDto cycle = new AppraisalCycleDto();
 		cycle.setName(CYCLE_NAME);
-		cycle.setStatus("DRAFT");
+		cycle.setStatus(AppraisalCycleStatus.DRAFT);
 		calendar.add(Calendar.MONTH, -3);
 		cycle.setStartDate(calendar.getTime());
 		calendar.add(Calendar.MONTH, 3);
 		cycle.setEndDate(calendar.getTime());
 		cycle.setCutoffDate(new Date());
 		
-		List<AppraisalPhase> phases = new ArrayList<>();
-		AppraisalPhase phase1 = new AppraisalPhase();
+		List<AppraisalPhaseDto> phases = new ArrayList<>();
+		AppraisalPhaseDto phase1 = new AppraisalPhaseDto();
 		phase1.setName("Phase 1");
 		calendar.add(Calendar.MONTH, -3);
 		phase1.setStartDate(calendar.getTime());
@@ -76,7 +77,7 @@ public class AppraisalCycleTest {
 		phase1.setEndDate(calendar.getTime());
 		phases.add(phase1);
 		
-		AppraisalPhase phase2 = new AppraisalPhase();
+		AppraisalPhaseDto phase2 = new AppraisalPhaseDto();
 		phase2.setName("Phase 2");
 		calendar.add(Calendar.MONTH, 2);
 		phase2.setStartDate(calendar.getTime());
@@ -87,14 +88,14 @@ public class AppraisalCycleTest {
 		cycle.setPhases(phases);
 		System.out.println("cycle to Create: " + cycle);
 
-		AppraisalCycle updated = appraisalService.update(cycle);
+		AppraisalCycleDto updated = appraisalService.update(cycle);
 		System.out.println("Created AppraisalCA=" + updated);
 		assertNotNull(updated);
 		assertTrue(updated.getId()!=0);
 		assertTrue(updated.getName()==CYCLE_NAME);
-		List<AppraisalPhase> updatedAppraisalPhases = updated.getPhases();
+		List<AppraisalPhaseDto> updatedAppraisalPhases = updated.getPhases();
 		assertTrue(updatedAppraisalPhases.size()==2);
-		AppraisalPhase updatedAppraisalPhase = updatedAppraisalPhases.get(0);
+		AppraisalPhaseDto updatedAppraisalPhase = updatedAppraisalPhases.get(0);
 		assertNotNull(updatedAppraisalPhase);
 		assertTrue(updatedAppraisalPhase.getId()!=0);
 		assertTrue(updatedAppraisalPhase.getName()=="Phase 1");
@@ -105,14 +106,14 @@ public class AppraisalCycleTest {
 	@Test
 	public void test3_getById() {
 		System.out.println("test3_getById: " + id);
-		AppraisalCycle goalCa = appraisalService.getCycle(id);
+		AppraisalCycleDto goalCa = appraisalService.getCycle(id);
 		assertNotNull(goalCa);
 		assertTrue(goalCa.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCa.getName()));
-		List<AppraisalPhase> goalCaps = goalCa.getPhases();
+		List<AppraisalPhaseDto> goalCaps = goalCa.getPhases();
 		assertNotNull(goalCaps);
 		assertTrue(!goalCaps.isEmpty());
-		AppraisalPhase goalCap = goalCaps.get(0);
+		AppraisalPhaseDto goalCap = goalCaps.get(0);
 		assertNotNull(goalCap);
 		assertTrue(goalCap.getId() != 0);
 		assertTrue(!StringUtils.isBlank(goalCap.getName()));
@@ -122,7 +123,7 @@ public class AppraisalCycleTest {
 	public void test4_deleteById() throws ServiceException {
 		System.out.println("test4_deleteById: " + id);
 		appraisalService.delete(id);
-		AppraisalCycle goalCa = appraisalService.getCycle(id);
+		AppraisalCycleDto goalCa = appraisalService.getCycle(id);
 		assertNull(goalCa);
 	}
 }

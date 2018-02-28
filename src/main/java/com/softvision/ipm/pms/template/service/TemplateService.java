@@ -8,41 +8,57 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
+import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
+import com.softvision.ipm.pms.template.repo.TemplateHeaderDataRepository;
 
 @Service
 public class TemplateService {
 
-	@Autowired
-	private TemplateDataRepository templateDataRepository;
+	@Autowired private TemplateDataRepository templateDataRepository;
 
-	public List<Template> getTemplates() {
-		return templateDataRepository.findAll();
+	@Autowired private TemplateHeaderDataRepository templateHeaderDataRepository;
+
+	public List<TemplateDto> getTemplates() {
+		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll());
 	}
 
-	public Template getTemplate(Long id) {
-		return templateDataRepository.findById(id);
+	public TemplateDto getTemplate(long id) {
+		return TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
 	}
 
-	public Template update(Template template) throws ServiceException {
+	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
-			if (template == null) {
+			if (templateDto == null) {
 				throw new ServiceException("Competency Assessment information is not provided.");
 			}
-			ValidationUtil.validate(template);
-			return templateDataRepository.save(template);
+			System.out.println("##### templateDto=" + templateDto);
+			ValidationUtil.validate(templateDto);
+			Template template = TemplateAssembler.getTemplate(templateDto);
+			Template savedTemplate = templateDataRepository.save(template);
+			Long templateId = template.getId();
+			if (templateId == 0) {
+				// Create
+			} else {
+				// Update
+				// Delete the header and details.
+				templateHeaderDataRepository.deleteByTemplateId(templateId);
+			}
 		} catch (Exception exception) {
-			String message = ExceptionUtil.getExcceptionMessage(exception);
+			exception.printStackTrace();
+			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
+		return templateDto;
 	}
 
 	public void delete(Long id) throws ServiceException {
 		try {
 			templateDataRepository.delete(id);
 		} catch (Exception exception) {
-			String message = ExceptionUtil.getExcceptionMessage(exception);
+			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
 	}

@@ -1,9 +1,11 @@
+/*(function ( $ ) {
 $('.datepicker').bootstrapMaterialDatePicker({
   format: 'DD/MM/YYYY',
   clearButton: true,
   weekStart: 1,
   time: false
 });
+}( jQuery ));*/
 
 
 function formatDate(date) {
@@ -44,7 +46,7 @@ function setButtonWavesEffect(event) {
     $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
 }
 
-var getJSON = function (url, successCallback, errorCallback) {
+/*var getJSON = function (url, successCallback, errorCallback) {
   $.ajax({
     type: 'GET',
     url: url,
@@ -61,10 +63,10 @@ var getJSON = function (url, successCallback, errorCallback) {
 	  }
  	}
   });
-}
+}*/
 
 
-var postJSON = function (url, data, successCallback, failureCallback, errorCallback) {
+/*var postJSON = function (url, data, successCallback, failureCallback, errorCallback) {
 	sendAjax('POST',url, data, successCallback, failureCallback, errorCallback)
 }
 
@@ -100,4 +102,4 @@ var sendAjax = function (type, url, data, successCallback, failureCallback, erro
 		  }
  	    }
  	  });
-  }
+  }*/

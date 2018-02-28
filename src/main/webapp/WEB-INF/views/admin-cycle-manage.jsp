@@ -15,8 +15,6 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
-    <!-- Animation Css -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
     <!-- Bootstrap Material Datetime Picker Css -->
@@ -24,6 +22,8 @@
     <!-- Bootstrap Select Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css">
 
+    <!-- Animation Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -57,52 +57,65 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
             <div class="header">
-              <h2>Create Appraisal Cycle</h2>
+              <h2>Manage Appraisal Cycle</h2>
             </div>
             <div class="body">
               <form id="Appr_Cycle_Form" method="POST">
                 <h3>Create Cycle</h3>
                 <fieldset>
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                    <label for="Cycle_Name">Cycle Name</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-		            <div class="form-group form-float">
-		              <div class="form-line">
-		                <input type="text" id="Cycle_Name" class="form-control" name="minmaxlength" maxlength="10" minlength="3" required value="2016">
+
+                  <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-control-label">
+                      <label for="Cycle_Name">Cycle Name</label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
+		              <div class="form-group form-float">
+		                <div class="form-line">
+		                  <input type="text" id="Cycle_Name" class="form-control" minlength="3" required autofocus value="2016">
+                        </div>
                       </div>
                     </div>
                   </div>
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                    <label for="Cycle_StartDate">Start Date</label>
+
+                  <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-control-label">
+                      <label for="Cycle_StartDate">Start Date</label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
+		              <div class="form-group form-float">
+		                <div class="form-line">
+		                  <input type="text" id="Cycle_StartDate" name="startDate" class="form-control datepicker" required value="01/01/2016">
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-		            <div class="form-group form-float">
-		              <div class="form-line">
-		                <input type="text" id="Cycle_StartDate" class="form-control datepicker" name="startDate" required value="01/01/2016">
-		              </div>
-		            </div>
+
+                  <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-control-label">
+                      <label for="Cycle_EndDate">End Date</label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
+		              <div class="form-group form-float">
+		                <div class="form-line">
+		                  <input type="text" id="Cycle_EndDate" name="endDate" class="form-control datepicker" required value="31/12/2016">
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                    <label for="Cycle_EndDate">End Date</label>
+
+                  <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 form-control-label">
+                      <label for="Cycle_EligibilityDate">Eligible Before</label>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
+		              <div class="form-group form-float">
+		                <div class="form-line">
+		                  <input type="text" id="Cycle_EligibilityDate" name="eligibilityDate" class="form-control datepicker" required value="30/10/2015">
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-		            <div class="form-group form-float">
-		              <div class="form-line">
-		                <input type="text" id="Cycle_EndDate" class="form-control datepicker" name="endDate" required value="31/12/2016">
-		              </div>
-		            </div>
-                  </div>
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
-                    <label for="Cycle_EligibilityDate">Eligibility Cutoff Date</label>
-                  </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
-		            <div class="form-group form-float">
-		              <div class="form-line">
-		                <input type="text" id="Cycle_EligibilityDate" class="form-control datepicker" name="cutoffDate" required value="30/10/2015" >
-		              </div>
-		            </div>
-                  </div>
+
                 </fieldset>
 
                 <h3>Define Phases</h3>
@@ -110,21 +123,21 @@
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_Name" class="form-control" placeholder="Phase Name" autofocus value="FY">
+                        <input type="text" id="Phase_Name" class="form-control" placeholder="Phase Name" autofocus  value="Q1">
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_StartDate" class="form-control datepicker" placeholder="Start Date" value="01/01/2016">
+                        <input type="text" id="Phase_StartDate" class="form-control datepicker" placeholder="Start Date"  value="01/01/2016">
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_EndDate" class="form-control datepicker" placeholder="End Date" value="31/12/2016" >
+                        <input type="text" id="Phase_EndDate" class="form-control datepicker" placeholder="End Date"  value="31/12/2016">
                       </div>
                     </div>
                   </div>
@@ -159,8 +172,8 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
   <!-- Slimscroll Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/dropzone/dropzone.js"></script>
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/multi-select/js/jquery.multi-select.js"></script>
+  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/dropzone/dropzone.js"></script>
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/multi-select/js/jquery.multi-select.js"></script> --%>
 
 
   <!-- Waves Effect Plugin Js -->
@@ -183,6 +196,7 @@
   <!-- Custom Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
   <!-- <script src="AdminBSBMaterialDesign/js/pages/forms/basic-form-elements.js"></script> -->
   <!-- Demo Js -->
@@ -200,23 +214,23 @@
     	apprCycle.id=id;
     	apprCycle.name=$('#Cycle_Name').val();
     	apprCycle.status='DRAFT';
-    	apprCycle.startDate=moment($('#Cycle_StartDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-    	apprCycle.endDate=moment($('#Cycle_EndDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-    	apprCycle.cutoffDate=moment($('#Cycle_EligibilityDate').val(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+    	apprCycle.startDate=$('#Cycle_StartDate').val();
+    	apprCycle.endDate=$('#Cycle_EndDate').val();
+    	apprCycle.cutoffDate=$('#Cycle_EligibilityDate').val();
     	
 		$('#Phase_Table > tbody tr').each(function(index, row) {
 			var $tds = $(this).find('td')
 			console.log('index : ' + index);
 			var phase={};
+			phase.id=$tds.eq(0).attr('item-id');
 			phase.name=$tds.eq(0).text();
-			phase.startDate=moment($tds.eq(1).text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
-			phase.endDate=moment($tds.eq(2).text(), 'DD/MM/YYYY').format('YYYY-MM-DD');
+			phase.startDate=$tds.eq(1).text();
+			phase.endDate=$tds.eq(2).text();
 			phases[phases.length]=phase;
 		});
     	apprCycle.phases=phases;
-        console.log('serailize form : ' + JSON.stringify(apprCycle));
-        postJSON("<%=request.getContextPath()%>/appraisal/update", apprCycle, null, null, null);
-      }
+    	$.fn.postJSON({url : '<%=request.getContextPath()%>/appraisal/update', data: apprCycle});
+      },
 	});
 
     if (id != 0) {
@@ -230,12 +244,14 @@
           $('#Cycle_StartDate').val(result.startDate);
           $('#Cycle_EndDate').val(result.endDate);
           $('#Cycle_EligibilityDate').val(result.cutoffDate);
-	      $(result.appraisalPhases).each(function(index, phase) {
+	      $(result.phases).each(function(index, phase) {
 	    	  appendRow(table, phase);
 	      });
        	}
       });
     }
+
+    $('.datepicker').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY', clearButton: true, weekStart: 1, time: false });
 
 	$('#Phase_Add').click(function() {
 	  console.log('clicked CompetencyParam_Add');
@@ -258,7 +274,7 @@
         + '>' + phase.name + '</td>');
       $(row).append('<td>' + phase.startDate + '</td>');
       $(row).append('<td>' + phase.endDate + '</td>');
-      $(tableSelector).find('tbody:last-child').append(row);
+      $(''+tableSelector).find('tbody:last-child').append(row);
    	}
 
 	$('#Cycle_StartDate').change(function(e, date) {

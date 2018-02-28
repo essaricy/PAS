@@ -103,7 +103,7 @@
       } else if (listingType==null) {
         var ol=$("<ol>");
         $(data).each(function (index, item) {
-          $(ol).append('<li item-id="' + item.id + ' item-name="' + item.name + '">' + item.name + '</li>');
+          $(ol).append('<li item-id="' + item.id + '" item-name="' + item.name + '">' + item.name + '</li>');
         });
         $(container).append(ol);
       }
@@ -173,7 +173,6 @@
         $(obj).find('.header .header-dropdown .dropdown').append(a);
         $(obj).find('.header .header-dropdown .dropdown').append(actionsMenu);
 
-        console.log("$.inArray(Add, menuActions)?" + $.inArray("Add", menuActions))
         if ($.inArray("Add", menuActions) > -1) {
           createAddMenuAction(actionsMenu, settings.manageUrl)
         }
@@ -224,20 +223,7 @@
         	  showCancelButton: true, confirmButtonColor: "#DD6B55",
         	  confirmButtonText: "Yes, delete it!", closeOnConfirm: false
         	}, function () {
-        		ajaxDelete(deleteUrl + "/" + itemId, null, function() {
-        		  swal({ title: "Deleted!", text: "Deleted successfully.", type: "success"}, function () {location.reload();});
-        	  }, null, null);
-
-        	  /*$.get(deleteUrl + "/" + itemId, {sid: new Date().getTime()}, function() {})
-        	  .done(function(result) {
-        		swal({ title: "Deleted!", text: "Deleted successfully.", type: "success"},
-        		function () {
-        		  location.reload();
-        		});
-        	  }).fail(function(result) {
-        		swal("Failed!", "Errors occured while deleting", "error");
-        	  }).always(function(result) {
-        	  });*/
+              $.fn.ajaxDelete({url:deleteUrl + "/" + itemId});
             }
           );
         }

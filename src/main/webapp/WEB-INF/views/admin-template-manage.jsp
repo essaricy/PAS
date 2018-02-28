@@ -58,8 +58,8 @@
               <h2>Template</h2>
             </div>
             <div class="body">
-              <form id="Appr_Cycle_Form" method="POST">
-                <h3>Details</h3>
+              <form id="Template_Form" method="POST">
+                <h3>Template Information</h3>
                 <fieldset style="margin-top: 90px;">
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
                     <label for="Template_Name">Template Name</label>
@@ -73,14 +73,14 @@
                   </div>
                 </fieldset>
 
-                <h3>Competency Assessment</h3>
+                <h3>Choose Assessments & Parameters</h3>
                 <fieldset>
                   <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12" style="padding:0px">
-	                <div class="panel-group" id="accordion_1" role="tablist" aria-multiselectable="true">
+	                <div class="panel-group" id="Goals_Accordion" role="tablist" aria-multiselectable="true">
 	                  <div class="panel">
 	                    <div class="panel-heading" role="tab" id="heading_1">
 	                      <h4 class="panel-title">
-	                        <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
+	                        <a role="button" data-toggle="collapse" data-parent="#Goals_Accordion" href="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
 	                          Client Orientation/Customer Focus
 	                        </a>
 	                      </h4>
@@ -113,7 +113,7 @@
 	                  <div class="panel">
 	                    <div class="panel-heading" role="tab" id="heading_2">
 	                      <h4 class="panel-title">
-	                        <a role="button" data-toggle="collapse" data-parent="#accordion_1" href="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
+	                        <a role="button" data-toggle="collapse" data-parent="#Goals_Accordion" href="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
 	                          Project Management
 	                        </a>
 	                      </h4>
@@ -170,9 +170,6 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
   <!-- Slimscroll Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/dropzone/dropzone.js"></script>
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/multi-select/js/jquery.multi-select.js"></script>
-
 
   <!-- Waves Effect Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
@@ -193,94 +190,118 @@
 
   <!-- Custom Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
-  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/forms/basic-form-elements.js"></script> --%>
-  <!-- Demo Js -->
-  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>  --%>
 
   <script>
+  var template={};
+
   $(function () {
-	var table = '#AppraisalPhase_Table';
 	var id="${param.id}";
 
-	$('#Appr_Cycle_Form').formValidator({
+	template.id=id;
+	template.headers=[];
+
+	$('#Template_Form').formValidator({
       onFinishing: function () {
-    	var apprCycle={};
-    	var phases=[];
-    	apprCycle.name=$('#Template_Name').val();
-    	apprCycle.startDate=$('#AppraisalCycle_StartDate').val();
-    	apprCycle.endDate=$('#AppraisalCycle_EndDate').val();
-    	apprCycle.cutoffDate=$('#AppraisalCycle_EligibilityDate').val();
-    	
-		$('#AppraisalPhase_Table > tbody tr').each(function(index, row) {
-			var $tds = $(this).find('td')
-			console.log('index : ' + index);
-			var phase={};
-			phase.name=$tds.eq(0).text();
-			phase.startDate=$tds.eq(1).text();
-			phase.endDate=$tds.eq(2).text();
-			phases[phases.length]=phase;
-		});
-    	apprCycle.phases=phases;
-
-        console.log('serailize form : ' + JSON.stringify(apprCycle));
+    	console.log('template=' + JSON.stringify(template));
+    	$.fn.postJSON({url : '<%=request.getContextPath()%>/template/save', data: template});
       },
-      onFinished: function() {
-    	  alert('show result based on rest response');
-      }
 	});
 
+	$.fn.ajaxGet({
+	  url: '<%=request.getContextPath()%>/goal/apply-list',
+	  onSuccess: renderGoals,
+	  onFail: onLoadError,
+	  onError: onLoadError
+	});
+
+	// Load all the goals with parameters
     if (id != 0) {
-      var url = '<%=request.getContextPath()%>/appriasal/list/' + id;
-
-      $.get(url, {sid: new Date().getTime()}, function() {})
-      .done(function(result) {
-        if (result) {
-          console.log(JSON.stringify(result));
-          $('#Template_Name').val(result.name);
-          $('#AppraisalCycle_StartDate').val(result.startDate);
-          $('#AppraisalCycle_EndDate').val(result.endDate);
-          $('#AppraisalCycle_EligibilityDate').val(result.cutoffDate);
-	      $(result.appraisalPhases).each(function(index, phase) {
-	    	  appendRow(table, phase);
-	      });
-       	}
-      });
+		// Select and deselect based on the goal parameters
     }
-
-	$('#AppraisalPhase_Add').click(function() {
-	  console.log('clicked CompetencyParam_Add');
-	  // Validate the input fields
-	  appendRow(table, {id:0, name: $('#AppraisalPhase_Name').val(),
-		  startDate: $('#AppraisalPhase_StartDate').val(), endDate: $('#AppraisalPhase_EndDate').val()});
-
-   	  $('#AppraisalPhase_Name').val('');
-   	  $('#AppraisalPhase_StartDate').val('');
-   	  $('#AppraisalPhase_EndDate').val('');
-	});
-
-    function appendRow(tableSelector, phase) {
-   	  console.log('phase=' + JSON.stringify(phase));
-   	  var row=$('<tr>');
-      $(row).append('<td item-id=' + phase.id
-        + ' item-name=' + phase.name
-        + ' item-startDate=' + phase.startDate
-        + ' item-endDate=' + phase.endDate
-        + '>' + phase.name + '</td>');
-      $(row).append('<td>' + phase.startDate + '</td>');
-      $(row).append('<td>' + phase.endDate + '</td>');
-      $(tableSelector).find('tbody:last-child').append(row);
-   	}
-
-	$('#AppraisalCycle_StartDate').change(function(e, date) {
-	  $('#AppraisalCycle_EndDate').bootstrapMaterialDatePicker('setMinDate', moment(date).add(1, 'day'));
-	  $('#AppraisalCycle_EligibilityDate').bootstrapMaterialDatePicker('setMaxDate', moment(date).subtract(1, 'day'));
-	});
-
-    $('#AppraisalPhase_StartDate').change(function(e, date) {
-      $('#AppraisalPhase_EndDate').bootstrapMaterialDatePicker('setMinDate', moment(date).add(1, 'day'));
-	});
   });
+
+  function renderGoals(result) {
+	//console.log('result=' + JSON.stringify(result));
+	var Goals_Accordion = $('#Goals_Accordion');
+	$(Goals_Accordion).empty();
+
+	$(result).each(function (index, goal) {
+	  var headingId='heading_' + goal.id
+	  var collapseId='collapse_' + goal.id
+      var panel=$('<div class="panel">');
+
+	  var heading=$('<div class="panel-heading" role="tab" id="' + headingId + '">');
+      var title=$('<h4 class="panel-title">'
+		+ '<a role="button" data-toggle="collapse" data-parent="#Goals_Accordion" href="#' + collapseId + '" aria-expanded="true" aria-controls="' + collapseId + '">'
+		+ goal.name
+		+ '</a>');
+	  $(heading).append(title);
+
+	  var collapse=$('<div id="' + collapseId + '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="' + headingId + '">');
+	  var panelBody=$('<div class="panel-body">');
+	  var table=$('<table class="table table-striped table-hover">');
+	  var tbody=$('<tbody>');
+	  $(goal.params).each(function (jindex, param) {
+        var tr=$('<tr>');
+        $(tr).append('<td>' + param.name + '</td>');
+	    var checkbox=$('<input type="checkbox" checked>');
+	    var span=$('<span class="lever switch-col-green">');
+	    var label=$('<label>');
+	    var switchDiv=$('<div class="switch pull-right">');
+	    var switchTd=$('<td>');
+        $(label).append(checkbox);
+	    $(label).append(span);
+        $(switchDiv).append(label);
+        $(switchTd).append(switchDiv);
+        $(tr).append(switchTd);
+	    $(tbody).append(tr);
+	    $(checkbox).click(function() {
+	      var checked=$(this).is(':checked');
+	        $(template.headers).each(function (aindex, header) {
+	    	  $(header.details).each(function (aindex, detail) {
+	    	    if (detail.paramId == param.id) {
+	    		  detail.apply=(checked)?"Y":"N";
+	    		}
+	    	  });
+	    	});
+	      });
+	  });
+
+	  $(table).append(tbody);
+	  $(panelBody).append(table);
+	  $(collapse).append(panelBody);
+
+	  $(panel).append(heading);
+	  $(panel).append(collapse);
+
+	  $(Goals_Accordion).append(panel);
+
+      // Model creation
+      var templateHeader={};
+      templateHeader.id=0; // TODO: change for updated one
+      templateHeader.goalId=goal.id;
+      templateHeader.goalName=goal.name;
+      templateHeader.weightage=0; // TODO: change for updated one
+      templateHeader.details=[];
+	  template.headers[template.headers.length]=templateHeader;
+
+	  $(goal.params).each(function (jindex, param) {
+		  var templateDetail={};
+		  templateDetail.id=0; // TODO: change for updated one
+		  templateDetail.paramId=param.id;
+		  templateDetail.paramName=param.name;
+		  templateDetail.apply=param.applicable; // TODO: change for updated one
+		  templateHeader.details[templateHeader.details.length]=templateDetail;
+	  });
+	});
+	//console.log('template=' + JSON.stringify(template));
+  }
+
+  function onLoadError(error) {
+	console.log('error=' + JSON.stringify(error));
+  }
 
   </script>
 
