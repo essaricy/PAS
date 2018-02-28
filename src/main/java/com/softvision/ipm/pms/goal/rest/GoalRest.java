@@ -21,17 +21,11 @@ import com.softvision.ipm.pms.goal.service.GoalService;
 @RequestMapping(value="goal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class GoalRest {
 
-	@Autowired
-	private GoalService goalService;
+	@Autowired private GoalService goalService;
 
 	@RequestMapping(value="/list", method=RequestMethod.GET)
     public @ResponseBody List<GoalDto> getGoals() {
 		return goalService.getGoals();
-    }
-
-	@RequestMapping(value="/apply-list", method=RequestMethod.GET)
-    public @ResponseBody List<GoalDto> getActiveGoals() {
-		return goalService.getActiveGoals();
     }
 
 	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)

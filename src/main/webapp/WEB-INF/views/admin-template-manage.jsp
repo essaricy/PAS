@@ -17,6 +17,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
     <!-- Animation Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
+    <!-- Sweetalert Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
     <!-- Bootstrap Material Datetime Picker Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css"/>
     <!-- Bootstrap Select Css -->
@@ -77,80 +79,6 @@
                 <fieldset>
                   <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12" style="padding:0px">
 	                <div class="panel-group" id="Goals_Accordion" role="tablist" aria-multiselectable="true">
-	                  <div class="panel">
-	                    <div class="panel-heading" role="tab" id="heading_1">
-	                      <h4 class="panel-title">
-	                        <a role="button" data-toggle="collapse" data-parent="#Goals_Accordion" href="#collapse_1" aria-expanded="true" aria-controls="collapse_1">
-	                          Client Orientation/Customer Focus
-	                        </a>
-	                      </h4>
-	                    </div>
-	                    <div id="collapse_1" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_1">
-	                      <div class="panel-body">
-	                        <table class="table table-striped table-hover">
-	                          <tbody>
-	                            <tr>
-	                              <td width="90%">Establishes and maintains effective relationship with both internal and external customers and gains their trust</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Understands and Proactively addresses customer needs in a timely manner by following the Client/Softvision Process</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Knowledge of Softvision and Customer processes (software development processes)</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Number of customer accolades</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                          </tbody>
-	                        </table>
-	                      </div>
-	                    </div>
-	                  </div>
-	                  <div class="panel">
-	                    <div class="panel-heading" role="tab" id="heading_2">
-	                      <h4 class="panel-title">
-	                        <a role="button" data-toggle="collapse" data-parent="#Goals_Accordion" href="#collapse_2" aria-expanded="true" aria-controls="collapse_2">
-	                          Project Management
-	                        </a>
-	                      </h4>
-	                    </div>
-	                    <div id="collapse_2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading_2">
-	                      <div class="panel-body">
-	                        <table class="table table-striped table-hover">
-	                          <tbody>
-	                            <tr>
-	                              <td width="90%">Ability to identify, plan, procure and utilize resources within the scope of the project</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Ability to identify, mitigate and manage risks in the project. a) Planning and Control b) Resource Management</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Knowledge of Softvision and Customer processes (software development processes)</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Knowledge of PM basics like Initiation, Planning, Monitoring, Negotiation skills, budgeting,Tracking and Closure</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Concepts and application of PM disciplines like estimation, scope, time, cost and risk mgmt</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                            <tr>
-	                              <td width="90%">Application of Softvision PM Process and Client PM Process</td>
-	                              <td width="10%"><div class="switch pull-right"><label><input type="checkbox" checked><span class="lever switch-col-green"></span></label></div></td>
-	                            </tr>
-	                          </tbody>
-	                        </table>
-	                      </div>
-	                    </div>
-	                  </div>
 	                </div>
 	              </div>
                 </fieldset>
@@ -204,23 +132,54 @@
 
 	$('#Template_Form').formValidator({
       onFinishing: function () {
+    	template.name=$('#Template_Name').val();
+    	$('.weightage').each(function(index, weightage) {
+    		template.headers[index].weightage=$(this).val();
+    	});
     	console.log('template=' + JSON.stringify(template));
     	$.fn.postJSON({url : '<%=request.getContextPath()%>/template/save', data: template});
       },
 	});
 
-	$.fn.ajaxGet({
-	  url: '<%=request.getContextPath()%>/goal/apply-list',
-	  onSuccess: renderGoals,
-	  onFail: onLoadError,
-	  onError: onLoadError
-	});
-
 	// Load all the goals with parameters
-    if (id != 0) {
-		// Select and deselect based on the goal parameters
+    if (id == 0) {
+      $.fn.ajaxGet({
+	    url: '<%=request.getContextPath()%>/template/list/new',
+	    onSuccess: createNewModel,
+	    onFail: onLoadError,
+	    onError: onLoadError
+	  });
+	  // Select and deselect based on the goal parameters
+    } else {
+   	  $.fn.ajaxGet({
+        url: '<%=request.getContextPath()%>/template/list/'+id,
+    	onSuccess: createNewModel,
+    	onFail: onLoadError,
+    	onError: onLoadError
+      });
     }
   });
+
+  function createNewModel(result) {
+	$(result).each(function (index, goal) {
+      // Model creation
+      var templateHeader={};
+      templateHeader.id=0; // TODO: change for updated one
+      templateHeader.goalId=goal.id;
+      templateHeader.goalName=goal.name;
+      templateHeader.weightage=0; // TODO: change for updated one
+      templateHeader.details=[];
+	  template.headers[template.headers.length]=templateHeader;
+	  $(goal.params).each(function (jindex, param) {
+		var templateDetail={};
+		templateDetail.id=0; // TODO: change for updated one
+		templateDetail.paramId=param.id;
+		templateDetail.paramName=param.name;
+		templateDetail.apply='Y'; // TODO: change for updated one
+		templateHeader.details[templateHeader.details.length]=templateDetail;
+	  });
+	});
+  }
 
   function renderGoals(result) {
 	//console.log('result=' + JSON.stringify(result));
@@ -239,8 +198,9 @@
 		+ '</a>');
 	  $(heading).append(title);
 
-	  var collapse=$('<div id="' + collapseId + '" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="' + headingId + '">');
+	  var collapse=$('<div id="' + collapseId + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="' + headingId + '">');
 	  var panelBody=$('<div class="panel-body">');
+	  $(panelBody).append('<div class="row clearfix"><div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 form-control-label"><label for="Weightage' +goal.id + '">Weightage</label></div><div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 col-xs-2"><div class="form-group form-float"><div class="form-line"><input type="number" id="Weightage' + goal.id + '" class="form-control weightage" name="weightage" value="' + goal.id + '" required></div></div></div></div>');
 	  var table=$('<table class="table table-striped table-hover">');
 	  var tbody=$('<tbody>');
 	  $(goal.params).each(function (jindex, param) {

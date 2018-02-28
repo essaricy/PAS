@@ -30,7 +30,7 @@ public class TemplateHeaderDto implements Serializable {
 	@NotBlank(message="Provide a name for template header")
 	private String goalName;
 
-	@Min(value=1, message="weightage must be greater than or equal to 1")
+	@Min(value=0, message="weightage must be greater than or equal to 0")
 	@Max(value=100, message="weightage must be less than or equal to 100")
 	private int weightage;
 
@@ -41,7 +41,7 @@ public class TemplateHeaderDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TemplateHeaderDto [id=" + id + ", goalId=" + goalId + ", goalName=" + goalName + ", weightage="
+		return "\nTemplateHeaderDto [id=" + id + ", goalId=" + goalId + ", goalName=" + goalName + ", weightage="
 				+ weightage + ", details=" + details + "]";
 	}
 

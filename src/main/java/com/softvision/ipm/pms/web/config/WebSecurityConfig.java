@@ -8,15 +8,15 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
+import com.softvision.ipm.pms.acl.service.TestAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
-	//private TestAuthenticationProvider authenticationProvider;
-	private SVAuthenticationProvider authenticationProvider;
+	private TestAuthenticationProvider authenticationProvider;
+	//private SVAuthenticationProvider authenticationProvider;
 
 	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

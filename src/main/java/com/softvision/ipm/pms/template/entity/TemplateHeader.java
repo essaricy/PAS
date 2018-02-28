@@ -35,7 +35,7 @@ public class TemplateHeader implements Serializable {
 	private int weightage;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.DETACH, orphanRemoval=true)
-	@JoinColumn(name = "ca_id", nullable = false)
+	@JoinColumn(name = "ca_id", nullable = false, updatable=false, insertable=false)
 	private Goal goalCa;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
@@ -45,7 +45,7 @@ public class TemplateHeader implements Serializable {
 
 	@Override
 	public String toString() {
-		return "TemplateHeader [id=" + id + ", weightage=" + weightage + ", goalCa=" + goalCa + ", templateDetails="
+		return "\nTemplateHeader [id=" + id + ", weightage=" + weightage + ", goalCa=" + goalCa + ", templateDetails="
 				+ templateDetails + "]";
 	}
 

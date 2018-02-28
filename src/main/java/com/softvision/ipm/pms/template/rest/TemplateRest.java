@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.goal.model.GoalDto;
+import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.service.TemplateService;
 
@@ -26,6 +28,8 @@ public class TemplateRest {
 
 	@Autowired private TemplateService templateService;
 
+	@Autowired private GoalService goalService;
+
 	@RequestMapping(value="/list", method=RequestMethod.GET)
     public @ResponseBody List<TemplateDto> geTemplates() {
 		return templateService.getTemplates();
@@ -34,6 +38,11 @@ public class TemplateRest {
 	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
     public @ResponseBody TemplateDto getTemplate(@PathVariable(required=true) @NotNull long id) {
 		return templateService.getTemplate(id);
+    }
+
+	@RequestMapping(value="/list/new", method=RequestMethod.GET)
+    public @ResponseBody List<GoalDto> getActiveGoals() {
+		return goalService.getActiveGoals();
     }
 
 	@RequestMapping(value="save", method=RequestMethod.POST)

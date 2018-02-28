@@ -109,8 +109,8 @@ public class TemplateAssembler {
 			object.setWeightage(dto.getWeightage());
 
 			Goal goalCa = new Goal();
-			goalCa.setId(dto.getId());
-			goalCa.setName(dto.getGoalName());
+			goalCa.setId(dto.getGoalId());
+			//goalCa.setName(dto.getGoalName());
 			object.setGoalCa(goalCa);
 
 			object.setTemplateDetails(getTemplateDetails(dto.getDetails()));
@@ -131,9 +131,11 @@ public class TemplateAssembler {
 		if (dto != null) {
 			object = new TemplateDetail();
 			object.setId(dto.getId());
+			object.setApply(dto.getApply());
 
 			GoalParam goalParam = new GoalParam();
-			goalParam.setId(dto.getId());
+			goalParam.setId(dto.getParamId());
+			object.setGoalParam(goalParam);
 			//goalParam.setName(name);
 			//goalCa.setName(dto.getGoalName());
 			//object.setGoalCa(goalCa);
