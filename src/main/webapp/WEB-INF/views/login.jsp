@@ -40,7 +40,7 @@
                 <i class="material-icons">person</i>
               </span>
               <div class="form-line">
-                <input type="text" class="form-control" name="username" placeholder="Username" required autofocus value="srikanth.kumar">
+                <input type="text" class="form-control" name="username" placeholder="Username" required autofocus value="mallikarjun.gongati">
               </div>
             </div>
             <div class="input-group">
