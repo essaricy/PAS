@@ -61,7 +61,7 @@
 			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                   <label for="Template_Name">Template Name</label>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 		          <div class="form-group form-float">
 		            <div class="form-line">
 		              <input type="text" id="Template_Name" class="form-control" placeholder="Start enetering template name" required autofocus value="">
@@ -73,7 +73,7 @@
 			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                   <label for="Search_Employees">Select Employees</label>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 		          <div class="form-group form-float">
 		            <div class="form-line">
 		              <input type="text" id="Search_Employees" class="form-control" placeholder="Start enetering employee name" value="">
@@ -83,11 +83,22 @@
               </div>
               <div class="row clearfix">
 			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
-                  <label for="Selected_Employees1">Selected Employees</label>
+                  <label for="Selected_Employees_List">Selected Employees</label>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 		          <ul class="list-group" id="Selected_Employees_List">
                   </ul>
+                </div>
+              </div>
+              <div class="row clearfix">
+			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		          <button id="Assign_Button" name="assign" class="btn btn-primary center-block">Assign</button>
+                </div>
+              </div>
+              <div class="row clearfix">
+                <ul class="list-group" id="Assignment_Results">
+                </ul>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 results_container">
                 </div>
               </div>
             </div>
@@ -128,15 +139,19 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
-$(function () {
-  var employeeAssign={};
-  employeeAssign.employeesIds=[];
-  employeeAssign.employeesNames=[];
+var bulkAssignment={};
+/* bulkAssignment.templateId=4;
+bulkAssignment.cycleId=11;
+bulkAssignment.employeeIds=[1136,2388,2006]; */
+bulkAssignment.templateId=0;
+bulkAssignment.cycleId=0;
+bulkAssignment.employeeIds=[];
 
+$(function () {
   $.fn.ajaxGet({
-	  url: '<%=request.getContextPath()%>/appraisal/get/active',
-	  onSuccess: onActiveAvailable,
-	  onError: onError
+	url: '<%=request.getContextPath()%>/appraisal/get/active',
+	onSuccess: onActiveAvailable,
+	onError: onError
   });
 
    $("#Template_Name").easyAutocomplete({
@@ -153,7 +168,7 @@ $(function () {
 	},
 	list: {
 	  onClickEvent: function() {
-		employeeAssign.templateId=$("#Template_Name").getSelectedItemData().id;
+		bulkAssignment.templateId=$("#Template_Name").getSelectedItemData().id;
 	  }	
 	}
   });
@@ -173,24 +188,44 @@ $(function () {
 	list: {
 	  onClickEvent: function() {
 		var data=$("#Search_Employees").getSelectedItemData();
-		//employeeAssign.employeesIds.push(data.id);
-		//employeeAssign.employeesNames.push(data.FirstName + " " + data.LastName);
-		//console.log(employeeAssign.employeesNames);
+		var itemId=data.EmployeeId;
+		var itemValue=data.FirstName + " " + data.LastName;
 
-		//$("input[data-role=tagsinput]").tagsinput('add', data.FirstName + " " + data.LastName);
-		$("#Selected_Employees").tagsinput('add', data.FirstName + " " + data.LastName);
-		/* $("input[data-role=tagsinput]").tagsinput('removeAll');
-		$(employeeAssign.employeesNames).each(function(index, value) {
-			$("input[data-role=tagsinput]").tagsinput('add', value);
-		}); */
-		$('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + data.EmployeeId + '">' + data.FirstName + " " + data.LastName + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="$(this).parent().parent().remove();">clear</i></span></li>');
+		if(!$('#Selected_Employees_List li:contains("' + itemValue + '")').length) {
+ 		  // Insert your new li
+ 		  bulkAssignment.employeeIds.push(itemId);
+ 		 $('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + itemId + '">' + itemValue + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="javascript: removeDataItem(this, ' + itemId + ');">clear</i></span></li>');
+		}
 		$("#Search_Employees").val('');
 	  }	
 	}
   });
 
-  $('#Search').click(function() {
-	  console.log(JSON.stringify(employeeAssign.templateId));
+  $('#Assign_Button').click(function() {
+	if (bulkAssignment.templateId == 0) {
+	  swal({title: "Missing Information", text: "Please select a template", type: "warning"});
+    } else if (bulkAssignment.employeeIds.length == 0) {
+	  swal({title: "Missing Information", text: "Please select at least an employee to assign", type: "warning"});
+    } else {
+      console.log(JSON.stringify(bulkAssignment));
+	  $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+		onSuccess: function(result) {
+		  console.log('result=' + result);
+		  var results_container=$('#Assignment_Results');
+		  $(results_container).empty();
+		  $(result).each(function(index, aResult) {
+			if (aResult.code=='SUCCESS') {
+			  $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+			} else {
+			  $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+			}
+		  });
+		},
+		onFail: function(message, content) {
+		  console.log('message=' + message);			
+		}
+	  });
+    }
   });
 
   function onActiveAvailable(result) {
@@ -198,6 +233,7 @@ $(function () {
 	  onError("There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.");
 	  return;
 	}
+    bulkAssignment.cycleId=result.id;
 	console.log('onActiveAvailable result=' + result);
   }
   function onError(error) {
@@ -207,6 +243,11 @@ $(function () {
   }
 });
 
+function removeDataItem(item, itemId) {
+  console.log('itemId=' + itemId);
+  $(item).parent().parent().remove();
+  bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
+}
 
 </script>
 </html>

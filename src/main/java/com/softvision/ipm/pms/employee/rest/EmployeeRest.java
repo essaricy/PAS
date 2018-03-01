@@ -27,7 +27,7 @@ public class EmployeeRest {
 
 	@RequestMapping(value="/search/byId/{employeeId}", method=RequestMethod.GET)
     public @ResponseBody Employee getEmployee(
-    		@PathVariable(value="employeeId", required=true) Long employeeId) {
+    		@PathVariable(value="employeeId", required=true) int employeeId) {
 		return employeeService.getEmployee(employeeId);
     }
 
@@ -41,6 +41,12 @@ public class EmployeeRest {
     public @ResponseBody List<Employee> search(
     		@PathVariable(value="searchString", required=true) String searchString) {
 		return employeeService.search(searchString);
+    }
+	
+	@RequestMapping(value="/role-search/{searchString}", method=RequestMethod.GET)
+    public @ResponseBody List<Employee> roleSearch(
+    		@PathVariable(value="searchString", required=true) String searchString) {
+		return employeeService.roleSearch(searchString);
     }
 
 	/*@RequestMapping(value="/save", method=RequestMethod.PUT)

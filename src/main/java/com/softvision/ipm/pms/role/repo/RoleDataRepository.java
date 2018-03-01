@@ -18,11 +18,13 @@ public interface RoleDataRepository extends CrudRepository<Role, Integer>, JpaSp
 	List<Role> findById(int roleId);
 
 	List<Role> findAll(Specification<Role> spec);
+	
+	Role findByRoleName(String name);
 
 	@Query(value = "select r.id,r.role_name from employee_role e inner join role r on e.role_id=r.id  where e.employee_id=:employeeId", nativeQuery = true)
 	List<Role> findByEmployeeId(@Param("employeeId") Long employeeId);
 
 	@Query(value = "select e.* from employee e inner join employee_role r on e.EMPLOYEE_ID =r.EMPLOYEE_ID and r.role_id=:roleId", nativeQuery = true)
-	List<Employee> findEmployeesbyRoleId(@Param("roleId") int roleId);
+	List<Employee> findEmployeesByRoleId(@Param("roleId") int roleId);
 
 }

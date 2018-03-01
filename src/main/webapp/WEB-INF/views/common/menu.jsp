@@ -1,14 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-
+<%@ taglib prefix="fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!-- #Top Bar -->
 <section>
   <sec:authentication property="details.imageUrl" var="imageUrl"/>
   <sec:authentication property="details.employeeId" var="employeeId" />
   <sec:authentication property="name" var="userName" />
   <sec:authentication property="details.band" var="band" />
+  <sec:authentication property="details.designation" var="designation" />
   <sec:authentication property="details.location" var="location" />
   <sec:authentication property="details.joinedDate" var="joinedDate" />
+  <sec:authentication property="authorities" var="privilige" />
   
 
   <!-- Left Sidebar -->
@@ -47,20 +49,22 @@
             <span>Dashboard</span>
           </a>
         </li>
-        <li>
-          <a href="javascript:void(0);" class="menu-toggle">
-            <i class="material-icons">album</i>
-            <span>Goal Setting</span>
-          </a>
-          <ul class="ml-menu">
-            <li>
-              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
-            </li>
-            <li>
-              <a href="<%=request.getContextPath()%>/admin/template/assign">Assign Templates</a>
-            </li>
-          </ul>
-        </li>
+        <c:if test='${fn:contains(privilige, "Manager")}'>  
+	        <li>
+	          <a href="javascript:void(0);" class="menu-toggle">
+	            <i class="material-icons">album</i>
+	            <span>Goal Setting</span>
+	          </a>
+	          <ul class="ml-menu">
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
+	            </li>
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/template/assign">Assign Templates</a>
+	            </li>
+	          </ul>
+	        </li>
+	     </c:if>
         <li>
           <a href="javascript:void(0);" class="menu-toggle">
             <i class="material-icons">flag</i>
@@ -68,30 +72,35 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/admin/cycles/list">My Appraisal</a>
+              <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assigned Employees</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/employee/myappraisal/view">My Appraisal</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/competency/list">Perform Assessment</a>
             </li>
           </ul>
         </li>
-        <li>
-          <a href="javascript:void(0);" class="menu-toggle">
-            <i class="material-icons">settings</i>
-            <span>Admin</span>
-          </a>
-          <ul class="ml-menu">
-            <li>
-              <a href="<%=request.getContextPath()%>/admin/cycles/list">Manage Appraisal Cycles</a>
-            </li>
-            <li>
-              <a href="<%=request.getContextPath()%>/admin/goal/list">Manage Competency Assessments</a>
-            </li>
-            <li>
-              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
-            </li>
-          </ul>
-        </li>
+        <c:if test='${fn:contains(privilige, "Admin")}'> 
+	        <li>
+	          <a href="javascript:void(0);" class="menu-toggle">
+	            <i class="material-icons">settings</i>
+	            <span>Admin</span>
+	          </a>
+	          <ul class="ml-menu">
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/cycles/list">Manage Appraisal Cycles</a>
+	            </li>
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/goal/list">Manage Competency Assessments</a>
+	            </li>
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
+	            </li>
+	          </ul>
+	        </li>
+        </c:if>
       </ul>
     </div>
     <!-- #Menu -->

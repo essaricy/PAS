@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,16 +34,20 @@ public class RoleRest {
 	public @ResponseBody List<Role> getRolesByRole(@PathVariable(value = "roleId", required = true) int roleId) {
 		return roleService.getRole(roleId);
 	}
-	
+
 	@RequestMapping(value = "/emp-byRole/{roleId}", method = RequestMethod.GET)
 	public @ResponseBody List<Employee> getEmployeeByRole(@PathVariable(value = "roleId", required = true) int roleId) {
 		return roleService.getEmployeesbyRoleId(roleId);
 	}
 
-	@RequestMapping(value = "/byEmployee/{employeeId}", method = RequestMethod.GET)
-	public @ResponseBody List<Role> getRolesByEmployee(
-			@PathVariable(value = "employeeId", required = true) Long employeeId) {
+	@RequestMapping(value = "/byEmployee/{empId}", method = RequestMethod.GET)
+	public @ResponseBody List<Role> getRolesByEmp(@PathVariable(value = "empId", required = true) Long employeeId) {
 		return roleService.getRolesbyEmployeeId(employeeId);
+	}
+
+	@RequestMapping(value = "/byLogin/{loginId}", method = RequestMethod.GET)
+	public @ResponseBody List<Role> getRolesBylogin(@PathVariable(value = "loginId", required = true) String loginId) {
+		return roleService.getRolesbyLoginId(loginId);
 	}
 
 	@RequestMapping(value = "/delete/{employeeId}/{roleId}", method = RequestMethod.GET)

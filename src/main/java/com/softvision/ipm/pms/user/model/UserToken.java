@@ -10,18 +10,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.softvision.ipm.pms.role.entity.Role;
+
 public class UserToken implements Authentication {
 
 	private static final long serialVersionUID = 1L;
 
 	private User user;
 
-	private List<GrantedAuthority> grantedAuthorities;
+	private List<GrantedAuthority> authorities;
 
 	public UserToken(@NotNull User user) {
-		this.user=user;
-		grantedAuthorities = new ArrayList<>();
-		grantedAuthorities.add(new SimpleGrantedAuthority(user.getBand()));
+		this.user = user;
+		authorities = new ArrayList<>();
+		for (Role role : user.getRoles()) {
+			authorities.add(new SimpleGrantedAuthority(role.getRoleName()));
+		}
 	}
 
 	@Override
@@ -29,9 +33,8 @@ public class UserToken implements Authentication {
 		return user.getFirstName() + " " + user.getLastName();
 	}
 
-	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return grantedAuthorities;
+		return authorities;
 	}
 
 	@Override
@@ -56,6 +59,11 @@ public class UserToken implements Authentication {
 
 	@Override
 	public void setAuthenticated(boolean arg0) throws IllegalArgumentException {
+	}
+
+	@Override
+	public String toString() {
+		return "UserToken [user=" + user.toString() + ", grantedAuthorities=" + authorities.toString() + "]";
 	}
 
 }

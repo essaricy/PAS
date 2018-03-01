@@ -1,10 +1,15 @@
 package com.softvision.ipm.pms.user.model;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import com.softvision.ipm.pms.common.validator.NotContainNull;
+import com.softvision.ipm.pms.role.entity.Role;
 
 import lombok.Data;
 
@@ -47,4 +52,8 @@ public class User {
 
 	private String imageUrl;
 
+	@NotEmpty
+	@NotContainNull
+	private List<Role> roles;
+	
 }

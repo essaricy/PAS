@@ -1,9 +1,4 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.softvision.ipm.pms.constant.AppraisalCycleStatus" %>
-
-<c:set var="DRAFT" value="<%=AppraisalCycleStatus.DRAFT%>"/>
-<c:set var="ACTIVE" value="<%=AppraisalCycleStatus.ACTIVE%>"/>
-<c:set var="COMPLETE" value="<%=AppraisalCycleStatus.COMPLETE%>"/>
 
 <!DOCTYPE html>
 <html>
@@ -50,49 +45,40 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Appraisal Cycle Managemet
-          <small>Add and update appraisal cycles and phases. Create Drafts, Kick Off or Complete Appraisal Cycle</small>
+        <h2>Employee Assignments
+          <small>View status of the current employees those are assigned to you, change manager, send forms</small>
         </h2>
       </div>
       <div class="row clearfix">
         <!-- Linked Items -->
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <div class="card appr_cycles_card">
-            <div class="header">
-              <h2>Cycles</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
+        <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
+          <div class="card assignment_list_card">
+          	<div class="header">Current Appraisal Cycle Name
+          	</div>
             <div class="body">
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-          <div class="card appr_cycle_card">
-            <div class="header">
-              <h2>Cycle Information</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
-            <div class="body">
-            </div>
-          </div>
-          <div class="card appr_phases_card">
-            <div class="header">
-              <h2>Phases</h2>
-            </div>
-            <div class="body">
-            </div>
+	            <table id="Assignments_Table" class="table table-striped table-hover dataTable">
+					<thead>
+						<tr>
+							<th>Phase Name</th>
+							<th>Employee Name</th>
+							<th>Assigned By</th>
+							<th>Assigned At</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 </body>
+
+<!-- Jquery Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
@@ -114,6 +100,7 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/tooltips-popovers.js"></script>
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
@@ -121,74 +108,54 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
 $(function () {
-});
-$('.appr_cycles_card').cardManager({
-  type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/appraisal/list',
-  manageUrl: '<%=request.getContextPath()%>/admin/cycles/manage',
-  deleteUrl: '<%=request.getContextPath()%>/appraisal/delete',
-  onClickCallback: renderCycleInformation,
-  menuActions: ["Add", "Update", "Delete"],
-  renderConfigs: [
-    { 
-      type: 'table',
-      fromNode: 'phases',
-      toContainer: '.appr_phases_card .body',
-      headerNames: ["Name", "Start Date", "End Date"],
-	  columnMappings: ["name", "startDate", "endDate"]
-    }
-  ],
-  afterLoadCallback: function (items, data) {
-    $(items).each(function(index, item) {
-      var dataItem=data[index];
-      console.log('item = ' + JSON.stringify(dataItem));
-      var status=dataItem.status;
-      var class1=null;
-      if (status == '${DRAFT}') {
-      	class1='bg-amber';
-      } else if (status == '${ACTIVE}') {
-      	class1='bg-light-blue';
-      } else if (status == '${COMPLETE}') {
-      	class1='bg-grey';
-      }
-      $(this).append('<span class="badge ' + class1 + '">' + status + '</span>');
+  $.fn.ajaxGet({
+	url: '<%=request.getContextPath()%>/appraisal/get/active',
+	onSuccess: onActiveAvailable,
+	onError: onError
+  });
+  function onActiveAvailable(result) {
+    if (result== null || result=="" || result=="undefined") {
+	  onError("There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.");
+	  return;
+	}
+	console.log('onActiveAvailable result=' + result);
+  }
+  function onError(error) {
+	console.log('onError error=' + error);
+	var mainCard=$('.assignment_list_card');
+	$(mainCard).find('.body').empty();
+	$(mainCard).find('.body').append('<p class="font-bold col-pink">' + error + '</p>');
+  }
+
+  $.fn.ajaxGet({
+	url: '<%=request.getContextPath()%>/manager/assignment/current',
+	onSuccess: renderAssignedEmployees,
+	onError: onErrorAssignedEmployees
+  });
+
+  function renderAssignedEmployees(result) {
+    var table=$('#Assignments_Table');
+    $(result).each(function(index, assignment) {
+      var statusId=assignment.status.code;
+	  var row=$('<tr>');
+	  $(row).append('<td>' + assignment.phaseName + '</td>');
+	  $(row).append('<td>' + assignment.assignedToName + '</td>');
+	  $(row).append('<td>' + assignment.assignedByName + '</td>');
+	  $(row).append('<td>' + assignment.assignedAt + '</td>');
+	  $(row).append('<td>' + assignment.status.name + '</td>');
+	  if (statusId == 0) {
+		$(row).append('<td><button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button> '
+				+ '<button class="btn btn-xs btn-info waves-effect" title="Roll for self-submission"><i class="material-icons">assignment_turned_in</i></button></td>');
+	  } else {
+		$(row).append('<td>-</td>');
+	  }
+	  $(table).find('tr:last').after(row);
     });
   }
-}); 
 
-function renderCycleInformation(item) {
-  console.log(JSON.stringify(item));
-  $('.appr_cycle_card .header h2').text(item.name);
-  $('.appr_cycle_card .body').empty();
-  var table=$('<table class="table">');
-  var tbody=$('<tbody>');
-  $(tbody).append('<tr><td>Start Date</td><td>' + (item.startDate) + '</td></tr>');
-  $(tbody).append('<tr><td>End Date</td><td>' + (item.endDate) + '</td></tr>');
-  $(tbody).append('<tr><td>Eligibility Date</td><td>' + (item.cutoffDate) + '</td></tr>');
-  $(table).append(tbody);
-  $('.appr_cycle_card .body').append(table);
-
-  var status=item.status;
-  $('.appr_cycle_card .header .dropdown').empty();
-  if (status == '${DRAFT}') {
-	var button=$('<button class="activate btn bg-light-blue waves-effect">Activate</button>');
-	$(button).click(function() {activate(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${ACTIVE}') {
-    var button=$('<button class="activate btn bg-light-blue waves-effect">Complete</button>');
-	$(button).click(function() {complete(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${COMPLETE}') {
-  	class1='bg-green';
+  function onErrorAssignedEmployees(error) {
+	  
   }
-}
-
-function activate(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
-}
-function complete(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
-}
-
+});
 </script>
 </html>

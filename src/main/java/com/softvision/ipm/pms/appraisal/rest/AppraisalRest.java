@@ -28,7 +28,6 @@ public class AppraisalRest {
 	@RequestMapping(value="/list", method=RequestMethod.GET)
     public @ResponseBody List<AppraisalCycleDto> getCycles() {
 		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
-		System.out.println("cycles=" + cycles.get(0).getStartDate());
 		return cycles;
     }
 

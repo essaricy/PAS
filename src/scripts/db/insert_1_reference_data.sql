@@ -1,3 +1,7 @@
+INSERT INTO role(id, role_name) 	VALUES (1, 'Admin');
+INSERT INTO role(id, role_name) 	VALUES (2, 'Manager');
+INSERT INTO role(id, role_name) 	VALUES (3, 'Employee');
+
 -- select * from goal_ca;
 INSERT INTO goal_ca(id, name) VALUES (nextval('goal_ca_id_seq'), 'Client Orientation/Customer Focus');
 INSERT INTO goal_ca(id, name) VALUES (nextval('goal_ca_id_seq'), 'Project Management');

@@ -25,6 +25,9 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
+     <!-- Bootstrap Select Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css"  />
+    
   </head>
   <style>
   .list-group-item {
@@ -57,6 +60,8 @@
               <ul class="nav nav-tabs tab-nav-right tab-col-deep-orange" role="tablist">
                 <li role="presentation" class="active"><a href="#Lookup_Employees" data-toggle="tab">LOOK UP</a></li>
                 <li role="presentation"><a href="#Sync_Employees" data-toggle="tab">Sync Employees</a></li>
+                <li role="presentation"><a href="#Roles" data-toggle="tab">Roles</a></li>
+                <li role="presentation"><a href="#Change_Roles" data-toggle="tab">Changes Roles</a></li>
               </ul>
                <!-- Tab panes -->
                <div class="tab-content">
@@ -102,6 +107,60 @@
                  <div role="tabpanel" class="tab-pane fade" id="Sync_Employees">
                    <p>This features can be used to Sync all the employee information from SV project to this system.</p>
                  </div>
+                 <div role="tabpanel" class="tab-pane fade" id="Roles">
+                 	<div class="body">
+	                   <div class="row clearfix">
+	                     <div class="col-sm-2">&nbsp;</div>
+	                     <div class="col-sm-6">
+							 <select id="SearchRoleBy" class="form-control show-tick">
+	                        	<option value="-1"> Please select </option>
+	                            <option value="Admin">Admin</option>
+	                            <option value="Manager">Manager</option>
+	                         </select> 
+	                      </div>
+	                     <div class="col-sm-2">
+	                       <button type="button" id="SearchRole" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+	                         <i class="material-icons">search</i>
+	                       </button>
+	                     </div>
+	                     <div class="col-sm-2">&nbsp;</div>
+	                   </div>
+                   </div>
+                   <div class="row clearfix">
+                     <div class="table-responsive">
+                       <table id="SearchRoleTable" class="table table-bordered table-striped table-hover dataTable">
+                         <thead>
+                           <tr>
+                             <th>#</th>
+                             <th>First Name</th>
+                             <th>Last Name</th>
+                             <th>Band</th>
+                             <th>Designation</th>
+                             <th>Location</th>
+                           </tr>
+                         </thead>
+                         <tbody>
+                         </tbody>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+                 
+                 <div role="tabpanel" class="tab-pane fade" id="Change_Roles">
+                   <p>This features can be used to assign or remove the applications roles (Admin Or Manager).</p>
+                   <div class="row clearfix">
+					    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+		                  <label for="Search_Employees">Select Employees</label>
+		                </div>
+		                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+				          <div class="form-group form-float">
+				            <div class="form-line">
+				              <input type="text" id="Search_Employees" class="form-control" placeholder="Start enetering employee name" value="">
+		                    </div>
+		                  </div>
+		                </div>
+		            </div>
+                 </div>
                </div>
             </div>
           </div>
@@ -144,7 +203,14 @@
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
 
   <script>
+  
   $(function () {
+	  $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+	        // var target = $(e.target).attr("href"); // activated tab
+	        // alert (target);
+	        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+	        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+	    } );
 	var searchText='qqqq';
 	$('#SearchTable').DataTable({
         responsive: true,
@@ -165,6 +231,24 @@
             { "data": "Location" }
         ],
     });
+	
+	$('#SearchRoleTable').DataTable({
+        responsive: true,
+        paging: false,
+		searching: false,
+		ordering: true,
+		info: true,
+        "ajax": "<%=request.getContextPath()%>/employee/role-search/" + searchText,
+        "sAjaxDataProp":"",
+		"columns": [
+            { "data": "EmployeeId" },
+            { "data": "FirstName" },
+            { "data": "LastName" },
+            { "data": "Band" },
+            { "data": "Designation" },
+            { "data": "Location" }
+        ],
+    });
 
     $('#Search').click(function() {
       var searchBy=$('#SearchBy');
@@ -178,6 +262,47 @@
     	table.ajax.url("<%=request.getContextPath()%>/employee/search/" + searchText).load();
       }
     });
+    $('#SearchRole').click(function() {
+        var searchRoleBy=$('#SearchRoleBy');
+        searchText=$.trim(searchRoleBy.val());
+        if (searchText ==-1) {
+      	$(searchText).focus();
+        } else {
+      	console.log('searchText=' + searchText);
+      	var table = $('#SearchRoleTable').DataTable();
+      	//table.ajax.reload();
+      	table.ajax.url("<%=request.getContextPath()%>/employee/role-search/" + searchText).load();
+        }
+      });
+    
+    $("#Search_Employees").easyAutocomplete({
+    	url: function(phrase) {
+    	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
+    	},
+    	dataType: "json",
+    	getValue: function (item) { return item.FirstName + " " + item.LastName},
+    	template: {
+    	  type: "custom",
+    	  method: function(value, item) {
+    		return "<b>" + item.FirstName + " " + item.LastName + "</b> [<code>" + item.EmployeeId + "</code>]</small>";
+    	  }
+    	},
+    	list: {
+    	  onClickEvent: function() {
+    		var data=$("#Search_Employees").getSelectedItemData();
+    		var itemId=data.EmployeeId;
+    		var itemValue=data.FirstName + " " + data.LastName;
+
+    		if(!$('#Selected_Employees_List li:contains("' + itemValue + '")').length) {
+     		  // Insert your new li
+     		  bulkAssignment.employeeIds.push(itemId);
+     		 $('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + itemId + '">' + itemValue + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="javascript: removeDataItem(this, ' + itemId + ');">clear</i></span></li>');
+    		}
+    		$("#Search_Employees").val('');
+    	  }	
+    	}
+      });
+
   });
   </script>
 </body>

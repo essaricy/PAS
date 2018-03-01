@@ -76,7 +76,7 @@ $.fn.ajaxWrapper = function(options) {
  	  	}
  	  } else {
  	  	if (options.onSuccess) {
- 	  	  options.successCallback(result.content);
+ 	  	  options.onSuccess(result.content);
  	  	} else {
  	  	  var text=(result.message)?result.message:"Data has been saved successfully.";
  	  	  swal({ title: "Updated!", text: text, type: "success"}, function () { location.reload(); });
@@ -92,7 +92,7 @@ $.fn.ajaxWrapper = function(options) {
      	}
       } else {
        	if (options.onSuccess) {
-       	  options.successCallback(result.content);
+       	  options.onSuccess(result.content);
        	} else {
        	  var text=(result.message)?result.message:"Data has been deleted successfully.";
    	  	  swal({ title: "Deleted!", text: text, type: "success"}, function () { location.reload(); });
@@ -108,7 +108,7 @@ $.fn.ajaxWrapper = function(options) {
      	}
       } else {
        	if (options.onSuccess) {
-       	  options.successCallback(result.content);
+       	  options.onSuccess(result.content);
        	} else {
        	  var text=(result.message)?result.message:"Data has been saved successfully.";
    	  	  swal({ title: "Updated!", text: text, type: "success"}, function () { location.reload(); });

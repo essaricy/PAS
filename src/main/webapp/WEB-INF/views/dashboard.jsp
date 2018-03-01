@@ -1,6 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <!DOCTYPE html>
 <html>
@@ -38,14 +37,7 @@
       <div class="block-header">
         <h2>DASHBOARD</h2>
       </div>
-      <sec:authentication property="details.imageUrl" var="imageUrl"/>
-      <sec:authentication property="details.employeeId" var="employeeId" />
-      <sec:authentication property="name" var="userName" />
-      <sec:authentication property="details.designation" var="designation" />
-      <sec:authentication property="details.band" var="band" />
-      <sec:authentication property="details.location" var="location" />
-      <sec:authentication property="details.joinedDate" var="joinedDate" />
-
+      
       <!-- Basic Example -->
       <div class="row clearfix">
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">

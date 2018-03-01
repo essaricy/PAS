@@ -14,15 +14,17 @@ import com.softvision.ipm.pms.employee.repo.EmployeeSpecs;
 @Service
 public class EmployeeService {
 
-	@Autowired private EmployeeRepository employeeRepository;
+	@Autowired
+	private EmployeeRepository employeeRepository;
 
-	@Autowired private SVProjectRepository svProjectRepository;
+	@Autowired
+	private SVProjectRepository svProjectRepository;
 
 	public List<Employee> getEmployees() {
 		return CollectionUtil.toList(employeeRepository.findAll());
 	}
 
-	public Employee getEmployee(Long employeeId) {
+	public Employee getEmployee(int employeeId) {
 		return employeeRepository.findByEmployeeId(employeeId);
 	}
 
@@ -51,6 +53,13 @@ public class EmployeeService {
 
 	public List<String> getEmployeeTypes() {
 		return employeeRepository.findEmployeeTypes();
+	}
+
+	public List<Employee> roleSearch(String searchString) {
+		if (searchString != null) {
+			return employeeRepository.findEmployeesByRoleName(searchString	);
+		}
+		return null;
 	}
 
 }
