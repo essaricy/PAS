@@ -2,9 +2,12 @@ package com.softvision.ipm.pms.role.service;
 
 import java.util.List;
 
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.softvision.ipm.pms.common.constants.Roles;
 import com.softvision.ipm.pms.common.util.CollectionUtil;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
@@ -32,7 +35,7 @@ public class RoleService {
 		return roleDataRepository.findById(roleId);
 	}
 
-	public List<Role> getRolesbyEmployeeId(Long employeeId) {
+	public List<Role> getRolesbyEmployeeId(Integer employeeId) {
 		return roleDataRepository.findByEmployeeId(employeeId);
 	}
 
@@ -41,6 +44,12 @@ public class RoleService {
 	}
 
 	public int assignRole(Long employeeId, int roleId) {
+		List<Role> roles=roleDataRepository.findByEmployeeId(employeeId);
+		for (Role role : roles) {
+			if(role.getId()==roleId){
+				throw new ValidationException("Manager role is already present, please check");
+			}
+		}
 		return roleRepository.assign(employeeId, roleId);
 	}
 
@@ -51,9 +60,51 @@ public class RoleService {
 	public List<Role> getRolesbyLoginId(String loginId) {
 		Employee employee = employeeService.getEmployee(loginId);
 		if (employee != null) {
-			return roleDataRepository.findByEmployeeId(Long.valueOf(employee.getEmployeeId()));
+			return roleDataRepository.findByEmployeeId(employee.getEmployeeId());
 		}
 		return null;
+	}
+
+	public boolean isAdmin(int employeeId) {
+		return isInRole(employeeId, Roles.ADMIN);
+	}
+
+	public boolean isManager(int employeeId) {
+		return isInRole(employeeId, Roles.MANAGER);
+	}
+
+	private boolean isInRole(int employeeId, Roles checkingRole) {
+		List<Role> roles = getRolesbyEmployeeId(employeeId);
+		if (roles != null && !roles.isEmpty()) {
+			for (Role role : roles) {
+				Roles currentRole = Roles.get(role.getRoleName());
+				if (currentRole == checkingRole) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean isAdmin(String loginId) {
+		return isInRole(loginId, Roles.ADMIN);
+	}
+
+	public boolean isManager(String loginId) {
+		return isInRole(loginId, Roles.MANAGER);
+	}
+
+	private boolean isInRole(String loginId, Roles checkingRole) {
+		List<Role> roles = getRolesbyLoginId(loginId);
+		if (roles != null && !roles.isEmpty()) {
+			for (Role role : roles) {
+				Roles currentRole = Roles.get(role.getRoleName());
+				if (currentRole == checkingRole) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

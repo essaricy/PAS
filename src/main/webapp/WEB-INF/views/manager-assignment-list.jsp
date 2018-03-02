@@ -137,15 +137,23 @@ $(function () {
     var table=$('#Assignments_Table');
     $(result).each(function(index, assignment) {
       var statusId=assignment.status.code;
+      var statusName=assignment.status.name;
 	  var row=$('<tr>');
 	  $(row).append('<td>' + assignment.phaseName + '</td>');
 	  $(row).append('<td>' + assignment.assignedToName + '</td>');
 	  $(row).append('<td>' + assignment.assignedByName + '</td>');
 	  $(row).append('<td>' + assignment.assignedAt + '</td>');
-	  $(row).append('<td>' + assignment.status.name + '</td>');
-	  if (statusId == 0) {
-		$(row).append('<td><button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button> '
-				+ '<button class="btn btn-xs btn-info waves-effect" title="Roll for self-submission"><i class="material-icons">assignment_turned_in</i></button></td>');
+	  $(row).append('<td>' + assignment.status.title + '</td>');
+	  if (statusName == '${AssignmentPhaseStatus_ASSIGNED}') {
+		var td=$('<td>');
+		var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
+		var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_turned_in</i></button>');
+		$(enableFormButton).click(function() {
+			enableSelfSubmission(assignment.assignmentId);	
+		});
+		//$(td).append(assignToManagerButton);
+		$(td).append(enableFormButton);
+		$(row).append(td);
 	  } else {
 		$(row).append('<td>-</td>');
 	  }
@@ -157,5 +165,18 @@ $(function () {
 	  
   }
 });
+
+function enableSelfSubmission(assignmentId) {
+  swal({
+    title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
+    showCancelButton: true, confirmButtonColor: "#DD6B55",
+	confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
+  }, function () {
+	$.fn.ajaxPut({
+	  url: '<%=request.getContextPath()%>/manager/assignment/enableForm/' + assignmentId
+	});
+  });
+}
+
 </script>
 </html>

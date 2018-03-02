@@ -22,7 +22,7 @@ import com.softvision.ipm.pms.user.model.User;
 import com.softvision.ipm.pms.user.model.UserToken;
 
 @Service
-public class TestAuthenticationProvider implements AuthenticationProvider {
+public class DummyAuthenticationProvider implements AuthenticationProvider {
 
 	private static List<User> users = new ArrayList<User>();
 
@@ -79,7 +79,7 @@ public class TestAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("Authentication failed for " + username);
 		}
 
-		List<Role> roles = roleDataRepository.findByEmployeeId(Long.valueOf(1136));
+		List<Role> roles = roleDataRepository.findByEmployeeId(1136);
 
 		boolean flag = true;
 		if (roles != null && !roles.isEmpty()) {

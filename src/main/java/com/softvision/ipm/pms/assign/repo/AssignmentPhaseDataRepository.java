@@ -10,6 +10,8 @@ public interface AssignmentPhaseDataRepository extends CrudRepository<EmployeePh
 
 	List<EmployeePhaseAssignment> findAll();
 
+	EmployeePhaseAssignment findById(Long id);
+
 	EmployeePhaseAssignment findByPhaseIdAndTemplateIdAndEmployeeId(Integer phaseId, Long templateId, Integer employeeId);
 
 }

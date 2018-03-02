@@ -32,4 +32,6 @@ public class EmployeePhaseAssignment implements Serializable {
 
 	private Date assignedAt;
 
+	private int status;
+
 }

@@ -19,6 +19,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" />
     <!-- Animation Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
+    <!-- Sweetalert Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
     <!-- JQuery DataTable Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css"/>
     <!-- Custom Css -->
@@ -27,6 +29,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
      <!-- Bootstrap Select Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css"  />
+    <!-- EasyAutocomplete-1.3.5 -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/easy-autocomplete.min.css"/>
     
   </head>
   <style>
@@ -147,7 +151,6 @@
                  </div>
                  
                  <div role="tabpanel" class="tab-pane fade" id="Change_Roles">
-                   <p>This features can be used to assign or remove the applications roles (Admin Or Manager).</p>
                    <div class="row clearfix">
 					    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
 		                  <label for="Search_Employees">Select Employees</label>
@@ -155,11 +158,15 @@
 		                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 				          <div class="form-group form-float">
 				            <div class="form-line">
-				              <input type="text" id="Search_Employees" class="form-control" placeholder="Start enetering employee name" value="">
+				              <input type="text" id="Search_Employees" class="form-control" placeholder="Employee name" value="">
 		                    </div>
 		                  </div>
 		                </div>
 		            </div>
+		            <div class="row clearfix">
+				        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"  id="Employee_Data">
+				        </div>
+				    </div>
                  </div>
                </div>
             </div>
@@ -201,15 +208,21 @@
   
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
+  <!-- EasyAutocomplete-1.3.5 -->
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
+  
 
   <script>
-  
+  var availableRoles=[];
   $(function () {
 	  $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
 	        // var target = $(e.target).attr("href"); // activated tab
 	        // alert (target);
 	        $($.fn.dataTable.tables( true ) ).css('width', '100%');
 	        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+	        $('.easy-autocomplete').css('width', '100%');
 	    } );
 	var searchText='qqqq';
 	$('#SearchTable').DataTable({
@@ -275,6 +288,8 @@
         }
       });
     
+    var MANAGER_ROLE_ID=2;
+
     $("#Search_Employees").easyAutocomplete({
     	url: function(phrase) {
     	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
@@ -289,16 +304,59 @@
     	},
     	list: {
     	  onClickEvent: function() {
+    		  $('#Employee_Data').empty();    		
     		var data=$("#Search_Employees").getSelectedItemData();
     		var itemId=data.EmployeeId;
     		var itemValue=data.FirstName + " " + data.LastName;
-
-    		if(!$('#Selected_Employees_List li:contains("' + itemValue + '")').length) {
-     		  // Insert your new li
-     		  bulkAssignment.employeeIds.push(itemId);
-     		 $('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + itemId + '">' + itemValue + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="javascript: removeDataItem(this, ' + itemId + ');">clear</i></span></li>');
-    		}
+    		availableRoles=[];
+    		console.log(itemValue);
+    		var detailTable=$('<table class="table table-striped">');
+    	  	var detailTbody=$('<tbody>');
+     		var detailTfoot=$('<tfoot>');
+     		var detailThead=$('<thead>')
+    	  	$(detailTable).append(detailTbody);
+    	  	$(detailTable).append(detailTfoot);
+    	  	$(detailTable).append(detailThead);
+     		$('#Employee_Data').append(detailTable);
+     		$(detailThead).append('<tr><th>id</th><th>Name</th><th>Manager?</th></tr>');
+     		$(detailTbody).append('<tr id="emp_row"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="mgrcb"><span class="lever switch-col-green"></span></label></div></td></tr>');
+     		
+     		detailTfoot.append('<tr><td class="col-md-12" colspan="3"><button type="button" class="btn bg-light-blue waves-effect pull-right" id="save">Save</button></td></tr>')
+     		
     		$("#Search_Employees").val('');
+    		//$(detailTable).append('<tfoot><tr></tfoot>');
+
+    		$.fn.ajaxGet({
+    			url: '<%=request.getContextPath()%>/role/byEmployee/'+itemId,
+    			onSuccess: function(result) {
+    				  console.log('result=' + result);
+    				  $(result).each(function(index, role) {
+    					  availableRoles.push(role.RoleName);
+    				  });
+    				  if(availableRoles.indexOf('Manager')>-1){
+    				    $('#emp_row').find('input[type="checkbox"]').attr('checked', 'true');
+    				  }
+    				  $('#save').on('click',function(event) {
+    					  var flag=$("#mgrcb").is(':checked');
+    					  var apiUrl='<%=request.getContextPath()%>/role/' + (flag ? "assign" : "delete") + '/' + itemId + '/' + MANAGER_ROLE_ID;
+    					  /*swal({
+    					    title: "Are you sure?",
+    					    text: 'Do you want to ' + (flag ? "add" : "remove") + ' manager role for ' + itemValue + '?', type: "warning",
+    					    showCancelButton: true, confirmButtonColor: "#DD6B55",
+    			        	confirmButtonText: "Yes, Do it!", closeOnConfirm: true
+    				      }, function (isConfirm) {
+    				    	  if (isConfirm) {
+      				    	    $.fn.ajaxPut({url: apiUrl});
+      				    	  } 
+      				      });*/
+    					  $.fn.ajaxPut({url: apiUrl, refresh: "no"});
+   					});
+   				},
+    			onError: function(message, content) {
+    				  console.log('message=' + message);			
+    			}
+    		});
+
     	  }	
     	}
       });

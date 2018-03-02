@@ -62,6 +62,9 @@
 	            <li>
 	              <a href="<%=request.getContextPath()%>/admin/template/assign">Assign Templates</a>
 	            </li>
+	            <li>
+                  <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assigned Employees</a>
+                </li>
 	          </ul>
 	        </li>
 	     </c:if>
@@ -72,10 +75,7 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assigned Employees</a>
-            </li>
-            <li>
-              <a href="<%=request.getContextPath()%>/employee/myappraisal/view">My Appraisal</a>
+              <a href="<%=request.getContextPath()%>/employee/assignment/list">My Appraisals</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/competency/list">Perform Assessment</a>
@@ -120,6 +120,7 @@
   <aside id="rightsidebar" class="right-sidebar">
     <ul class="nav nav-tabs tab-nav-right" role="tablist">
       <li role="presentation" class="active"><a href="#skins" data-toggle="tab">SKINS</a></li>
+      <li role="presentation"><a href="#settings" data-toggle="tab">About</a></li>
     </ul>
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active in active" id="skins">
@@ -206,7 +207,27 @@
                     </li>
                 </ul>
             </div>
-        </div>
+			<div role="tabpanel" class="tab-pane fade in active in active"
+				id="settings">
+				<div class="demo-settings">
+					<ul class="setting-list">
+						<li><span>This product is a collaborative effort of
+								HR-Ops and Java Cummunity under the leadership of <b>Nithya Somaih</b> &
+								<b>Naveed A Hagalwadi</b></span>
+						</li>
+					</ul>
+					<p>Designed By</p>
+					<ul class="setting-list">
+						<li><span>Srikanth Ragi</span></li>
+					</ul>
+					<p>Full Stack Developers</p>
+					<ul class="setting-list">
+						<li><span>Mallikarjun Gongati</span></li>
+						<li><span>Rohit Ramesh</span></li>
+					</ul>
+				</div>
+			</div>
+		</div>
     </aside>
     <!-- #END# Right Sidebar -->
 </section>

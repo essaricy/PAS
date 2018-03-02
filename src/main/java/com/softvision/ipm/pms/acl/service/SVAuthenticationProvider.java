@@ -13,14 +13,14 @@ import com.softvision.ipm.pms.user.model.UserToken;
 @Service
 public class SVAuthenticationProvider implements AuthenticationProvider {
 
-	@Autowired
-	private SVAuthenticationService svAuthenticationService;
+	//@Autowired private SVAuthenticationService authenticationService;
+	@Autowired private SVDevAuthenticationService authenticationService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String principal = authentication.getPrincipal().toString();
 		String credentials = authentication.getCredentials().toString();
-		User user = svAuthenticationService.authenticate(principal, credentials);
+		User user = authenticationService.authenticate(principal, credentials);
 		return new UserToken(user);
 	}
 

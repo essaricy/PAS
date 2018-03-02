@@ -19,11 +19,14 @@ public enum AssignmentPhaseStatus {
 
 	private String name;
 
+	private String title;
+
 	private String description;
 
-	private AssignmentPhaseStatus(int code, String name, String desciption) {
+	private AssignmentPhaseStatus(int code, String title, String desciption) {
 		this.code=code;
-		this.name=name;
+		this.name=this.toString();
+		this.title=title;
 		this.description=desciption;
 	}
 
@@ -33,6 +36,10 @@ public enum AssignmentPhaseStatus {
 
 	public String getName() {
 		return name;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public String getDescription() {

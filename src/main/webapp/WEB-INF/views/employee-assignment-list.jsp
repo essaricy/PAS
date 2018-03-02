@@ -45,49 +45,40 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Appraisal Cycle Managemet
-          <small>Add and update appraisal cycles and phases. Create Drafts, Kick Off or Complete Appraisal Cycle</small>
+        <h2>Employee Assignments
+          <small>View status of the current employees those are assigned to you, change manager, send forms</small>
         </h2>
       </div>
       <div class="row clearfix">
         <!-- Linked Items -->
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <div class="card appr_cycles_card">
-            <div class="header">
-              <h2>Cycles</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
+        <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
+          <div class="card assignment_list_card">
+          	<div class="header">Current Appraisal Cycle Name
+          	</div>
             <div class="body">
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-          <div class="card appr_cycle_card">
-            <div class="header">
-              <h2>Cycle Information</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
-            <div class="body">
-            </div>
-          </div>
-          <div class="card appr_phases_card">
-            <div class="header">
-              <h2>Phases</h2>
-            </div>
-            <div class="body">
-            </div>
+	            <table id="Assignments_Table" class="table table-striped table-hover dataTable">
+					<thead>
+						<tr>
+							<th>Phase Name</th>
+							<th>Employee Name</th>
+							<th>Assigned By</th>
+							<th>Assigned At</th>
+							<th>Status</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 </body>
+
+<!-- Jquery Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
@@ -109,6 +100,7 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/tooltips-popovers.js"></script>
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
@@ -116,74 +108,42 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
 $(function () {
-});
-$('.appr_cycles_card').cardManager({
-  type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/appraisal/list',
-  manageUrl: '<%=request.getContextPath()%>/admin/cycles/manage',
-  deleteUrl: '<%=request.getContextPath()%>/appraisal/delete',
-  onClickCallback: renderCycleInformation,
-  menuActions: ["Add", "Update", "Delete"],
-  renderConfigs: [
-    { 
-      type: 'table',
-      fromNode: 'phases',
-      toContainer: '.appr_phases_card .body',
-      headerNames: ["Name", "Start Date", "End Date"],
-	  columnMappings: ["name", "startDate", "endDate"]
-    }
-  ],
-  afterLoadCallback: function (items, data) {
-    $(items).each(function(index, item) {
-      var dataItem=data[index];
-      console.log('item = ' + JSON.stringify(dataItem));
-      var status=dataItem.status;
-      var class1=null;
-      if (status == '${AppraisalCycleStatus_DRAFT}') {
-      	class1='bg-amber';
-      } else if (status == '${AppraisalCycleStatus_ACTIVE}') {
-      	class1='bg-light-blue';
-      } else if (status == '${AppraisalCycleStatus_COMPLETE}') {
-      	class1='bg-grey';
-      }
-      $(this).append('<span class="badge ' + class1 + '">' + status + '</span>');
+  $.fn.ajaxGet({
+	url: '<%=request.getContextPath()%>/employee/assignment/current',
+	onSuccess: renderCurrentAssignments,
+	onError: onErrorCurrentAssignments
+  });
+
+  function renderCurrentAssignments(result) {
+    var table=$('#Assignments_Table');
+    $(result).each(function(index, assignment) {
+      var statusId=assignment.status.code;
+      var statusName=assignment.status.name;
+	  var row=$('<tr>');
+	  $(row).append('<td>' + assignment.phaseName + '</td>');
+	  $(row).append('<td>' + assignment.assignedToName + '</td>');
+	  $(row).append('<td>' + assignment.assignedByName + '</td>');
+	  $(row).append('<td>' + assignment.assignedAt + '</td>');
+	  $(row).append('<td>' + assignment.status.title + '</td>');
+	  if (statusName == '${AssignmentPhaseStatus_SELF_APPRAISAL_PENDING}') {
+		var td=$('<td>');
+		var selfAppraisalButton=$('<button class="btn btn-xs btn-info waves-effect" title="Start Self Appraisal"><i class="material-icons">assignment_late</i></button>');
+		$(selfAppraisalButton).click(function() {
+		  location.href='<%=request.getContextPath()%>/employee/assignment/show/' + assignment.assignmentId;
+		});
+		$(td).append(selfAppraisalButton);
+		$(row).append(td);
+	  } else {
+		$(row).append('<td>-</td>');
+	  }
+	  $(table).find('tr:last').after(row);
     });
   }
-}); 
 
-function renderCycleInformation(item) {
-  console.log(JSON.stringify(item));
-  $('.appr_cycle_card .header h2').text(item.name);
-  $('.appr_cycle_card .body').empty();
-  var table=$('<table class="table">');
-  var tbody=$('<tbody>');
-  $(tbody).append('<tr><td>Start Date</td><td>' + (item.startDate) + '</td></tr>');
-  $(tbody).append('<tr><td>End Date</td><td>' + (item.endDate) + '</td></tr>');
-  $(tbody).append('<tr><td>Eligibility Date</td><td>' + (item.cutoffDate) + '</td></tr>');
-  $(table).append(tbody);
-  $('.appr_cycle_card .body').append(table);
-
-  var status=item.status;
-  $('.appr_cycle_card .header .dropdown').empty();
-  if (status == '${AppraisalCycleStatus_DRAFT}') {
-	var button=$('<button class="activate btn bg-light-blue waves-effect">Activate</button>');
-	$(button).click(function() {activate(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${AppraisalCycleStatus_ACTIVE}') {
-    var button=$('<button class="activate btn bg-light-blue waves-effect">Complete</button>');
-	$(button).click(function() {complete(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${AppraisalCycleStatus_COMPLETE}') {
-  	class1='bg-green';
+  function onErrorCurrentAssignments(error) {
+	  
   }
-}
-
-function activate(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
-}
-function complete(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
-}
+});
 
 </script>
 </html>

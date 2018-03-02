@@ -30,4 +30,12 @@ public class EmployeeAssignmentDto implements Serializable {
 
 	private AssignmentPhaseStatus status;
 
+	@Override
+	public String toString() {
+		return "EmployeeAssignmentDto [assignmentId=" + assignmentId + ", phaseId=" + phaseId + ", phaseName="
+				+ phaseName + ", assignedToId=" + assignedToId + ", assignedToName=" + assignedToName
+				+ ", assignedById=" + assignedById + ", assignedByName=" + assignedByName + ", assignedAt=" + assignedAt
+				+ ", status=" + status + "]";
+	}
+
 }
