@@ -43,7 +43,7 @@ public class RoleService {
 		return roleDataRepository.findEmployeesByRoleId(roleId);
 	}
 
-	public int assignRole(Long employeeId, int roleId) {
+	public int assignRole(Integer employeeId, int roleId) {
 		List<Role> roles=roleDataRepository.findByEmployeeId(employeeId);
 		for (Role role : roles) {
 			if(role.getId()==roleId){
@@ -53,7 +53,7 @@ public class RoleService {
 		return roleRepository.assign(employeeId, roleId);
 	}
 
-	public int removeRole(Long employeeId, int roleId) {
+	public int removeRole(Integer employeeId, int roleId) {
 		return roleRepository.remove(employeeId, roleId);
 	}
 

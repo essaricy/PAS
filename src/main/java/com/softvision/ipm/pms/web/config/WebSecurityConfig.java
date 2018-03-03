@@ -13,12 +13,11 @@ import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled=true)
+//@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
+	@Autowired private SVAuthenticationProvider authenticationProvider;
 
-	@Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
     }
@@ -44,7 +43,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/fonts/**", "/scripts/**", "/images/**",
-				"/AdminBSBMaterialDesign/**", "/StarAdmin/**");
+				"/AdminBSBMaterialDesign/**");
 	}
 
 }

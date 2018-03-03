@@ -54,8 +54,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/**")
         	.addResourceLocations("classpath:favicon.ico")
         	.addResourceLocations("classpath:/AdminBSBMaterialDesign")
-        	.addResourceLocations("classpath:/StarAdmin")
-        	.addResourceLocations("classpath:/Adminator")
         	.addResourceLocations("classpath:/fonts")
         	.addResourceLocations("classpath:/scripts")
         	.addResourceLocations("classpath:/images")

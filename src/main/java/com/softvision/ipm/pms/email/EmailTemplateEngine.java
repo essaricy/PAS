@@ -2,17 +2,14 @@ package com.softvision.ipm.pms.email;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.softvision.ipm.pms.common.constants.EmailConstants;
 import com.softvision.ipm.pms.common.exception.EmailException;
@@ -26,7 +23,6 @@ public class EmailTemplateEngine {
 
     private static final Logger LOGGER = Logger.getLogger(EmailTemplateEngine.class);
 
-    @Autowired
     private Configuration configuration;
 
     @PostConstruct

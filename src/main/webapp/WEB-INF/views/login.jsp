@@ -19,6 +19,12 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
+  <style type="text/css">
+  .login-page {
+    /* background-color: #1b75bc; */
+    background-image: url('<%=request.getContextPath()%>/images/keyboard_letter-wallpaper.jpg');
+  }
+  </style>
   </head>
   <body class="login-page">
     <div class="login-box">
