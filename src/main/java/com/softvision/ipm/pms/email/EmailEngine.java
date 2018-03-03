@@ -1,15 +1,14 @@
 package com.softvision.ipm.pms.email;
 
+import java.util.Map;
+
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.common.constants.EmailConstants;
 import com.softvision.ipm.pms.common.exception.EmailException;
-
-import java.text.MessageFormat;
-import java.util.Map;
-
-import javax.mail.MessagingException;
 
 @Component
 public class EmailEngine {

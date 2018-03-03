@@ -13,7 +13,7 @@ import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired private SVAuthenticationProvider authenticationProvider;

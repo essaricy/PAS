@@ -3,8 +3,6 @@ package com.sv.ipm.pms;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -17,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.softvision.ipm.pms.Application;
 import com.softvision.ipm.pms.email.EmailEngine;
-import com.softvision.ipm.pms.email.SPIEmailUtil;
 
 
 @RunWith(SpringRunner.class)
@@ -25,7 +22,7 @@ import com.softvision.ipm.pms.email.SPIEmailUtil;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TestMailTest {
 
-	private static final String CYCLE_NAME = "AppraisalCycle-Test-" + System.currentTimeMillis();
+	//private static final String CYCLE_NAME = "AppraisalCycle-Test-" + System.currentTimeMillis();
 
 	//@Autowired SPIEmailUtil spiEmailUtil;
 

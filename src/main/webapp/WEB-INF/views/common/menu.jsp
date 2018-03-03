@@ -21,7 +21,7 @@
         <c:if test="${empty imageUrl}">
           <img src="<%=request.getContextPath()%>/images/user.png" width="48" height="48" alt="${userName}" />
         </c:if>
-        <c:if test="${not empty var1}">
+        <c:if test="${not empty imageUrl}">
           <img src="${imageUrl}" width="48" height="48" alt="${userName}" />
         </c:if>
       </div>
