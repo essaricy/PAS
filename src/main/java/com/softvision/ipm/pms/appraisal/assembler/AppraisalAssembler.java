@@ -34,7 +34,7 @@ public class AppraisalAssembler {
 		return dto;
 	}
 
-	private static List<AppraisalPhaseDto> getPhasesList(List<AppraisalPhase> all) {
+	public static List<AppraisalPhaseDto> getPhasesList(List<AppraisalPhase> all) {
 		List<AppraisalPhaseDto> list = new ArrayList<>();
 		for (AppraisalPhase object : all) {
 			list.add(getPhase(object));
@@ -42,7 +42,7 @@ public class AppraisalAssembler {
 		return list;
 	}
 
-	private static AppraisalPhaseDto getPhase(AppraisalPhase object) {
+	public static AppraisalPhaseDto getPhase(AppraisalPhase object) {
 		AppraisalPhaseDto dto = null;
 		if (object != null) {
 			dto = new AppraisalPhaseDto();

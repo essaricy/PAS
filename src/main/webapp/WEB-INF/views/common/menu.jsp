@@ -60,10 +60,10 @@
 	              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
 	            </li>
 	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/template/assign">Assign Templates</a>
+	              <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
 	            </li>
 	            <li>
-                  <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assigned Employees</a>
+                  <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
                 </li>
 	          </ul>
 	        </li>

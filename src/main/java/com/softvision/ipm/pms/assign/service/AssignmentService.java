@@ -49,7 +49,7 @@ public class AssignmentService {
 		long templateId = bulkAssignmentDto.getTemplateId();
 		List<Integer> employeeIds = bulkAssignmentDto.getEmployeeIds();
 
-		AppraisalCycle cycle = appraisalCycleDataRepository.findById((long)cycleId);
+		AppraisalCycle cycle = appraisalCycleDataRepository.findById(cycleId);
 		if (cycle == null) {
 			throw new ServiceException("There is no such cycle with the given id");
 		}

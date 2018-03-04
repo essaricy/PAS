@@ -26,7 +26,7 @@ public class AppraisalCycle implements Serializable {
 	@Id
 	@SequenceGenerator(name="appr_cycle_id_seq",sequenceName="appr_cycle_id_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="appr_cycle_id_seq")
-	private Long id;
+	private Integer id;
 
 	@Column(unique=true)
 	private String name;

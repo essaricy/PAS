@@ -33,7 +33,7 @@ import com.softvision.ipm.pms.constant.AppraisalCycleStatus;
 public class AppraisalCycleTest {
 
 	private static final String CYCLE_NAME = "AppraisalCycle-Test-" + System.currentTimeMillis();
-	private static Long id;
+	private static Integer id;
 
 	@Autowired AppraisalService appraisalService;
 

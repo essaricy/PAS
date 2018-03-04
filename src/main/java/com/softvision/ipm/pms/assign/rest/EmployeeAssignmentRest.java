@@ -10,23 +10,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
 import com.softvision.ipm.pms.assign.service.EmployeeAssignmentService;
 import com.softvision.ipm.pms.user.model.User;
 
 @RestController
-@RequestMapping(value="employee/assignment", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="assignment/employee", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeAssignmentRest {
 
 	@Autowired private EmployeeAssignmentService employeeAssignmentService;
 
-	@RequestMapping(value="current", method=RequestMethod.GET)
-    public List<EmployeeAssignmentDto> getCurrentAssignments() {
+	@RequestMapping(value="list", method=RequestMethod.GET)
+    public List<CycleAssignmentDto> getAll() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = (User) auth.getDetails();
 		int employeeId = user.getEmployeeId();
 		System.out.println("employeeId=" + employeeId);
-		return employeeAssignmentService.getCurrentAssignments(employeeId);
+		return employeeAssignmentService.getAll(employeeId);
     }
 
 }

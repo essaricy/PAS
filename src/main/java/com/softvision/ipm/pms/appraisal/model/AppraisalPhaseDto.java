@@ -21,7 +21,7 @@ public class AppraisalPhaseDto implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Min(0)
-    private long id;
+    private int id;
 
 	@NotBlank(message="Provide a name for cycle. It cannot be empty")
 	private String name;

@@ -1,13 +1,19 @@
 package com.softvision.ipm.pms.assign.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.constant.AssignmentPhaseStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
-import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
+import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -20,13 +26,9 @@ public class ManagerAssignmentService {
 
 	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
 
-	//@Autowired private EmployeeRepository employeeRepository;
-
 	@Autowired private RoleService roleService;
 
-	public List<EmployeeAssignmentDto> getCurrentAssignments(int employeeId) {
-		return managerAssignmentRepository.getCurrentPhases(employeeId);
-	}
+	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	public void changeManager(long phaseAssignId, int toEmployeeId)
 			throws ServiceException {
@@ -67,6 +69,30 @@ public class ManagerAssignmentService {
 			throw new ServiceException("Unable to change assigned-by-manager");
 		}
 		// TODO email trigger
+	}
+
+	public List<CycleAssignmentDto> getAll(int employeeId) {
+		List<CycleAssignmentDto> cycleAssignments = new ArrayList<>();
+		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
+		for (AppraisalCycle cycle : allCycles) {
+			int cycleId = cycle.getId();
+			System.out.println("cycleId=" + cycleId);
+			CycleAssignmentDto cycleAssignment = new CycleAssignmentDto();
+			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+			cycleAssignment.setEmployeeAssignments(managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
+			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
+			cycleAssignment.setPhaseAssignments(phaseAssignments);
+			List<AppraisalPhase> phases = cycle.getPhases();
+			for (AppraisalPhase phase : phases) {
+				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
+				phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
+				phaseAssignment.setEmployeeAssignments(managerAssignmentRepository.getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+				phaseAssignments.add(phaseAssignment);
+			}
+			cycleAssignments.add(cycleAssignment);
+		}
+		System.out.println("cycleAssignments=" + cycleAssignments);
+		return cycleAssignments;
 	}
 
 }

@@ -46,60 +46,23 @@ function setButtonWavesEffect(event) {
     $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
 }
 
-/*var getJSON = function (url, successCallback, errorCallback) {
-  $.ajax({
-    type: 'GET',
-    url: url,
-    success: function(result) {
-      console.log(url + ': ' + JSON.stringify(result));
-      if (successCallback) {
-    	successCallback(result);
- 	  }
-    },
-    error: function(error) {
-      console.log('error= ' + JSON.stringify(error));
-      if (errorCallback) {
-      	errorCallback(error);
-	  }
- 	}
-  });
-}*/
-
-
-/*var postJSON = function (url, data, successCallback, failureCallback, errorCallback) {
-	sendAjax('POST',url, data, successCallback, failureCallback, errorCallback)
+function getPhaseStatus(code) {
+  if (code == 0) {
+	return '<span class="label bg-lime">Assigned</span>';
+  } else if (code == 10) {
+	return '<span class="label bg-orange">Self-appraisal Pending</span>';
+  } else if (code == 20) {
+	return '<span class="label bg-deep-orange">Awaiting Review</span>';
+  } else if (code == 30) {
+	return '<span class="label bg-green">Review Completed</span>';
+  } else if (code == 40) {
+	return '<span class="label bg-grey">Frozen</span>';
+  }
+  return null;
 }
-
-var ajaxDelete = function (url, data, successCallback, failureCallback, errorCallback) {
-	sendAjax('DELETE',url, data, successCallback, failureCallback, errorCallback)
+function getCycleStatus(code) {
+  if (code == 0) {
+  	return "Assigned";
+  }
+  return null;
 }
-
-var sendAjax = function (type, url, data, successCallback, failureCallback, errorCallback) {
-    $.ajax({
- 		type: type,
- 	  	contentType: 'application/json',
- 	  	url: url,
- 	  	data: JSON.stringify(data),
- 	  	success: function(result) {
- 	  	  if (result != null && result.code != 'SUCCESS') {
- 	  		if (failureCallback) {
- 	  		  failureCallback(result.message, result.content);
- 	  		} else {
- 	  			swal("Failed to save data", result.message);
- 	  		}
- 	  	  } else {
- 	  		if (successCallback) {
- 	  	      successCallback(result.content);
- 	  		} else {
- 	  		  swal("Data has been saved successfully.");
- 	  		}
- 	  	  }
- 	    },
- 	    error: function(error) {
-        console.log('error= ' + JSON.stringify(error));
-        if (errorCallback) {
-      	errorCallback(error);
-		  }
- 	    }
- 	  });
-  }*/

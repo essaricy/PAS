@@ -25,7 +25,7 @@ public class AppraisalService {
 		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAll());
 	}
 
-	public AppraisalCycleDto getCycle(Long id) {
+	public AppraisalCycleDto getCycle(Integer id) {
 		return AppraisalAssembler.getCycle(appraisalCycleDataRepository.findById(id));
 	}
 
@@ -34,7 +34,7 @@ public class AppraisalService {
 			if (appraisalCycleDto == null) {
 				throw new ServiceException("Appraisal Cycle information is not provided.");
 			}
-			long id = appraisalCycleDto.getId();
+			int id = appraisalCycleDto.getId();
 			if (id == 0) {
 				appraisalCycleDto.setStatus(AppraisalCycleStatus.DRAFT);
 			} else {
@@ -58,7 +58,7 @@ public class AppraisalService {
 		}
 	}
 
-	public void changeStatus(long id, AppraisalCycleStatus status) throws ServiceException {
+	public void changeStatus(Integer id, AppraisalCycleStatus status) throws ServiceException {
 		boolean sendActivationEmail=false;
 		if (id <= 0) {
 			throw new ServiceException("Invalid id");
@@ -114,7 +114,7 @@ public class AppraisalService {
 		}
 	}
 
-	public void delete(Long id) throws ServiceException {
+	public void delete(Integer id) throws ServiceException {
 		try {
 			AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findById(id);
 			if (appraisalCycle == null) {

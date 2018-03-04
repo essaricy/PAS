@@ -32,7 +32,7 @@ public class AppraisalRest {
     }
 
 	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
-    public @ResponseBody AppraisalCycleDto getCycle(@PathVariable(required=true) @NotNull long id) {
+    public @ResponseBody AppraisalCycleDto getCycle(@PathVariable(required=true) @NotNull Integer id) {
 		return appraisalService.getCycle(id);
     }
 
@@ -77,7 +77,7 @@ public class AppraisalRest {
     }
 
 	@RequestMapping(value="/activate/{id}", method=RequestMethod.PUT)
-    public Result activate(@PathVariable(required=true) @NotNull long id) {
+    public Result activate(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
 			System.out.println("id= " + id);
@@ -92,7 +92,7 @@ public class AppraisalRest {
     }
 
 	@RequestMapping(value="/complete/{id}", method=RequestMethod.PUT)
-    public Result complete(@PathVariable(required=true) @NotNull long id) {
+    public Result complete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
 			System.out.println("id= " + id);
@@ -107,7 +107,7 @@ public class AppraisalRest {
     }
 
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
-    public Result delete(@PathVariable(required=true) @NotNull long id) {
+    public Result delete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
 			System.out.println("id= " + id);

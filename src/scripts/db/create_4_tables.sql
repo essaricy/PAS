@@ -164,8 +164,8 @@ CREATE TABLE emp_cycle_assign (
 	CHECK (CYCLE_ID > 0),
 	CHECK (TEMPLATE_ID > 0),
 	CHECK (EMPLOYEE_ID > 0),
-	CHECK (EMPLOYEE_ID != ASSIGNED_BY),
-	CHECK (STATUS IN (0, 1, 2, 3))
+	CHECK (EMPLOYEE_ID != ASSIGNED_BY)
+	--, CHECK (STATUS IN (0, 1, 2, 3))
 );
 -- drop table emp_phase_assign;
 CREATE TABLE emp_phase_assign (
@@ -186,8 +186,8 @@ CREATE TABLE emp_phase_assign (
 	CHECK (PHASE_ID > 0),
 	CHECK (TEMPLATE_ID > 0),
 	CHECK (EMPLOYEE_ID > 0),
-	CHECK (EMPLOYEE_ID != ASSIGNED_BY),
-	CHECK (STATUS IN (0, 1, 2, 3))
+	CHECK (EMPLOYEE_ID != ASSIGNED_BY)
+	--, CHECK (STATUS IN (0, 1, 2, 3))
 );
 
 

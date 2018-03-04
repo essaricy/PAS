@@ -7,12 +7,6 @@
 <c:set var="AppraisalCycleStatus_ACTIVE" value="<%=AppraisalCycleStatus.ACTIVE%>"/>
 <c:set var="AppraisalCycleStatus_COMPLETE" value="<%=AppraisalCycleStatus.COMPLETE%>"/>
 
-<c:set var="AssignmentPhaseStatus_ASSIGNED" value="<%=AssignmentPhaseStatus.ASSIGNED.getName()%>" />
-<c:set var="AssignmentPhaseStatus_SELF_APPRAISAL_PENDING" value="<%=AssignmentPhaseStatus.SELF_APPRAISAL_PENDING.getName()%>"/>
-<c:set var="AssignmentPhaseStatus_SELF_APPRAISAL_COMPLETED" value="<%=AssignmentPhaseStatus.SELF_APPRAISAL_COMPLETED.getName()%>"/>
-<c:set var="AssignmentPhaseStatus_MANAGER_REVIEW_COMPLETED" value="<%=AssignmentPhaseStatus.MANAGER_REVIEW_COMPLETED.getName()%>"/>
-<c:set var="AssignmentPhaseStatus_FROZEN" value="<%=AssignmentPhaseStatus.FROZEN.getName()%>"/>
-
 <style>
 </style>
 <!-- Page Loader -->

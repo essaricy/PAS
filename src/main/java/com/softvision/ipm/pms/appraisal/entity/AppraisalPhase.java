@@ -21,7 +21,7 @@ public class AppraisalPhase implements Serializable {
 	@Id
 	@SequenceGenerator(name="appr_phase_id_seq",sequenceName="appr_phase_id_seq", allocationSize=1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="appr_phase_id_seq")
-    private long id;
+    private int id;
 
 	private String name;
 

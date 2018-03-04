@@ -41,7 +41,7 @@ public class AssignmentRepository extends AbstractRepository {
 		}
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase appraisalPhase : phases) {
-			Long phaseId = appraisalPhase.getId();
+			Integer phaseId = appraisalPhase.getId();
 			System.out.println("Doing for Phase " + phaseId);
 			EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId.intValue(), templateId, employeeId);
 			if (employeePhaseAssignment != null) {

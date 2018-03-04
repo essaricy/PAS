@@ -45,34 +45,9 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Employee Assignments
-          <small>View status of the current employees those are assigned to you, change manager, send forms</small>
+        <h2>My Appraisals
+          <small>View and submit the appraisal forms</small>
         </h2>
-      </div>
-      <div class="row clearfix">
-        <!-- Linked Items -->
-        <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
-          <div class="card assignment_list_card">
-          	<div class="header">Current Appraisal Cycle Name
-          	</div>
-            <div class="body">
-	            <table id="Assignments_Table" class="table table-striped table-hover dataTable">
-					<thead>
-						<tr>
-							<th>Phase Name</th>
-							<th>Employee Name</th>
-							<th>Assigned By</th>
-							<th>Assigned At</th>
-							<th>Status</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-          </div>
-        </div>
       </div>
     </div>
   </section>
@@ -106,44 +81,33 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
 <script>
 $(function () {
-  $.fn.ajaxGet({
-	url: '<%=request.getContextPath()%>/employee/assignment/current',
-	onSuccess: renderCurrentAssignments,
-	onError: onErrorCurrentAssignments
+  $('.container-fluid').renderAssignment({
+  	url: '<%=request.getContextPath()%>/assignment/employee/list',
+  	phaseActionCell: handlePhaseActions,
   });
 
-  function renderCurrentAssignments(result) {
-    var table=$('#Assignments_Table');
-    $(result).each(function(index, assignment) {
-      var statusId=assignment.status.code;
-      var statusName=assignment.status.name;
-	  var row=$('<tr>');
-	  $(row).append('<td>' + assignment.phaseName + '</td>');
-	  $(row).append('<td>' + assignment.assignedToName + '</td>');
-	  $(row).append('<td>' + assignment.assignedByName + '</td>');
-	  $(row).append('<td>' + assignment.assignedAt + '</td>');
-	  $(row).append('<td>' + assignment.status.title + '</td>');
-	  if (statusName == '${AssignmentPhaseStatus_SELF_APPRAISAL_PENDING}') {
-		var td=$('<td>');
-		var selfAppraisalButton=$('<button class="btn btn-xs btn-info waves-effect" title="Start Self Appraisal"><i class="material-icons">assignment_late</i></button>');
-		$(selfAppraisalButton).click(function() {
-		  location.href='<%=request.getContextPath()%>/employee/assignment/show/' + assignment.assignmentId;
-		});
-		$(td).append(selfAppraisalButton);
-		$(row).append(td);
-	  } else {
-		$(row).append('<td>-</td>');
-	  }
-	  $(table).find('tr:last').after(row);
-    });
+  function handlePhaseActions(ea) {
+	var status=ea.status;
+	var td=$('<td>');
+	if (status == 0) {
+	} else if (status == 10) {
+      var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment_ind</i></button>');
+      $(fillFormButton).click(function() {
+        gotoSelfSubmission(ea.assignmentId);	
+	  });
+	  $(td).append(fillFormButton);
+	}
+	return td;
   }
 
-  function onErrorCurrentAssignments(error) {
+  function gotoSelfSubmission(assignmentId) {
 	  
   }
 });
+
 
 </script>
 </html>

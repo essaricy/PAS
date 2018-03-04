@@ -49,31 +49,6 @@
           <small>View status of the current employees those are assigned to you, change manager, send forms</small>
         </h2>
       </div>
-      <div class="row clearfix">
-        <!-- Linked Items -->
-        <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12">
-          <div class="card assignment_list_card">
-          	<div class="header">Current Appraisal Cycle Name
-          	</div>
-            <div class="body">
-	            <table id="Assignments_Table" class="table table-striped table-hover dataTable">
-					<thead>
-						<tr>
-							<th>Phase Name</th>
-							<th>Employee Name</th>
-							<th>Assigned By</th>
-							<th>Assigned At</th>
-							<th>Status</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </body>
@@ -106,77 +81,41 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
 <script>
 $(function () {
-  $.fn.ajaxGet({
-	url: '<%=request.getContextPath()%>/appraisal/get/active',
-	onSuccess: onActiveAvailable,
-	onError: onError
+  $('.container-fluid').renderAssignment({
+  	url: '<%=request.getContextPath()%>/assignment/manager/list',
+  	phaseActionCell: handlePhaseActions,
   });
-  function onActiveAvailable(result) {
-    if (result== null || result=="" || result=="undefined") {
-	  onError("There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.");
-	  return;
+ 
+  function handlePhaseActions(ea) {
+	var status=ea.status;
+	var td=$('<td>');
+	if (status == 0) {
+      var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
+      var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_turned_in</i></button>');
+      $(enableFormButton).click(function() {
+        enableSelfSubmission(ea.assignmentId);	
+	  });
+	  //$(td).append(assignToManagerButton);
+	  $(td).append(enableFormButton);
 	}
-	console.log('onActiveAvailable result=' + result);
-  }
-  function onError(error) {
-	console.log('onError error=' + error);
-	var mainCard=$('.assignment_list_card');
-	$(mainCard).find('.body').empty();
-	$(mainCard).find('.body').append('<p class="font-bold col-pink">' + error + '</p>');
+	return td;
   }
 
-  $.fn.ajaxGet({
-	url: '<%=request.getContextPath()%>/manager/assignment/current',
-	onSuccess: renderAssignedEmployees,
-	onError: onErrorAssignedEmployees
-  });
-
-  function renderAssignedEmployees(result) {
-    var table=$('#Assignments_Table');
-    $(result).each(function(index, assignment) {
-      var statusId=assignment.status.code;
-      var statusName=assignment.status.name;
-	  var row=$('<tr>');
-	  $(row).append('<td>' + assignment.phaseName + '</td>');
-	  $(row).append('<td>' + assignment.assignedToName + '</td>');
-	  $(row).append('<td>' + assignment.assignedByName + '</td>');
-	  $(row).append('<td>' + assignment.assignedAt + '</td>');
-	  $(row).append('<td>' + assignment.status.title + '</td>');
-	  if (statusName == '${AssignmentPhaseStatus_ASSIGNED}') {
-		var td=$('<td>');
-		var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
-		var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_turned_in</i></button>');
-		$(enableFormButton).click(function() {
-			enableSelfSubmission(assignment.assignmentId);	
-		});
-		//$(td).append(assignToManagerButton);
-		$(td).append(enableFormButton);
-		$(row).append(td);
-	  } else {
-		$(row).append('<td>-</td>');
-	  }
-	  $(table).find('tr:last').after(row);
+  function enableSelfSubmission(assignmentId) {
+    swal({
+	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
+	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
+	}, function () {
+	  $.fn.ajaxPut({
+	    url: '<%=request.getContextPath()%>/assignment/manager/change/phase-status/enable/' + assignmentId
+	  });
     });
   }
-
-  function onErrorAssignedEmployees(error) {
-	  
-  }
 });
-
-function enableSelfSubmission(assignmentId) {
-  swal({
-    title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
-    showCancelButton: true, confirmButtonColor: "#DD6B55",
-	confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
-  }, function () {
-	$.fn.ajaxPut({
-	  url: '<%=request.getContextPath()%>/manager/assignment/enableForm/' + assignmentId
-	});
-  });
-}
 
 </script>
 </html>
