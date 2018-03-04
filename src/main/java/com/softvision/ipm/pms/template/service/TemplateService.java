@@ -14,6 +14,7 @@ import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
+import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
@@ -52,14 +53,32 @@ public class TemplateService {
 
 			List<TemplateHeaderDto> headers = templateDto.getHeaders();
 			int totalWeightage=0;
+
 			for (TemplateHeaderDto header : headers) {
-				totalWeightage += header.getWeightage();
+				int weightage = header.getWeightage();
+				totalWeightage += weightage;
+
+				boolean containsApply=false;
+				List<TemplateDetailDto> details = header.getDetails();
+				for (TemplateDetailDto detail : details) {
+					String apply = detail.getApply();
+					if (apply != null && apply.equalsIgnoreCase("Y")) {
+						containsApply=true;
+						// Weightage should not be zero if any apply='Y'.
+						if (weightage == 0) {
+							throw new ServiceException("There should not be any items applicable if the weightage is zero. Param '" + detail.getParamName() + "' is applied but weightage is zero for '" + header.getGoalName() + "'");
+						}
+						//break;
+					}
+				}
+				// Weightage should be zero if all apply='N'.
+				if (!containsApply && weightage != 0) {
+					throw new ServiceException("Weightage should be zero if there are no aparams applied");
+				}
 			}
 			if (totalWeightage != 100) {
 				throw new ValidationException("Total Weightage should accumulate to 100%. Its now " + totalWeightage + "%");
 			}
-			// TODO Weightage should not be zero if any apply='Y'.
-			// TODO Weightage should be zero if all apply='N'.
 			Template template = TemplateAssembler.getTemplate(templateDto);
 			templateRepository.save(template);
 			templateDto=TemplateAssembler.getTemplateDto(template);

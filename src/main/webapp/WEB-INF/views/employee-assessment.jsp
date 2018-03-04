@@ -45,8 +45,8 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>My Appraisals
-          <small>View and submit the appraisal forms</small>
+        <h2>My Appraisal
+          <small>View and submit the appraisal form</small>
         </h2>
       </div>
     </div>
@@ -84,11 +84,7 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
 <script>
 $(function () {
-  $('.container-fluid').renderAssignment({
-	role: 'Employee',
-	contextpath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/assignment/employee/list',
-  });
+  console.log('id= ${id}');
 });
 
 

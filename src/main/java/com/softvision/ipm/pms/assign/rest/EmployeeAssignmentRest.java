@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
 import com.softvision.ipm.pms.assign.service.EmployeeAssignmentService;
+import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.user.model.User;
 
 @RestController
@@ -22,11 +23,7 @@ public class EmployeeAssignmentRest {
 
 	@RequestMapping(value="list", method=RequestMethod.GET)
     public List<CycleAssignmentDto> getAll() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = (User) auth.getDetails();
-		int employeeId = user.getEmployeeId();
-		System.out.println("employeeId=" + employeeId);
-		return employeeAssignmentService.getAll(employeeId);
+		return employeeAssignmentService.getAll(RestUtil.getLoggedInEmployeeId());
     }
 
 }

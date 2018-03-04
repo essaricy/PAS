@@ -13,6 +13,7 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.constant.AssignmentPhaseStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
@@ -30,11 +31,16 @@ public class ManagerAssignmentService {
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
-	public void changeManager(long phaseAssignId, int toEmployeeId)
+	public void changeManager(long phaseAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
+		}
+		// he must be the same employee who has been assigned
+		int assignedBy = employeePhaseAssignment.getAssignedBy();
+		if (assignedBy != fromEmployeeId) {
+			throw new ServiceException("The manager who assigned can only enable the form");
 		}
 		int status = employeePhaseAssignment.getStatus();
 		AssignmentPhaseStatus assignmentPhaseStatus = AssignmentPhaseStatus.get(status);
@@ -51,17 +57,28 @@ public class ManagerAssignmentService {
 		}
 	}
 
-	public void enableAppraisalFormToEmployee(long phaseAssignId) throws ServiceException {
+	public void enableAppraisalFormToEmployee(long phaseAssignId, int fromEmployeeId) throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
+		}
+		// he must be the same employee who has been assigned
+		int assignedBy = employeePhaseAssignment.getAssignedBy();
+		if (assignedBy != fromEmployeeId) {
+			throw new ServiceException("The manager who assigned can only enable the form");
 		}
 		int existingStatusId = employeePhaseAssignment.getStatus();
 		AssignmentPhaseStatus existingStatus = AssignmentPhaseStatus.get(existingStatusId);
 		//AssignmentPhaseStatus desiredStatus = AssignmentPhaseStatus.get(toStatusId);
 
-		if (existingStatus != AssignmentPhaseStatus.ASSIGNED /*|| desiredStatus != AssignmentPhaseStatus.SELF_APPRAISAL_PENDING*/) {
+		if (existingStatus != AssignmentPhaseStatus.ASSIGNED) {
 			throw new ServiceException("Assignment status is not in ASSIGNED status.");
+		}
+		int employeeId = employeePhaseAssignment.getEmployeeId();
+		// check if any previous assignments are pending.
+		EmployeeAssignmentDto incompletePhaseAssignment = managerAssignmentRepository.getIncompletePhaseAssignment(phaseAssignId, employeeId);
+		if (incompletePhaseAssignment != null) {
+			throw new ServiceException("Make sure that assignments in previous phase are frozen for this employee before assigning new one");
 		}
 		// Check if from and to employees are managers.
 		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, AssignmentPhaseStatus.SELF_APPRAISAL_PENDING.getCode());
@@ -93,6 +110,33 @@ public class ManagerAssignmentService {
 		}
 		System.out.println("cycleAssignments=" + cycleAssignments);
 		return cycleAssignments;
+	}
+
+	public void freezePhaseForm(long phaseAssignId, int fromEmployeeId) throws ServiceException {
+		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
+		if (employeePhaseAssignment == null) {
+			throw new ServiceException("Assignment does not exist.");
+		}
+		// he must be the same employee who has been assigned
+		int assignedBy = employeePhaseAssignment.getAssignedBy();
+		if (assignedBy != fromEmployeeId) {
+			throw new ServiceException("The manager who assigned can only freeze the form");
+		}
+		int existingStatusId = employeePhaseAssignment.getStatus();
+		AssignmentPhaseStatus existingStatus = AssignmentPhaseStatus.get(existingStatusId);
+		//AssignmentPhaseStatus desiredStatus = AssignmentPhaseStatus.get(toStatusId);
+
+		if (existingStatus != AssignmentPhaseStatus.MANAGER_REVIEW_COMPLETED) {
+			throw new ServiceException("Manager Review is not completed. Cannot freeze the assignment");
+		}
+		// TODO: check if the assessments are available for this assignment.
+		// TODO: Check if this is the past phase assignment. If yes then dump data to emp_cycle_assign
+		// Check if from and to employees are managers.
+		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, AssignmentPhaseStatus.FROZEN.getCode());
+		if (!changed) {
+			throw new ServiceException("Unable to freeze this assignment");
+		}
+		// TODO email trigger
 	}
 
 }

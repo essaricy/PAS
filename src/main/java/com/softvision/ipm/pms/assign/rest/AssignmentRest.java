@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.service.AssignmentService;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.user.model.User;
 
 @RestController
@@ -29,10 +30,7 @@ public class AssignmentRest {
     public Result saveBulk(@RequestBody(required=true) @NotNull @NotEmpty BulkAssignmentDto bulkAssignmentDto) {
 		Result result = new Result();
 		try {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			User user = (User) auth.getDetails();
-			int employeeId = user.getEmployeeId();
-			bulkAssignmentDto.setAssignedBy(employeeId);
+			bulkAssignmentDto.setAssignedBy(RestUtil.getLoggedInEmployeeId());
 			List<Result> assignResult = assignmentService.bulkAssign(bulkAssignmentDto);
 			result.setCode(Result.SUCCESS);
 			result.setContent(assignResult);

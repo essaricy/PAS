@@ -38,6 +38,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
 
         registry.addViewController("/employee/assignment/list").setViewName("employee-assignment-list");
+        registry.addViewController("/employee/assessment").setViewName("employee-assessment");
     }
 
     @Override

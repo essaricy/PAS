@@ -85,36 +85,10 @@
 <script>
 $(function () {
   $('.container-fluid').renderAssignment({
+	role: 'Manager',
+	contextpath: '<%=request.getContextPath()%>',
   	url: '<%=request.getContextPath()%>/assignment/manager/list',
-  	phaseActionCell: handlePhaseActions,
   });
- 
-  function handlePhaseActions(ea) {
-	var status=ea.status;
-	var td=$('<td>');
-	if (status == 0) {
-      var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
-      var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_turned_in</i></button>');
-      $(enableFormButton).click(function() {
-        enableSelfSubmission(ea.assignmentId);	
-	  });
-	  //$(td).append(assignToManagerButton);
-	  $(td).append(enableFormButton);
-	}
-	return td;
-  }
-
-  function enableSelfSubmission(assignmentId) {
-    swal({
-	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
-	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-		confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
-	}, function () {
-	  $.fn.ajaxPut({
-	    url: '<%=request.getContextPath()%>/assignment/manager/change/phase-status/enable/' + assignmentId
-	  });
-    });
-  }
 });
 
 </script>

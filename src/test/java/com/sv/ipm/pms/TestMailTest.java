@@ -34,7 +34,6 @@ public class TestMailTest {
 //		try {
 //			spiEmailUtil.sendEmail("srikanth.kumar@softvision.com", new String[] {"rohith.ramesh@softvision.com"}, "subject", "content");
 //		} catch (MessagingException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //	}
@@ -51,7 +50,6 @@ public class TestMailTest {
 				emailData.put("cycle", "2017-2018");
 				emailEngine.sendApprasialKickOfMail(emailData);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -65,7 +63,6 @@ public class TestMailTest {
 				emailData.put("manager", "Murgan");
 				emailEngine.sendEmployeeAlert(emailData);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

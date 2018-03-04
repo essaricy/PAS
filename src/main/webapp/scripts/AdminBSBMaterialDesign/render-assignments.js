@@ -1,8 +1,9 @@
 $(function () {
   $.fn.renderAssignment=function( options ) {
     var settings=$.extend({
+      contextpath: null,
 	  url: null,
-	  afterLoad: null,
+	  role: 'Employee',
 	}, options );
 
     var obj=$(this);
@@ -14,7 +15,6 @@ $(function () {
     });
     
     function renderAssignedEmployees(data) {
-      console.log('renderAssignedEmployees()');
       $(data).each(function (index, cycleAssignment) {
     	var cycle=cycleAssignment.cycle;
 
@@ -34,7 +34,11 @@ $(function () {
         var employeeAssignments=cycleAssignment.employeeAssignments;
         console.log('employeeAssignments.length=' + employeeAssignments.length);
         if (employeeAssignments.length==0) {
-          $(cycleTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this cycle.</p>');
+          if (options.role == 'Manager') {
+        	$(cycleTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this cycle.</p>');
+          } else {
+        	$(cycleTabPanel).append('<p class="font-bold col-pink">Nothing has been assigned to you for this cycle.</p>');
+          }
         } else {
           var table=$('<table class="table table-striped">');
           var thead=$('<thead>');
@@ -60,7 +64,7 @@ $(function () {
         	$(row).append('<td>' + ea.assignedAt + '</td>');
         	$(row).append('<td>' + getCycleStatus(ea.status) + '</td>');
         	if (options.cycleActionCell) {
-       		  $(row).append(options.cycleActionCell(ea));
+       		  $(row).append(options.cycleActionCell(options.role, ea));
         	} else {
         	  $(row).append('<td>-</td>');
         	}
@@ -81,7 +85,11 @@ $(function () {
           console.log('employeeAssignments.length=' + employeeAssignments.length);
 
           if (employeeAssignments.length==0) {
-        	$(phaseTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this phase.</p>');
+        	if (options.role == 'Manager') {
+              $(phaseTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this phase.</p>');
+            } else {
+           	  $(phaseTabPanel).append('<p class="font-bold col-pink">Nothing has been assigned to you for this phase.</p>');
+            }
           } else {
             var table=$('<table class="table table-striped">');
             var thead=$('<thead>');
@@ -98,11 +106,7 @@ $(function () {
           	  $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           	  $(row).append('<td>' + ea.assignedAt + '</td>');
           	  $(row).append('<td>' + getPhaseStatus(ea.status) + '</td>');
-          	  if (options.phaseActionCell) {
-          		$(row).append(options.phaseActionCell(ea));
-          	  } else {
-          		$(row).append('<td>-</td>');
-          	  }
+          	  $(row).append(getPhaseActionCell(options.role, ea));
           	  $(tbody).append(row);
             });
 
@@ -132,8 +136,86 @@ $(function () {
         $(tabContent).append(cycleTabPanel);
         $(tabContent).append(phaseTabPanel);
       });
-      
     }
+    function getPhaseActionCell(role, ea) {
+    	var status=ea.status;
+    	var td=$('<td>');
+    	console.log('getPhaseActionCell() ' + role);
+
+    	if (status == 0) {
+    	  if (role == 'Manager') {
+            var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
+            var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_return</i></button>');
+    		$(enableFormButton).click(function() {
+    		  enableSelfSubmission(ea.assignmentId);	
+    		});
+    		//$(td).append(assignToManagerButton);
+    		$(td).append(enableFormButton);
+    	  } else {
+    		$(td).append('-');
+    	  }
+    	} else if (status == 10) {
+    	  if (role == 'Manager') {
+    		$(td).append('-');
+    	  } else {
+            var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment_ind</i></button>');
+            $(fillFormButton).click(function() {
+              //gotoSelfSubmission(ea.assignmentId);
+              location.href=settings.contextpath + '/employee/assessment?id=' + ea.assignmentId;
+    	    });
+    	    $(td).append(fillFormButton);
+    	  }
+    	} else if (status == 20) {
+    	  if (role == 'Manager') {
+            var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Review"><i class="material-icons">assignment</i></button>');
+            $(fillReviewButton).click(function() {
+              //gotoSelfSubmission(ea.assignmentId);
+              location.href=settings.contextpath + '/assessment/manager/' + ea.assignmentId;
+    	    });
+    	    $(td).append(fillReviewButton);
+    	  } else {
+    		$(td).append('-');
+    	  }
+    	} else if (status == 30) {
+    	  if (role == 'Manager') {
+            var freezeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Freeze"><i class="material-icons">assignment_turned_in</i></button>');
+            $(freezeButton).click(function() {
+              freezeAssignment(ea.assignmentId);
+    	    });
+    	    $(td).append(freezeButton);
+    	  } else {
+    		$(td).append('-');
+    	  }
+    	} else if (status == 40) {
+    	  $(td).append('-');
+    	}
+    	return td;
+      }
+
+      function enableSelfSubmission(assignmentId) {
+        swal({
+    	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
+    	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+    		confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
+    	}, function () {
+    	  $.fn.ajaxPut({
+    	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + assignmentId
+    	  });
+        });
+      }
+
+      function freezeAssignment(assignmentId) {
+        swal({
+    	  title: "Are you sure?", text: "Do you want to Freeze this assignment? This cannot be undone!!!", type: "warning",
+    	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+    		confirmButtonText: "Yes, Freeze it!", closeOnConfirm: false
+    	}, function () {
+    	  $.fn.ajaxPut({
+    	    url: settings.contextpath + '/assignment/manager/change/phase-status/freeze/' + assignmentId
+    	  });
+        });
+      }
+
     function onErrorAssignedEmployees(error) {
     	console.log('error=' + error);
     }
