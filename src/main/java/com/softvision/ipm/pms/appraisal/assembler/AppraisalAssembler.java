@@ -3,11 +3,11 @@ package com.softvision.ipm.pms.appraisal.assembler;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
-import com.softvision.ipm.pms.constant.AppraisalCycleStatus;
 
 public class AppraisalAssembler {
 

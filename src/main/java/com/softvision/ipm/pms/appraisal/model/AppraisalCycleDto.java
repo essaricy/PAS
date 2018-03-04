@@ -14,10 +14,10 @@ import org.springframework.validation.annotation.Validated;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatDeserializer;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatSerializer;
 import com.softvision.ipm.pms.common.validator.NotContainNull;
-import com.softvision.ipm.pms.constant.AppraisalCycleStatus;
 
 import lombok.Data;
 

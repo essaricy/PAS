@@ -1,4 +1,4 @@
-package com.softvision.ipm.pms.constant;
+package com.softvision.ipm.pms.appraisal.constant;
 
 public enum AppraisalCycleStatus {
 	DRAFT,

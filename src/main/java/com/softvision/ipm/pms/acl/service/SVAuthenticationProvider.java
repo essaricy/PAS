@@ -13,7 +13,8 @@ import com.softvision.ipm.pms.user.model.UserToken;
 @Service
 public class SVAuthenticationProvider implements AuthenticationProvider {
 
-	@Autowired private SVAuthenticationService authenticationService;
+	//@Autowired private SVAuthenticationService authenticationService;
+	@Autowired private TestAuthenticationService authenticationService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
