@@ -40,17 +40,13 @@
       onFinishing: function (event, currentIndex) {
         form.validate().settings.ignore = ':disabled';
         var isValid=form.valid();
-        console.log('isValid? ' + isValid);
         if (isValid && settings.onFinishing) {
-        	console.log('Calling onFinishing');
         	settings.onFinishing();
         }
         return isValid;
       },
       onFinished: function (event, currentIndex) {
-        //swal("Good job!", "Submitted!", "success");
     	if (settings.onFinished) {
-          console.log('Calling onFinished');
           settings.onFinished();
         } else {
         	//swal("Good job!", "Submitted!", "success");

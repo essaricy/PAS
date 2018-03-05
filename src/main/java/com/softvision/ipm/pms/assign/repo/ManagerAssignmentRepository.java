@@ -39,7 +39,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 	}
 
 	public EmployeeAssignmentDto getIncompletePhaseAssignment(Long phaseAssignId, int employeeId) {
-		EmployeeAssignmentDto employeeAssignment = jdbcTemplate.queryForObject(
+		List<EmployeeAssignmentDto> employeeAssignments = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_INCOMPLETE,
 			    new Object[] {phaseAssignId, employeeId},
 			    new RowMapper<EmployeeAssignmentDto>() {
@@ -47,7 +47,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
 			        }
 			    });
-		return employeeAssignment;
+		return (employeeAssignments== null || employeeAssignments.isEmpty()) ? null : employeeAssignments.get(0);
 	}
 
 	public boolean changeManager(Long phaseAssignId, int toEmployeeId) {

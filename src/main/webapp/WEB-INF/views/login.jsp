@@ -21,8 +21,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
   <style type="text/css">
   .login-page {
-    /* background-color: #1b75bc; */
-    background-image: url('<%=request.getContextPath()%>/images/keyboard_letter-wallpaper.jpg');
+    background-color: #607D8B;
+    <%-- background-image: url('<%=request.getContextPath()%>/images/keyboard_letter-wallpaper.jpg'); --%>
   }
   </style>
   </head>
@@ -30,7 +30,7 @@
     <div class="login-box">
       <div class="logo">
         <a href="javascript:void(0);"><b>SOFTVISION</b></a>
-        <small>Admin BootStrap Based - Material Design</small>
+        <small>PAS - Performance Appraisal System</small>
       </div>
       <div class="card">
         <div class="body">

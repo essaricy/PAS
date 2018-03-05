@@ -11,6 +11,8 @@ public interface TemplateDataRepository extends CrudRepository<Template, Long> {
 
 	List<Template> findAll();
 
+	List<Template> findAllByOrderByUpdatedAtDesc();
+	
 	Template findById(Long id);
 
 	List<Template> findAll(Specification<Template> spec);

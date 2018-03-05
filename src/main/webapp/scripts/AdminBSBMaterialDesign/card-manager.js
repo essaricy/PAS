@@ -29,8 +29,6 @@
     .done(function(data) {
       //console.log('data=' + data);
       if (data) {
-
-        console.log('data.length=' + data.length);
         if (data.length == 0) {
           //var div=$('<div class="alert alert-danger">There are no records found</div>');
           //var noRecordsNote=$('<p class="font-bold col-pink">There are no records found</p>');
@@ -53,8 +51,12 @@
           }
         }
       }
+      var items = $(''+activeItemSelector);
+      if (items != null && items.length != 0) {
+   	    $(items)[0].click();
+      }
       if (settings.afterLoadCallback) {
-    	  settings.afterLoadCallback($(''+activeItemSelector), data);
+    	settings.afterLoadCallback(items, data);
       }
     })
     .fail(function(result) {
@@ -91,7 +93,6 @@
     	  $(link).text(item['name']);
     	  $(container).append(link);
           $(link).click(function() {
-            console.log('Link clicked in list. Rendering children');
             $(this).addClass('active').siblings().removeClass('active');
             // Show items in child container
             renderChildren(item);
@@ -115,7 +116,6 @@
       var columnMappings=config.columnMappings;
 
       $(container).empty();
-      console.log('data=' + JSON.stringify(data));
 
       var table=$('<table class="table table-condensed table-hover">');
       var thead=$('<thead>');
@@ -130,7 +130,6 @@
       });
 
       $(data).each(function (index, item) {
-        console.log('item=' + item);
         var dataRow=$('<tr>');
         $(tbody).append(dataRow);
         $(columnMappings).each(function(index, columnMapping) {
@@ -140,7 +139,6 @@
     }
 
     function renderChildren(data) {
-      console.log("renderChildren()");
       $(settings.renderConfigs).each(function (index, config) {
         var renderType=config.type;
         var renderFromNode=config.fromNode;
@@ -150,8 +148,6 @@
         if (config.listingType) {
           renderListingType=config.listingType;
         }
-        console.log('renderType=' + renderType + ", renderFromNode=" + renderFromNode
-        		+ ", renderToContainer=" + renderToContainer + ", renderListingType=" + renderListingType);
         if (renderType && renderFromNode && renderToContainer) {
           if (renderType == 'list') {
             renderList($(renderToContainer), data[renderFromNode], renderListingType);

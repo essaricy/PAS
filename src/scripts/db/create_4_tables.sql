@@ -38,7 +38,7 @@ CREATE TABLE appr_phase (
 -- Goals Module
 -- #######################################################
 -- Competency Assessment
-CREATE TABLE goal_ca (
+CREATE TABLE goal (
 	ID			SMALLINT NOT NULL,
 	NAME		VARCHAR(40) NOT NULL,
 	PRIMARY KEY (ID),
@@ -47,17 +47,21 @@ CREATE TABLE goal_ca (
 	CHECK (NAME <> '')
 );
 -- Competency Assessment Parameters
-CREATE TABLE goal_cap (
+CREATE TABLE goal_param (
 	ID			SMALLINT NOT NULL,
-	CA_ID		SMALLINT NOT NULL,
+	GOAL_ID		SMALLINT NOT NULL,
 	APPLY		VARCHAR(1) NOT NULL DEFAULT 'Y',
 	NAME		VARCHAR(300) NOT NULL,
 	PRIMARY KEY (ID),
-	FOREIGN KEY (CA_ID) REFERENCES goal_ca (ID),
+	FOREIGN KEY (GOAL_ID) REFERENCES goal (ID),
 	CHECK (ID > 0),
 	CHECK (NAME <> ''),
 	CHECK (APPLY IN ('Y', 'N'))
 );
+
+-- #######################################################
+-- Template Module
+-- #######################################################
 -- Competency Assessment Template
 CREATE TABLE template (
 	ID			BIGINT NOT NULL,
@@ -74,13 +78,13 @@ CREATE TABLE template (
 CREATE TABLE template_header (
 	ID				BIGINT NOT NULL,
 	TEMPLATE_ID		BIGINT NOT NULL,
-	CA_ID			SMALLINT NOT NULL,
+	GOAL_ID			SMALLINT NOT NULL,
 	WEIGHTAGE		INT NOT NULL,
 
 	PRIMARY KEY (ID),
 	FOREIGN KEY (TEMPLATE_ID) REFERENCES template (ID),
-	FOREIGN KEY (CA_ID) REFERENCES goal_ca (ID),
-	UNIQUE (TEMPLATE_ID, CA_ID),
+	FOREIGN KEY (GOAL_ID) REFERENCES goal (ID),
+	UNIQUE (TEMPLATE_ID, GOAL_ID),
 	CHECK (ID > 0),
 	CHECK (WEIGHTAGE >= 0)
 );
@@ -88,12 +92,12 @@ CREATE TABLE template_header (
 CREATE TABLE template_detail (
 	ID				BIGINT NOT NULL,
 	HEADER_ID		BIGINT NOT NULL,
-	CAP_ID			SMALLINT NOT NULL,
+	PARAM_ID		SMALLINT NOT NULL,
 	APPLY			VARCHAR(1) NOT NULL DEFAULT 'Y',
 
 	PRIMARY KEY (ID),
 	FOREIGN KEY (HEADER_ID) REFERENCES template_header (ID),
-	FOREIGN KEY (CAP_ID) REFERENCES goal_caP (ID),
+	FOREIGN KEY (PARAM_ID) REFERENCES goal_param (ID),
 	CHECK (ID > 0),
 	CHECK (APPLY IN ('Y', 'N'))
 );
@@ -143,7 +147,7 @@ CREATE TABLE employee_role (
 );
 
 -- #######################################################
--- Assessment Module
+-- Assignment Module
 -- #######################################################
 -- drop table emp_cycle_assign;
 CREATE TABLE emp_cycle_assign (
@@ -165,8 +169,8 @@ CREATE TABLE emp_cycle_assign (
 	CHECK (TEMPLATE_ID > 0),
 	CHECK (EMPLOYEE_ID > 0),
 	CHECK (EMPLOYEE_ID != ASSIGNED_BY)
-	--, CHECK (STATUS IN (0, 1, 2, 3))
 );
+
 -- drop table emp_phase_assign;
 CREATE TABLE emp_phase_assign (
 	ID						BIGINT NOT NULL,
@@ -186,10 +190,13 @@ CREATE TABLE emp_phase_assign (
 	CHECK (PHASE_ID > 0),
 	CHECK (TEMPLATE_ID > 0),
 	CHECK (EMPLOYEE_ID > 0),
-	CHECK (EMPLOYEE_ID != ASSIGNED_BY)
-	--, CHECK (STATUS IN (0, 1, 2, 3))
+	CHECK (EMPLOYEE_ID != ASSIGNED_BY),
+	CHECK (STATUS IN (0, 10, 20, 30, 40))
 );
 
+-- #######################################################
+-- Assessment Module
+-- #######################################################
 CREATE TABLE emp_cycle_assess (
 	ID				BIGINT NOT NULL,
 	ASSIGN_ID		BIGINT NOT NULL,
@@ -219,7 +226,7 @@ CREATE TABLE emp_phase_assess (
 	COMMENTS		VARCHAR(600) NOT NULL,
 	PRIMARY KEY (ID),
 	FOREIGN KEY (ASSIGN_ID) REFERENCES emp_phase_assign (ID),
-	FOREIGN KEY (GOAL_ID) REFERENCES goal_ca (ID),
+	FOREIGN KEY (GOAL_ID) REFERENCES goal (ID),
 	UNIQUE(ASSIGN_ID, ASSESS_TYPE, GOAL_ID),
 	CHECK (ID > 0),
 	CHECK (ASSESS_TYPE > 0),

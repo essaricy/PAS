@@ -110,17 +110,17 @@ public class AppraisalCycleTest {
 	@Ignore
 	public void test3_getById() {
 		System.out.println("test3_getById: " + id);
-		AppraisalCycleDto goalCa = appraisalService.getCycle(id);
-		assertNotNull(goalCa);
-		assertTrue(goalCa.getId() != 0);
-		assertTrue(!StringUtils.isBlank(goalCa.getName()));
-		List<AppraisalPhaseDto> goalCaps = goalCa.getPhases();
-		assertNotNull(goalCaps);
-		assertTrue(!goalCaps.isEmpty());
-		AppraisalPhaseDto goalCap = goalCaps.get(0);
-		assertNotNull(goalCap);
-		assertTrue(goalCap.getId() != 0);
-		assertTrue(!StringUtils.isBlank(goalCap.getName()));
+		AppraisalCycleDto appraisalCycle = appraisalService.getCycle(id);
+		assertNotNull(appraisalCycle);
+		assertTrue(appraisalCycle.getId() != 0);
+		assertTrue(!StringUtils.isBlank(appraisalCycle.getName()));
+		List<AppraisalPhaseDto> appraisalPhases = appraisalCycle.getPhases();
+		assertNotNull(appraisalPhases);
+		assertTrue(!appraisalPhases.isEmpty());
+		AppraisalPhaseDto appraisalPhase = appraisalPhases.get(0);
+		assertNotNull(appraisalPhase);
+		assertTrue(appraisalPhase.getId() != 0);
+		assertTrue(!StringUtils.isBlank(appraisalPhase.getName()));
 	}
 
 	@Test
@@ -128,25 +128,25 @@ public class AppraisalCycleTest {
 	public void test4_deleteById() throws ServiceException {
 		System.out.println("test4_deleteById: " + id);
 		appraisalService.delete(id);
-		AppraisalCycleDto goalCa = appraisalService.getCycle(id);
-		assertNull(goalCa);
+		AppraisalCycleDto appraisalCycle = appraisalService.getCycle(id);
+		assertNull(appraisalCycle);
 	}
 
 	@Test
 	public void test5_getActiveCycle() {
 		System.out.println("test5_getActiveCycle: " + id);
-		AppraisalCycleDto goalCa = appraisalService.getActiveCycle();
-		System.out.println("goalCa=" + goalCa);
-		/*assertNotNull(goalCa);
-		assertTrue(goalCa.getId() != 0);
-		assertTrue(!StringUtils.isBlank(goalCa.getName()));
-		List<AppraisalPhaseDto> goalCaps = goalCa.getPhases();
-		assertNotNull(goalCaps);
-		assertTrue(!goalCaps.isEmpty());
-		AppraisalPhaseDto goalCap = goalCaps.get(0);
-		assertNotNull(goalCap);
-		assertTrue(goalCap.getId() != 0);
-		assertTrue(!StringUtils.isBlank(goalCap.getName()));*/
+		AppraisalCycleDto appraisalCycle = appraisalService.getActiveCycle();
+		System.out.println("appraisalCycle=" + appraisalCycle);
+		/*assertNotNull(appraisalCycle);
+		assertTrue(appraisalCycle.getId() != 0);
+		assertTrue(!StringUtils.isBlank(appraisalCycle.getName()));
+		List<AppraisalPhaseDto> appraisalPhases = appraisalCycle.getPhases();
+		assertNotNull(appraisalPhases);
+		assertTrue(!appraisalPhases.isEmpty());
+		AppraisalPhaseDto appraisalPhase = appraisalPhases.get(0);
+		assertNotNull(appraisalPhase);
+		assertTrue(appraisalPhase.getId() != 0);
+		assertTrue(!StringUtils.isBlank(appraisalPhase.getName()));*/
 	}
 
 }

@@ -207,24 +207,42 @@ $(function () {
     } else if (bulkAssignment.employeeIds.length == 0) {
 	  swal({title: "Missing Information", text: "Please select at least an employee to assign", type: "warning"});
     } else {
-      console.log(JSON.stringify(bulkAssignment));
-	  $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
-		onSuccess: function(result) {
-		  console.log('result=' + result);
-		  var results_container=$('#Assignment_Results');
-		  $(results_container).empty();
-		  $(result).each(function(index, aResult) {
-			if (aResult.code=='SUCCESS') {
-			  $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
-			} else {
-			  $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
-			}
-		  });
-		},
-		onFail: function(message, content) {
-		  console.log('message=' + message);			
-		}
-	  });
+      $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+  		onSuccess: function(result) {
+  		  var results_container=$('#Assignment_Results');
+  		  $(results_container).empty();
+  		  $(result).each(function(index, aResult) {
+  		    if (aResult.code=='SUCCESS') {
+  			  $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+  			} else {
+    		  $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+  			}
+  		  });
+  		},
+  		onFail: function(message, content) {
+  		}
+  	  });
+   	  <%-- swal({
+		title: "Are you sure?", text: "Do you want to assign this template to the selected employees?", type: "warning",
+		showCancelButton: true, confirmButtonColor: "#DD6B55",
+	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false
+	  }, function () {
+        $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+		  onSuccess: function(result) {
+		    var results_container=$('#Assignment_Results');
+		    $(results_container).empty();
+		    $(result).each(function(index, aResult) {
+			  if (aResult.code=='SUCCESS') {
+			    $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+			  } else {
+  			    $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+			  }
+		    });
+		  },
+		  onFail: function(message, content) {
+		  }
+	    });
+	  }); --%>
     }
   });
 
@@ -234,7 +252,6 @@ $(function () {
 	  return;
 	}
     bulkAssignment.cycleId=result.id;
-	console.log('onActiveAvailable result=' + result);
   }
   function onError(error) {
 	console.log('onError error=' + error);
@@ -244,7 +261,6 @@ $(function () {
 });
 
 function removeDataItem(item, itemId) {
-  console.log('itemId=' + itemId);
   $(item).parent().parent().remove();
   bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
 }

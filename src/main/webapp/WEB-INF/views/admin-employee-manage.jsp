@@ -269,7 +269,6 @@
       if (searchText.length < 3) {
     	$(searchText).focus();
       } else {
-    	console.log('searchText=' + searchText);
     	var table = $('#SearchTable').DataTable();
     	//table.ajax.reload();
     	table.ajax.url("<%=request.getContextPath()%>/employee/search/" + searchText).load();
@@ -281,7 +280,6 @@
         if (searchText ==-1) {
       	$(searchText).focus();
         } else {
-      	console.log('searchText=' + searchText);
       	var table = $('#SearchRoleTable').DataTable();
       	//table.ajax.reload();
       	table.ajax.url("<%=request.getContextPath()%>/employee/role-search/" + searchText).load();
@@ -309,7 +307,6 @@
     		var itemId=data.EmployeeId;
     		var itemValue=data.FirstName + " " + data.LastName;
     		availableRoles=[];
-    		console.log(itemValue);
     		var detailTable=$('<table class="table table-striped">');
     	  	var detailTbody=$('<tbody>');
      		var detailTfoot=$('<tfoot>');
@@ -322,14 +319,11 @@
      		$(detailTbody).append('<tr id="emp_row"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="mgrcb"><span class="lever switch-col-green"></span></label></div></td></tr>');
      		
      		detailTfoot.append('<tr><td class="col-md-12" colspan="3"><button type="button" class="btn bg-light-blue waves-effect pull-right" id="save">Save</button></td></tr>')
-     		
     		$("#Search_Employees").val('');
-    		//$(detailTable).append('<tfoot><tr></tfoot>');
 
     		$.fn.ajaxGet({
     			url: '<%=request.getContextPath()%>/role/byEmployee/'+itemId,
     			onSuccess: function(result) {
-    				  console.log('result=' + result);
     				  $(result).each(function(index, role) {
     					  availableRoles.push(role.RoleName);
     				  });
@@ -339,21 +333,10 @@
     				  $('#save').on('click',function(event) {
     					  var flag=$("#mgrcb").is(':checked');
     					  var apiUrl='<%=request.getContextPath()%>/role/' + (flag ? "assign" : "delete") + '/' + itemId + '/' + MANAGER_ROLE_ID;
-    					  /*swal({
-    					    title: "Are you sure?",
-    					    text: 'Do you want to ' + (flag ? "add" : "remove") + ' manager role for ' + itemValue + '?', type: "warning",
-    					    showCancelButton: true, confirmButtonColor: "#DD6B55",
-    			        	confirmButtonText: "Yes, Do it!", closeOnConfirm: true
-    				      }, function (isConfirm) {
-    				    	  if (isConfirm) {
-      				    	    $.fn.ajaxPut({url: apiUrl});
-      				    	  } 
-      				      });*/
     					  $.fn.ajaxPut({url: apiUrl, refresh: "no"});
    					});
    				},
     			onError: function(message, content) {
-    				  console.log('message=' + message);			
     			}
     		});
 

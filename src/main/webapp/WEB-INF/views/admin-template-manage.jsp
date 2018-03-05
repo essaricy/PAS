@@ -136,7 +136,6 @@
     	$('.weightage').each(function(index, weightage) {
     		template.headers[index].weightage=$(this).val();
     	});
-    	console.log('template=' + JSON.stringify(template));
     	$.fn.postJSON({url : '<%=request.getContextPath()%>/template/save', data: template});
       },
 	});

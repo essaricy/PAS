@@ -11,14 +11,14 @@ import javax.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
-@Entity(name="goal_cap")
+@Entity(name="goal_param")
 public class GoalParam implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="goal_cap_id_seq",sequenceName="goal_cap_id_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="goal_cap_id_seq")
+	@SequenceGenerator(name="goal_param_id_seq",sequenceName="goal_param_id_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="goal_param_id_seq")
 	private Long id;
 
 	private String name;

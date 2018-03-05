@@ -50,6 +50,39 @@
         </h2>
       </div>
     </div>
+	  	<!-- Large Size -->
+		<div class="modal fade" id="largeModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="largeModalLabel">Manager Change</h4>
+					</div>
+					<div class="modal-body">
+	                   <div class="row clearfix">
+	                     <div class="table-responsive">
+	                       <table id="SearchRoleTable" class="table table-bordered table-striped table-hover dataTable">
+	                         <thead>
+	                           <tr>
+	                             <th>Employee ID</th>
+	                             <th>First Name</th>
+	                             <th>Last Name</th>
+	                             <th>Band</th>
+	                             <th>Designation</th>
+	                           </tr>
+	                         </thead>
+	                         <tbody>
+	                         </tbody>
+	                       </table>
+	                     </div>
+	                   </div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="AssignTo" class="btn btn-link waves-effect">Assign To</button>
+						<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+					</div>
+				</div>
+			</div>
+		</div>
   </section>
 </body>
 
@@ -82,13 +115,64 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
 <script>
 $(function () {
+  var MANAGER_ROLE_ID='Manager';
   $('.container-fluid').renderAssignment({
 	role: 'Manager',
 	contextpath: '<%=request.getContextPath()%>',
   	url: '<%=request.getContextPath()%>/assignment/manager/list',
   });
+  
+  var assignmentId=0;
+  $( "#largeModal" ).on('shown.bs.modal', function(e) {
+	  var $invoker = $(e.relatedTarget);
+	  assignmentId=$invoker.attr('item-id');
+      $($.fn.dataTable.tables( true ) ).css('width', '100%');
+      $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+  } );
+
+  $('#SearchRoleTable').DataTable({
+      responsive: true,
+      paging: false,
+		searching: false,
+		ordering: true,
+		info: true,
+      "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,
+      "sAjaxDataProp":"",
+		"columns": [
+          { "data": "EmployeeId" },
+          { "data": "FirstName" },
+          { "data": "LastName" },
+          { "data": "Band" },
+          { "data": "Designation" },
+      ],
+      columnDefs: [
+          { 
+              targets: 0,
+              searchable: false,
+              orderable: false,
+              render: function(data, type, full, meta){
+                 if(type === 'display'){
+                    data = '<input name="SelectedManagerId" type="radio" id="radio_' + data + '" value="' + data + '" class="with-gap radio-col-red"><label for="radio_' + data + '">' + data + '</label>';      
+                 }
+
+                 return data;
+              }
+          }
+      ]
+  });
+  
+  $('#AssignTo').click(function() {
+    var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
+    console.log('SelectedManagerId=' + SelectedManagerId);
+    if (SelectedManagerId) {
+    	$.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/assignedBy/' + assignmentId + '/' + SelectedManagerId});
+    }
+    });
+  
 });
 
 </script>

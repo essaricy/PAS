@@ -136,7 +136,6 @@ $('.appr_cycles_card').cardManager({
   afterLoadCallback: function (items, data) {
     $(items).each(function(index, item) {
       var dataItem=data[index];
-      console.log('item = ' + JSON.stringify(dataItem));
       var status=dataItem.status;
       var class1=null;
       if (status == '${AppraisalCycleStatus_DRAFT}') {
@@ -152,7 +151,6 @@ $('.appr_cycles_card').cardManager({
 }); 
 
 function renderCycleInformation(item) {
-  console.log(JSON.stringify(item));
   $('.appr_cycle_card .header h2').text(item.name);
   $('.appr_cycle_card .body').empty();
   var table=$('<table class="table">');
@@ -179,10 +177,22 @@ function renderCycleInformation(item) {
 }
 
 function activate(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
+  swal({
+	title: "Are you sure?", text: "Do you really want to activate this appraisal cycle?", type: "warning",
+	showCancelButton: true, confirmButtonColor: "#DD6B55",
+    confirmButtonText: "Yes, Activate!", closeOnConfirm: false
+  }, function () {
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
+  });
 }
 function complete(itemId) {
-  $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
+  swal({
+	title: "Are you sure?", text: "Do you really want to complete this appraisal cycle? Please make sure that al eligible employees have completed thier appraisals.", type: "warning",
+	showCancelButton: true, confirmButtonColor: "#DD6B55",
+    confirmButtonText: "Yes, Mark it Complete!", closeOnConfirm: false
+  }, function () {
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
+  });
 }
 
 </script>

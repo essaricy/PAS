@@ -53,7 +53,7 @@ public class AssessmentService {
 				List<EmployeeAssessmentDto> employeeAssessments = new ArrayList<>();
 				for (TemplateHeader templateHeader : templateHeaders) {
 					EmployeeAssessmentDto employeeAssessment = new EmployeeAssessmentDto();
-					employeeAssessment.setGoal(GoalAssembler.getGoal(templateHeader.getGoalCa()));
+					employeeAssessment.setGoal(GoalAssembler.getGoal(templateHeader.getGoal()));
 					employeeAssessments.add(employeeAssessment);
 				}
 				assignmentAssessment.setEmployeeAssessments(employeeAssessments);

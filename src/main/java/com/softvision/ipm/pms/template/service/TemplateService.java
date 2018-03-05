@@ -31,7 +31,7 @@ public class TemplateService {
 	@Autowired private TemplateRepository templateRepository;
 
 	public List<TemplateDto> getTemplates() {
-		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll());
+		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAllByOrderByUpdatedAtDesc());
 	}
 
 	public TemplateDto getTemplate(long id) {

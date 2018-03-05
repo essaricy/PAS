@@ -125,8 +125,6 @@ $(headerCard).hide();
 $(detailCard).hide();
 
 function renderTemplateInformation(template) {
-  console.log(JSON.stringify(template));
-
   $(detailCard).hide();
   $(headerCard).show();
   $(headerCard).find('.header h2').empty();

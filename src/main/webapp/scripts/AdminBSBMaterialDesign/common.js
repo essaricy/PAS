@@ -13,7 +13,6 @@ function formatDate(date) {
 }
 
 function submitForm(url, id) {
-	console.log('postData() url=' + url + ', id=' + id);
 	var form= document.createElement('form');
 	form.method= 'get';
 	form.action= url;
@@ -33,8 +32,6 @@ function deleteContainingRow(obj) {
 }
 
 function appendTableRow(tableSelector, name) {
-  console.log('tableSelector=' + tableSelector);
-  console.log('name=' + name);
   var row=$('<tr>');
   row.append('<td>' + name + '</td>');
   row.append('<td><i class="material-icons" style="cursor: pointer;" onclick="deleteContainingRow(this)">delete</i></td>');

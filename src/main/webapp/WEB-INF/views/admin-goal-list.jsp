@@ -117,7 +117,6 @@ $('.ca_card').cardManager({
   ],
   onClickCallback: function (item) {
     var params=item.params;
-    console.log(item);
     $(params).each(function(index, param) {
       if (param.applicable!='Y') {
         $('.ca_items_card .body ol li[item-id=' + param.id +']').remove();

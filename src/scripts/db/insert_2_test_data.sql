@@ -8,13 +8,13 @@ insert into appr_phase (ID, CYCLE_ID, NAME, START_DATE, END_DATE) values (nextva
 
 
 INSERT INTO template(id, name, updated_by) VALUES (nextval('template_id_seq'), 'Template 1', 'basavaraju.n');
-INSERT INTO template_header(id, TEMPLATE_ID, ca_id, WEIGHTAGE)
-	VALUES (nextval('template_header_id_seq'), (select ID from template where name='Template 1'), (select id from goal_ca where name='Client Orientation/Customer Focus'), 50);
-INSERT INTO template_header(id, TEMPLATE_ID, ca_id, WEIGHTAGE)
-	VALUES (nextval('template_header_id_seq'), (select ID from template where name='Template 1'), (select id from goal_ca where name='Project Management'), 50);
+INSERT INTO template_header(id, TEMPLATE_ID, goal_id, WEIGHTAGE)
+	VALUES (nextval('template_header_id_seq'), (select ID from template where name='Template 1'), (select id from goal where name='Client Orientation/Customer Focus'), 50);
+INSERT INTO template_header(id, TEMPLATE_ID, goal_id, WEIGHTAGE)
+	VALUES (nextval('template_header_id_seq'), (select ID from template where name='Template 1'), (select id from goal where name='Project Management'), 50);
 
-INSERT INTO template_detail(id, header_ID, cap_id) VALUES (nextval('template_detail_id_seq'), 1, (select id from goal_cap where name='Knowledge of Softvision and Customer processes (software development processes)'));
-INSERT INTO template_detail(id, header_ID, cap_id) VALUES (nextval('template_detail_id_seq'), 1, (select id from goal_cap where name='Number of customer accolades'));
+INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 1, (select id from goal_param where name='Knowledge of Softvision and Customer processes (software development processes)'));
+INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 1, (select id from goal_param where name='Number of customer accolades'));
 
-INSERT INTO template_detail(id, header_ID, cap_id) VALUES (nextval('template_detail_id_seq'), 2, (select id from goal_cap where name='Ontime resolutions'));
-INSERT INTO template_detail(id, header_ID, cap_id) VALUES (nextval('template_detail_id_seq'), 2, (select id from goal_cap where name='Ontime zero defect deliveries'));
+INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 2, (select id from goal_param where name='Ontime resolutions'));
+INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 2, (select id from goal_param where name='Ontime zero defect deliveries'));

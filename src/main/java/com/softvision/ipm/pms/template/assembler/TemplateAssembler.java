@@ -52,9 +52,9 @@ public class TemplateAssembler {
 			dto.setId(object.getId());
 			dto.setWeightage(object.getWeightage());
 
-			Goal goalCa = object.getGoalCa();
-			dto.setGoalId(goalCa.getId());
-			dto.setGoalName(goalCa.getName());
+			Goal goal = object.getGoal();
+			dto.setGoalId(goal.getId());
+			dto.setGoalName(goal.getName());
 			dto.setDetails(getTemplateDetailDtoList(object.getTemplateDetails()));
 		}
 		return dto;
@@ -110,10 +110,10 @@ public class TemplateAssembler {
 			object.setId(dto.getId());
 			object.setWeightage(dto.getWeightage());
 
-			Goal goalCa = new Goal();
-			goalCa.setId(dto.getGoalId());
-			//goalCa.setName(dto.getGoalName());
-			object.setGoalCa(goalCa);
+			Goal goal = new Goal();
+			goal.setId(dto.getGoalId());
+			//goal.setName(dto.getGoalName());
+			object.setGoal(goal);
 
 			object.setTemplateDetails(getTemplateDetails(dto.getDetails()));
 		}

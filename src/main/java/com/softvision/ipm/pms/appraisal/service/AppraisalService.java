@@ -22,7 +22,7 @@ public class AppraisalService {
 	private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	public List<AppraisalCycleDto> getCycles() {
-		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAll());
+		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
 	}
 
 	public AppraisalCycleDto getCycle(Integer id) {

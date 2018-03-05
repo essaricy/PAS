@@ -1,5 +1,4 @@
 $.fn.ajaxGet = function(options) {
-	console.log('ajaxGet');
 	$.fn.ajaxWrapper({
 	  type: 'GET',
 	  url: options.url,
@@ -10,7 +9,6 @@ $.fn.ajaxGet = function(options) {
 };
 
 $.fn.ajaxPut = function(options) {
-	console.log('ajaxPut');
 	$.fn.ajaxWrapper({
 	  type: 'PUT',
 	  url: options.url,
@@ -22,7 +20,6 @@ $.fn.ajaxPut = function(options) {
 };
 
 $.fn.postJSON = function(options) {
-	console.log('postJSON');
 	$.fn.ajaxWrapper({
 	  type: 'POST',
 	  url: options.url,
@@ -36,7 +33,6 @@ $.fn.postJSON = function(options) {
 };
 
 $.fn.ajaxDelete = function(options) {
-	console.log('ajaxDelete');
 	$.fn.ajaxWrapper({
 	  type: 'DELETE',
 	  url: options.url,

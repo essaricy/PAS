@@ -54,7 +54,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
             <div class="header">
-              <h2>Create Appraisal Cycle</h2>
+              <h2>Manage Competency Assessment</h2>
             </div>
             <div class="body">
               <form id="Competency_Form" method="POST">
@@ -66,7 +66,7 @@
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
                     <div class="form-group form-float">
                       <div class="form-line">
-		                <input type="text" id="Competency_Name" class="form-control" minlength="3" required value="Some name">
+		                <input type="text" id="Competency_Name" class="form-control" minlength="3" required >
 		              </div>
 		            </div>
                   </div>
@@ -157,7 +157,6 @@
           params[params.length]=param;
    		});
      	goal.params=params;
-      	//console.log('goal=' + JSON.stringify(goal));
       	$.fn.postJSON({url : '<%=request.getContextPath()%>/goal/update', data: goal});
       	//postJSON("<%=request.getContextPath()%>/goal/update", goal, null, null, null);
       }
@@ -168,7 +167,6 @@
       $.get(url, {sid: new Date().getTime()}, function() {})
       .done(function(result) {
         if (result) {
-          console.log(result);
 	      $('#Competency_Name').val(result.name);
 	      $(result.params).each(function(index, param) {
 	    	appendRow(table, param);
@@ -184,7 +182,6 @@
     });
 
     function appendRow(tableSelector, param) {
-      console.log('param=' + JSON.stringify(param));
       var row=$('<tr>');
       $(row).append('<td item-id="' + param.id + '" item-name="' + param.name + '" item-applicable="' + param.applicable + '">' + param.name + '</td>');
       if (param.applicable == 'Y') {

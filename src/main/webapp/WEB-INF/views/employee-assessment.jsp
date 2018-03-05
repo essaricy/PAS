@@ -21,7 +21,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/raty/lib/jquery.raty.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/star-rating-svg/star-rating-svg.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -32,6 +32,12 @@
   	font-size: 13px;
   }
   .self-appraisal {
+  }
+  .weightage, .self-score {
+  	font-weight: bold;
+  }
+  table > tfoot > tr > th {
+    font-size: 20px;
   }
   </style>
 </head>
@@ -59,6 +65,7 @@
               <h2>Phase Information Here</h2>
             </div>
             <div class="body">
+              <div class="row clearfix">
               <table class="table table-striped">
                 <thead>
                   <tr>
@@ -68,9 +75,15 @@
                     <th>Rating</th>
                     <th>Score</th> -->
                 </thead>
+                <tfoot></tfoot>
                 <tbody>
                 </tbody>
               </table>
+              </div>
+
+              <div class="row clearfix">
+              <button class="btn bg-light-blue pull-right">Submit</button>
+              </button>
               <!-- Modal Dialogs ====================================================================================================================== -->
               <!-- Default Size -->
               <div class="modal fade" id="GoalModal" tabindex="-1" role="dialog">
@@ -115,7 +128,7 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
-<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/raty/lib/jquery.raty.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/star-rating-svg/jquery.star-rating-svg.js"></script>
 
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
@@ -132,27 +145,22 @@
 <script>
 $(function () {
   var assignmentId='${param.assignmentId}';
-  console.log('assignmentId=' + assignmentId);
   $.fn.ajaxGet({
 	url: '<%=request.getContextPath()%>/assessment/list/assign/' + assignmentId,
 	onSuccess: onLoadSuccess,
 	onFail: onLoadFail
   });
  
-  $.fn.raty.defaults.path='<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/raty/demo/images';
-  $.fn.raty.defaults.hints=["Unsatisfactory", "Partially Meets Expectation", "Meets Expectation", "Excceds Expectation", "Outstanding"];
-  //$.fn.raty.defaults.half=true;
-  //$.fn.raty.defaults.halfShow=true;
- 
   function onLoadSuccess(result) {
-	console.log('result= ' + JSON.stringify(result));
 	var ea=result.employeeAssignment;
 	var ea_status=ea.status;
+	var isFormOpen = (ea_status == 10 );
 
 	var card=$('.assessment_card');
 	var table=$(card).find('.body table');
 	var thead=$(table).find('thead');
 	var tbody=$(table).find('tbody');
+	var tfoot=$(table).find('tfoot');
 
 	$(card).find('.header').append('<small>' + getPhaseStatus(ea_status) + '</small>');
 	// Append template headers
@@ -177,41 +185,79 @@ $(function () {
 		$(linkTd).append(link);
 		$(row).append(linkTd);
 
-		$(row).append('<td><b>' + weightage + '</b></td>');
+		$(row).append('<td class="weightage">' + weightage + '</td>');
 		$(table).find('tbody:last-child').append(row);
 	});
 	
 	$(result.assignmentAssessments).each(function(index, aa) {
 	  $(aa.employeeAssessments).each(function(jindex, ea) {
 		if (jindex == 0) {
-		  //var classname=(ea.assessType != 0) ? "manager-review" : "self-appraisal";
-		  var classname=(ea.assessType != 0) ? "manager-review" : "bg-grey";
+		  var classname=(ea.assessType != 0) ? "bg-light-green" : "bg-orange";
 	      $(thead).find("tr:first").append(
 	    		  '<th class="' + classname + '">Comments</th>' + 
 	    		  '<th class="' + classname + '">Rating</th>' +
 	    		  '<th class="' + classname + '">Score</th>');
 		}
-		var commentsTd=$('<td>');
-		var comments=$('<textarea maxlength="500">');
-		$(comments).append(ea.comments);
-		$(commentsTd).append(comments);
-		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append(commentsTd);
-
-		var ratingTd=$('<td>');
-		var rating=$('<div>');
-		$(rating).raty({readOnly: (ea_status != 10),  score: ea.rating,
-		  click: function (score) {
-			  alert(score);
-		  }
-		});
-		$(rating).append(ea.rating);
-		$(ratingTd).append(rating);
-		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append(ratingTd);
-
-		//$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append('<td>4</td>');
-		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append('<td>4</td>')
+		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append(getCommentsCell(isFormOpen, ea.comments));
+		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append(getRatingCell(isFormOpen, ea.rating));
+		$(tbody).find('tr td[item-id="' + ea.goal.id + '"]').parent().append('<td class="self-score">' + ea.score + '</td>')
 	  });
 	});
+	
+	$(tfoot).append('<tr>' +
+		'<th>&nbsp</th>' +
+		'<th>0</th>' +
+		'<th>&nbsp</th>' +
+		'<th>&nbsp</th>' +
+		'<th>0</th>'
+	);
+	setTotalScore();
+	setColumnSum('.weightage', 1);
+  }
+
+  function getCommentsCell(isFormOpen, comments) {
+	var commentsTd=$('<td>');
+	var comments=$('<textarea maxlength="500" ' + (isFormOpen? "":"readonly") + '>');
+	$(comments).append(comments);
+	$(commentsTd).append(comments);
+	return commentsTd;
+  }
+
+  function getRatingCell(isFormOpen, rating) {
+    var ratingTd=$('<td>');
+	var rating=$('<div class="starbox">');
+	$(rating).starRating({
+	  initialRating: rating,
+	  totalStars: 5,
+	  starSize: 18,
+	  hoverColor: '#8BC34A',
+	  ratedColor: '#4CAF50',
+	  disableAfterRate: false,
+	  readOnly: !isFormOpen,
+	  onLeave: function(currentIndex, currentRating, el) {
+	    var currentWeightage=$(el).closest('tr').find('.weightage').text();
+	    if (isNaN(currentRating)) currentRating=0;
+	    var weightedRating=(currentRating==0)? 0: ((currentRating*currentWeightage)/100);
+		$(el).closest('tr').find('.self-score').text(weightedRating);
+		setTotalScore();
+	  }
+	});
+	$(ratingTd).append(rating);
+	return ratingTd;
+  }
+
+  function setTotalScore() {
+	  setColumnSum('.self-score', 4);
+  }
+
+  function setColumnSum(selector, columnIndex) {
+	var tbody=$('.assessment_card .body table tbody');
+	var tfoot=$('.assessment_card .body table tfoot');
+    var totalScore=0;
+    $('' + selector).each(function(index, td) {
+    	totalScore+=parseFloat($(td).text());	
+    });
+	$(tfoot).find('tr th:eq(' + columnIndex + ')').text(totalScore);
   }
 
   function onLoadFail(error) {

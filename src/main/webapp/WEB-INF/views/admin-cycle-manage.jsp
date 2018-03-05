@@ -71,7 +71,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
 		              <div class="form-group form-float">
 		                <div class="form-line">
-		                  <input type="text" id="Cycle_Name" class="form-control" minlength="3" required autofocus value="2016">
+		                  <input type="text" id="Cycle_Name" class="form-control" minlength="3" required autofocus >
                         </div>
                       </div>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
 		              <div class="form-group form-float">
 		                <div class="form-line">
-		                  <input type="text" id="Cycle_StartDate" name="startDate" class="form-control datepicker" required value="01/01/2016">
+		                  <input type="text" id="Cycle_StartDate" name="startDate" class="form-control datepicker" required >
                         </div>
                       </div>
                     </div>
@@ -97,7 +97,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
 		              <div class="form-group form-float">
 		                <div class="form-line">
-		                  <input type="text" id="Cycle_EndDate" name="endDate" class="form-control datepicker" required value="31/12/2016">
+		                  <input type="text" id="Cycle_EndDate" name="endDate" class="form-control datepicker" required >
                         </div>
                       </div>
                     </div>
@@ -110,7 +110,7 @@
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 col-xs-7">
 		              <div class="form-group form-float">
 		                <div class="form-line">
-		                  <input type="text" id="Cycle_EligibilityDate" name="eligibilityDate" class="form-control datepicker" required value="30/10/2015">
+		                  <input type="text" id="Cycle_EligibilityDate" name="eligibilityDate" class="form-control datepicker" required >
                         </div>
                       </div>
                     </div>
@@ -123,21 +123,21 @@
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_Name" class="form-control" placeholder="Phase Name" autofocus  value="Q1">
+                        <input type="text" id="Phase_Name" class="form-control" placeholder="Phase Name" autofocus >
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_StartDate" class="form-control datepicker" placeholder="Start Date"  value="01/01/2016">
+                        <input type="text" id="Phase_StartDate" class="form-control datepicker" placeholder="Start Date" >
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <input type="text" id="Phase_EndDate" class="form-control datepicker" placeholder="End Date"  value="31/12/2016">
+                        <input type="text" id="Phase_EndDate" class="form-control datepicker" placeholder="End Date" >
                       </div>
                     </div>
                   </div>
@@ -220,7 +220,6 @@
     	
 		$('#Phase_Table > tbody tr').each(function(index, row) {
 			var $tds = $(this).find('td')
-			console.log('index : ' + index);
 			var phase={};
 			phase.id=$tds.eq(0).attr('item-id');
 			phase.name=$tds.eq(0).text();
@@ -239,7 +238,6 @@
       $.get(url, {sid: new Date().getTime()}, function() {})
       .done(function(result) {
         if (result) {
-          console.log(JSON.stringify(result));
           $('#Cycle_Name').val(result.name);
           $('#Cycle_StartDate').val(result.startDate);
           $('#Cycle_EndDate').val(result.endDate);
@@ -254,7 +252,6 @@
     $('.datepicker').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY', clearButton: true, weekStart: 1, time: false });
 
 	$('#Phase_Add').click(function() {
-	  console.log('clicked CompetencyParam_Add');
 	  // Validate the input fields
 	  appendRow(table, {id:0, name: $('#Phase_Name').val(),
 		  startDate: $('#Phase_StartDate').val(), endDate: $('#Phase_EndDate').val()});
@@ -265,7 +262,6 @@
 	});
 
     function appendRow(tableSelector, phase) {
-   	  console.log('phase=' + JSON.stringify(phase));
    	  var row=$('<tr>');
       $(row).append('<td item-id=' + phase.id
         + ' item-name=' + phase.name

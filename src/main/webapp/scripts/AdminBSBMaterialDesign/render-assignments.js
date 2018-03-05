@@ -32,7 +32,6 @@ $(function () {
         // Render CYCLE Tab
         var cycleTabPanel=$('<div role="tabpanel" class="tab-pane fade in active" id="CycleTab_' + cycle.id +'">');
         var employeeAssignments=cycleAssignment.employeeAssignments;
-        console.log('employeeAssignments.length=' + employeeAssignments.length);
         if (employeeAssignments.length==0) {
           if (options.role == 'Manager') {
         	$(cycleTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this cycle.</p>');
@@ -82,9 +81,9 @@ $(function () {
           
           var phaseTitle=$('<h5>Phase: ' + phase.name + '</h5>');
           var employeeAssignments=phaseAssignment.employeeAssignments;
-          console.log('employeeAssignments.length=' + employeeAssignments.length);
 
           if (employeeAssignments.length==0) {
+        	$(phaseTabPanel).append(phaseTitle);
         	if (options.role == 'Manager') {
               $(phaseTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this phase.</p>');
             } else {
@@ -140,16 +139,16 @@ $(function () {
     function getPhaseActionCell(role, ea) {
     	var status=ea.status;
     	var td=$('<td>');
-    	console.log('getPhaseActionCell() ' + role);
 
     	if (status == 0) {
     	  if (role == 'Manager') {
-            var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager"><i class="material-icons">trending_flat</i></button>');
+            var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager" data-toggle="modal" data-target="#largeModal" item-id="' + ea.assignmentId + '"><i class="material-icons">trending_flat</i></button>');
             var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_return</i></button>');
     		$(enableFormButton).click(function() {
     		  enableSelfSubmission(ea.assignmentId);	
     		});
-    		//$(td).append(assignToManagerButton);
+    		$(td).append(assignToManagerButton);
+    		$(td).append('&nbsp;');
     		$(td).append(enableFormButton);
     	  } else {
     		$(td).append('-');

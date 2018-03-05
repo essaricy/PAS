@@ -12,16 +12,16 @@ import com.softvision.ipm.pms.goal.assembler.GoalAssembler;
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.model.GoalParamDto;
-import com.softvision.ipm.pms.goal.repo.GoalCaDataRepository;
+import com.softvision.ipm.pms.goal.repo.GoalDataRepository;
 
 @Service
 public class GoalService {
 
 	@Autowired
-	private GoalCaDataRepository goalCaDataRepository;
+	private GoalDataRepository goalDataRepository;
 
 	public List<GoalDto> getGoals() {
-		return GoalAssembler.getGoals(goalCaDataRepository.findAll());
+		return GoalAssembler.getGoals(goalDataRepository.findAll());
 	}
 
 	public List<GoalDto> getActiveGoals() {
@@ -41,7 +41,7 @@ public class GoalService {
 	}
 
 	public GoalDto getGoal(Long id) {
-		return GoalAssembler.getGoal(goalCaDataRepository.findById(id));
+		return GoalAssembler.getGoal(goalDataRepository.findById(id));
 	}
 
 	public GoalDto update(GoalDto goalDto) throws ServiceException {
@@ -51,7 +51,7 @@ public class GoalService {
 			}
 			ValidationUtil.validate(goalDto);
 			Goal goal = GoalAssembler.getGoal(goalDto);
-			return GoalAssembler.getGoal(goalCaDataRepository.save(goal));
+			return GoalAssembler.getGoal(goalDataRepository.save(goal));
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -60,7 +60,7 @@ public class GoalService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
-			goalCaDataRepository.delete(id);
+			goalDataRepository.delete(id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);

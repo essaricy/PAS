@@ -34,7 +34,7 @@ public class TemplateRepository extends AbstractRepository {
 			if (headerId == 0) {
 				// Create
 				headerId=getSequenceNextVal("template_header_id_seq");
-				int headerInsert = jdbcTemplate.update("INSERT INTO template_header(id, template_id, ca_id, weightage) VALUES(?, ?, ?, ?)", headerId, templateId, header.getGoalCa().getId(), header.getWeightage());
+				int headerInsert = jdbcTemplate.update("INSERT INTO template_header(id, template_id, goal_id, weightage) VALUES(?, ?, ?, ?)", headerId, templateId, header.getGoal().getId(), header.getWeightage());
 				System.out.println("headerInsert=" + headerInsert);
 			} else {
 				// Update
@@ -49,7 +49,7 @@ public class TemplateRepository extends AbstractRepository {
 				if (detailId == 0) {
 					// Create
 					detailId=getSequenceNextVal("template_detail_id_seq");
-					int detailInsert = jdbcTemplate.update("INSERT INTO template_detail(id, header_id, cap_id, apply) VALUES(?, ?, ?, ?)", detailId, headerId, detail.getGoalParam().getId(), detail.getApply());
+					int detailInsert = jdbcTemplate.update("INSERT INTO template_detail(id, header_id, param_id, apply) VALUES(?, ?, ?, ?)", detailId, headerId, detail.getGoalParam().getId(), detail.getApply());
 					System.out.println("detailInsert=" + detailInsert);
 				} else {
 					// Update
