@@ -37,7 +37,7 @@ public class TemplateAssembler {
 		return dto;
 	}
 
-	private static List<TemplateHeaderDto> getTemplateHeaderDtoList(List<TemplateHeader> all) {
+	public static List<TemplateHeaderDto> getTemplateHeaderDtoList(List<TemplateHeader> all) {
 		List<TemplateHeaderDto> list = new ArrayList<>();
 		for (TemplateHeader object : all) {
 			list.add(getTemplateHeaderDto(object));
@@ -45,7 +45,7 @@ public class TemplateAssembler {
 		return list;
 	}
 
-	private static TemplateHeaderDto getTemplateHeaderDto(TemplateHeader object) {
+	public static TemplateHeaderDto getTemplateHeaderDto(TemplateHeader object) {
 		TemplateHeaderDto dto = null;
 		if (object != null) {
 			dto = new TemplateHeaderDto();

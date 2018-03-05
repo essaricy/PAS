@@ -8,6 +8,8 @@ import com.softvision.ipm.pms.template.entity.TemplateHeader;
 
 public interface TemplateHeaderDataRepository extends CrudRepository<TemplateHeader, Long> {
 
+	//List<TemplateHeader> findByTemplateId(Long templateId);
+
 	@Query(value="delete from template_header where template_id=:templateId", nativeQuery=true)
 	void deleteByTemplateId(@Param("templateId") Long templateId);
 

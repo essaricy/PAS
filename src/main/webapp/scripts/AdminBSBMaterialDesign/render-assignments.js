@@ -161,7 +161,7 @@ $(function () {
             var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment_ind</i></button>');
             $(fillFormButton).click(function() {
               //gotoSelfSubmission(ea.assignmentId);
-              location.href=settings.contextpath + '/employee/assessment?id=' + ea.assignmentId;
+              location.href=settings.contextpath + '/employee/assessment?assignmentId=' + ea.assignmentId;
     	    });
     	    $(td).append(fillFormButton);
     	  }
