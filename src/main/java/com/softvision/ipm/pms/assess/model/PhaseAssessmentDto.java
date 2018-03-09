@@ -3,29 +3,41 @@ package com.softvision.ipm.pms.assess.model;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.validation.annotation.Validated;
+
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.common.validator.NotContainNull;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
 
 import lombok.Data;
 
 @Data
+@Validated
 public class PhaseAssessmentDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private AppraisalPhaseDto phase;
 
+	@NotNull(message="Assignment information must be provided")
 	private EmployeeAssignmentDto employeeAssignment;
 
 	private List<TemplateHeaderDto> templateHeaders;
 
-	private List<AssignmentAssessmentsDto> assignmentAssessments;
+	@NotEmpty(message="At least one assessment must be provided")
+	@NotContainNull(message="Assess list cannot contain null")
+	@Valid
+	private List<PhaseAssessHeaderDto> phaseAssessmentHeaders;
 
 	@Override
 	public String toString() {
-		return "PhaseAssessmentDto [phase=" + phase + ", templateHeaders=" + templateHeaders
-				+ ", assignmentAssessments=" + assignmentAssessments + "]";
+		return "PhaseAssessmentDto [phase=" + phase + ", employeeAssignment=" + employeeAssignment
+				+ ", templateHeaders=" + templateHeaders + ", phaseAssessmentHeaders=" + phaseAssessmentHeaders + "]";
 	}
 
 }

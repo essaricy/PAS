@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.assign.service;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -17,6 +18,7 @@ import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.DateUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
@@ -35,6 +37,14 @@ public class AssignmentService {
 	@Autowired private TemplateDataRepository templateDataRepository;
 
 	@Autowired private EmployeeRepository employeeRepository;
+
+	private String NO_ELIGIBILITY_MESSAGE = "{0} - Not eligible for this appraisal cycle. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
+
+	private String CANNOT_ASSIGN_TO_SELF = "{0} - Cannot assign an appraisal cycle to self";
+
+	private String ALREADY_ASSIGNED = "{0} - An appraisal cycle has already been assigned by {1} on {2}";
+
+	private String ASSIGN_SUCCESSFUL = "{0} - appraisal cycle has been assigned successfully";
 
 	public List<Result> bulkAssign(BulkAssignmentDto bulkAssignmentDto) throws ServiceException {
 		List<Result> results = new ArrayList<>();
@@ -78,16 +88,17 @@ public class AssignmentService {
 				Date cutoffDate = cycle.getCutoffDate();
 				// check if employee hired date should be before cutoff date
 				if (hiredOn.after(cutoffDate)) {
-					throw new ServiceException("Employee (" + employeeName + ") - Not eligible for this appraisal cycle. His Joined date is " + hiredOn + " and appraisal eligibility cut off date is " + cutoffDate);
+					throw new ServiceException(MessageFormat.format(NO_ELIGIBILITY_MESSAGE, employeeName,
+							DateUtil.getIndianDateFormat(hiredOn), DateUtil.getIndianDateFormat(cutoffDate)));
 				}
 				if (employeeId == assignedBy) {
-					throw new ServiceException("Employee (" + employeeName + ") - Cannot assign an appraisal cycle to himself");
+					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
 				// check if already assigned.
 				EmployeeCycleAssignment cycleAssignment = assignmentDataRepository.findByCycleIdAndTemplateIdAndEmployeeId(cycleId, templateId, employeeId);
 				System.out.println("cycleAssignment=" + cycleAssignment);
 				if (cycleAssignment != null) {
-					throw new ServiceException("Employee (" + employeeName + ") - An appraisal cycle has already been assigned by " + cycleAssignment.getAssignedBy() + " on " + cycleAssignment.getAssignedAt());
+					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}
 				cycleAssignment = new EmployeeCycleAssignment();
 				cycleAssignment.setAssignedAt(assignedAt);
@@ -98,7 +109,7 @@ public class AssignmentService {
 				assignmentRepository.assign(cycleAssignment, cycle, employeeName);
 				System.out.println("Assignment is completed");
 				result.setCode(Result.SUCCESS);
-				result.setMessage("Employee (" + employeeName + ") - appraisal cycle has been assigned successfully");
+				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
 				result.setCode(Result.FAILURE);
 				result.setMessage(exception.getMessage());

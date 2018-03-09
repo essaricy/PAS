@@ -1,12 +1,32 @@
-/*(function ( $ ) {
-$('.datepicker').bootstrapMaterialDatePicker({
-  format: 'DD/MM/YYYY',
-  clearButton: true,
-  weekStart: 1,
-  time: false
-});
-}( jQuery ));*/
+var PhaseAssignmentStatus={
+	ASSIGNED:
+		{code: 0, name: "Created", colorClass: "bg-grey", description: "Created but not effective"},
+	SELF_APPRAISAL_PENDING: 
+		{code: 10, name: "Self-Appraisal Pending", colorClass: "bg-amber", description: "Initiated and self-appraisal is pending"},
+	SELF_APPRAISAL_SAVED: 
+		{code: 20, name: "Self-Appraisal Drafted", colorClass: "bg-orange", description: "self-appraisal is drafted"},
+	REVIEW_PENDING:
+		{code: 30, name: "Review Pending", colorClass: "bg-deep-orange", description: "Self-appraisal completed and manager review is pending"},
+	REVIEW_COMPLETED:
+		{code: 40, name: "Review Completed", colorClass: "bg-green", description: "Manager review is completed"},
+	FROZEN:
+		{code: 50, name: "Frozen", colorClass: "bg-deep-purple", description: "Appraisal phase is frozen"},
+};
 
+function getPhaseAssignmentStatus(code) {
+  for (var key in PhaseAssignmentStatus) {
+	var data=PhaseAssignmentStatus[key];
+	if (code == data.code) {
+	  return data;
+    }
+  }
+  return null;
+}
+
+function getPhaseStatusLabel(status) {
+  //var phaseStatus = getPhaseAssignmentStatus(code);
+  return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
+}
 
 function formatDate(date) {
   return moment(date).format("DD/MM/YYYY");
@@ -43,20 +63,11 @@ function setButtonWavesEffect(event) {
     $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
 }
 
-function getPhaseStatus(code) {
-  if (code == 0) {
-	return '<span class="label bg-lime">Assigned</span>';
-  } else if (code == 10) {
-	return '<span class="label bg-orange">Self-appraisal Pending</span>';
-  } else if (code == 20) {
-	return '<span class="label bg-deep-orange">Awaiting Review</span>';
-  } else if (code == 30) {
-	return '<span class="label bg-green">Review Completed</span>';
-  } else if (code == 40) {
-	return '<span class="label bg-grey">Frozen</span>';
-  }
-  return null;
-}
+/*function getPhaseStatus(code) {
+  var phaseStatus = getPhaseAssignmentStatus(code);
+  return (phaseStatus == null) ? '' : '<span class="label ' + phaseStatus.colorClass + '">' + phaseStatus.name + '</span>';
+}*/
+
 function getCycleStatus(code) {
   if (code == 0) {
   	return "Assigned";

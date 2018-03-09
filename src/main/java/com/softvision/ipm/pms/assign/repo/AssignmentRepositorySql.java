@@ -1,6 +1,6 @@
 package com.softvision.ipm.pms.assign.repo;
 
-import com.softvision.ipm.pms.assign.constant.AssignmentPhaseStatus;
+import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 
 public class AssignmentRepositorySql {
 
@@ -51,12 +51,13 @@ public class AssignmentRepositorySql {
 			"and appr_phase.cycle_id=? " + 
 			"and appr_phase.id=? ";
 
-	public static final String SELECT_PHASE_ASSIGNMENTS_INCOMPLETE = SELECT_PHASE_ASSIGNMENTS + 
+	public static final String SELECT_INCOMPLETE_PREVIOUS_PHASE_ASSIGNMENTS = SELECT_PHASE_ASSIGNMENTS + 
 			" where " +
-			" appr_phase.cycle_id=(select cycle_id from appr_phase where id=emp_phase_assign.phase_id) " +
-			" and status != " + AssignmentPhaseStatus.FROZEN.getCode() +
-			" and emp_phase_assign.id != ? " +
+			" emp_phase_assign.id != ? " +
 			" and employee_id=? " + 
+			" and appr_phase.start_date < (select start_date from appr_phase where id=?)" + 
+			" and status != " + PhaseAssignmentStatus.FROZEN.getCode() +
+			//" appr_phase.cycle_id=(select cycle_id from appr_phase where id=emp_phase_assign.phase_id) " +
 			" order by appr_phase.start_date " + 
 			" LIMIT 1 ";
 

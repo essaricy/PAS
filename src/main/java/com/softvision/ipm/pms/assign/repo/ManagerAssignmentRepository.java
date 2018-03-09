@@ -38,10 +38,10 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
-	public EmployeeAssignmentDto getIncompletePhaseAssignment(Long phaseAssignId, int employeeId) {
+	public EmployeeAssignmentDto getPreviousIncompletePhaseAssignment(long phaseAssignId, int employeeId, int phaseId) {
 		List<EmployeeAssignmentDto> employeeAssignments = jdbcTemplate.query(
-				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_INCOMPLETE,
-			    new Object[] {phaseAssignId, employeeId},
+				AssignmentRepositorySql.SELECT_INCOMPLETE_PREVIOUS_PHASE_ASSIGNMENTS,
+			    new Object[] {phaseAssignId, employeeId, phaseId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
 			            return AssignmentSqlAssember.getEmployeeAssignment(rs);

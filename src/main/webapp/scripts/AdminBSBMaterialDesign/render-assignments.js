@@ -98,13 +98,14 @@ $(function () {
             $(employeeAssignments).each(function(index, ea) {
           	  var assignedTo=ea.assignedTo;
           	  var assignedBy=ea.assignedBy;
+          	  var status=getPhaseAssignmentStatus(ea.status)
 
           	  var row=$('<tr>');
           	  $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
           	  $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
           	  $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           	  $(row).append('<td>' + ea.assignedAt + '</td>');
-          	  $(row).append('<td>' + getPhaseStatus(ea.status) + '</td>');
+          	  $(row).append('<td>' + getPhaseStatusLabel(status) + '</td>');
           	  $(row).append(getPhaseActionCell(options.role, ea));
           	  $(tbody).append(row);
             });
@@ -138,79 +139,119 @@ $(function () {
     }
     function getPhaseActionCell(role, ea) {
     	var status=ea.status;
+    	var id=ea.assignmentId;
     	var td=$('<td>');
+    	//var phaseStatus = getPhaseAssignmentStatus(code);
 
-    	if (status == 0) {
+    	if (status == PhaseAssignmentStatus.ASSIGNED.code) {
     	  if (role == 'Manager') {
-            var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager" data-toggle="modal" data-target="#largeModal" item-id="' + ea.assignmentId + '"><i class="material-icons">trending_flat</i></button>');
-            var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-submission"><i class="material-icons">assignment_return</i></button>');
-    		$(enableFormButton).click(function() {
-    		  enableSelfSubmission(ea.assignmentId);	
-    		});
-    		$(td).append(assignToManagerButton);
+    		$(td).append(getAssignToManagerButton(id));
     		$(td).append('&nbsp;');
-    		$(td).append(enableFormButton);
+    		$(td).append(getEnableFormButton(id));
     	  } else {
     		$(td).append('-');
     	  }
-    	} else if (status == 10) {
+    	} else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
+    			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
     	  if (role == 'Manager') {
-    		$(td).append('-');
+    		$(td).append(getSendReminderButton(id));
     	  } else {
-            var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment_ind</i></button>');
-            $(fillFormButton).click(function() {
-              //gotoSelfSubmission(ea.assignmentId);
-              location.href=settings.contextpath + '/employee/assessment?assignmentId=' + ea.assignmentId;
-    	    });
-    	    $(td).append(fillFormButton);
+    		$(td).append(getFillFormButton(id));
     	  }
-    	} else if (status == 20) {
+    	} else if (status == PhaseAssignmentStatus.REVIEW_PENDING.code) {
     	  if (role == 'Manager') {
-            var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Review"><i class="material-icons">assignment</i></button>');
-            $(fillReviewButton).click(function() {
-              //gotoSelfSubmission(ea.assignmentId);
-              location.href=settings.contextpath + '/assessment/manager/' + ea.assignmentId;
-    	    });
-    	    $(td).append(fillReviewButton);
+   		    $(td).append(getFillReviewButton(id));
     	  } else {
-    		$(td).append('-');
+    		$(td).append(getViewFormButton(id, role));
     	  }
-    	} else if (status == 30) {
+    	} else if (status == PhaseAssignmentStatus.REVIEW_COMPLETED.code) {
     	  if (role == 'Manager') {
-            var freezeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Freeze"><i class="material-icons">assignment_turned_in</i></button>');
-            $(freezeButton).click(function() {
-              freezeAssignment(ea.assignmentId);
-    	    });
-    	    $(td).append(freezeButton);
+    		$(td).append(getFreezeButton(id));
     	  } else {
-    		$(td).append('-');
+    		$(td).append(getViewFormButton(id, role));
     	  }
-    	} else if (status == 40) {
-    	  $(td).append('-');
+    	} else if (status == PhaseAssignmentStatus.FROZEN.code) {
+    	  $(td).append(getViewFormButton(id, role));
     	}
     	return td;
       }
 
-      function enableSelfSubmission(assignmentId) {
+      function getAssignToManagerButton(id) {
+        var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager" data-toggle="modal" data-target="#largeModal" item-id="' + id + '"><i class="material-icons">trending_flat</i></button>');
+  		return assignToManagerButton;
+      }
+
+      function getEnableFormButton(id) {
+        var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-Submission"><i class="material-icons">assignment_returned</i></button>');
+  		$(enableFormButton).click(function() {
+  		  enableSelfSubmission(id);
+  		});
+  		return enableFormButton;
+      }
+
+      function getSendReminderButton(id) {
+        var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
+        $(reminderButton).click(function() {
+  	    });
+   	    return reminderButton;
+      }
+
+      function getFillFormButton(id) {
+        var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment</i></button>');
+        $(fillFormButton).click(function() {
+          location.href=settings.contextpath + '/employee/assessment?aid=' + id;
+  	    });
+  	    return fillFormButton;
+      }
+
+      function getFillReviewButton(id) {
+    	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Review"><i class="material-icons">assignment</i></button>');
+    	$(fillReviewButton).click(function() {
+          location.href=settings.contextpath + '/manager/assessment?aid=' + id;
+    	});
+    	return fillReviewButton;
+      }
+
+      function getViewFormButton(id, role) {
+    	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
+        $(viewFormButton).click(function() {
+          if (role == 'Manager') {
+        	location.href=settings.contextpath + '/manager/assessment?aid=' + id;
+          } else if (role == 'Employee') {
+        	location.href=settings.contextpath + '/employee/assessment?aid=' + id;
+          } 
+  	    });
+  	    return viewFormButton;
+      }
+
+      function getFreezeButton(id) {
+        var freezeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Freeze"><i class="material-icons">assignment_turned_in</i></button>');
+        $(freezeButton).click(function() {
+          freezeAssignment(id);
+  	    });
+  	    return freezeButton;
+      }
+
+      function enableSelfSubmission(id) {
         swal({
     	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
     		confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
     	}, function () {
     	  $.fn.ajaxPut({
-    	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + assignmentId
+    	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + id
     	  });
         });
       }
 
-      function freezeAssignment(assignmentId) {
+      function freezeAssignment(id) {
         swal({
     	  title: "Are you sure?", text: "Do you want to Freeze this assignment? This cannot be undone!!!", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
     		confirmButtonText: "Yes, Freeze it!", closeOnConfirm: false
     	}, function () {
     	  $.fn.ajaxPut({
-    	    url: settings.contextpath + '/assignment/manager/change/phase-status/freeze/' + assignmentId
+    	    url: settings.contextpath + '/assignment/manager/change/phase-status/freeze/' + id
     	  });
         });
       }
