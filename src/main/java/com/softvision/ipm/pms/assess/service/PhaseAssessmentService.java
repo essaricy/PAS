@@ -117,14 +117,14 @@ public class PhaseAssessmentService {
 				throw new ServiceException("The assessment form is not in a state to submit now.");
 			}
 		}
-		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_COMPLETED.getCode());
+		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
 		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println("saved= " + saved);
 		// Change assignment status to 30
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_COMPLETED.getCode());
+		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		// Move assignment to next status
 		assignmentPhaseDataRepository.save(employeePhaseAssignment);
 	}
@@ -150,18 +150,18 @@ public class PhaseAssessmentService {
 			throw new ServiceException("The assessment form is not in a state to review now.");
 		}
 		PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
-		if (latestStatus != PhaseAssignmentStatus.SELF_APPRAISAL_COMPLETED
-				&& latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED) {
+		if (latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_PENDING
+				&& latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			throw new ServiceException("Review can only be done when the employee appraisal form is submitted.");
 		}
-		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED.getCode());
+		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
 		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println("saved= " + saved);
 		// Change assignment status to 40
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED.getCode());
+		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		// Move assignment to next status
 		assignmentPhaseDataRepository.save(employeePhaseAssignment);
 	}
@@ -178,7 +178,7 @@ public class PhaseAssessmentService {
 		int assignedBy = employeePhaseAssignment.getAssignedBy();
 		int assessedBy = phaseAssessmentHeaderDto.getAssessedBy();
 		if (assessedBy != assignedBy) {
-			throw new ServiceException("Assignment can only be frozen by the manager to whom its been assigned to");
+			throw new ServiceException("Assignment can only be concluded by the manager to whom its been assigned to");
 		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
@@ -187,17 +187,17 @@ public class PhaseAssessmentService {
 			throw new ServiceException("The assessment form is not in a state to freeze now.");
 		}
 		PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
-		if (latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED) {
+		if (latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			throw new ServiceException("Freeze can only be done when the manager review is completed.");
 		}
-		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.FROZEN.getCode());
+		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
 		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println("saved= " + saved);
 		// Change assignment status to 50
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.FROZEN.getCode());
+		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
 		// Move assignment to next status
 		assignmentPhaseDataRepository.save(employeePhaseAssignment);
 	}

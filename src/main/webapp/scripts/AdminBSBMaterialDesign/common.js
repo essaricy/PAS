@@ -1,16 +1,16 @@
 var PhaseAssignmentStatus={
-	ASSIGNED:
-		{code: 0, name: "Created", colorClass: "bg-grey", description: "Created but not effective"},
+	NOT_INITIATED:
+		{code: 0, name: "Not Initiated", colorClass: "bg-grey", description: "Appraisal Form has not been initiated"},
 	SELF_APPRAISAL_PENDING: 
 		{code: 10, name: "Self-Appraisal Pending", colorClass: "bg-amber", description: "Initiated and self-appraisal is pending"},
 	SELF_APPRAISAL_SAVED: 
 		{code: 20, name: "Self-Appraisal Drafted", colorClass: "bg-orange", description: "self-appraisal is drafted"},
-	REVIEW_PENDING:
-		{code: 30, name: "Review Pending", colorClass: "bg-deep-orange", description: "Self-appraisal completed and manager review is pending"},
-	REVIEW_COMPLETED:
+	MANAGER_REVIEW_PENDING:
+		{code: 30, name: "Review Pending", colorClass: "bg-deep-orange", description: "Self-Appraisal is completed and manager review is pending"},
+	MANAGER_REVIEW_SAVED:
 		{code: 40, name: "Review Completed", colorClass: "bg-green", description: "Manager review is completed"},
-	FROZEN:
-		{code: 50, name: "Frozen", colorClass: "bg-deep-purple", description: "Appraisal phase is frozen"},
+	CONCLUDED:
+		{code: 50, name: "Concluded", colorClass: "bg-deep-purple", description: "Appraisal Phase is concluded"},
 };
 
 function getPhaseAssignmentStatus(code) {

@@ -5,17 +5,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PhaseAssignmentStatus {
 
-	ASSIGNED(0, "Assigned", "Created but not effective"),
+	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
 
-	SELF_APPRAISAL_PENDING(10, "Self-appraisal pending", "Initiated and self-appraisal is pending"),
+	SELF_APPRAISAL_PENDING(10, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
 
-	SELF_APPRAISAL_SAVED(20, "Self-appraisal drafted", "self-appraisal is drafted"),
+	SELF_APPRAISAL_SAVED(20, "Self-Appraisal drafted", "Self-Appraisal is saved but not submitted"),
 
-	SELF_APPRAISAL_COMPLETED(30, "Awaiting Review", "Self-appraisal completed and manager review is pending"),
+	MANAGER_REVIEW_PENDING(30, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
-	MANAGER_REVIEW_COMPLETED(40, "Reviewed", "Manager review is completed"),
+	MANAGER_REVIEW_SAVED(40, "Review Saved", "Manager review is saved but not concluded"),
 
-	FROZEN(50, "Frozen", "Appraisal phase is frozen");
+	CONCLUDED(50, "Concluded", "Appraisal Phase is concluded");
 
 	private int code;
 

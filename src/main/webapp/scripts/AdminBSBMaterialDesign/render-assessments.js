@@ -143,7 +143,7 @@ $(function () {
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
-      } else if (status == PhaseAssignmentStatus.REVIEW_PENDING) {
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
         if (role == 'Employee') {
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
     	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Manager");
@@ -160,7 +160,7 @@ $(function () {
      	  assignment.render.buttons.push('Freeze');
      	  //$('.sidebar').removeClass('.overlay-open').addClass('.ls-closed');
         }
-      } else if (status == PhaseAssignmentStatus.REVIEW_COMPLETED) {
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
         if (role == 'Employee') {
           var phaseAssessHeader=phaseAssessHeaders[0];
           phaseAssessHeader.render=getSelfRatingRenderer(role=="Manager");
@@ -177,7 +177,7 @@ $(function () {
       	  assignment.render.buttons.push('Save Review');
        	  assignment.render.buttons.push('Freeze');
         }
-      } else if (status == PhaseAssignmentStatus.FROZEN) {
+      } else if (status == PhaseAssignmentStatus.CONCLUDED) {
         var phaseAssessHeader=phaseAssessHeaders[0];
         phaseAssessHeader.render=getSelfRatingRenderer(false);
 

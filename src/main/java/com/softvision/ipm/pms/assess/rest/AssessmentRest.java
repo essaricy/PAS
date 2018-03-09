@@ -39,17 +39,17 @@ public class AssessmentRest {
 
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
 	public Result submit(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.SELF_APPRAISAL_COMPLETED);
+		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
 	@RequestMapping(value="phase/review", method=RequestMethod.POST)
 	public Result review(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED);
+		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
 	@RequestMapping(value="phase/freeze", method=RequestMethod.POST)
 	public Result freeze(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.FROZEN);
+		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
 	}
 
 	public Result moveForm(PhaseAssessHeaderDto phaseAssessmentHeader, PhaseAssignmentStatus status) {
@@ -59,11 +59,11 @@ public class AssessmentRest {
 			phaseAssessmentHeader.setAssessDate(new Date());
 			if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
 				phaseAssessmentService.save(phaseAssessmentHeader);
-			} else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_COMPLETED) {
+			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
 				phaseAssessmentService.submit(phaseAssessmentHeader);
-			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED) {
+			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 				phaseAssessmentService.review(phaseAssessmentHeader);
-			} else if (status == PhaseAssignmentStatus.FROZEN) {
+			} else if (status == PhaseAssignmentStatus.CONCLUDED) {
 				phaseAssessmentService.freeze(phaseAssessmentHeader);
 			}
 			result.setCode(Result.SUCCESS);

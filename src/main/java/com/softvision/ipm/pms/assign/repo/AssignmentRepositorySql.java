@@ -56,7 +56,7 @@ public class AssignmentRepositorySql {
 			" emp_phase_assign.id != ? " +
 			" and employee_id=? " + 
 			" and appr_phase.start_date < (select start_date from appr_phase where id=?)" + 
-			" and status != " + PhaseAssignmentStatus.FROZEN.getCode() +
+			" and status != " + PhaseAssignmentStatus.CONCLUDED.getCode() +
 			//" appr_phase.cycle_id=(select cycle_id from appr_phase where id=emp_phase_assign.phase_id) " +
 			" order by appr_phase.start_date " + 
 			" LIMIT 1 ";

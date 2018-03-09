@@ -70,8 +70,8 @@ public class ManagerAssignmentService {
 		int existingStatusId = employeePhaseAssignment.getStatus();
 		PhaseAssignmentStatus existingStatus = PhaseAssignmentStatus.get(existingStatusId);
 
-		if (existingStatus != PhaseAssignmentStatus.ASSIGNED) {
-			throw new ServiceException("Assignment status is not in ASSIGNED status.");
+		if (existingStatus != PhaseAssignmentStatus.NOT_INITIATED) {
+			throw new ServiceException("The Appraisal Phase is not yet initiated for you.");
 		}
 		int employeeId = employeePhaseAssignment.getEmployeeId();
 		System.out.println("phaseAssignId= " + phaseAssignId + ", employeeId=" + employeeId);
@@ -79,7 +79,7 @@ public class ManagerAssignmentService {
 		EmployeeAssignmentDto incompletePhaseAssignment = managerAssignmentRepository.getPreviousIncompletePhaseAssignment(phaseAssignId, employeeId, employeePhaseAssignment.getPhaseId());
 		if (incompletePhaseAssignment != null) {
 			System.out.println("incompletePhaseAssignment= " + incompletePhaseAssignment);
-			throw new ServiceException("Make sure that assignments in previous phase are frozen for this employee before assigning new one");
+			throw new ServiceException("Make sure that assignments in previous phase are concluded for this employee before assigning new one");
 		}
 		// Check if from and to employees are managers.
 		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.getCode());
@@ -126,13 +126,13 @@ public class ManagerAssignmentService {
 		int existingStatusId = employeePhaseAssignment.getStatus();
 		PhaseAssignmentStatus existingStatus = PhaseAssignmentStatus.get(existingStatusId);
 
-		if (existingStatus != PhaseAssignmentStatus.MANAGER_REVIEW_COMPLETED) {
+		if (existingStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			throw new ServiceException("Manager Review is not completed. Cannot freeze the assignment");
 		}
 		// TODO: check if the assessments are available for this assignment.
 		// TODO: Check if this is the past phase assignment. If yes then dump data to emp_cycle_assign
 		// Check if from and to employees are managers.
-		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, PhaseAssignmentStatus.FROZEN.getCode());
+		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, PhaseAssignmentStatus.CONCLUDED.getCode());
 		if (!changed) {
 			throw new ServiceException("Unable to freeze this assignment");
 		}

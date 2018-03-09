@@ -143,7 +143,7 @@ $(function () {
     	var td=$('<td>');
     	//var phaseStatus = getPhaseAssignmentStatus(code);
 
-    	if (status == PhaseAssignmentStatus.ASSIGNED.code) {
+    	if (status == PhaseAssignmentStatus.NOT_INITIATED.code) {
     	  if (role == 'Manager') {
     		$(td).append(getAssignToManagerButton(id));
     		$(td).append('&nbsp;');
@@ -158,19 +158,19 @@ $(function () {
     	  } else {
     		$(td).append(getFillFormButton(id));
     	  }
-    	} else if (status == PhaseAssignmentStatus.REVIEW_PENDING.code) {
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
     	  if (role == 'Manager') {
    		    $(td).append(getFillReviewButton(id));
     	  } else {
     		$(td).append(getViewFormButton(id, role));
     	  }
-    	} else if (status == PhaseAssignmentStatus.REVIEW_COMPLETED.code) {
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
     	  if (role == 'Manager') {
     		$(td).append(getFreezeButton(id));
     	  } else {
     		$(td).append(getViewFormButton(id, role));
     	  }
-    	} else if (status == PhaseAssignmentStatus.FROZEN.code) {
+    	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
     	  $(td).append(getViewFormButton(id, role));
     	}
     	return td;
