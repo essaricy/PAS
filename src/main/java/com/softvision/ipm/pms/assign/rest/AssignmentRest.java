@@ -2,17 +2,20 @@ package com.softvision.ipm.pms.assign.rest;
 
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.service.AssignmentService;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
@@ -38,5 +41,16 @@ public class AssignmentRest {
 		}
 		return result;
     }
+	
+	@RequestMapping(value = "cycle/employee-status/{cycleId}", method = RequestMethod.GET)
+	public List<EmployeeAssignmentDto> getEmpCycleAppraisalStatus(@PathVariable(required = true) @Min(1) int cycleId) {
+		return assignmentService.getAllEmployeeAssignmentsforCycle(cycleId);
+	}
+
+	@RequestMapping(value = "phase/employee-status/{cycleId}/{phaseId}", method = RequestMethod.GET)
+	public List<EmployeeAssignmentDto> getEmpCycleAppraisalStatus(@PathVariable(required = true) @Min(1) int cycleId,
+			@PathVariable(required = true) @Min(1) int phaseId) {
+		return assignmentService.getAllEmployeeAssignmentsforPhase(cycleId, phaseId);
+	}
 
 }

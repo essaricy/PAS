@@ -96,6 +96,9 @@
 	            <li>
 	              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
 	            </li>
+	            <li>
+	              <a href="<%=request.getContextPath()%>/admin/appraisal/status">Appraisal Status Report</a>
+	            </li>
 	          </ul>
 	        </li>
         </c:if>

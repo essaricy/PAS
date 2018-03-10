@@ -1,17 +1,22 @@
 package com.softvision.ipm.pms.assign.repo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssember;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.repo.AbstractRepository;
 
@@ -58,6 +63,30 @@ public class AssignmentRepository extends AbstractRepository {
 				throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal phase ");
 			}
 		}
+	}
+	
+	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforCycle(int cycleId) {
+		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+				AssignmentRepositorySql.QUERY_MANAGER_ALL_CYCLE_ASSIGNMENTS,
+			    new Object[] {cycleId},
+			    new RowMapper<EmployeeAssignmentDto>() {
+			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+			        }
+			    });
+		return list;
+	}
+	
+	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforPhase(int cycleId, int phaseId) {
+		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+				AssignmentRepositorySql.QUERY_MANAGER_ALL_PHASE_ASSIGNMENTS,
+			    new Object[] {cycleId, phaseId},
+			    new RowMapper<EmployeeAssignmentDto>() {
+			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+			        }
+			    });
+		return list;
 	}
 
 	/*public boolean assignPhases(List<EmployeePhaseAssignment> phaseAssignments) throws ServiceException {
