@@ -48,7 +48,6 @@ public class TemplateService {
 			if (templateDto == null) {
 				throw new ServiceException("Competency Assessment information is not provided.");
 			}
-			System.out.println("##### templateDto=" + templateDto);
 			ValidationUtil.validate(templateDto);
 
 			List<TemplateHeaderDto> headers = templateDto.getHeaders();

@@ -40,25 +40,21 @@ public class AssignmentRepository extends AbstractRepository {
 						+ "ID, CYCLE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
 						+ "VALUES(nextval('emp_cycle_assign_id_seq'), ?, ?, ?, ?, ?)",
 						cycleId, templateId, employeeId, assignedBy, assignedAt);
-		System.out.println("Cycle inserted? " + inserted);
 		if (inserted!=1) {
 			throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal cycle ");
 		}
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase appraisalPhase : phases) {
 			Integer phaseId = appraisalPhase.getId();
-			System.out.println("Doing for Phase " + phaseId);
 			EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId.intValue(), templateId, employeeId);
 			if (employeePhaseAssignment != null) {
 				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
 			}
-			System.out.println("vemployeePhaseAssignment = " + employeePhaseAssignment);
 			inserted = jdbcTemplate.update(
 					"INSERT INTO emp_phase_assign("
 							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
 							+ "VALUES(nextval('emp_phase_assign_id_seq'), ?, ?, ?, ?, ?)",
 							phaseId, templateId, employeeId, assignedBy, assignedAt);
-			System.out.println("Phase inserted? " + inserted);
 			if (inserted != 1) {
 				throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal phase ");
 			}

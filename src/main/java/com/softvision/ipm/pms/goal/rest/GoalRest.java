@@ -37,7 +37,6 @@ public class GoalRest {
     public Result update(@RequestBody(required=true) @NotNull GoalDto goal) {
 		Result result = new Result();
 		try {
-			System.out.println("goal= " + goal);
 			GoalDto updated = goalService.update(goal);
 			result.setCode(Result.SUCCESS);
 			result.setContent(updated);

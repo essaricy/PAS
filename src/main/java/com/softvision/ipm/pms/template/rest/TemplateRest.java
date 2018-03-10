@@ -47,7 +47,6 @@ public class TemplateRest {
 			// set updatedBy & updatedAt
 			template.setUpdatedBy(RestUtil.getLoggedInLoginId());
 			template.setUpdatedAt(new Date());
-			System.out.println("Template= " + template);
 			TemplateDto updated = templateService.update(template);
 			result.setCode(Result.SUCCESS);
 			result.setContent(updated);

@@ -41,30 +41,10 @@ public class AppraisalRest {
 		return appraisalService.getActiveCycle();
     }
 
-	/*@RequestMapping(value="/get/active", method=RequestMethod.GET)
-    public @ResponseBody Result getActiveCycle() {
-		Result result = new Result();
-		try {
-			System.out.println("update dto= ");
-			AppraisalCycleDto activeCycle = appraisalService.getActiveCycle();
-			if (activeCycle == null) {
-				throw new Exception("No Appraisal Cycle is ACTIVE currently.");
-			}
-			result.setCode(Result.SUCCESS);
-			result.setContent(activeCycle);
-		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-			result.setContent(exception);
-		}
-		return result;
-    }*/
-
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull AppraisalCycleDto dto) {
 		Result result = new Result();
 		try {
-			System.out.println("update dto= " + dto);
 			AppraisalCycleDto updated = appraisalService.update(dto);
 			result.setCode(Result.SUCCESS);
 			result.setContent(updated);
@@ -80,7 +60,6 @@ public class AppraisalRest {
     public Result activate(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
-			System.out.println("id= " + id);
 			appraisalService.changeStatus(id, AppraisalCycleStatus.ACTIVE);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
@@ -95,7 +74,6 @@ public class AppraisalRest {
     public Result complete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
-			System.out.println("id= " + id);
 			appraisalService.changeStatus(id, AppraisalCycleStatus.COMPLETE);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
@@ -110,7 +88,6 @@ public class AppraisalRest {
     public Result delete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
-			System.out.println("id= " + id);
 			appraisalService.delete(id);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

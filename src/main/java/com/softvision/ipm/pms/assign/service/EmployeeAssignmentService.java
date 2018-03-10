@@ -26,7 +26,6 @@ public class EmployeeAssignmentService {
 		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
 		for (AppraisalCycle cycle : allCycles) {
 			int cycleId = cycle.getId();
-			System.out.println("cycleId=" + cycleId);
 			CycleAssignmentDto cycleAssignment = new CycleAssignmentDto();
 			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
 			cycleAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfCycle(employeeId, cycleId));
@@ -41,7 +40,6 @@ public class EmployeeAssignmentService {
 			}
 			cycleAssignments.add(cycleAssignment);
 		}
-		System.out.println("cycleAssignments=" + cycleAssignments);
 		return cycleAssignments;
 	}
 

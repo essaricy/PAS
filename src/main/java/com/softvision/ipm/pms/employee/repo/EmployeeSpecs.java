@@ -12,7 +12,6 @@ import com.softvision.ipm.pms.employee.entity.Employee;
 public class EmployeeSpecs {
 
 	public static Specification<Employee> searchInName(String searchString) {
-		System.out.println("searchString=" + searchString);
 		return new Specification<Employee>() {
 			public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 				return builder.or(

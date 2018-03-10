@@ -49,18 +49,11 @@ public class EmployeeRest {
 		return employeeService.roleSearch(searchString);
     }
 
-	/*@RequestMapping(value="/save", method=RequestMethod.PUT)
-    public @ResponseBody Employee saveEmployee(@RequestBody Employee employee) {
-		System.out.println(employee);
-		return employeeService.save(employee);
-    }*/
-
 	@RequestMapping(value="/save/byLogin/{loginId:.+}", method=RequestMethod.PUT)
     public @ResponseBody Result saveEmployee(
     		@PathVariable(value="loginId", required=true) String loginId) {
 		Result result = new Result();
 		try {
-			System.out.println("loginId= " + loginId);
 			Employee employee = employeeService.save(loginId);
 			result.setCode(Result.SUCCESS);
 			result.setContent(employee);

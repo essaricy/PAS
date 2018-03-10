@@ -78,12 +78,10 @@ public class AssignmentService {
 				if (employeeId == 0) {
 					throw new ServiceException("Invalid Employee ID");
 				}
-				System.out.println("Doing for " + employeeId);
 				Employee employee = employeeRepository.findByEmployeeId(employeeId);
 				if (employee == null) {
 					throw new ServiceException("Employee does not exist");
 				}
-				System.out.println("Employee exists");
 				String employeeName = employee.getFirstName() + " " + employee.getLastName();
 				Date hiredOn = employee.getHiredOn();
 				Date cutoffDate = cycle.getCutoffDate();
@@ -97,7 +95,6 @@ public class AssignmentService {
 				}
 				// check if already assigned.
 				EmployeeCycleAssignment cycleAssignment = assignmentDataRepository.findByCycleIdAndTemplateIdAndEmployeeId(cycleId, templateId, employeeId);
-				System.out.println("cycleAssignment=" + cycleAssignment);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}
@@ -108,7 +105,6 @@ public class AssignmentService {
 				cycleAssignment.setEmployeeId(employeeId);
 				cycleAssignment.setTemplateId(templateId);
 				assignmentRepository.assign(cycleAssignment, cycle, employeeName);
-				System.out.println("Assignment is completed");
 				result.setCode(Result.SUCCESS);
 				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
@@ -124,16 +120,12 @@ public class AssignmentService {
 	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforCycle(int cycleId) {
 		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
 		employeeAssignments=assignmentRepository.getAllEmployeeAssignmentsforCycle( cycleId);
-		
-		System.out.println("employeeAssignments=" + employeeAssignments);
 		return employeeAssignments;
 	}
 	
 	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforPhase(int cycleId,int phaseId) {
 		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
 		employeeAssignments=assignmentRepository.getAllEmployeeAssignmentsforPhase( cycleId,phaseId);
-		
-		System.out.println("employeeAssignments=" + employeeAssignments);
 		return employeeAssignments;
 	}
 

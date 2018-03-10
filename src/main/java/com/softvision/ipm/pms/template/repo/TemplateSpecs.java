@@ -14,7 +14,6 @@ public class TemplateSpecs {
 	public static Specification<Template> searchInName(String searchString) {
 		return new Specification<Template>() {
 			public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-				System.out.println("searchString=" + searchString);
 				return builder.like(builder.lower(root.get("name")), "%" + searchString.toLowerCase() + "%");
 			}
 		};

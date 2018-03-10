@@ -130,7 +130,7 @@ public class ManagerAssignmentService {
 			throw new ServiceException("Manager Review is not completed. Cannot freeze the assignment");
 		}
 		// TODO: check if the assessments are available for this assignment.
-		// TODO: Check if this is the past phase assignment. If yes then dump data to emp_cycle_assign
+		// TODO: Check if this is the last phase assignment. If yes then dump data to emp_cycle_assign
 		// Check if from and to employees are managers.
 		boolean changed = managerAssignmentRepository.changeStatus(phaseAssignId, PhaseAssignmentStatus.CONCLUDED.getCode());
 		if (!changed) {

@@ -13,18 +13,15 @@ import com.softvision.ipm.pms.template.entity.TemplateHeader;
 public class TemplateRepository extends AbstractRepository {
 
 	public void save(Template template) {
-		System.out.println("##### template=" + template);
 		//Template savedTemplate = templateDataRepository.save(template);
 		Long templateId = template.getId();
 		if (templateId == 0) {
 			// Create
 			templateId=getSequenceNextVal("template_id_seq");
 			int templateInsert = jdbcTemplate.update("INSERT INTO template(id, name, updated_by, updated_at) VALUES(?,?, ?, ?)", templateId, template.getName(), template.getUpdatedBy(), template.getUpdatedAt());
-			System.out.println("templateInsert=" + templateInsert);
 		} else {
 			// Update
 			int templateUpdate = jdbcTemplate.update("UPDATE template set name=?, updated_by=?, updated_at=? where id=?", template.getName(), template.getUpdatedBy(), template.getUpdatedAt(), templateId);
-			System.out.println("templateUpdate=" + templateUpdate);
 		}
 		template.setId(templateId);
 
@@ -35,11 +32,9 @@ public class TemplateRepository extends AbstractRepository {
 				// Create
 				headerId=getSequenceNextVal("template_header_id_seq");
 				int headerInsert = jdbcTemplate.update("INSERT INTO template_header(id, template_id, goal_id, weightage) VALUES(?, ?, ?, ?)", headerId, templateId, header.getGoal().getId(), header.getWeightage());
-				System.out.println("headerInsert=" + headerInsert);
 			} else {
 				// Update
 				int headerUpdate = jdbcTemplate.update("UPDATE template_header set weightage=? where id=?", header.getWeightage(), headerId);
-				System.out.println("headerUpdate=" + headerUpdate);
 			}
 			header.setId(headerId);
 
@@ -50,11 +45,9 @@ public class TemplateRepository extends AbstractRepository {
 					// Create
 					detailId=getSequenceNextVal("template_detail_id_seq");
 					int detailInsert = jdbcTemplate.update("INSERT INTO template_detail(id, header_id, param_id, apply) VALUES(?, ?, ?, ?)", detailId, headerId, detail.getGoalParam().getId(), detail.getApply());
-					System.out.println("detailInsert=" + detailInsert);
 				} else {
 					// Update
 					int detailUpdate = jdbcTemplate.update("UPDATE template_detail set apply=? where id=?", detail.getApply(), detailId);
-					System.out.println("detailUpdate=" + detailUpdate);
 				}
 				detail.setId(detailId);
 			}

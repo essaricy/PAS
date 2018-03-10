@@ -26,9 +26,7 @@ public class SVLdapRepository {
 	private String domain;
 
 	public void authenticate(String userid, String password) throws NamingException {
-		System.out.println("Authenticating " + userid);
 		String principal = userid + "@" + domain;
-		System.out.println("principal=" + principal);
 
 		Hashtable<String, String> env = new Hashtable<String, String>();
 		env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactory);
@@ -38,7 +36,6 @@ public class SVLdapRepository {
 		env.put(Context.SECURITY_CREDENTIALS, password.toString());
 
 		DirContext ctx = new InitialDirContext(env);
-		//System.out.println(ctx.getEnvironment());
 		System.out.println("Authentication completed.");
 		// do something useful with the context...
 		ctx.close();

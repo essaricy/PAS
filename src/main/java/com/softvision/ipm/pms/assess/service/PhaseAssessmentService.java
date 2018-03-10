@@ -36,17 +36,24 @@ public class PhaseAssessmentService {
 
 	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
 
-	public PhaseAssessmentDto getByAssignment(long assignmentId) {
+	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+
+		// Allow this form only to the employee and to the manager to whom its been assigned
+		int assignedBy = employeePhaseAssignment.getAssignedBy();
+		int employeeId = employeePhaseAssignment.getEmployeeId();
+
+		if (requestedEmployeeId != assignedBy
+				&& requestedEmployeeId != employeeId) {
+			throw new ServiceException("No allowed to view other's appraisal forms");
+		}
 		phaseAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeePhaseAssignment));
 
 		int phaseId = employeePhaseAssignment.getPhaseId();
-		System.out.println("phaseId= " + phaseId);
 		phaseAssessment.setPhase(AppraisalAssembler.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
 
 		long templateId = employeePhaseAssignment.getTemplateId();
-		System.out.println("templateId= " + templateId);
 		Template template = templateDataRepository.findById(templateId);
 		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
 		phaseAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
@@ -59,7 +66,6 @@ public class PhaseAssessmentService {
 	@Transactional
 	public void save(PhaseAssessHeaderDto phaseAssessmentHeaderDto)
 			throws ServiceException {
-		System.out.println("save(" + phaseAssessmentHeaderDto + ")");
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
@@ -73,7 +79,6 @@ public class PhaseAssessmentService {
 		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		System.out.println("latestHeader=" + latestHeader);
 		if (latestHeader != null) {
 			PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
 			if (latestStatus != PhaseAssignmentStatus.SELF_APPRAISAL_PENDING
@@ -84,9 +89,7 @@ public class PhaseAssessmentService {
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
-		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println("saved= " + saved);
 		// Change assignment status to 20
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
 		// Move assignment to next status
@@ -95,7 +98,6 @@ public class PhaseAssessmentService {
 
 	@Transactional
 	public void submit(PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		System.out.println("submit(" + phaseAssessmentHeaderDto + ")");
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
@@ -109,7 +111,6 @@ public class PhaseAssessmentService {
 		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		System.out.println("latestHeader=" + latestHeader);
 		if (latestHeader != null) {
 			PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
 			if (latestStatus != PhaseAssignmentStatus.SELF_APPRAISAL_PENDING
@@ -120,9 +121,7 @@ public class PhaseAssessmentService {
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
-		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println("saved= " + saved);
 		// Change assignment status to 30
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		// Move assignment to next status
@@ -131,7 +130,6 @@ public class PhaseAssessmentService {
 
 	@Transactional
 	public void review(PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		System.out.println("review(" + phaseAssessmentHeaderDto + ")");
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
@@ -145,7 +143,6 @@ public class PhaseAssessmentService {
 		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		System.out.println("latestHeader=" + latestHeader);
 		if (latestHeader == null) {
 			throw new ServiceException("The assessment form is not in a state to review now.");
 		}
@@ -157,9 +154,7 @@ public class PhaseAssessmentService {
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
-		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println("saved= " + saved);
 		// Change assignment status to 40
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		// Move assignment to next status
@@ -168,7 +163,6 @@ public class PhaseAssessmentService {
 
 	@Transactional
 	public void freeze(PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		System.out.println("freeze(" + phaseAssessmentHeaderDto + ")");
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
@@ -182,7 +176,6 @@ public class PhaseAssessmentService {
 		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		System.out.println("latestHeader=" + latestHeader);
 		if (latestHeader == null) {
 			throw new ServiceException("The assessment form is not in a state to freeze now.");
 		}
@@ -193,14 +186,11 @@ public class PhaseAssessmentService {
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
-		System.out.println("phaseAssessHeader=" + phaseAssessHeader);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println("saved= " + saved);
 		// Change assignment status to 50
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
 		// Move assignment to next status
 		assignmentPhaseDataRepository.save(employeePhaseAssignment);
 	}
-
 
 }

@@ -16,8 +16,6 @@ public class ValidationUtil {
 		if (!violations.isEmpty()) {
 			System.err.println(violations.iterator().next().getMessage());
 			throw new ValidationException(violations.iterator().next().getMessage());
-		} else {
-			System.out.println("Validation Successful");
 		}
 	}
 

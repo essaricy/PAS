@@ -16,6 +16,7 @@ import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 
@@ -27,9 +28,9 @@ public class AssessmentRest {
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
 	@RequestMapping(value="list/phase/byAssignId/{aid}", method=RequestMethod.GET)
-	public PhaseAssessmentDto getByAssignment(@PathVariable(name = "aid", required = true) @NotNull long assignmentId) {
-		// TODO show this form only to manager and the employee
-		return phaseAssessmentService.getByAssignment(assignmentId);
+	public PhaseAssessmentDto getByAssignment(@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
+			throws ServiceException {
+		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)

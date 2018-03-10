@@ -71,10 +71,6 @@ public enum PhaseAssignmentStatus {
 		return next;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getNext(15));
-	}
-
 	public static PhaseAssignmentStatus getNext(PhaseAssignmentStatus status) {
 		return getNext(status.getCode());
 	}
