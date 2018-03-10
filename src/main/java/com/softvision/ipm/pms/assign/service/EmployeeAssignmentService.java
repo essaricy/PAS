@@ -36,7 +36,7 @@ public class EmployeeAssignmentService {
 			for (AppraisalPhase phase : phases) {
 				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
 				phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
-				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
 				phaseAssignments.add(phaseAssignment);
 			}
 			cycleAssignments.add(cycleAssignment);

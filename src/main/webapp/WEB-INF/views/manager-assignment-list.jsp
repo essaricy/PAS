@@ -167,7 +167,6 @@ $(function () {
   
   $('#AssignTo').click(function() {
     var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
-    console.log('SelectedManagerId=' + SelectedManagerId);
     if (SelectedManagerId) {
     	$.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/assignedBy/' + assignmentId + '/' + SelectedManagerId});
     }

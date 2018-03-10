@@ -199,7 +199,6 @@
         $('.easy-autocomplete').css('width', '100%');
      }); 
      $.get(url, {sid: new Date().getTime()}, function() {}).done(function(result) {
-   	 	//console.log(result);
 		$.each(result,function(index, value) {
 			var flag=(value.status=="ACTIVE")?'Selected':' ';
 			$('#cyclesSelectId').append('<option value="'+value.id+'"'+flag+'>'+value.name+'</option>');

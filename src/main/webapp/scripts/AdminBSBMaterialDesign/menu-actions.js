@@ -80,10 +80,7 @@
     // Retrieve data from URL
     $.get(loadUrl, {sid: new Date().getTime()}, function() {})
     .done(function(data) {
-      //console.log('data=' + data);
       if (data) {
-
-        console.log('data.length=' + data.length);
         if (data.length == 0) {
           //var div=$('<div class="alert alert-danger">There are no records found</div>');
           //var noRecordsNote=$('<p class="font-bold col-pink">There are no records found</p>');
@@ -130,7 +127,6 @@
     	  $(link).text(item['name']);
     	  $(container).append(link);
           $(link).click(function() {
-            console.log('Link clicked in list. Rendering children');
             $(this).addClass('active').siblings().removeClass('active');
             // Show items in child container
             renderChildren(item);
@@ -151,7 +147,6 @@
       var columnMappings=config.columnMappings;
 
       $(container).empty();
-      console.log('data=' + JSON.stringify(data));
 
       var table=$('<table class="table table-condensed table-hover">');
       var thead=$('<thead>');
@@ -166,7 +161,6 @@
       });
 
       $(data).each(function (index, item) {
-        console.log('item=' + item);
         var dataRow=$('<tr>');
         $(tbody).append(dataRow);
         $(columnMappings).each(function(index, columnMapping) {
@@ -176,7 +170,6 @@
     }
 
     function renderChildren(data) {
-      console.log("renderChildren()");
       $(settings.renderConfigs).each(function (index, config) {
         var renderType=config.type;
         var renderFromNode=config.fromNode;
@@ -186,8 +179,6 @@
         if (config.listingType) {
           renderListingType=config.listingType;
         }
-        console.log('renderType=' + renderType + ", renderFromNode=" + renderFromNode
-        		+ ", renderToContainer=" + renderToContainer + ", renderListingType=" + renderListingType);
         if (renderType && renderFromNode && renderToContainer) {
           if (renderType == 'list') {
             renderList($(renderToContainer), data[renderFromNode], renderListingType);
@@ -209,7 +200,6 @@
         $(obj).find('.header .header-dropdown .dropdown').append(a);
         $(obj).find('.header .header-dropdown .dropdown').append(actionsMenu);
 
-        console.log("$.inArray(Add, menuActions)?" + $.inArray("Add", menuActions))
         if ($.inArray("Add", menuActions) > -1) {
           createAddMenuAction(actionsMenu, settings.manageUrl)
         }

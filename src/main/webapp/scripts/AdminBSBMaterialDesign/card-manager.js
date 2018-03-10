@@ -27,7 +27,6 @@
     // Retrieve data from URL
     $.get(loadUrl, {sid: new Date().getTime()}, function() {})
     .done(function(data) {
-      //console.log('data=' + data);
       if (data) {
         if (data.length == 0) {
           //var div=$('<div class="alert alert-danger">There are no records found</div>');

@@ -40,11 +40,9 @@
       $.get(url, {sid: new Date().getTime()}, function() {})
       .done(function(result) {
         $(listGroup).empty();
-        console.log('result=' + result);
         if (result) {
         	for (index=0; index<result.length;index++) {
         		var item=result[index];
-        		console.log(JSON.stringify(item));
         		var link=$('<a href="#" class="list-group-item">');
         		$(link).attr('item-id', item['id']);
         		$(link).attr('item-name', item['name']);
@@ -72,7 +70,6 @@
         	      	.done(function(result) {
         	      		for (index=0; index<result.length;index++) {
         	        		var item=result[index];
-        	        		//console.log(item);
         	        		$(ol).append('<li item-id="' + item.id + ' item-name="' + item.name + '">' + item.name + '</li>');
         	      		}
         	      	});
@@ -81,7 +78,6 @@
         }
       })
       .fail(function(result) {
-        console.log('fillData: list.fail=' + result);
         if (settings.failedCallback) {
           settings.failedCallback();
         }

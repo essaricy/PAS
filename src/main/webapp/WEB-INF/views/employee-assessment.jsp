@@ -28,7 +28,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
   </head>
   <style>
-  .self-score {
+  .self-score, .manager-score {
   	font-weight: bold;
   }
   table > tfoot > tr > th {
@@ -64,8 +64,7 @@
           <div class="card assessment_card">
             <div class="header">
             </div>
-            <div class="body">
-              <!-- <button class="btn bg-light-blue pull-right">Submit</button> -->
+            <div class="body" style="overflow-x: scroll;">
             </div>
           </div>
         </div>

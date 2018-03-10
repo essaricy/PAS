@@ -16,7 +16,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 
 	public List<EmployeeAssignmentDto> getAssignedByAssignmentsOfCycle(int employeeId, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
-				AssignmentRepositorySql.QUERY_MANAGER_CYCLE_ASSIGNMENTS,
+				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_BY,
 			    new Object[] {employeeId, cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {

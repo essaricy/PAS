@@ -31,7 +31,6 @@ $(function () {
 	}
 
 	function updateData(result) {
-      console.log('result=' + JSON.stringify(result));
       assignment=result.employeeAssignment;
       phase=result.phase;
       templateHeaders=result.templateHeaders;
@@ -132,47 +131,45 @@ $(function () {
        	if (role == 'Employee') {
        	  var phaseAssessHeader=getBlankPhaseAssessHeader();
        	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Employee");
+       	  phaseAssessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == 'Employee') {
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Employee");
+    	  phaseAssessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
         if (role == 'Employee') {
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Manager");
+    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
         } else if (role == 'Manager') {
-          console.log('Review Pending for manager');
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Employee");
+    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
 
           phaseAssessHeader=getBlankPhaseAssessHeader();
        	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getManagerRatingRenderer(role=="Manager");
+       	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
      	  assignment.render.buttons.push('Save Review');
      	  assignment.render.buttons.push('Freeze');
-     	  //$('.sidebar').removeClass('.overlay-open').addClass('.ls-closed');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
         if (role == 'Employee') {
           var phaseAssessHeader=phaseAssessHeaders[0];
-          phaseAssessHeader.render=getSelfRatingRenderer(role=="Manager");
+          phaseAssessHeader.render=getSelfRatingRenderer(false);
 
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getSelfRatingRenderer(role=="Manager");
+          phaseAssessHeader.render=getSelfRatingRenderer(false);
         } else if (role == 'Manager') {
           var phaseAssessHeader=phaseAssessHeaders[0];
-      	  phaseAssessHeader.render=getSelfRatingRenderer(role=="Employee");
+      	  phaseAssessHeader.render=getSelfRatingRenderer(false);
 
           phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-      	  phaseAssessHeader.render=getManagerRatingRenderer(role=="Manager");
+      	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
       	  assignment.render.buttons.push('Save Review');
        	  assignment.render.buttons.push('Freeze');
@@ -193,7 +190,6 @@ $(function () {
       var tfoot=$(table).find('tfoot');
     	
       $(phaseAssessHeaders).each(function(index, phaseAssessHeader) {
-   	    console.log('phaseAssessHeader=' + JSON.stringify(phaseAssessHeader));
        	var render=phaseAssessHeader.render;
        	var renderRating=render.rating;
        	var renderComments=render.comments;
@@ -205,7 +201,6 @@ $(function () {
 
         $(tbody).find('tr').each(function (index, row) {
           var phaseAssessDetail=phaseAssessHeader.phaseAssessDetails[index];
-          console.log('phaseAssessDetail=' + JSON.stringify(phaseAssessDetail));
           var ratingParams={
             data: phaseAssessDetail, property: 'rating', sProperty: 'score', enable: render.editable,
             rClass: renderRating.className, wClass: 'weightage', sClass: renderScore.className
@@ -252,7 +247,6 @@ $(function () {
       var sProperty=ratingParams.sProperty;
       var value=data[property];
       var sValue=data[sProperty];
-      console.log('enable= ' + enable);
 
       var ratingTd=$('<td class="' + rClass + '">');
       var rating=$('<div>');
