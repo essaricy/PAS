@@ -10,7 +10,7 @@ var PhaseAssignmentStatus={
 	MANAGER_REVIEW_SAVED:
 		{code: 40, name: "Review Completed", colorClass: "bg-green", description: "Manager review is completed"},
 	CONCLUDED:
-		{code: 50, name: "Concluded", colorClass: "bg-deep-purple", description: "Appraisal Phase is concluded"},
+		{code: 50, name: "Concluded", colorClass: "bg-deep-purple", description: "Assessment is concluded"},
 };
 
 function getPhaseAssignmentStatus(code) {

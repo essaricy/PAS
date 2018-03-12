@@ -15,7 +15,7 @@ public enum PhaseAssignmentStatus {
 
 	MANAGER_REVIEW_SAVED(40, "Review Saved", "Manager review is saved but not concluded"),
 
-	CONCLUDED(50, "Concluded", "Appraisal Phase is concluded");
+	CONCLUDED(50, "Concluded", "Assessment is concluded");
 
 	private int code;
 

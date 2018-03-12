@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.assess.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -8,15 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assess.assembler.AssessmentAssembler;
+import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
+import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
+import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
+import com.softvision.ipm.pms.assess.model.PhaseAssessDetailDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
+import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
 import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
@@ -35,6 +47,8 @@ public class PhaseAssessmentService {
 	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
 
 	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
+
+	@Autowired private CycleAssessmentService cycleAssessmentService;
 
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
@@ -191,6 +205,59 @@ public class PhaseAssessmentService {
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
 		// Move assignment to next status
 		assignmentPhaseDataRepository.save(employeePhaseAssignment);
+
+		// Check if this assignment is the phase assignment for the employee for this cycle.
+		List<AppraisalPhase> nextPhases = appraisalPhaseDataRepository.findNextPhases(employeePhaseAssignment.getPhaseId());
+		if (nextPhases == null || nextPhases.isEmpty()) {
+			// This is the last phase. Summarize the phases ratings and dump to appraisal cycle
+			cycleAssessmentService.abridge(employeePhaseAssignment.getEmployeeId());
+		}
+	}
+
+	private void summarizeCycle() {
+			boolean concluded=false;
+			//cycle_assess_header
+			CycleAssessHeader cycleAssessHeader = new CycleAssessHeader();
+			for (PhaseAssessHeaderDto phaseAssessHeaderDto : phaseAssessmentHeaders) {
+				PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(phaseAssessHeaderDto.getStatus());
+				if (phaseAssignmentStatus == PhaseAssignmentStatus.CONCLUDED) {
+					concluded=true;
+					cycleAssessHeader.setAssignId(phaseAssessHeaderDto.getAssignId());
+					// STATUS = 10
+					cycleAssessHeader.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
+					// ASSESS_DATE = today
+					cycleAssessHeader.setAssessDate(phaseAssessHeaderDto.getAssessDate());
+					// ASSESSED_BY = last assigned by
+					cycleAssessHeader.setAssessedBy(phaseAssessHeaderDto.getAssessedBy());
+
+					List<PhaseAssessDetailDto> phaseAssessDetails = phaseAssessHeaderDto.getPhaseAssessDetails();
+					if (phaseAssessDetails == null || phaseAssessDetails.isEmpty()) {
+						throw new ServiceException("There are no phase assessments found to summarize");
+					}
+					List<CycleAssessDetail> cycleAssessDetails = new ArrayList<>();
+					for (PhaseAssessDetailDto phaseAssessDetail : phaseAssessDetails) {
+						CycleAssessDetail cycleAssessDetail = new CycleAssessDetail();
+						//cycle_assess_detail
+						double rating = phaseAssessDetail.getRating();
+						// COMMENTS = Phase 1: rating, Phase 2: Rating, Phase 3: Rating
+						phase.getName()
+						cycleAssessDetail.setComments(comments);
+						//cycleAssessDetail.setId(id);
+						cycleAssessDetail.setRating(phaseAssessDetail.getRating());
+						cycleAssessDetail.setScore(phaseAssessDetail.getScore());
+						// TEMPLATE_HEADER_ID = template header id from phase-assign
+						cycleAssessDetail.setTemplateHeaderId(phaseAssessDetail.getTemplateHeaderId());
+						cycleAssessDetails.add(cycleAssessDetail);
+					}
+					cycleAssessHeader.setCycleAssessDetails(cycleAssessDetails);
+					break;
+				}
+			}
+			if (!concluded) {
+				throw new ServiceException("There seems to be an assignment pending which needs to be concluded. Cannot abridge appraisal cycle.");
+			}
+
+		}
 	}
 
 }

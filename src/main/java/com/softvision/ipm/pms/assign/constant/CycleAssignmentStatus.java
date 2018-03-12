@@ -3,17 +3,17 @@ package com.softvision.ipm.pms.assign.constant;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum AssignmentCycleStatus {
+public enum CycleAssignmentStatus {
 
 	ASSIGNED(0, "Assigned", "Created but not effective"),
 
-	SELF_APPRAISAL_PENDING(10, "Self-appraisal pending", "Initiated and self-appraisal is pending"),
+	ABRIDGED(10, "Abridged", "Phases summarized and cycle assessment available"),
 
-	SELF_APPRAISAL_COMPLETED(20, "Awaiting Review", "Self-appraisal completed and manager review is pending"),
+	MANAGER_REVIEW_PENDING(20, "Awaiting Review", "Abridged and manager review is pending"),
 
-	MANAGER_REVIEW_COMPLETED(30, "Reviewed", "Manager review is completed"),
+	MANAGER_REVIEW_SAVED(30, "Reviewed", "Manager review is completed"),
 
-	FROZEN(40, "Frozen", "Appraisal phase is frozen");
+	CONCLUDED(40, "Frozen", "Assessment is frozen");
 
 	private int code;
 
@@ -23,7 +23,7 @@ public enum AssignmentCycleStatus {
 
 	private String description;
 
-	private AssignmentCycleStatus(int code, String title, String desciption) {
+	private CycleAssignmentStatus(int code, String title, String desciption) {
 		this.code=code;
 		this.name=this.toString();
 		this.title=title;
@@ -46,8 +46,8 @@ public enum AssignmentCycleStatus {
 		return description;
 	}
 
-	public static AssignmentCycleStatus get(int code) {
-		for (AssignmentCycleStatus status : values()) {
+	public static CycleAssignmentStatus get(int code) {
+		for (CycleAssignmentStatus status : values()) {
 			if (status.getCode() == code) {
 				return status;
 			}
