@@ -3,7 +3,7 @@ $(function () {
 
   $.fn.renderAssessment=function( options ) {
     var settings=$.extend({
-      contextpath: null,
+      contextPath: null,
 	  url: null,
 	  role: 'Employee',
 	}, options );
@@ -155,7 +155,7 @@ $(function () {
        	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
      	  assignment.render.buttons.push('Save Review');
-     	  assignment.render.buttons.push('Freeze');
+     	  assignment.render.buttons.push('Conclude');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
         if (role == 'Employee') {
@@ -163,7 +163,7 @@ $(function () {
           phaseAssessHeader.render=getSelfRatingRenderer(false);
 
           var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getSelfRatingRenderer(false);
+          phaseAssessHeader.render=getManagerRatingRenderer(false);
         } else if (role == 'Manager') {
           var phaseAssessHeader=phaseAssessHeaders[0];
       	  phaseAssessHeader.render=getSelfRatingRenderer(false);
@@ -172,7 +172,7 @@ $(function () {
       	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
       	  assignment.render.buttons.push('Save Review');
-       	  assignment.render.buttons.push('Freeze');
+       	  assignment.render.buttons.push('Conclude');
         }
       } else if (status == PhaseAssignmentStatus.CONCLUDED) {
         var phaseAssessHeader=phaseAssessHeaders[0];
@@ -371,10 +371,10 @@ $(function () {
       var currentForm=phaseAssessHeaders[phaseAssessHeaders.length-1];
 
       if(buttonName=='Save') {
-   		url=contextpath + '/assessment/phase/save';
+   		url=options.contextPath + '/assessment/phase/save';
    		$.fn.postJSON({ url: url, data: currentForm });
       } else if(buttonName=='Submit') {
-    	url=contextpath + '/assessment/phase/submit';
+    	url=options.contextPath + '/assessment/phase/submit';
     	swal({
           title: "Are you sure?", text: "Do you want want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -384,12 +384,17 @@ $(function () {
         });
    	  } else if(buttonName=='Save Review') {
    		//reivewAppraisalForm();
-   		url=contextpath + '/assessment/phase/review';
+   		url=options.contextPath + '/assessment/phase/review';
    		$.fn.postJSON({ url: url, data: currentForm });
-      } else if(buttonName=='Freeze') {
-        //freezeAppraisalForm();
-    	url=contextpath + '/assessment/phase/freeze';
-    	$.fn.postJSON({ url: url, data: currentForm });
+      } else if(buttonName=='Conclude') {
+    	swal({
+          title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
+            showCancelButton: true, confirmButtonColor: "#DD6B55",
+        	confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
+        }, function () {
+       	  url=options.contextPath + '/assessment/phase/conclude';
+          $.fn.postJSON({ url: url, data: currentForm });
+        });
       }
       //delete currentForm.render;
       //delete currentForm.status;

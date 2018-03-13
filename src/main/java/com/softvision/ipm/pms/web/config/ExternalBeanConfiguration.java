@@ -30,7 +30,7 @@ public class ExternalBeanConfiguration {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_25);
         configuration.setDefaultEncoding("UTF-8");
         configuration.setClassForTemplateLoading(this.getClass(), "/templates");
-		return configuration;		
+		return configuration;
 	}
 
 	@Bean

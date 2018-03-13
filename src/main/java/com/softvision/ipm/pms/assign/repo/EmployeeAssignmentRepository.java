@@ -14,7 +14,8 @@ import com.softvision.ipm.pms.common.repo.AbstractRepository;
 @Repository
 public class EmployeeAssignmentRepository extends AbstractRepository {
 
-	public List<EmployeeAssignmentDto> getEmployeeAssignmentsOfCycle(int employeeId, int cycleId) {
+	// TODO This one actually returns a single object.
+	public List<EmployeeAssignmentDto> getEmployeesAssignmentsOfCycle(int employeeId, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_TO,
 			    new Object[] {employeeId, cycleId},
@@ -26,6 +27,18 @@ public class EmployeeAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
+	public EmployeeAssignmentDto getEmployeeAssignmentInCycle(int employeeId, int cycleId) {
+		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_TO,
+			    new Object[] {employeeId, cycleId},
+			    new RowMapper<EmployeeAssignmentDto>() {
+			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+			        }
+			    });
+		return (list == null || list.isEmpty())? null : list.get(0);
+	}
+	
 	public List<EmployeeAssignmentDto> getEmployeeAssignmentsOfPhase(int employeeId, int cycleId, int phaseId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_ASSIGNED_TO,

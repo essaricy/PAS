@@ -61,7 +61,7 @@ $(function () {
         	$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
         	$(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
         	$(row).append('<td>' + ea.assignedAt + '</td>');
-        	$(row).append('<td>' + getCycleStatus(ea.status) + '</td>');
+        	$(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
         	if (options.cycleActionCell) {
        		  $(row).append(options.cycleActionCell(options.role, ea));
         	} else {
@@ -98,14 +98,14 @@ $(function () {
             $(employeeAssignments).each(function(index, ea) {
           	  var assignedTo=ea.assignedTo;
           	  var assignedBy=ea.assignedBy;
-          	  var status=getPhaseAssignmentStatus(ea.status)
+          	  //var status=getPhaseAssignmentStatus(ea.status)
 
           	  var row=$('<tr>');
           	  $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
           	  $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
           	  $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           	  $(row).append('<td>' + ea.assignedAt + '</td>');
-          	  $(row).append('<td>' + getPhaseStatusLabel(status) + '</td>');
+          	  $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
           	  $(row).append(getPhaseActionCell(options.role, ea));
           	  $(tbody).append(row);
             });
@@ -166,7 +166,9 @@ $(function () {
     	  }
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
     	  if (role == 'Manager') {
-    		$(td).append(getFreezeButton(id));
+    		$(td).append(getViewFormButton(id, role));
+    		$(td).append('&nbsp;');
+    		$(td).append(getConcludeButton(id));
     	  } else {
     		$(td).append(getViewFormButton(id, role));
     	  }
@@ -224,12 +226,12 @@ $(function () {
   	    return viewFormButton;
       }
 
-      function getFreezeButton(id) {
-        var freezeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Freeze"><i class="material-icons">assignment_turned_in</i></button>');
-        $(freezeButton).click(function() {
-          freezeAssignment(id);
+      function getConcludeButton(id) {
+        var concludeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Conclude"><i class="material-icons">assignment_turned_in</i></button>');
+        $(concludeButton).click(function() {
+          concludeAssignment(id);
   	    });
-  	    return freezeButton;
+  	    return concludeButton;
       }
 
       function enableSelfSubmission(id) {
@@ -244,14 +246,14 @@ $(function () {
         });
       }
 
-      function freezeAssignment(id) {
+      function concludeAssignment(id) {
         swal({
-    	  title: "Are you sure?", text: "Do you want to Freeze this assignment? This cannot be undone!!!", type: "warning",
+    	  title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-    		confirmButtonText: "Yes, Freeze it!", closeOnConfirm: false
+    		confirmButtonText: "Yes, Conclude it!", closeOnConfirm: false
     	}, function () {
     	  $.fn.ajaxPut({
-    	    url: settings.contextpath + '/assignment/manager/change/phase-status/freeze/' + id
+    	    url: settings.contextpath + '/assignment/manager/change/phase-status/conclude/' + id
     	  });
         });
       }

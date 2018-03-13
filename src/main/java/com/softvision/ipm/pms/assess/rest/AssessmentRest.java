@@ -48,8 +48,8 @@ public class AssessmentRest {
 		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
-	@RequestMapping(value="phase/freeze", method=RequestMethod.POST)
-	public Result freeze(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
+	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
+	public Result conclude(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
 	}
 
@@ -65,7 +65,7 @@ public class AssessmentRest {
 			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 				phaseAssessmentService.review(phaseAssessmentHeader);
 			} else if (status == PhaseAssignmentStatus.CONCLUDED) {
-				phaseAssessmentService.freeze(phaseAssessmentHeader);
+				phaseAssessmentService.reviewAndConclude(phaseAssessmentHeader);
 			}
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

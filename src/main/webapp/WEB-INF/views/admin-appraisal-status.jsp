@@ -237,7 +237,7 @@
 	$('#SearchTable').DataTable({
         responsive: true,
         paging: false,
-		searching: false,
+		searching: true,
 		ordering: true,
 		info: true,
         "ajax": "<%=request.getContextPath()%>/assignment/cycle/employee-status/" + cycleId,
@@ -252,10 +252,10 @@
         columnDefs: [
             { 
                 targets: 4,
-                searchable: false,
-                orderable: false,
+                searchable: true,
+                orderable: true,
                 render: function(data, type, full, meta){
-                   return getCycleStatus(data);
+                   return getPhaseStatusLabel(data);
                 }
             },
             {
@@ -287,7 +287,7 @@
 	$('#SearchPhaseTable').DataTable({
       responsive: true,
       paging: false,
-		searching: false,
+		searching: true,
 		ordering: true,
 		info: true,
       "ajax": "<%=request.getContextPath()%>/assignment/phase/employee-status/" + cycleId+"/"+phaseId,
@@ -302,10 +302,10 @@
       columnDefs: [
           { 
               targets: 4,
-              searchable: false,
-              orderable: false,
+              searchable: true,
+              orderable: true,
               render: function(data, type, full, meta){
-                 return getCycleStatus(data);
+                 return getPhaseStatusLabel(data);
               }
           },
           {

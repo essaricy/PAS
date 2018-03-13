@@ -11,15 +11,19 @@ import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
+import com.softvision.ipm.pms.common.exception.EmailException;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.email.repo.EmailRepository;
 
 @Service
 public class AppraisalService {
 
 	@Autowired
 	private AppraisalCycleDataRepository appraisalCycleDataRepository;
+
+	@Autowired private EmailRepository emailRepository;
 
 	public List<AppraisalCycleDto> getCycles() {
 		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
@@ -99,7 +103,12 @@ public class AppraisalService {
 		appraisalCycle.setStatus(status.toString());
 		appraisalCycleDataRepository.save(appraisalCycle);
 		if (sendActivationEmail) {
-			// TODO Send email to whole group
+			try {
+				// Send email to whole group
+				emailRepository.sendApprasialKickOff(appraisalCycle);
+			} catch (EmailException emailException) {
+				emailException.printStackTrace();
+			}
 		}
 	}
 

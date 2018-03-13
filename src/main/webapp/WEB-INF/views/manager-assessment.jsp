@@ -113,7 +113,7 @@ $(function () {
 
   $('.assessment_card').renderAssessment({
 	role: 'Manager',
-    contextpath: '<%=request.getContextPath()%>',
+    contextPath: '<%=request.getContextPath()%>',
     url: '<%=request.getContextPath()%>/assessment/list/phase/byAssignId/' + assignmentId,
   });
 

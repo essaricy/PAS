@@ -10,9 +10,8 @@ public interface PhaseAssessmentHeaderDataRepository extends CrudRepository<Phas
 
 	List<PhaseAssessHeader> findByAssignIdOrderByStatusAsc(long assignmentId);
 
-	/*@Query("select status from phase_assess_header where assign_id=:assign_id order by status desc")
-    int getLatestStatus(long assignmentId);*/
-
 	PhaseAssessHeader findFirstByAssignIdOrderByStatusDesc(long assignmentId);
+
+	PhaseAssessHeader findFirstByAssignIdAndStatus(long assignmentId, int status);
 
 }

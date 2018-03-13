@@ -23,7 +23,6 @@ public class SVProjectRepository {
 	@AuditTransaction
 	public Employee getEmployee(String userId) {
 		String email = userId + "@" + domain;
-		System.out.println("email=" + email);
 
 		// To enable tracing of request and response
 		/*RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));

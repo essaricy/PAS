@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
@@ -28,7 +29,7 @@ public class EmployeeAssignmentService {
 			int cycleId = cycle.getId();
 			CycleAssignmentDto cycleAssignment = new CycleAssignmentDto();
 			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
-			cycleAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfCycle(employeeId, cycleId));
+			cycleAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeesAssignmentsOfCycle(employeeId, cycleId));
 			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
 			cycleAssignment.setPhaseAssignments(phaseAssignments);
 			List<AppraisalPhase> phases = cycle.getPhases();
@@ -41,6 +42,26 @@ public class EmployeeAssignmentService {
 			cycleAssignments.add(cycleAssignment);
 		}
 		return cycleAssignments;
+	}
+
+	public CycleAssignmentDto getCurrentCycleAssignment(int employeeId) {
+		AppraisalCycle cycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+		int cycleId = cycle.getId();
+
+		CycleAssignmentDto cycleAssignment = new CycleAssignmentDto();
+		cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+		cycleAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeesAssignmentsOfCycle(employeeId, cycleId));
+
+		List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
+		cycleAssignment.setPhaseAssignments(phaseAssignments);
+		List<AppraisalPhase> phases = cycle.getPhases();
+		for (AppraisalPhase phase : phases) {
+			PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
+			phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
+			phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+			phaseAssignments.add(phaseAssignment);
+		}
+		return cycleAssignment;
 	}
 
 }

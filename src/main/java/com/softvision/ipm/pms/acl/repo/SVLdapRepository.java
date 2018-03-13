@@ -36,7 +36,6 @@ public class SVLdapRepository {
 		env.put(Context.SECURITY_CREDENTIALS, password.toString());
 
 		DirContext ctx = new InitialDirContext(env);
-		System.out.println("Authentication completed.");
 		// do something useful with the context...
 		ctx.close();
 	}

@@ -23,8 +23,8 @@ function getPhaseAssignmentStatus(code) {
   return null;
 }
 
-function getPhaseStatusLabel(status) {
-  //var phaseStatus = getPhaseAssignmentStatus(code);
+function getPhaseStatusLabel(code) {
+  var status = getPhaseAssignmentStatus(code);
   return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
 }
 
@@ -61,16 +61,4 @@ function appendTableRow(tableSelector, name) {
 function setButtonWavesEffect(event) {
     $(event.currentTarget).find('[role="menu"] li a').removeClass('waves-effect');
     $(event.currentTarget).find('[role="menu"] li:not(.disabled) a').addClass('waves-effect');
-}
-
-/*function getPhaseStatus(code) {
-  var phaseStatus = getPhaseAssignmentStatus(code);
-  return (phaseStatus == null) ? '' : '<span class="label ' + phaseStatus.colorClass + '">' + phaseStatus.name + '</span>';
-}*/
-
-function getCycleStatus(code) {
-  if (code == 0) {
-  	return "Assigned";
-  }
-  return null;
 }

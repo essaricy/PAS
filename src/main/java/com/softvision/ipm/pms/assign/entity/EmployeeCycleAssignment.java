@@ -32,4 +32,6 @@ public class EmployeeCycleAssignment implements Serializable {
 
 	private Date assignedAt;
 
+	private int status;
+
 }

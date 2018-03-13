@@ -12,6 +12,8 @@ public interface AssignmentPhaseDataRepository extends CrudRepository<EmployeePh
 
 	EmployeePhaseAssignment findById(Long id);
 
+	EmployeePhaseAssignment findByPhaseIdAndEmployeeIdAndStatus(Integer phaseId, Integer employeeId, int status);
+
 	EmployeePhaseAssignment findByPhaseIdAndTemplateIdAndEmployeeId(Integer phaseId, Long templateId, Integer employeeId);
 
 }
