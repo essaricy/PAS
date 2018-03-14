@@ -10,21 +10,31 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
+import com.softvision.ipm.pms.assess.assembler.CycleAssessmentAssembler;
 import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
 import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
+import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
+import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
 import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
+import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
+import com.softvision.ipm.pms.template.entity.Template;
+import com.softvision.ipm.pms.template.entity.TemplateHeader;
+import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
 @Service
 public class CycleAssessmentService {
@@ -32,6 +42,10 @@ public class CycleAssessmentService {
 	private static final String CYCLE_SUMMARY_FORMAT= "{0} : Rating= {1}, Score= {2}\n";
 
 	@Autowired private AppraisalRepository appraisalRepository;
+
+	@Autowired private TemplateDataRepository templateDataRepository;
+
+	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	@Autowired private AssignmentCycleDataRepository assignmentCycleDataRepository;
 
@@ -124,6 +138,32 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		assignmentCycleDataRepository.save(employeeCycleAssignment);
 		return true;
+	}
+
+	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
+		CycleAssessmentDto cycleAssessment = new CycleAssessmentDto();
+		EmployeeCycleAssignment employeeCycleAssignment = assignmentCycleDataRepository.findById(assignmentId);
+		
+		// Allow this form only to the employee and to the manager to whom its been assigned
+		int assignedBy = employeeCycleAssignment.getAssignedBy();
+		// TODO: Allow it to employee?
+		//int employeeId = employeeCycleAssignment.getEmployeeId();
+		if (requestedEmployeeId != assignedBy) {
+			throw new ServiceException("No allowed to view appraisal form");
+		}
+		cycleAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeeCycleAssignment));
+
+		int cycleId = employeeCycleAssignment.getCycleId();
+		cycleAssessment.setCycle(AppraisalAssembler.getCycle(appraisalCycleDataRepository.findById(cycleId)));
+
+		long templateId = employeeCycleAssignment.getTemplateId();
+		Template template = templateDataRepository.findById(templateId);
+		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
+		cycleAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
+
+		List<CycleAssessHeader> cycleAssessHeaders = cycleAssessmentHeaderDataRepository.findByAssignIdOrderByStatusAsc(assignmentId);
+		cycleAssessment.setCycleAssessmentHeaders(CycleAssessmentAssembler.getCycleAssessHeaderDtos(cycleAssessHeaders));
+		return cycleAssessment;
 	}
 
 	private CycleAssessDetail getByTemplateHeaderId(List<CycleAssessDetail> cycleAssessDetails, long templateHeaderId) {

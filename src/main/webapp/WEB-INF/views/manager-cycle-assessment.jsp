@@ -21,14 +21,24 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
   </head>
   <style>
-  .list-group-item {
-  	font-size: 13px;
+  .self-score, .manager-score {
+  	font-weight: bold;
+  }
+  table > tfoot > tr > th {
+    font-size: 20px;
+  }
+  textarea {
+   resize: none;
+  }
+  .action-buttons button {
+    margin-right: 8px;
   }
   </style>
 </head>
@@ -45,45 +55,21 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Employee Assignments
-          <small>View status of the current employees those are assigned to you, change manager, send forms</small>
+        <h2>My Appraisal
+          <small>View and submit the appraisal form</small>
         </h2>
       </div>
+      <div class="row clearfix">
+        <div class="">
+          <div class="card assessment_card">
+            <div class="header">
+            </div>
+            <div class="body" style="overflow-x: scroll;">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-	  	<!-- Large Size -->
-		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1" role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title" id="EmployeeSearchModalLabel"></h4>
-					</div>
-					<div class="modal-body">
-	                   <div class="row clearfix">
-	                     <div class="table-responsive">
-	                       <table id="SearchRoleTable" class="table table-bordered table-striped table-hover dataTable">
-	                         <thead>
-	                           <tr>
-	                             <th>Employee ID</th>
-	                             <th>First Name</th>
-	                             <th>Last Name</th>
-	                             <th>Band</th>
-	                             <th>Designation</th>
-	                           </tr>
-	                         </thead>
-	                         <tbody>
-	                         </tbody>
-	                       </table>
-	                     </div>
-	                   </div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="AssignToAnotherManager" class="btn btn-link waves-effect">Assign1</button>
-						<button type="button" id="AssignToNextManager" class="btn btn-link waves-effect">Assign2</button>
-						<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
-					</div>
-				</div>
-			</div>
-		</div>
   </section>
 </body>
 
@@ -107,90 +93,32 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.js"></script>
+
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/tooltips-popovers.js"></script>
+
+
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
-<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
 
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/manager-assignments.js"></script>
-<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-cycle-assessments.js"></script>
 <script>
 $(function () {
-  var MANAGER_ROLE_ID='Manager';
+  var assignmentId='${param.aid}';
 
-  $('.container-fluid').managerAssignment({
-	contextpath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/assignment/manager/list',
-  });
-
-  var assignmentId=0;
-  $( "#EmployeeSearchModal" ).on('shown.bs.modal', function(e) {
-    var $invoker = $(e.relatedTarget);
-	assignmentId=$invoker.attr('item-id');
-	var type=$invoker.attr('item-type');
-	if (type == 'AssignToAnotherManager') {
-	  $('#AssignToAnotherManager').show();
-	  $('#AssignToNextManager').hide();
-	  $('#EmployeeSearchModalLabel').text('Assign To Another Manager');
-	} else if (type == 'AssignToNextManager') {
-	  $('#AssignToAnotherManager').hide();
-	  $('#AssignToNextManager').show();
-	  $('#EmployeeSearchModalLabel').text('Assign To Next Manager');
-	}
-    $($.fn.dataTable.tables( true )).css('width', '100%');
-    $($.fn.dataTable.tables( true )).DataTable().columns.adjust().draw();
-  });
-
-  $('#SearchRoleTable').DataTable({
-    responsive: true,
-    paging: false,
-	searching: false,
-	ordering: true,
-	info: true,
-    "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,
-    "sAjaxDataProp":"",
-	"columns": [
-      { "data": "EmployeeId" },
-      { "data": "FirstName" },
-      { "data": "LastName" },
-      { "data": "Band" },
-      { "data": "Designation" },
-    ],
-    columnDefs: [
-      { 
-        targets: 0,
-        searchable: false,
-        orderable: false,
-        render: function(data, type, full, meta) {
-          if(type === 'display'){
-            data = '<input name="SelectedManagerId" type="radio" id="radio_' + data + '" value="' + data + '" class="with-gap radio-col-red"><label for="radio_' + data + '">' + data + '</label>';      
-          }
-          return data;
-        }
-      }
-    ]
-  });
-
-  $('#AssignToAnotherManager').click(function() {
-    var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
-    if (SelectedManagerId) {
-      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/phase-assign/' + assignmentId + '/' + SelectedManagerId});
-    }
-  });
-
-  $('#AssignToNextManager').click(function() {
-	var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
-    if (SelectedManagerId) {
-      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/cycle-assign/' + assignmentId + '/' + SelectedManagerId});
-    }
+  $('.assessment_card').renderAssessment({
+	role: 'Manager',
+    contextPath: '<%=request.getContextPath()%>',
+    url: '<%=request.getContextPath()%>/assessment/list/cycle/byAssignId/' + assignmentId,
   });
 
 });
+
 
 </script>
 </html>

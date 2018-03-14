@@ -109,7 +109,59 @@
                    </div>
                  </div>
                  <div role="tabpanel" class="tab-pane fade" id="Sync_Employees">
-                   <p>This features can be used to Sync all the employee information from SV project to this system.</p>
+                   <p>This features can be used to Sync all the employee information from SV project to this system. After Sync, new employees will be added to system and existing employees data will be updated.</p>
+                   <div class="row clearfix">
+                   	 <div class="col-lg-5">&nbsp;</div>
+                   	 <div class="col-lg-2" style="margin-top: 20px;">
+                   	 	<button type="button" id="Sync" class="btn btn-block btn-lg btn-primary waves-effect">Sync Employee Data</button>
+                   	 </div>
+                     <div class="col-lg-5">&nbsp;</div>
+                   </div>
+                   <div class="panel-group" id="sync_employee_tab" role="tablist" aria-multiselectable="true" style="display:none">
+	                   <div class="row clearfix"  >
+	                   	 <div class="col-lg-3">&nbsp;</div>
+	                   	 <div class="col-lg-3 panel-heading" role="tab" id="headingOne_4">
+		                   	 <a class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-parent="sync_employee_tab" href="#collapseOne_4" aria-expanded="false" aria-controls="collapseExample">
+		                                Click for Success Data
+		                     </a>
+	                   	 </div>
+	                   	 <div class="col-lg-3 panel-heading" role="tab" id="headingTwo_4">
+		                     <a class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-parent="sync_employee_tab" href="#collapseTwo_4" aria-expanded="false" aria-controls="collapseExample">
+		                               Click for Error Data
+		                     </a>
+	                   	 </div>
+	                     <div class="col-lg-3">&nbsp;</div>
+	                   </div>
+	 
+	                    <div class="panel panel-danger">
+		                   	<div id="collapseTwo_4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_4">
+		                        <div class="panel-body">
+		                        	<ul class="list-group" id="Sync_Results_Error">
+		                       		</ul>
+		                    	</div>
+		                    </div>
+	                   </div>
+	                    <div class="panel panel-success">
+		                   	<div id="collapseOne_4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne_4">
+		                        <div class="panel-body">
+		                        	<ul class="list-group" id="Sync_Results_Success">
+		                       		</ul>
+		                    	</div>
+		                    </div>
+	                    </div>
+                   </div>
+              	   <!-- <div class="row clearfix">
+              	     <div class="col-lg-2">&nbsp;</div>
+              	     <div class="col-lg-8">
+              	     
+              	     <ul class="list-group collapse" id="Sync_Results_Error">
+                       </ul>
+                       <ul class="list-group collapse" id="Sync_Results_Success">
+                       </ul>
+              	     </div>
+                     <div class="col-lg-2">&nbsp;</div>
+                   </div> -->
+                   
                  </div>
                  <div role="tabpanel" class="tab-pane fade" id="Roles">
                  	<div class="body">
@@ -343,6 +395,41 @@
     	  }	
     	}
       });
+
+    $('#Sync').click(function() {
+      var button=this;
+	  swal({
+    	title: "Are you sure?", text: "Do you want to sync data of all employees from SV Project to this system? This may take few minutes!!", type: "warning",
+    	showCancelButton: true, confirmButtonColor: "#DD6B55",
+    	confirmButtonText: "Yes, Proceed!", closeOnConfirm: true
+      }, function () {
+	    $(button).attr('disabled', true);
+    	$.fn.ajaxPut({
+    	  url: '<%=request.getContextPath()%>/employee/sync',
+    	  //refresh: "no",
+    	  onSuccess: function (result) {
+    		console.log("success");
+    		var results_container_error=$('#Sync_Results_Error');
+    		var results_container_Success=$('#Sync_Results_Success');
+      		$(results_container_error).empty();
+      		$(results_container_Success).empty();
+      		$("#sync_employee_tab").show();
+      		$(result).each(function(index, aResult) {
+      		  if (aResult.code=='SUCCESS') {
+      		    $(results_container_Success).append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+      		  } else {
+      			$(results_container_error).append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+      		  }
+      		});
+    		  var text="";
+       	  	  swal({ title: "Sync Completed!", text: text, type: "success"}, function () { }); 
+    	  },
+    	  onComplete : function () {
+    		  //$(button).attr('disabled', false);
+	      }
+    	});
+      });
+    });
 
   });
   </script>

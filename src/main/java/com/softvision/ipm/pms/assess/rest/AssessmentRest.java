@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
+import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -27,33 +29,43 @@ public class AssessmentRest {
 
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
+	@Autowired private CycleAssessmentService cycleAssessmentService;
+
 	@RequestMapping(value="list/phase/byAssignId/{aid}", method=RequestMethod.GET)
-	public PhaseAssessmentDto getByAssignment(@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
+	public PhaseAssessmentDto getPhaseAssessmentByAssignmentId(
+			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
 			throws ServiceException {
 		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
     }
 
+	@RequestMapping(value="list/cycle/byAssignId/{aid}", method=RequestMethod.GET)
+	public CycleAssessmentDto getCycleAssessmentByAssignmentId(
+			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
+			throws ServiceException {
+		return cycleAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
+    }
+
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
 	public Result save(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
+		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
     }
 
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
 	public Result submit(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
+		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
 	@RequestMapping(value="phase/review", method=RequestMethod.POST)
 	public Result review(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
+		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
 	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
 	public Result conclude(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return moveForm(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
+		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
 	}
 
-	public Result moveForm(PhaseAssessHeaderDto phaseAssessmentHeader, PhaseAssignmentStatus status) {
+	public Result changePhaseStatus(PhaseAssessHeaderDto phaseAssessmentHeader, PhaseAssignmentStatus status) {
 		Result result = new Result();
 		try {
 			phaseAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());

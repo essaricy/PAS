@@ -1,11 +1,13 @@
 package com.softvision.ipm.pms.employee.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.acl.repo.SVProjectRepository;
+import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.CollectionUtil;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
@@ -62,4 +64,22 @@ public class EmployeeService {
 		return null;
 	}
 
+	public List<Result> syncEmployees() throws Exception {
+		List<Result> resultList = new ArrayList<Result>();
+		List<Employee> employeeList = svProjectRepository.getAllEmployees();
+		for (Employee employee : employeeList) {
+			Result result= new Result();
+			try{
+				save(employee);
+				result.setCode(Result.SUCCESS);
+				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " updated");
+			}catch (Exception e) {
+				System.out.println(employee);
+				result.setCode(Result.FAILURE);
+				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " update failed. Error = "+ e.getMessage());
+			}
+			resultList.add(result);
+		}
+		return resultList;
+	}
 }

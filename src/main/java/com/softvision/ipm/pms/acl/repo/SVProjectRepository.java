@@ -1,5 +1,8 @@
 package com.softvision.ipm.pms.acl.repo;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -34,6 +37,15 @@ public class SVProjectRepository {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey).queryParam("email", email);
 		Employee employee = restTemplate.getForObject(builder.toUriString(), Employee.class, apiKey, email);
 		return employee;
+	}
+	
+	
+	@AuditTransaction
+	public List<Employee> getAllEmployees() {
+		RestTemplate restTemplate = new RestTemplate();
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey);
+		Employee[] list = restTemplate.getForObject(builder.toUriString(), Employee[].class, apiKey);
+		return Arrays.asList(list);
 	}
 
 }

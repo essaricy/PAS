@@ -108,11 +108,11 @@ CREATE TABLE template_detail (
 CREATE TABLE employee (
 	EMPLOYEE_ID		BIGINT NOT NULL,
 	LOGIN_ID		varchar(25) NOT NULL,
-	FIRST_NAME		varchar(25) NOT NULL,
-	LAST_NAME		varchar(25) NOT NULL,
+	FIRST_NAME		varchar(60) NOT NULL,
+	LAST_NAME		varchar(60) NOT NULL,
 	EMPLOYMENT_TYPE	varchar(40) NOT NULL,
 	BAND			varchar(15) NOT NULL,
-	DESIGNATION		varchar(40) NOT NULL,
+	DESIGNATION		varchar(80) NULL,
 	HIRED_ON		date NOT NULL,
 	LOCATION		varchar(20),
 

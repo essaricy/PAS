@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum CycleAssignmentStatus {
 
-	ASSIGNED(0, "Assigned", "Created but not effective"),
+	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
 
 	ABRIDGED(10, "Abridged", "Phases summarized and cycle assessment available"),
 
-	MANAGER_REVIEW_PENDING(20, "Awaiting Review", "Abridged and manager review is pending"),
+	MANAGER_REVIEW_PENDING(20, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
-	MANAGER_REVIEW_SAVED(30, "Reviewed", "Manager review is completed"),
+	MANAGER_REVIEW_SAVED(30, "Review Saved", "Manager review is saved but not concluded"),
 
-	CONCLUDED(40, "Frozen", "Assessment is frozen");
+	CONCLUDED(40, "Concluded", "Assessment is concluded");
 
 	private int code;
 

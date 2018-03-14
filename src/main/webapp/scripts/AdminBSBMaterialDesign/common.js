@@ -1,16 +1,29 @@
 var PhaseAssignmentStatus={
 	NOT_INITIATED:
-		{code: 0, name: "Not Initiated", colorClass: "bg-grey", description: "Appraisal Form has not been initiated"},
+		{code: 0, 	name: "Not Initiated", 			colorClass: "bg-grey", 			description: "Appraisal Form has not been initiated"},
 	SELF_APPRAISAL_PENDING: 
-		{code: 10, name: "Self-Appraisal Pending", colorClass: "bg-amber", description: "Initiated and self-appraisal is pending"},
+		{code: 10, 	name: "Self-Appraisal Pending", colorClass: "bg-amber", 		description: "Initiated and self-appraisal is pending"},
 	SELF_APPRAISAL_SAVED: 
-		{code: 20, name: "Self-Appraisal Drafted", colorClass: "bg-orange", description: "self-appraisal is drafted"},
+		{code: 20, 	name: "Self-Appraisal Drafted", colorClass: "bg-orange", 		description: "self-appraisal is drafted"},
 	MANAGER_REVIEW_PENDING:
-		{code: 30, name: "Review Pending", colorClass: "bg-deep-orange", description: "Self-Appraisal is completed and manager review is pending"},
+		{code: 30, 	name: "Review Pending", 		colorClass: "bg-deep-orange", 	description: "Self-Appraisal is completed and manager review is pending"},
 	MANAGER_REVIEW_SAVED:
-		{code: 40, name: "Review Completed", colorClass: "bg-green", description: "Manager review is completed"},
+		{code: 40, 	name: "Review Completed", 		colorClass: "bg-green", 		description: "Manager review is completed"},
+    CONCLUDED:
+		{code: 50, 	name: "Concluded", 				colorClass: "bg-deep-purple", 	description: "Assessment is concluded"},
+};
+
+var CycleAssignmentStatus={
+	NOT_INITIATED:
+		{code: 0, 	name: "Assigned", 				colorClass: "bg-grey", 			description: "Created but not effective"},
+	ABRIDGED:
+		{code: 10, 	name: "Abridged", 				colorClass: "bg-amber", 		description: "Phases summarized and cycle assessment available"},
+	MANAGER_REVIEW_PENDING:
+		{code: 20, 	name: "Review Pending", 		colorClass: "bg-orange", 		description: "Abridged and manager review is pending"},
+	MANAGER_REVIEW_SAVED:
+		{code: 30, 	name: "Reviewed Completed", 	colorClass: "bg-green", 		description: "Manager review is completed"},
 	CONCLUDED:
-		{code: 50, name: "Concluded", colorClass: "bg-deep-purple", description: "Assessment is concluded"},
+		{code: 40, 	name: "Concluded", 				colorClass: "bg-deep-purple", 	description: "Assessment is frozen"},
 };
 
 function getPhaseAssignmentStatus(code) {
@@ -23,8 +36,23 @@ function getPhaseAssignmentStatus(code) {
   return null;
 }
 
+function getCycleAssignmentStatus(code) {
+  for (var key in CycleAssignmentStatus) {
+	var data=CycleAssignmentStatus[key];
+	if (code == data.code) {
+	  return data;
+    }
+  }
+  return null;
+}
+
 function getPhaseStatusLabel(code) {
   var status = getPhaseAssignmentStatus(code);
+  return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
+}
+
+function getCycleStatusLabel(code) {
+  var status = getCycleAssignmentStatus(code);
   return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
 }
 

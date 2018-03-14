@@ -64,6 +64,22 @@ public class EmployeeRest {
 		}
 		return result;
     }
+	
+	@RequestMapping(value="/sync", method=RequestMethod.PUT)
+    public @ResponseBody Result syncEmployees() {
+		Result result = new Result();
+		try {
+			List<Result> syncEmployees = employeeService.syncEmployees();
+			result.setCode(Result.SUCCESS);
+			result.setContent(syncEmployees);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
+    }
+	
 
 	@RequestMapping(value="/types", method=RequestMethod.GET)
     public @ResponseBody List<String> getEmployeeTypes() {

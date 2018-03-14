@@ -50,13 +50,18 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return (employeeAssignments== null || employeeAssignments.isEmpty()) ? null : employeeAssignments.get(0);
 	}
 
-	public boolean changeManager(Long phaseAssignId, int toEmployeeId) {
+	public boolean changePhaseManager(Long phaseAssignId, int toEmployeeId) {
 		int updated = jdbcTemplate.update("UPDATE emp_phase_assign SET assigned_by=? where id=?", toEmployeeId, phaseAssignId);
 		return updated==1;
 	}
 
 	public boolean changeStatus(long phaseAssignId, int toStatusId) {
 		int updated = jdbcTemplate.update("UPDATE emp_phase_assign SET status=? where id=?", toStatusId, phaseAssignId);
+		return updated==1;
+	}
+
+	public boolean changeCycleManager(Long phaseAssignId, int toEmployeeId) {
+		int updated = jdbcTemplate.update("UPDATE emp_cycle_assign SET assigned_by=? where id=?", toEmployeeId, phaseAssignId);
 		return updated==1;
 	}
 

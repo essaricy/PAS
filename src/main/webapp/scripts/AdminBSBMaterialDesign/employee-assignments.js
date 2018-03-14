@@ -150,7 +150,7 @@ $(function () {
       function getFillFormButton(id) {
         var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment</i></button>');
         $(fillFormButton).click(function() {
-          location.href=settings.contextPath + '/employee/assessment?aid=' + id;
+          location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
   	    });
   	    return fillFormButton;
       }
@@ -158,7 +158,7 @@ $(function () {
       function getViewFormButton(id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
         $(viewFormButton).click(function() {
-          location.href=settings.contextPath + '/employee/assessment?aid=' + id;
+          location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
   	    });
   	    return viewFormButton;
       }

@@ -1,8 +1,5 @@
 package com.sv.ipm.pms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.FixMethodOrder;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,6 +24,35 @@ public class TestMailTest {
 	@Autowired
 	private EmailRepository emailRepository;
 	
+
+	@Test
+	public void test1_sendGenericMail() {
+		try {
+			AppraisalCycle appraisalCycle = new AppraisalCycle();
+			appraisalCycle.setName("2017-2018");
+			AppraisalPhase appraisalPhase = new AppraisalPhase();
+			appraisalPhase.setName("Q1");
+			Employee employee = new Employee();
+			employee.setLoginId("srikanth.kumar");
+			employee.setFirstName("srikanth");
+			Employee manager = new Employee();
+			manager.setLoginId("rohith.ramesh");
+			manager.setFirstName("Rohith");
+			
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, null, null, "KICK_OFF");
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, employee, manager, "EMPLOYEE_ENABLE");
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, employee, manager, "EMPLOYEE_SUBMITED");
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, employee, manager, "MANAGER_REMAINDER");
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, employee, manager, "MANAGER_FROZEN");
+			emailRepository.sendGenericMail(appraisalCycle, appraisalPhase, employee, manager, "MANAGER_REVIEW");
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	@Test
 	@Ignore
 	public void test1_managerFrozen() {
@@ -35,38 +61,33 @@ public class TestMailTest {
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
 			Employee employee = new Employee();
 			employee.setLoginId("rohith.ramesh");
 			employee.setFirstName("Rohith");
 			Employee manager = new Employee();
 			manager.setLoginId("prasad.pachuru");
 			manager.setFirstName("Prasad");
-			emailRepository.sendManagerReviewFrozen(appraisalCycle, employee, manager);
+			emailRepository.sendManagerReviewFrozen(appraisalCycle,appraisalPhase, employee, manager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Test
+	@Ignore
 	public void test1_managerReview() {
 		try {
 			AppraisalCycle appraisalCycle = new AppraisalCycle();
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
 			Employee employee = new Employee();
 			employee.setLoginId("rohith.ramesh");
 			employee.setFirstName("Rohith");
 			Employee manager = new Employee();
 			manager.setLoginId("prasad.pachuru");
 			manager.setFirstName("Prasad");
-			emailRepository.sendManagerReviewCompleted(appraisalCycle, employee, manager);
+			emailRepository.sendManagerReviewCompleted(appraisalCycle,appraisalPhase, employee, manager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -81,16 +102,13 @@ public class TestMailTest {
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
 			Employee employee = new Employee();
 			employee.setLoginId("rohith.ramesh");
 			employee.setFirstName("Rohith");
 			Employee manager = new Employee();
 			manager.setLoginId("prasad.pachuru");
 			manager.setFirstName("Prasad");
-			emailRepository.sendEmployeeRemainder(appraisalCycle, employee, manager);
+			emailRepository.sendEmployeeRemainder(appraisalCycle, appraisalPhase,employee, manager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,16 +122,13 @@ public class TestMailTest {
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
 			Employee employee = new Employee();
 			employee.setLoginId("prasad.pachuru");
 			employee.setFirstName("Prasad");
 			Employee manager = new Employee();
 			manager.setLoginId("rohith.ramesh");
 			manager.setFirstName("Rohith");
-			emailRepository.sendApprasialEmployeeSubmitted(appraisalCycle, employee, manager);
+			emailRepository.sendApprasialEmployeeSubmitted(appraisalCycle,appraisalPhase, employee, manager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -127,36 +142,31 @@ public class TestMailTest {
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
 			Employee employee = new Employee();
 			employee.setLoginId("rohith.ramesh");
 			employee.setFirstName("Rohith");
 			Employee manager = new Employee();
 			manager.setLoginId("prasad.pachuru");
 			manager.setFirstName("Prasad");
-			emailRepository.sendApprasialManagerAssign(appraisalCycle, employee, manager);
+			emailRepository.sendApprasialManagerAssign(appraisalCycle,appraisalPhase, employee, manager);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-/*	@Test
+	@Test
+	@Ignore
 	public void test1_ApprasialKickOfMail() {
 		try {
 			AppraisalCycle appraisalCycle = new AppraisalCycle();
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			List a =new ArrayList();
-			a.add(appraisalPhase);
-			appraisalCycle.setPhases(a);
-			emailRepository.sendApprasialKickOff(appraisalCycle);
+			emailRepository.sendApprasialKickOff(appraisalCycle,appraisalPhase);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 
 	/*@Test
 	public void test1_EmployeeAlert() {

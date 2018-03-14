@@ -21,7 +21,7 @@ import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.role.service.RoleService;
 
 @Service
-public class ManagerAssignmentService {
+public class ManagerPhaseAssignmentService {
 
 	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
 
@@ -31,7 +31,7 @@ public class ManagerAssignmentService {
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
-	public void changeManager(long phaseAssignId, int fromEmployeeId, int toEmployeeId)
+	public void assignPhaseToAnotherManager(long phaseAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
@@ -51,13 +51,13 @@ public class ManagerAssignmentService {
 			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
 		}
 		// Check if from and to employees are managers.
-		boolean changed = managerAssignmentRepository.changeManager(phaseAssignId, toEmployeeId);
+		boolean changed = managerAssignmentRepository.changePhaseManager(phaseAssignId, toEmployeeId);
 		if (!changed) {
 			throw new ServiceException("Unable to change assigned-by-manager");
 		}
 	}
 
-	public void enableAppraisalFormToEmployee(long phaseAssignId, int fromEmployeeId) throws ServiceException {
+	public void enablePhaseAppraisal(long phaseAssignId, int fromEmployeeId) throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");

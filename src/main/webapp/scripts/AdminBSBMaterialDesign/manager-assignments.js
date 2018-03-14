@@ -56,12 +56,8 @@ $(function () {
         	$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
         	$(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
         	$(row).append('<td>' + ea.assignedAt + '</td>');
-        	$(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
-        	if (options.cycleActionCell) {
-       		  $(row).append(options.cycleActionCell(ea));
-        	} else {
-        	  $(row).append('<td>-</td>');
-        	}
+        	$(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
+        	$(row).append(getCycleActionCell(ea));
         	$(tbody).append(row);
           });
           $(table).append(tbody);
@@ -79,7 +75,7 @@ $(function () {
 
           if (employeeAssignments.length==0) {
         	$(phaseTabPanel).append(phaseTitle);
-        	$(phaseTabPanel).append('<p class="font-bold col-pink">No Employees weren assigned to you for this phase.</p>');
+        	$(phaseTabPanel).append('<p class="font-bold col-pink">No Employees were assigned to you for this phase.</p>');
           } else {
             var table=$('<table class="table table-striped">');
             var thead=$('<thead>');
@@ -89,7 +85,6 @@ $(function () {
             $(employeeAssignments).each(function(index, ea) {
           	  var assignedTo=ea.assignedTo;
           	  var assignedBy=ea.assignedBy;
-          	  //var status=getPhaseAssignmentStatus(ea.status)
 
           	  var row=$('<tr>');
           	  $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
@@ -128,76 +123,98 @@ $(function () {
         $(tabContent).append(phaseTabPanel);
       });
     }
+
+    function getCycleActionCell(ea) {
+   	  var status=ea.status;
+      var id=ea.assignmentId;
+      var td=$('<td>');
+
+      if (status == CycleAssignmentStatus.NOT_INITIATED.code) {
+    	$(td).append('&nbsp;');
+      } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
+    	$(td).append(getAssignToNextManagerButton('cycle', id));
+      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
+        $(td).append(getFillReviewButton('cycle', id));
+      }
+   	  return td;
+    }
+
     function getPhaseActionCell(ea) {
     	var status=ea.status;
     	var id=ea.assignmentId;
     	var td=$('<td>');
-    	//var phaseStatus = getPhaseAssignmentStatus(code);
 
     	if (status == PhaseAssignmentStatus.NOT_INITIATED.code) {
-    	  $(td).append(getAssignToManagerButton(id));
+    	  $(td).append(getAssignToManagerButton('phase', id));
     	  $(td).append('&nbsp;');
-    	  $(td).append(getEnableFormButton(id));
+    	  $(td).append(getEnableFormButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
     			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
-    	  $(td).append(getSendReminderButton(id));
+    	  $(td).append(getSendReminderButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-    	  $(td).append(getFillReviewButton(id));
+    	  $(td).append(getFillReviewButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	  $(td).append(getViewFormButton(id, role));
+    	  $(td).append(getViewFormButton('phase', id));
     	  $(td).append('&nbsp;');
-    	  $(td).append(getConcludeButton(id));
+    	  $(td).append(getConcludeButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
-    	  $(td).append(getViewFormButton(id));
+    	  $(td).append(getViewFormButton('phase', id));
     	}
     	return td;
       }
 
-      function getAssignToManagerButton(id) {
+      function getAssignToNextManagerButton(type, id) {
+        var assignToNextManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
+          'title="Assign to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
+          'item-id="' + id + '" item-type="AssignToNextManager"><i class="material-icons">call_merge</i></button>');
+  		return assignToNextManagerButton;
+      }
+
+      function getAssignToManagerButton(type, id) {
         var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager" data-toggle="modal" data-target="#largeModal" item-id="' + id + '"><i class="material-icons">trending_flat</i></button>');
   		return assignToManagerButton;
       }
 
-      function getEnableFormButton(id) {
+      function getEnableFormButton(type, id) {
         var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-Submission"><i class="material-icons">assignment_returned</i></button>');
   		$(enableFormButton).click(function() {
-  		  enableSelfSubmission(id);
+  		  enableSelfSubmission(type, id);
   		});
   		return enableFormButton;
       }
 
-      function getSendReminderButton(id) {
+      function getSendReminderButton(type, id) {
         var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
         $(reminderButton).click(function() {
   	    });
    	    return reminderButton;
       }
 
-      function getFillReviewButton(id) {
+      function getFillReviewButton(type, id) {
     	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Review"><i class="material-icons">assignment</i></button>');
     	$(fillReviewButton).click(function() {
-          location.href=settings.contextpath + '/manager/assessment?aid=' + id;
+          location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
     	});
     	return fillReviewButton;
       }
 
-      function getViewFormButton(id) {
+      function getViewFormButton(type, id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
         $(viewFormButton).click(function() {
-          location.href=settings.contextpath + '/manager/assessment?aid=' + id;
+          location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
   	    });
   	    return viewFormButton;
       }
 
-      function getConcludeButton(id) {
+      function getConcludeButton(type, id) {
         var concludeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Conclude"><i class="material-icons">assignment_turned_in</i></button>');
         $(concludeButton).click(function() {
-          concludeAssignment(id);
+          concludeAssignment(type, id);
   	    });
   	    return concludeButton;
       }
 
-      function enableSelfSubmission(id) {
+      function enableSelfSubmission(type, id) {
         swal({
     	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -209,7 +226,7 @@ $(function () {
         });
       }
 
-      function concludeAssignment(id) {
+      function concludeAssignment(type, id) {
         swal({
     	  title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",

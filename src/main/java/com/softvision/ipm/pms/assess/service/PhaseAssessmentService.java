@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
-import com.softvision.ipm.pms.assess.assembler.AssessmentAssembler;
+import com.softvision.ipm.pms.assess.assembler.PhaseAssessmentAssembler;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
@@ -64,7 +64,7 @@ public class PhaseAssessmentService {
 		phaseAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
 
 		List<PhaseAssessHeader> phaseAssessHeaders = phaseAssessmentHeaderDataRepository.findByAssignIdOrderByStatusAsc(assignmentId);
-		phaseAssessment.setPhaseAssessmentHeaders(AssessmentAssembler.getHeaderDtoList(phaseAssessHeaders));
+		phaseAssessment.setPhaseAssessmentHeaders(PhaseAssessmentAssembler.getPhaseAssessHeaderDtos(phaseAssessHeaders));
 		return phaseAssessment;
 	}
 
@@ -93,7 +93,7 @@ public class PhaseAssessmentService {
 		}
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
-		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
+		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println(saved);
 		// Change assignment status to 20
@@ -126,7 +126,7 @@ public class PhaseAssessmentService {
 		}
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
-		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
+		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println(saved);
 		// Change assignment status to 30
@@ -160,7 +160,7 @@ public class PhaseAssessmentService {
 		}
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
-		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
+		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println(saved);
 		// Change assignment status to 40
@@ -178,7 +178,7 @@ public class PhaseAssessmentService {
 		// Save the form first
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
-		PhaseAssessHeader phaseAssessHeader = AssessmentAssembler.getHeader(phaseAssessmentHeaderDto);
+		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		System.out.println(saved);
 		// CONCLUDE the assignment

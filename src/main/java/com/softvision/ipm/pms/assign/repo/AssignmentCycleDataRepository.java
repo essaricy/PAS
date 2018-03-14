@@ -10,6 +10,8 @@ public interface AssignmentCycleDataRepository extends CrudRepository<EmployeeCy
 
 	List<EmployeeCycleAssignment> findAll();
 
+	EmployeeCycleAssignment findById(Long id);
+
 	EmployeeCycleAssignment findByCycleIdAndTemplateIdAndEmployeeId(Integer cycleId, Long templateId, Integer employeeId);
 
 	EmployeeCycleAssignment findByCycleIdAndEmployeeId(Integer cycleId, Integer employeeId);

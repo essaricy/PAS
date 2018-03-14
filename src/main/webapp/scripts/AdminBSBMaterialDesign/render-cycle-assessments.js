@@ -20,10 +20,10 @@ $(function () {
     });
 
 	var assignment=null;
-	var phase=null;
+	var cycle=null;
     var templateHeaders=null;
 	var status=null;
-	var phaseAssessHeaders=null;
+	var cycleAssessHeaders=null;
 
 	function parseResult(result) {
 	  updateData(result);
@@ -32,27 +32,39 @@ $(function () {
 
 	function updateData(result) {
       assignment=result.employeeAssignment;
-      phase=result.phase;
+      cycle=result.cycle;
+      cycle=result.cycle;
       templateHeaders=result.templateHeaders;
-  	  status=getPhaseAssignmentStatus(assignment.status);
-  	  phaseAssessHeaders=result.phaseAssessmentHeaders;
+  	  status=getCycleAssignmentStatus(assignment.status);
+  	  cycleAssessHeaders=result.cycleAssessmentHeaders;
 	}
 
 	function renderAssessments() {
-      renderTitles(status, phase);
+	  if (cycle != null) {
+		renderCycleTitles();  
+	  } else if (cycle != null) {
+		renderCycleTitles();
+	  }
       renderGoalPopup();
-      renderTemplateInfo(status, templateHeaders);
+      renderTemplateInfo();
 
       updateModelByFormStatus();
       renderAllAssessments();
       renderActionButtons();
     }
 
-    function renderTitles() {
-      $(cardHeader).append('<h2>Phase: ' + phase.name + '</h2>'
-        + 'Phase starts on <code>' + phase.startDate + '</code> '
-        + 'and ends on <code>' + phase.endDate + '</code><br/>'
-        + 'Your form status is ' + getPhaseStatusLabel(status.code));
+	function renderCycleTitles() {
+	  $(cardHeader).append('<h2>Cycle: ' + cycle.name + '</h2>'
+        + 'Cycle starts on <code>' + cycle.startDate + '</code> '
+        + 'and ends on <code>' + cycle.endDate + '</code><br/>'
+        + 'Your form status is ' + getCycleStatusLabel(status.code));
+    }
+
+    function renderCycleTitles() {
+      $(cardHeader).append('<h2>Cycle: ' + cycle.name + '</h2>'
+        + 'Cycle starts on <code>' + cycle.startDate + '</code> '
+        + 'and ends on <code>' + cycle.endDate + '</code><br/>'
+        + 'Your form status is ' + getCycleStatusLabel(status.code));
     }
 
     function renderGoalPopup() {
@@ -127,59 +139,59 @@ $(function () {
       assignment.render={ buttons: [] };
 	  var role=options.role;
 
-      if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
+      if (status == CycleAssignmentStatus.SELF_APPRAISAL_PENDING) {
        	if (role == 'Employee') {
-       	  var phaseAssessHeader=getBlankPhaseAssessHeader();
-       	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getSelfRatingRenderer(true);
+       	  var cycleAssessHeader=getBlankCycleAssessHeader();
+       	  cycleAssessHeaders[cycleAssessHeaders.length]=cycleAssessHeader;
+       	  cycleAssessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
-      } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
+      } else if (status == CycleAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(true);
+          var cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+    	  cycleAssessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
-      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
+      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING) {
         if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
+          var cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+    	  cycleAssessHeader.render=getSelfRatingRenderer(false);
         } else if (role == 'Manager') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
+          var cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+    	  cycleAssessHeader.render=getSelfRatingRenderer(false);
 
-          phaseAssessHeader=getBlankPhaseAssessHeader();
-       	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getManagerRatingRenderer(true);
+          cycleAssessHeader=getBlankCycleAssessHeader();
+       	  cycleAssessHeaders[cycleAssessHeaders.length]=cycleAssessHeader;
+       	  cycleAssessHeader.render=getManagerRatingRenderer(true);
 
      	  assignment.render.buttons.push('Save Review');
      	  assignment.render.buttons.push('Conclude');
         }
-      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
+      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_SAVED) {
         if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[0];
-          phaseAssessHeader.render=getSelfRatingRenderer(false);
+          var cycleAssessHeader=cycleAssessHeaders[0];
+          cycleAssessHeader.render=getSelfRatingRenderer(false);
 
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getManagerRatingRenderer(false);
+          var cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+          cycleAssessHeader.render=getManagerRatingRenderer(false);
         } else if (role == 'Manager') {
-          var phaseAssessHeader=phaseAssessHeaders[0];
-      	  phaseAssessHeader.render=getSelfRatingRenderer(false);
+          var cycleAssessHeader=cycleAssessHeaders[0];
+      	  cycleAssessHeader.render=getSelfRatingRenderer(false);
 
-          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-      	  phaseAssessHeader.render=getManagerRatingRenderer(true);
+          cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+      	  cycleAssessHeader.render=getManagerRatingRenderer(true);
 
       	  assignment.render.buttons.push('Save Review');
        	  assignment.render.buttons.push('Conclude');
         }
-      } else if (status == PhaseAssignmentStatus.CONCLUDED) {
-        var phaseAssessHeader=phaseAssessHeaders[0];
-        phaseAssessHeader.render=getSelfRatingRenderer(false);
+      } else if (status == CycleAssignmentStatus.CONCLUDED) {
+        var cycleAssessHeader=cycleAssessHeaders[0];
+        cycleAssessHeader.render=getSelfRatingRenderer(false);
 
-        phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-        phaseAssessHeader.render=getManagerRatingRenderer(false);
+        cycleAssessHeader=cycleAssessHeaders[cycleAssessHeaders.length-1];
+        cycleAssessHeader.render=getManagerRatingRenderer(false);
       }
     }
 
@@ -189,8 +201,8 @@ $(function () {
       var tbody=$(table).find('tbody');
       var tfoot=$(table).find('tfoot');
     	
-      $(phaseAssessHeaders).each(function(index, phaseAssessHeader) {
-       	var render=phaseAssessHeader.render;
+      $(cycleAssessHeaders).each(function(index, cycleAssessHeader) {
+       	var render=cycleAssessHeader.render;
        	var renderRating=render.rating;
        	var renderComments=render.comments;
        	var renderScore=render.score;
@@ -200,16 +212,16 @@ $(function () {
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderScore.name + '</th>');
 
         $(tbody).find('tr').each(function (index, row) {
-          var phaseAssessDetail=phaseAssessHeader.phaseAssessDetails[index];
+          var cycleAssessDetail=cycleAssessHeader.cycleAssessDetails[index];
           var ratingParams={
-            data: phaseAssessDetail, property: 'rating', sProperty: 'score', enable: render.editable,
+            data: cycleAssessDetail, property: 'rating', sProperty: 'score', enable: render.editable,
             rClass: renderRating.className, wClass: 'weightage', sClass: renderScore.className
           };
           var commentsParams= {
-            data: phaseAssessDetail, property: 'comments', enable: render.editable, cClass: renderComments.className
+            data: cycleAssessDetail, property: 'comments', enable: render.editable, cClass: renderComments.className
           };
           var scoreParams={
-        	data: phaseAssessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
+        	data: cycleAssessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
           };
           $(row).find('td:last').after(getRatingCell(ratingParams));
           $(row).find('td:last').after(getCommentsCell(commentsParams));
@@ -320,7 +332,7 @@ $(function () {
 
     function getAssessmentAction(status) {
 	  var td=$('<td>');
-   	  if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
+   	  if (status == CycleAssignmentStatus.SELF_APPRAISAL_PENDING) {
    		var addButton=$('<button class="btn btn-xs btn-info waves-effect" title="Add Rating"><i class="material-icons">star</i></button>')
    		$(td).append(addButton);
       } else {
@@ -329,23 +341,23 @@ $(function () {
    	  return td;
     }
 
-    function getBlankPhaseAssessHeader() {
-      var phaseAssessHeader={};
-      phaseAssessHeader.id=0;
-      phaseAssessHeader.assignId=assignment.assignmentId;
-      var phaseAssessDetails=[];
-      phaseAssessHeader.phaseAssessDetails=phaseAssessDetails;
+    function getBlankCycleAssessHeader() {
+      var cycleAssessHeader={};
+      cycleAssessHeader.id=0;
+      cycleAssessHeader.assignId=assignment.assignmentId;
+      var cycleAssessDetails=[];
+      cycleAssessHeader.cycleAssessDetails=cycleAssessDetails;
       $(templateHeaders).each(function(index, templateHeader) {
-        var phaseAssessDetail={};
-        phaseAssessDetail.id=0;
-        phaseAssessDetail.templateHeaderId=templateHeader.id;
-        phaseAssessDetail.rating=0;
-        phaseAssessDetail.comments='';
-        phaseAssessDetail.score=0;
-        phaseAssessDetails[phaseAssessDetails.length]=phaseAssessDetail;
+        var cycleAssessDetail={};
+        cycleAssessDetail.id=0;
+        cycleAssessDetail.templateHeaderId=templateHeader.id;
+        cycleAssessDetail.rating=0;
+        cycleAssessDetail.comments='';
+        cycleAssessDetail.score=0;
+        cycleAssessDetails[cycleAssessDetails.length]=cycleAssessDetail;
       });
-      //phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-      return phaseAssessHeader;
+      //cycleAssessHeaders[cycleAssessHeaders.length]=cycleAssessHeader;
+      return cycleAssessHeader;
     }
 
     function getSelfRatingRenderer(editable) {
@@ -368,13 +380,13 @@ $(function () {
 
     function sendAssessmentForm(buttonName) {
       var url=null;
-      var currentForm=phaseAssessHeaders[phaseAssessHeaders.length-1];
+      var currentForm=cycleAssessHeaders[cycleAssessHeaders.length-1];
 
       if(buttonName=='Save') {
-   		url=options.contextPath + '/assessment/phase/save';
+   		url=options.contextPath + '/assessment/cycle/save';
    		$.fn.postJSON({ url: url, data: currentForm });
       } else if(buttonName=='Submit') {
-    	url=options.contextPath + '/assessment/phase/submit';
+    	url=options.contextPath + '/assessment/cycle/submit';
     	swal({
           title: "Are you sure?", text: "Do you want want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -384,7 +396,7 @@ $(function () {
         });
    	  } else if(buttonName=='Save Review') {
    		//reivewAppraisalForm();
-   		url=options.contextPath + '/assessment/phase/review';
+   		url=options.contextPath + '/assessment/cycle/review';
    		$.fn.postJSON({ url: url, data: currentForm });
       } else if(buttonName=='Conclude') {
     	swal({
@@ -392,7 +404,7 @@ $(function () {
             showCancelButton: true, confirmButtonColor: "#DD6B55",
         	confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
         }, function () {
-       	  url=options.contextPath + '/assessment/phase/conclude';
+       	  url=options.contextPath + '/assessment/cycle/conclude';
           $.fn.postJSON({ url: url, data: currentForm });
         });
       }
