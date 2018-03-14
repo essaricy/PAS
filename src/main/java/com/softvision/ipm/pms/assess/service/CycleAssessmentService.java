@@ -10,10 +10,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
 import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
@@ -32,7 +31,7 @@ public class CycleAssessmentService {
 
 	private static final String CYCLE_SUMMARY_FORMAT= "{0} : Rating= {1}, Score= {2}\n";
 
-	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
+	@Autowired private AppraisalRepository appraisalRepository;
 
 	@Autowired private AssignmentCycleDataRepository assignmentCycleDataRepository;
 
@@ -46,7 +45,7 @@ public class CycleAssessmentService {
 	public boolean abridge(int employeeId) {
 		System.out.println("##################################### abridge " + employeeId);
 		int lastPhaseAssignedBy=0;
-		AppraisalCycle activeCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
 

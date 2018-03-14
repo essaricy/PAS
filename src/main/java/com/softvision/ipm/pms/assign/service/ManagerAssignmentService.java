@@ -12,8 +12,8 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
-import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
@@ -87,12 +87,12 @@ public class ManagerAssignmentService {
 		// TODO email trigger
 	}
 
-	public List<CycleAssignmentDto> getAll(int employeeId) {
-		List<CycleAssignmentDto> cycleAssignments = new ArrayList<>();
+	public List<ManagerCycleAssignmentDto> getAllCycles(int employeeId) {
+		List<ManagerCycleAssignmentDto> cycleAssignments = new ArrayList<>();
 		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
 		for (AppraisalCycle cycle : allCycles) {
 			int cycleId = cycle.getId();
-			CycleAssignmentDto cycleAssignment = new CycleAssignmentDto();
+			ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
 			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
 			cycleAssignment.setEmployeeAssignments(managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
 			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();

@@ -114,14 +114,13 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/manager-assignments.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
 <script>
 $(function () {
   var MANAGER_ROLE_ID='Manager';
-  $('.container-fluid').renderAssignment({
-	role: 'Manager',
+  $('.container-fluid').managerAssignment({
 	contextpath: '<%=request.getContextPath()%>',
   	url: '<%=request.getContextPath()%>/assignment/manager/list',
   });

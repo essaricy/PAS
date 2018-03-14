@@ -52,7 +52,7 @@ $(function () {
       $(cardHeader).append('<h2>Phase: ' + phase.name + '</h2>'
         + 'Phase starts on <code>' + phase.startDate + '</code> '
         + 'and ends on <code>' + phase.endDate + '</code><br/>'
-        + 'Your form status is ' + getPhaseStatusLabel(status));
+        + 'Your form status is ' + getPhaseStatusLabel(status.code));
     }
 
     function renderGoalPopup() {

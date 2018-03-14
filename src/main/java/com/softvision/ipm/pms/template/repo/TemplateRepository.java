@@ -64,7 +64,7 @@ public class TemplateRepository extends AbstractRepository {
 	}
 
 	private void checkInsert(int templateInsert) throws ServiceException {
-		if (templateInsert != -1) {
+		if (templateInsert != 1) {
 			throw new ServiceException("Updating template has failed");
 		}
 	}

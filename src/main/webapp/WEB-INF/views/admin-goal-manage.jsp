@@ -60,10 +60,10 @@
               <form id="Competency_Form" method="POST">
                 <h3>Create Competency</h3>
                 <fieldset>
-                  <div class="col-lg-2 col-md-2 col-sm-4 col-xs-5 form-control-label">
+                  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                     <label for="Competency_Name">Competency Name</label>
                   </div>
-                  <div class="col-lg-10 col-md-10 col-sm-8 col-xs-7">
+                  <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                     <div class="form-group form-float">
                       <div class="form-line">
 		                <input type="text" id="Competency_Name" class="form-control" minlength="3" required >

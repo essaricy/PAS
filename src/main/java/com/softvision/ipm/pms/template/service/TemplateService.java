@@ -53,7 +53,9 @@ public class TemplateService {
 			List<TemplateHeaderDto> headers = templateDto.getHeaders();
 			int totalWeightage=0;
 
-			for (TemplateHeaderDto header : headers) {
+			//for (TemplateHeaderDto header : headers) {
+			for (int index = 0; index < headers.size(); index++) {
+				TemplateHeaderDto header = headers.get(index);
 				int weightage = header.getWeightage();
 				totalWeightage += weightage;
 
@@ -73,6 +75,11 @@ public class TemplateService {
 				// Weightage should be zero if all apply='N'.
 				if (!containsApply && weightage != 0) {
 					throw new ServiceException("Weightage should be zero if there are no aparams applied");
+				}
+				if (weightage == 0) {
+					// remove this
+					headers.remove(index);
+					index--;
 				}
 			}
 			if (totalWeightage != 100) {

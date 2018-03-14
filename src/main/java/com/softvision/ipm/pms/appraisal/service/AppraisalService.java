@@ -11,6 +11,7 @@ import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.common.exception.EmailException;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
@@ -20,8 +21,9 @@ import com.softvision.ipm.pms.email.repo.EmailRepository;
 @Service
 public class AppraisalService {
 
-	@Autowired
-	private AppraisalCycleDataRepository appraisalCycleDataRepository;
+	@Autowired private AppraisalRepository appraisalRepository;
+
+	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	@Autowired private EmailRepository emailRepository;
 
@@ -47,8 +49,10 @@ public class AppraisalService {
 					throw new ServiceException("Appraisal cycle information not found.");
 				}
 				AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
-				if (existingStatus != AppraisalCycleStatus.DRAFT) {
-					throw new ServiceException("Updating an appraisal cycle is allowed only when its a DRAFT");
+				if (existingStatus == AppraisalCycleStatus.ACTIVE) {
+					throw new ServiceException("Cannot update the appraisal cycle as it is ACTIVE");
+				} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
+					throw new ServiceException("Cannot update the appraisal cycle as it is COMPLETE");
 				}
 			}
 			ValidationUtil.validate(appraisalCycleDto);
@@ -130,7 +134,7 @@ public class AppraisalService {
 	}
 
 	public AppraisalCycleDto getActiveCycle() {
-		return AppraisalAssembler.getCycle(appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString()));
+		return AppraisalAssembler.getCycle(appraisalRepository.getActiveCycle());
 	}
 
 }

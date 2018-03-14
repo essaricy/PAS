@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
-import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
+import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
@@ -26,8 +26,8 @@ public class ManagerAssignmentRest {
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
 	@RequestMapping(value="list", method=RequestMethod.GET)
-    public List<CycleAssignmentDto> getAll() {
-		return managerAssignmentService.getAll(RestUtil.getLoggedInEmployeeId());
+    public List<ManagerCycleAssignmentDto> getAllCycles() {
+		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
     }
 
 	@RequestMapping(value="change/assignedBy/{phaseAssignId}/{toEmployeeId}", method=RequestMethod.PUT)

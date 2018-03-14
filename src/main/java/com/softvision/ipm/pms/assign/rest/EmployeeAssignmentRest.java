@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softvision.ipm.pms.assign.model.CycleAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeeCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.service.EmployeeAssignmentService;
 import com.softvision.ipm.pms.common.util.RestUtil;
 
@@ -19,8 +19,8 @@ public class EmployeeAssignmentRest {
 	@Autowired private EmployeeAssignmentService employeeAssignmentService;
 
 	@RequestMapping(value="list", method=RequestMethod.GET)
-    public List<CycleAssignmentDto> getAll() {
-		return employeeAssignmentService.getAll(RestUtil.getLoggedInEmployeeId());
+    public List<EmployeeCycleAssignmentDto> getAllCycles() {
+		return employeeAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
     }
 
 }

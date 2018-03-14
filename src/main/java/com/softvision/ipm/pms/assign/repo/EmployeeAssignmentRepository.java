@@ -14,19 +14,6 @@ import com.softvision.ipm.pms.common.repo.AbstractRepository;
 @Repository
 public class EmployeeAssignmentRepository extends AbstractRepository {
 
-	// TODO This one actually returns a single object.
-	public List<EmployeeAssignmentDto> getEmployeesAssignmentsOfCycle(int employeeId, int cycleId) {
-		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
-				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_TO,
-			    new Object[] {employeeId, cycleId},
-			    new RowMapper<EmployeeAssignmentDto>() {
-			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
-			        }
-			    });
-		return list;
-	}
-
 	public EmployeeAssignmentDto getEmployeeAssignmentInCycle(int employeeId, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_TO,

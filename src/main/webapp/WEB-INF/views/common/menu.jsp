@@ -106,7 +106,7 @@
     </div>
     <!-- #Menu -->
     <!-- Footer -->
-    <div class="legal">
+<!--     <div class="legal">
       <div class="copyright">
         Designed Using <a href="javascript:void(0);">AdminBSB - Material Design</a>.
       </div>
@@ -114,7 +114,7 @@
         <b>Version: </b> 0.A
       </div>
     </div>
-    <!-- #Footer -->
+ -->    <!-- #Footer -->
   </aside>
   <!-- #END# Left Sidebar -->
   <!-- Right Sidebar -->
@@ -127,12 +127,14 @@
         <div class="demo-settings">
           <ul class="setting-list">
             <li>
-              <span>This product is a collaborative effort of HR-Ops and Java Cummunity under the leadership of 
-                <b>Nithya Somaih</b> & <b>Naveed A Hagalwadi</b>
+              <span>
+                This product is a collaborative effort of HR-Ops and Java Community under the leadership of 
+                <label>Nithya Somaiah</label> and 
+                <label>Naveed A Hagalwadi</label> of Mysore Studio, Softvision.
               </span>
             </li>
 	      </ul>
-		  <p>Product Designed & Developed By</p>
+		  <p>Designed, Arch & Developed By</p>
 		  <ul class="setting-list">
 			<li><span>Srikanth Ragi</span></li>
 		  </ul>
@@ -140,6 +142,14 @@
 		  <ul class="setting-list">
 			<li><span>Mallikarjun Gongati</span></li>
 			<li><span>Rohit Ramesh</span></li>
+		  </ul>
+		  <p>Designed Using</p>
+		  <ul class="setting-list">
+			<li><span>AdminBSB - Material Design</span></li>
+		  </ul>
+		  <p>Version</p>
+		  <ul class="setting-list">
+			<li><span>0.A</span></li>
 		  </ul>
 		</div>
       </div>

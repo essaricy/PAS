@@ -81,12 +81,11 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/employee-assignments.js"></script>
 <script>
 $(function () {
-  $('.container-fluid').renderAssignment({
-	role: 'Employee',
-	contextpath: '<%=request.getContextPath()%>',
+  $('.container-fluid').employeeAssignment({
+	contextPath: '<%=request.getContextPath()%>',
   	url: '<%=request.getContextPath()%>/assignment/employee/list',
   });
 });
