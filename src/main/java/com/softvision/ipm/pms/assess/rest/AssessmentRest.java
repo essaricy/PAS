@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.assess.model.CycleAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
+import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
@@ -46,22 +48,22 @@ public class AssessmentRest {
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
-	public Result save(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
+	public Result savePhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
     }
 
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
-	public Result submit(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
+	public Result submitPhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
 	@RequestMapping(value="phase/review", method=RequestMethod.POST)
-	public Result review(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
+	public Result reviewPhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
 	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
-	public Result conclude(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
+	public Result concludePhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
 	}
 
@@ -87,5 +89,15 @@ public class AssessmentRest {
 		}
 		return result;
     }
+
+	@RequestMapping(value="cycle/review", method=RequestMethod.POST)
+	public Result review(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
+		return cycleAssessmentService.review(cycleAssessmentHeader, CycleAssignmentStatus.MANAGER_REVIEW_SAVED);
+	}
+
+	@RequestMapping(value="cycle/conclude", method=RequestMethod.POST)
+	public Result conclude(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
+		return cycleAssessmentService.conclude(cycleAssessmentHeader, CycleAssignmentStatus.CONCLUDED);
+	}
 
 }

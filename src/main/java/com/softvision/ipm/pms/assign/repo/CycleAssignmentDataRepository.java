@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 
-public interface AssignmentCycleDataRepository extends CrudRepository<EmployeeCycleAssignment, Long> {
+public interface CycleAssignmentDataRepository extends CrudRepository<EmployeeCycleAssignment, Long> {
 
 	List<EmployeeCycleAssignment> findAll();
 
@@ -15,5 +15,7 @@ public interface AssignmentCycleDataRepository extends CrudRepository<EmployeeCy
 	EmployeeCycleAssignment findByCycleIdAndTemplateIdAndEmployeeId(Integer cycleId, Long templateId, Integer employeeId);
 
 	EmployeeCycleAssignment findByCycleIdAndEmployeeId(Integer cycleId, Integer employeeId);
+
+	EmployeeCycleAssignment findByCycleIdAndEmployeeIdAndStatus(Integer cycleId, Integer employeeId, Integer code);
 
 }

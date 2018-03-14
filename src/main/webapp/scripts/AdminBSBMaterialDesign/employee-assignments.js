@@ -57,12 +57,8 @@ $(function () {
           $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
           $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           $(row).append('<td>' + ea.assignedAt + '</td>');
-          $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
-          if (options.cycleActionCell) {
-        	  $(row).append(options.cycleActionCell( ea));
-          } else {
-        	  $(row).append('<td>-</td>');
-          }
+          $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
+          $(row).append(getCycleActionCell(ea));
           $(tbody).append(row);
           $(table).append(tbody);
           $(cycleTabPanel).append(table);
@@ -127,6 +123,23 @@ $(function () {
         $(tabContent).append(phaseTabPanel);
       });
     }
+
+    function getCycleActionCell(ea) {
+      var status=ea.status;
+      var id=ea.assignmentId;
+      var td=$('<td>');
+      $(td).append('&nbsp;');
+
+      /*if (status == CycleAssignmentStatus.NOT_INITIATED.code) {
+      	$(td).append('&nbsp;');
+      } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
+      	$(td).append(getAssignToNextManagerButton('cycle', id));
+      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
+        $(td).append(getFillReviewButton('cycle', id));
+      }*/
+      return td;
+    }
+
     function getPhaseActionCell(ea) {
     	var status=ea.status;
     	var id=ea.assignmentId;
@@ -138,11 +151,11 @@ $(function () {
     			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
     	  $(td).append(getFillFormButton(id));
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-    	  $(td).append(getViewFormButton(id, role));
+    	  $(td).append(getViewFormButton(id));
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	  $(td).append(getViewFormButton(id, role));
+    	  $(td).append(getViewFormButton(id));
     	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
-    	  $(td).append(getViewFormButton(id, role));
+    	  $(td).append(getViewFormButton(id));
     	}
     	return td;
       }

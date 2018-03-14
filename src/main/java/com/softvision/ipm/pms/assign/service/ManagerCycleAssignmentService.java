@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.role.service.RoleService;
 
@@ -16,7 +16,7 @@ public class ManagerCycleAssignmentService {
 
 	@Autowired private RoleService roleService;
 
-	@Autowired private AssignmentCycleDataRepository assignmentCycleDataRepository;
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
 	@Transactional
 	public void assignCycleToNextManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
@@ -25,7 +25,7 @@ public class ManagerCycleAssignmentService {
 		System.out.println("fromEmployeeId= " + fromEmployeeId);
 		System.out.println("toEmployeeId= " + toEmployeeId);
 
-		EmployeeCycleAssignment employeeCycleAssignment = assignmentCycleDataRepository.findById(cycleAssignId);
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
 		}
@@ -49,7 +49,7 @@ public class ManagerCycleAssignmentService {
 		}*/
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
-		EmployeeCycleAssignment saved = assignmentCycleDataRepository.save(employeeCycleAssignment);
+		EmployeeCycleAssignment saved = cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		System.out.println("saved=" + saved);
 	}
 

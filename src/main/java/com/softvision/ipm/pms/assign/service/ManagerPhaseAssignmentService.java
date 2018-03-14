@@ -15,7 +15,7 @@ import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
-import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.role.service.RoleService;
@@ -25,7 +25,7 @@ public class ManagerPhaseAssignmentService {
 
 	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
 
-	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private RoleService roleService;
 
@@ -33,7 +33,7 @@ public class ManagerPhaseAssignmentService {
 
 	public void assignPhaseToAnotherManager(long phaseAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
 		}
@@ -58,7 +58,7 @@ public class ManagerPhaseAssignmentService {
 	}
 
 	public void enablePhaseAppraisal(long phaseAssignId, int fromEmployeeId) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(phaseAssignId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
 		}

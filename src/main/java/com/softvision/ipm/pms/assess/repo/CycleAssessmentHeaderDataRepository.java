@@ -12,4 +12,6 @@ public interface CycleAssessmentHeaderDataRepository extends CrudRepository<Cycl
 
 	List<CycleAssessHeader> findByAssignIdOrderByStatusAsc(long assignmentId);
 
+	CycleAssessHeader findFirstByAssignIdOrderByStatusDesc(long assignmentId);
+
 }

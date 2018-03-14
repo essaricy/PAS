@@ -23,7 +23,7 @@ import com.softvision.ipm.pms.common.repo.AbstractRepository;
 @Repository
 public class AssignmentRepository extends AbstractRepository {
 
-	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Transactional
 	public void assign(EmployeeCycleAssignment cycleAssignment, AppraisalCycle cycle, String employeeName)
@@ -46,7 +46,7 @@ public class AssignmentRepository extends AbstractRepository {
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase appraisalPhase : phases) {
 			Integer phaseId = appraisalPhase.getId();
-			EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId.intValue(), templateId, employeeId);
+			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId.intValue(), templateId, employeeId);
 			if (employeePhaseAssignment != null) {
 				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
 			}

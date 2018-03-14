@@ -15,7 +15,7 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
-import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
@@ -31,7 +31,7 @@ public class AssignmentService {
 
 	@Autowired private AssignmentRepository assignmentRepository;
 
-	@Autowired private AssignmentCycleDataRepository assignmentDataRepository;
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
@@ -94,7 +94,7 @@ public class AssignmentService {
 					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
 				// check if already assigned.
-				EmployeeCycleAssignment cycleAssignment = assignmentDataRepository.findByCycleIdAndTemplateIdAndEmployeeId(cycleId, templateId, employeeId);
+				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndTemplateIdAndEmployeeId(cycleId, templateId, employeeId);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}

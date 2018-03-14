@@ -17,7 +17,7 @@ import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
-import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
@@ -33,7 +33,7 @@ public class PhaseAssessmentService {
 
 	@Autowired private TemplateDataRepository templateDataRepository;
 
-	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
 
@@ -43,7 +43,7 @@ public class PhaseAssessmentService {
 
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 
 		// Allow this form only to the employee and to the manager to whom its been assigned
 		int assignedBy = employeePhaseAssignment.getAssignedBy();
@@ -72,7 +72,7 @@ public class PhaseAssessmentService {
 	public void save(PhaseAssessHeaderDto phaseAssessmentHeaderDto)
 			throws ServiceException {
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("No such assignment");
 		}
@@ -99,13 +99,13 @@ public class PhaseAssessmentService {
 		// Change assignment status to 20
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
 		// Move assignment to next status
-		assignmentPhaseDataRepository.save(employeePhaseAssignment);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 	}
 
 	@Transactional
 	public void submit(PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("No such assignment");
 		}
@@ -132,13 +132,13 @@ public class PhaseAssessmentService {
 		// Change assignment status to 30
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		// Move assignment to next status
-		assignmentPhaseDataRepository.save(employeePhaseAssignment);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 	}
 
 	@Transactional
 	public void review(PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
 		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("No such assignment");
 		}
@@ -166,7 +166,7 @@ public class PhaseAssessmentService {
 		// Change assignment status to 40
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		// Move assignment to next status
-		assignmentPhaseDataRepository.save(employeePhaseAssignment);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 	}
 
 	@Transactional
@@ -189,7 +189,7 @@ public class PhaseAssessmentService {
 	public void conclude(long assignmentId, int fromEmployeeId) throws ServiceException {
 		validateBeforeConclude(assignmentId, fromEmployeeId);
 
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 
 		// Change assignment status to CONCLUDED
@@ -198,7 +198,7 @@ public class PhaseAssessmentService {
 			throw new ServiceException("Unable to CONCLUDE this assignment");
 		}
 		System.out.println("######################## assignment (" + assignmentId + ") status changed with status " + PhaseAssignmentStatus.CONCLUDED.getCode());
-		employeePhaseAssignment = assignmentPhaseDataRepository
+		employeePhaseAssignment = phaseAssignmentDataRepository
 				.findByPhaseIdAndEmployeeIdAndStatus(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(), PhaseAssignmentStatus.CONCLUDED.getCode());
 		System.out.println("employeePhaseAssignment after save=" + employeePhaseAssignment);
 
@@ -213,7 +213,7 @@ public class PhaseAssessmentService {
 	}
 
 	private void validateBeforeConclude(long assignmentId, int assessedBy) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findById(assignmentId);
+		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new ServiceException("No such assignment");
 		}

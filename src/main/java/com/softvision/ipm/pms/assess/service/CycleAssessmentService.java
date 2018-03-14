@@ -20,6 +20,7 @@ import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
 import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
+import com.softvision.ipm.pms.assess.model.CycleAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
@@ -28,9 +29,11 @@ import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
-import com.softvision.ipm.pms.assign.repo.AssignmentCycleDataRepository;
-import com.softvision.ipm.pms.assign.repo.AssignmentPhaseDataRepository;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
+import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -47,13 +50,15 @@ public class CycleAssessmentService {
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
-	@Autowired private AssignmentCycleDataRepository assignmentCycleDataRepository;
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
-	@Autowired private AssignmentPhaseDataRepository assignmentPhaseDataRepository;
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
 
 	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
+
+	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
 
 	@Transactional
 	public boolean abridge(int employeeId) {
@@ -63,7 +68,7 @@ public class CycleAssessmentService {
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
 
-		EmployeeCycleAssignment employeeCycleAssignment = assignmentCycleDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
 			return false;
 		}
@@ -81,7 +86,7 @@ public class CycleAssessmentService {
 			System.out.println();
 			int phaseId = phase.getId();
 			System.out.println("phaseId=" + phaseId + ", employeeId=" + employeeId + ", status=" + PhaseAssignmentStatus.CONCLUDED.getCode());
-			EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository
+			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository
 					.findByPhaseIdAndEmployeeIdAndStatus(phaseId, employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
 			System.out.println("Concluded employeePhaseAssignment for " + phase.getName() + " = " + employeePhaseAssignment);
 			if (employeePhaseAssignment == null) {
@@ -136,13 +141,13 @@ public class CycleAssessmentService {
 		System.out.println("saved= " + saved);
 		// Update employeeCycleAssignment status to 10
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
-		assignmentCycleDataRepository.save(employeeCycleAssignment);
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		return true;
 	}
 
 	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		CycleAssessmentDto cycleAssessment = new CycleAssessmentDto();
-		EmployeeCycleAssignment employeeCycleAssignment = assignmentCycleDataRepository.findById(assignmentId);
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
 		
 		// Allow this form only to the employee and to the manager to whom its been assigned
 		int assignedBy = employeeCycleAssignment.getAssignedBy();
@@ -173,6 +178,100 @@ public class CycleAssessmentService {
 			}
 		}
 		return null;
+	}
+
+	@Transactional
+	public void review(CycleAssessHeaderDto cycleAssessHeaderDto) throws ServiceException {
+		long assignmentId = cycleAssessHeaderDto.getAssignId();
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
+		if (employeeCycleAssignment == null) {
+			throw new ServiceException("No such assignment");
+		}
+		// Can be saved by the same person whom it has been assigned to.
+		int assignedBy = employeeCycleAssignment.getAssignedBy();
+		int assessedBy = cycleAssessHeaderDto.getAssessedBy();
+		if (assessedBy != assignedBy) {
+			throw new ServiceException("Assignment can only be reviewed by the manager to whom its been assigned to");
+		}
+		// Check the latest assessment. Status must be self-appraisal pending.
+		CycleAssessHeader latestHeader = cycleAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
+		if (latestHeader == null) {
+			throw new ServiceException("The assessment form is not in a state to review now.");
+		}
+		CycleAssignmentStatus latestStatus = CycleAssignmentStatus.get(latestHeader.getStatus());
+		if (latestStatus != CycleAssignmentStatus.MANAGER_REVIEW_PENDING
+				&& latestStatus != CycleAssignmentStatus.MANAGER_REVIEW_SAVED) {
+			throw new ServiceException("Review can only be done when the employee appraisal form is submitted.");
+		}
+		cycleAssessHeaderDto.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
+		ValidationUtil.validate(cycleAssessHeaderDto);
+		CycleAssessHeader cycleAssessHeader = CycleAssessmentAssembler.getCycleAssessHeader(cycleAssessHeaderDto);
+		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
+		System.out.println(saved);
+		// Change assignment status to 40
+		employeeCycleAssignment.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
+		// Move assignment to next status
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+	}
+
+	@Transactional
+	public void reviewAndConclude(CycleAssessHeaderDto cycleAssessmentHeaderDto) throws ServiceException {
+		long assignmentId = cycleAssessmentHeaderDto.getAssignId();
+		int assessedBy = cycleAssessmentHeaderDto.getAssessedBy();
+
+		validateBeforeConclude(assignmentId, assessedBy);
+		// Save the form first
+		cycleAssessmentHeaderDto.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
+		ValidationUtil.validate(cycleAssessmentHeaderDto);
+		CycleAssessHeader cycleAssessHeader = CycleAssessmentAssembler.getCycleAssessHeader(cycleAssessmentHeaderDto);
+		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
+		System.out.println(saved);
+		// CONCLUDE the assignment
+		conclude(assignmentId, assessedBy);
+	}
+
+	@Transactional
+	public void conclude(long assignmentId, int fromEmployeeId) throws ServiceException {
+		validateBeforeConclude(assignmentId, fromEmployeeId);
+
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
+		CycleAssessHeader latestHeader = cycleAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
+
+		// Change assignment status to CONCLUDED
+		boolean changed = managerAssignmentRepository.changeStatus(assignmentId, CycleAssignmentStatus.CONCLUDED.getCode());
+		if (!changed) {
+			throw new ServiceException("Unable to CONCLUDE this assignment");
+		}
+		System.out.println("######################## assignment (" + assignmentId + ") status changed with status " + CycleAssignmentStatus.CONCLUDED.getCode());
+		employeeCycleAssignment = cycleAssignmentDataRepository
+				.findByCycleIdAndEmployeeIdAndStatus(employeeCycleAssignment.getCycleId(), employeeCycleAssignment.getEmployeeId(), CycleAssignmentStatus.CONCLUDED.getCode());
+		System.out.println("employeeCycleAssignment after save=" + employeeCycleAssignment);
+
+		// Change last assessment status to CONCLUDED
+		latestHeader.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
+		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(latestHeader);
+		System.out.println("######################## assessment status changed with status " + saved.getStatus());
+	}
+
+	private void validateBeforeConclude(long assignmentId, int assessedBy) throws ServiceException {
+		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
+		if (employeeCycleAssignment == null) {
+			throw new ServiceException("No such assignment");
+		}
+		// Can be saved by the same person whom it has been assigned to.
+		int assignedBy = employeeCycleAssignment.getAssignedBy();
+		if (assessedBy != assignedBy) {
+			throw new ServiceException("Assignment can only be concluded by the manager to whom its been assigned to");
+		}
+		// Check the latest assessment. Status must be self-appraisal pending.
+		CycleAssessHeader latestHeader = cycleAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
+		if (latestHeader == null) {
+			throw new ServiceException("The assessment form is not in a state to CONCLUDE now.");
+		}
+		CycleAssignmentStatus latestStatus = CycleAssignmentStatus.get(latestHeader.getStatus());
+		if (latestStatus != CycleAssignmentStatus.MANAGER_REVIEW_SAVED) {
+			throw new ServiceException("CONCLUDE can only be done when the manager review is completed.");
+		}
 	}
 
 }

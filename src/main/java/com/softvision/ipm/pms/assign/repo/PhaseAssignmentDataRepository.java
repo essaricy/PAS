@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 
-public interface AssignmentPhaseDataRepository extends CrudRepository<EmployeePhaseAssignment, Long> {
+public interface PhaseAssignmentDataRepository extends CrudRepository<EmployeePhaseAssignment, Long> {
 
 	List<EmployeePhaseAssignment> findAll();
 
