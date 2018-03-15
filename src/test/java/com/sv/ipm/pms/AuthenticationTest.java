@@ -14,6 +14,7 @@ import com.softvision.ipm.pms.user.model.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
+@Ignore
 public class AuthenticationTest {
 
 	@Autowired SVAuthenticationService authenticationService;

@@ -3,6 +3,7 @@ package com.sv.ipm.pms;
 import java.util.List;
 
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -19,6 +20,7 @@ import com.softvision.ipm.pms.appraisal.service.AppraisalService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class AppraisalPhaseTest {
 
 	@Autowired AppraisalService appraisalService;

@@ -25,7 +25,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
 
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
-    }
+    } 
 
     @Override
     protected MethodSecurityExpressionHandler createExpressionHandler() {

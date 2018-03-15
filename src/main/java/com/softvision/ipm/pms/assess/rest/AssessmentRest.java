@@ -69,16 +69,17 @@ public class AssessmentRest {
 	public Result changePhaseStatus(PhaseAssessHeaderDto phaseAssessmentHeader, PhaseAssignmentStatus status) {
 		Result result = new Result();
 		try {
-			phaseAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
+			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
+			//phaseAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
 			phaseAssessmentHeader.setAssessDate(new Date());
 			if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
-				phaseAssessmentService.save(phaseAssessmentHeader);
+				phaseAssessmentService.save(requestedEmployeeId, phaseAssessmentHeader);
 			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-				phaseAssessmentService.submit(phaseAssessmentHeader);
+				phaseAssessmentService.submit(requestedEmployeeId, phaseAssessmentHeader);
 			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-				phaseAssessmentService.review(phaseAssessmentHeader);
+				phaseAssessmentService.review(requestedEmployeeId, phaseAssessmentHeader);
 			} else if (status == PhaseAssignmentStatus.CONCLUDED) {
-				phaseAssessmentService.reviewAndConclude(phaseAssessmentHeader);
+				phaseAssessmentService.reviewAndConclude(requestedEmployeeId, phaseAssessmentHeader);
 			}
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

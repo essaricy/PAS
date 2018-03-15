@@ -27,6 +27,7 @@ import com.softvision.ipm.pms.goal.service.GoalService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class GoalTest {
 
 	private static final String GOAL_NAME = "Goal-Test-" + System.currentTimeMillis();

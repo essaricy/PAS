@@ -19,6 +19,7 @@ import com.softvision.ipm.pms.employee.entity.Employee;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class TestMailTest {
 
 	@Autowired

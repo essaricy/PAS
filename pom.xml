@@ -181,7 +181,9 @@
 									<filtering>true</filtering>
 									<excludes>
 										<exclude>**/*.woff</exclude>
+										<exclude>**/*.woff2</exclude>
 										<exclude>**/*.ttf</exclude>
+										<exclude>**/*.mp4</exclude>
 									</excludes>
 								</resource>
 								<resource>
@@ -189,8 +191,10 @@
 									<filtering>false</filtering>
 									<includes>
 										<include>**/*.woff</include>
+										<include>**/*.woff2</include>
 										<include>**/*.ttf</include>
-									</includes>
+										<include>**/*.mp4</include>
+									</includes> 
 								</resource>
 							</resources>
 						</configuration>

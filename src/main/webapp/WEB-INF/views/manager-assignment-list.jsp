@@ -8,9 +8,6 @@
     <title>Softvision | PMS</title>
     <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/favicon.ico">
-    <!-- Google Fonts -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/fonts/google-Roboto.css">
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/fonts/google-Material-Icons.css">
     <!-- Bootstrap Core Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
@@ -77,9 +74,9 @@
 	                   </div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="AssignToAnotherManager" class="btn btn-link waves-effect">Assign</button>
-						<button type="button" id="AssignToNextManager" class="btn btn-link waves-effect">Assign</button>
-						<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
+						<button type="button" id="AssignToAnotherManager" class="btn btn-primary waves-effect">Assign</button>
+						<button type="button" id="AssignToNextManager" class="btn btn-primary waves-effect">Assign</button>
+						<button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>

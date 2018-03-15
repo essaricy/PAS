@@ -177,7 +177,9 @@ $(function () {
       }
 
       function getAssignToManagerButton(type, id) {
-        var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" title="Assign to another manager" data-toggle="modal" data-target="#largeModal" item-id="' + id + '"><i class="material-icons">trending_flat</i></button>');
+    	var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
+    	  'title="Assign to Another Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
+    	  'item-id="' + id + '" item-type="AssignToAnotherManager"><i class="material-icons">trending_flat</i></button>');
   		return assignToManagerButton;
       }
 
