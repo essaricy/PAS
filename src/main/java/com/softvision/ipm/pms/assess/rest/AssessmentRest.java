@@ -18,7 +18,6 @@ import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
-import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
@@ -92,12 +91,30 @@ public class AssessmentRest {
 
 	@RequestMapping(value="cycle/review", method=RequestMethod.POST)
 	public Result review(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
-		return cycleAssessmentService.review(cycleAssessmentHeader, CycleAssignmentStatus.MANAGER_REVIEW_SAVED);
+		Result result = new Result();
+		try {
+			cycleAssessmentService.review(cycleAssessmentHeader);
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
 	}
 
 	@RequestMapping(value="cycle/conclude", method=RequestMethod.POST)
 	public Result conclude(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
-		return cycleAssessmentService.conclude(cycleAssessmentHeader, CycleAssignmentStatus.CONCLUDED);
+		Result result = new Result();
+		try {
+			cycleAssessmentService.reviewAndConclude(cycleAssessmentHeader);
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
 	}
 
 }

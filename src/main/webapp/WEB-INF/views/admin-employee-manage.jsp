@@ -111,57 +111,28 @@
                  <div role="tabpanel" class="tab-pane fade" id="Sync_Employees">
                    <p>This features can be used to Sync all the employee information from SV project to this system. After Sync, new employees will be added to system and existing employees data will be updated.</p>
                    <div class="row clearfix">
-                   	 <div class="col-lg-5">&nbsp;</div>
-                   	 <div class="col-lg-2" style="margin-top: 20px;">
+                   	 <div class="col-lg-4">&nbsp;</div>
+                   	 <div class="col-lg-4" style="margin-top: 20px;">
                    	 	<button type="button" id="Sync" class="btn btn-block btn-lg btn-primary waves-effect">Sync Employee Data</button>
                    	 </div>
-                     <div class="col-lg-5">&nbsp;</div>
+                     <div class="col-lg-4">&nbsp;</div>
                    </div>
-                   <div class="panel-group" id="sync_employee_tab" role="tablist" aria-multiselectable="true" style="display:none">
-	                   <div class="row clearfix"  >
-	                   	 <div class="col-lg-3">&nbsp;</div>
-	                   	 <div class="col-lg-3 panel-heading" role="tab" id="headingOne_4">
-		                   	 <a class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-parent="sync_employee_tab" href="#collapseOne_4" aria-expanded="false" aria-controls="collapseExample">
-		                                Click for Success Data
-		                     </a>
-	                   	 </div>
-	                   	 <div class="col-lg-3 panel-heading" role="tab" id="headingTwo_4">
-		                     <a class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-parent="sync_employee_tab" href="#collapseTwo_4" aria-expanded="false" aria-controls="collapseExample">
-		                               Click for Error Data
-		                     </a>
-	                   	 </div>
-	                     <div class="col-lg-3">&nbsp;</div>
-	                   </div>
-	 
-	                    <div class="panel panel-danger">
-		                   	<div id="collapseTwo_4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo_4">
-		                        <div class="panel-body">
-		                        	<ul class="list-group" id="Sync_Results_Error">
-		                       		</ul>
-		                    	</div>
-		                    </div>
-	                   </div>
-	                    <div class="panel panel-success">
-		                   	<div id="collapseOne_4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne_4">
-		                        <div class="panel-body">
-		                        	<ul class="list-group" id="Sync_Results_Success">
-		                       		</ul>
-		                    	</div>
-		                    </div>
-	                    </div>
+                   <div class="row clearfix sync_result_row">
+					 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                   	 	<button id="Show_Sync_Results_Success" class="btn btn-success waves-effect" type="button">Successful<span class="badge"></span></button>
+                   	 </div>
+					 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                   	 	<button id="Show_Sync_Results_Error" class="btn btn-warning waves-effect pull-right" type="button">Errors<span class="badge"></span></button>
+                   	 </div>
                    </div>
-              	   <!-- <div class="row clearfix">
-              	     <div class="col-lg-2">&nbsp;</div>
-              	     <div class="col-lg-8">
-              	     
-              	     <ul class="list-group collapse" id="Sync_Results_Error">
-                       </ul>
-                       <ul class="list-group collapse" id="Sync_Results_Success">
-                       </ul>
-              	     </div>
-                     <div class="col-lg-2">&nbsp;</div>
-                   </div> -->
-                   
+                   <div class="row clearfix sync_result_row">
+					 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                   	 	<ul class="list-group" id="Sync_Results_Success" style="display: none;">
+		                </ul>
+		                <ul class="list-group" id="Sync_Results_Error" style="display: none;">
+		                </ul>
+                   	 </div>
+                   </div>
                  </div>
                  <div role="tabpanel" class="tab-pane fade" id="Roles">
                  	<div class="body">
@@ -396,6 +367,8 @@
     	}
       });
 
+    $('.sync_result_row').hide();
+
     $('#Sync').click(function() {
       var button=this;
 	  swal({
@@ -404,6 +377,7 @@
     	confirmButtonText: "Yes, Proceed!", closeOnConfirm: true
       }, function () {
 	    $(button).attr('disabled', true);
+	    $('.sync_result_row').hide();
     	$.fn.ajaxPut({
     	  url: '<%=request.getContextPath()%>/employee/sync',
     	  //refresh: "no",
@@ -425,12 +399,23 @@
        	  	  swal({ title: "Sync Completed!", text: text, type: "success"}, function () { }); 
     	  },
     	  onComplete : function () {
-    		  //$(button).attr('disabled', false);
+    		$(button).attr('disabled', false);
+    		$('.sync_result_row').show();
+    		$('#Show_Sync_Results_Error').find('.badge').text($('#Sync_Results_Error').find('li').length);
+    		$('#Show_Sync_Results_Success').find('.badge').text($('#Sync_Results_Success').find('li').length);
 	      }
     	});
       });
     });
 
+    $('#Show_Sync_Results_Success').click(function() {
+    	$('#Sync_Results_Success').show();
+    	$('#Sync_Results_Error').hide();
+    });
+    $('#Show_Sync_Results_Error').click(function() {
+    	$('#Sync_Results_Success').hide();
+    	$('#Sync_Results_Error').show();
+    });
   });
   </script>
 </body>

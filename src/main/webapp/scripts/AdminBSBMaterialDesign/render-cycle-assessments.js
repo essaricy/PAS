@@ -390,7 +390,7 @@ $(function () {
     	swal({
           title: "Are you sure?", text: "Do you want want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit it!", closeOnConfirm: false
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
           $.fn.postJSON({ url: url, data: currentForm });
         });
@@ -402,7 +402,7 @@ $(function () {
     	swal({
           title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-        	confirmButtonText: "Yes, Enable it!", closeOnConfirm: false
+        	confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
         }, function () {
        	  url=options.contextPath + '/assessment/cycle/conclude';
           $.fn.postJSON({ url: url, data: currentForm });

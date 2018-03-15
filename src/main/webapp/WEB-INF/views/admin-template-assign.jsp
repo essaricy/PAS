@@ -53,6 +53,20 @@
           <small>Assign templates to employee(s)</small>
         </h2>
       </div>
+      <%@include file="common/no-cycle.jsp" %>
+      <!-- <div class="row clearfix">
+        <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
+          <div class="card">
+            <div class="header bg-red">
+              <h2>No Data Available!</h2>
+            </div>
+            <div class="body">
+              There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.
+            </div>
+          </div>
+        </div>
+      </div> -->
+
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
           <div class="card template_assign_card">
@@ -95,10 +109,20 @@
 		          <button id="Assign_Button" name="assign" class="btn btn-primary center-block">Assign</button>
                 </div>
               </div>
-              <div class="row clearfix">
-                <ul class="list-group" id="Assignment_Results">
-                </ul>
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 results_container">
+              <div class="row clearfix assign_result_row">
+			    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <button id="Show_Assign_Results_Success" class="btn btn-success waves-effect" type="button">Successful<span class="badge"></span></button>
+                </div>
+				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                  <button id="Show_Assign_Results_Error" class="btn btn-warning waves-effect pull-right" type="button">Errors<span class="badge"></span></button>
+                </div>
+              </div>
+              <div class="row clearfix assign_result_row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                  <ul class="list-group" id="Assign_Results_Success" style="display: none;">
+		          </ul>
+		          <ul class="list-group" id="Assign_Results_Error" style="display: none;">
+		          </ul>
                 </div>
               </div>
             </div>
@@ -138,6 +162,7 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/active-cycle-check.js"></script>
 <script>
 var bulkAssignment={};
 /* bulkAssignment.templateId=4;
@@ -148,14 +173,16 @@ bulkAssignment.cycleId=0;
 bulkAssignment.employeeIds=[];
 
 $(function () {
-  $.fn.ajaxGet({
-	url: '<%=request.getContextPath()%>/appraisal/get/active',
-	onSuccess: onActiveAvailable,
-	onError: onError
+  $.fn.activeCycleCheck({
+	contextPath: '<%=request.getContextPath()%>',
+	errorMessage: 'There is no Appraisal Cycle ACTIVE right now! You can assign a template to employees only when there is an appraisal cycle is ACTIVE',
+	onAvailable: function (cycle) {
+	  bulkAssignment.cycleId=cycle.id;
+	}
   });
 
-   $("#Template_Name").easyAutocomplete({
-	url: function(phrase) {
+  $("#Template_Name").easyAutocomplete({
+    url: function(phrase) {
 	  return "<%=request.getContextPath()%>/template/search/byName/" + phrase;
 	},
 	dataType: "json",
@@ -201,63 +228,59 @@ $(function () {
 	}
   });
 
+  $('.assign_result_row').hide();
+
   $('#Assign_Button').click(function() {
+	var button=this;
 	if (bulkAssignment.templateId == 0) {
 	  swal({title: "Missing Information", text: "Please select a template", type: "warning"});
     } else if (bulkAssignment.employeeIds.length == 0) {
 	  swal({title: "Missing Information", text: "Please select at least an employee to assign", type: "warning"});
     } else {
-      $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
-  		onSuccess: function(result) {
-  		  var results_container=$('#Assignment_Results');
-  		  $(results_container).empty();
-  		  $(result).each(function(index, aResult) {
-  		    if (aResult.code=='SUCCESS') {
-  			  $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
-  			} else {
-    		  $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
-  			}
-  		  });
-  		},
-  		onFail: function(message, content) {
-  		}
-  	  });
-   	  <%-- swal({
+   	  swal({
 		title: "Are you sure?", text: "Do you want to assign this template to the selected employees?", type: "warning",
 		showCancelButton: true, confirmButtonColor: "#DD6B55",
-	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false
+	    confirmButtonText: "Yes, Assign!", closeOnConfirm: true
 	  }, function () {
-        $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+	      $(button).attr('disabled', true);
+		  $('.assign_result_row').hide();
+		  $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
 		  onSuccess: function(result) {
-		    var results_container=$('#Assignment_Results');
-		    $(results_container).empty();
-		    $(result).each(function(index, aResult) {
+    		var results_container_error=$('#Assign_Results_Error');
+    		var results_container_Success=$('#Assign_Results_Success');
+      		$(results_container_error).empty();
+      		$(results_container_Success).empty();
+
+   	  	    swal({ title: "Data has been saved successfully!", text: "", type: "success"}, function () { });
+      		$(result).each(function(index, aResult) {
 			  if (aResult.code=='SUCCESS') {
-			    $('#Assignment_Results').append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+      		    $(results_container_Success).append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
 			  } else {
-  			    $('#Assignment_Results').append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+      			$(results_container_error).append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
 			  }
 		    });
 		  },
 		  onFail: function(message, content) {
-		  }
+		  },
+    	  onComplete : function () {
+      		$(button).attr('disabled', false);
+      		$('.assign_result_row').show();
+      		$('#Show_Assign_Results_Error').find('.badge').text($('#Assign_Results_Error').find('li').length);
+      		$('#Show_Assign_Results_Success').find('.badge').text($('#Assign_Results_Success').find('li').length);
+  	      }
 	    });
-	  }); --%>
+	  });
     }
   });
 
-  function onActiveAvailable(result) {
-    if (result== null || result=="" || result=="undefined") {
-	  onError("There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.");
-	  return;
-	}
-    bulkAssignment.cycleId=result.id;
-  }
-  function onError(error) {
-	console.log('onError error=' + error);
-	$('.template_assign_card .body').empty();
-	$('.template_assign_card .body').append('<p class="font-bold col-pink">' + error + '</p>');
-  }
+  $('#Show_Assign_Results_Success').click(function() {
+  	$('#Assign_Results_Success').show();
+  	$('#Assign_Results_Error').hide();
+  });
+  $('#Show_Assign_Results_Error').click(function() {
+  	$('#Assign_Results_Success').hide();
+  	$('#Assign_Results_Error').show();
+  });
 });
 
 function removeDataItem(item, itemId) {
