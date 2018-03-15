@@ -177,6 +177,7 @@ $(function () {
 	contextPath: '<%=request.getContextPath()%>',
 	errorMessage: 'There is no Appraisal Cycle ACTIVE right now! You can assign a template to employees only when there is an appraisal cycle is ACTIVE',
 	onAvailable: function (cycle) {
+		console.log('#####################' + cycle);
 	  bulkAssignment.cycleId=cycle.id;
 	}
   });

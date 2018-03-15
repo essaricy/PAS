@@ -162,7 +162,7 @@ public class TestMailTest {
 			appraisalCycle.setName("2017-2018");
 			AppraisalPhase appraisalPhase = new AppraisalPhase();
 			appraisalPhase.setName("Q1");
-			emailRepository.sendApprasialKickOff(appraisalCycle,appraisalPhase);
+			emailRepository.sendApprasialKickOff(appraisalCycle);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

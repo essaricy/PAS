@@ -12,6 +12,7 @@ $.fn.activeCycleCheck=function(options) {
 	  } else {
 		showErrorCard("You can see this section only when the Appraisal Cycle is ACTIVE");
 	  }
+	} else {
 	  if (options.onAvailable) {
 		options.onAvailable(cycle);
 	  }

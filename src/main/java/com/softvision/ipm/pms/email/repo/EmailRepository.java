@@ -22,7 +22,6 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.common.constants.EmailConstant;
 import com.softvision.ipm.pms.common.exception.EmailException;
-import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 

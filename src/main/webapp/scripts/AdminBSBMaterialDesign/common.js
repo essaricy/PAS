@@ -15,7 +15,7 @@ var PhaseAssignmentStatus={
 
 var CycleAssignmentStatus={
 	NOT_INITIATED:
-		{code: 0, 	name: "Assigned", 				colorClass: "bg-grey", 			description: "Created but not effective"},
+		{code: 0, 	name: "Not Initiated",			colorClass: "bg-grey", 			description: "Created but not effective"},
 	ABRIDGED:
 		{code: 10, 	name: "Abridged", 				colorClass: "bg-amber", 		description: "Phases summarized and cycle assessment available"},
 	MANAGER_REVIEW_PENDING:

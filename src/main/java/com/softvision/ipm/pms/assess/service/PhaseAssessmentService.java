@@ -17,10 +17,11 @@ import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
-import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.email.repo.EmailRepository;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -40,6 +41,8 @@ public class PhaseAssessmentService {
 	@Autowired private CycleAssessmentService cycleAssessmentService;
 
 	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
+
+	@Autowired private EmailRepository emailRepository;
 
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
@@ -133,6 +136,8 @@ public class PhaseAssessmentService {
 		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		// Move assignment to next status
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
+		// Email Trigger
+		emailRepository.sendEmployeeSubmitMail(employeePhaseAssignment.getPhaseId(),assessedBy,employeePhaseAssignment.getEmployeeId());
 	}
 
 	@Transactional
@@ -197,10 +202,8 @@ public class PhaseAssessmentService {
 		if (!changed) {
 			throw new ServiceException("Unable to CONCLUDE this assignment");
 		}
-		System.out.println("######################## assignment (" + assignmentId + ") status changed with status " + PhaseAssignmentStatus.CONCLUDED.getCode());
 		employeePhaseAssignment = phaseAssignmentDataRepository
 				.findByPhaseIdAndEmployeeIdAndStatus(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(), PhaseAssignmentStatus.CONCLUDED.getCode());
-		System.out.println("employeePhaseAssignment after save=" + employeePhaseAssignment);
 
 		// Change last assessment status to CONCLUDED
 		latestHeader.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
@@ -209,7 +212,8 @@ public class PhaseAssessmentService {
 
 		// Abridge Cycle Assignment 
 		cycleAssessmentService.abridge(employeePhaseAssignment.getEmployeeId());
-		// TODO email trigger
+		// email trigger
+		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(),fromEmployeeId,employeePhaseAssignment.getEmployeeId());
 	}
 
 	private void validateBeforeConclude(long assignmentId, int assessedBy) throws ServiceException {

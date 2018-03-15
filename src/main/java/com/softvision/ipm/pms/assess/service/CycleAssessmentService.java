@@ -31,7 +31,6 @@ import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
-import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
@@ -58,11 +57,8 @@ public class CycleAssessmentService {
 
 	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
 
-	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
-
 	@Transactional
 	public boolean abridge(int employeeId) {
-		System.out.println("##################################### abridge " + employeeId);
 		int lastPhaseAssignedBy=0;
 		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
@@ -73,17 +69,14 @@ public class CycleAssessmentService {
 			return false;
 		}
 		Long cycleAssignmentId = employeeCycleAssignment.getId();
-		System.out.println("cycleAssignmentId=" + cycleAssignmentId);
 
 		CycleAssessHeader cycleAssessHeader = cycleAssessmentHeaderDataRepository.findByAssignId(cycleAssignmentId);
-		System.out.println("CycleAssessHeader does not exist. GOOD");
 		if (cycleAssessHeader != null) {
 			return false;
 		}
 		List<CycleAssessDetail> cycleAssessDetails = new ArrayList<>();
 		// Get phase assignments for each phase by employee id and phase id
 		for (AppraisalPhase phase : phases) {
-			System.out.println();
 			int phaseId = phase.getId();
 			System.out.println("phaseId=" + phaseId + ", employeeId=" + employeeId + ", status=" + PhaseAssignmentStatus.CONCLUDED.getCode());
 			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository
@@ -97,7 +90,6 @@ public class CycleAssessmentService {
 			Long assignmentId = employeePhaseAssignment.getId();
 			System.out.println("assignmentId = " + assignmentId);
 			PhaseAssessHeader concludedPhaseAssessHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdAndStatus(assignmentId, PhaseAssignmentStatus.CONCLUDED.getCode());
-			System.out.println("concluded PhaseAssessHeader = " + concludedPhaseAssessHeader);
 			if (concludedPhaseAssessHeader == null) {
 				// CONCLUDED Header is not found
 				return false;
@@ -137,8 +129,6 @@ public class CycleAssessmentService {
 		cycleAssessHeader.setAssessedBy(lastPhaseAssignedBy); // last phase assigned by
 		cycleAssessHeader.setCycleAssessDetails(cycleAssessDetails);
 		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		System.out.println();
-		System.out.println("saved= " + saved);
 		// Update employeeCycleAssignment status to 10
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
@@ -207,7 +197,6 @@ public class CycleAssessmentService {
 		ValidationUtil.validate(cycleAssessHeaderDto);
 		CycleAssessHeader cycleAssessHeader = CycleAssessmentAssembler.getCycleAssessHeader(cycleAssessHeaderDto);
 		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		System.out.println(saved);
 		// Change assignment status to 40
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		// Move assignment to next status
@@ -225,7 +214,6 @@ public class CycleAssessmentService {
 		ValidationUtil.validate(cycleAssessmentHeaderDto);
 		CycleAssessHeader cycleAssessHeader = CycleAssessmentAssembler.getCycleAssessHeader(cycleAssessmentHeaderDto);
 		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		System.out.println(saved);
 		// CONCLUDE the assignment
 		conclude(assignmentId, assessedBy);
 	}
@@ -238,19 +226,14 @@ public class CycleAssessmentService {
 		CycleAssessHeader latestHeader = cycleAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 
 		// Change assignment status to CONCLUDED
-		boolean changed = managerAssignmentRepository.changeStatus(assignmentId, CycleAssignmentStatus.CONCLUDED.getCode());
-		if (!changed) {
-			throw new ServiceException("Unable to CONCLUDE this assignment");
-		}
-		System.out.println("######################## assignment (" + assignmentId + ") status changed with status " + CycleAssignmentStatus.CONCLUDED.getCode());
+		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		employeeCycleAssignment = cycleAssignmentDataRepository
 				.findByCycleIdAndEmployeeIdAndStatus(employeeCycleAssignment.getCycleId(), employeeCycleAssignment.getEmployeeId(), CycleAssignmentStatus.CONCLUDED.getCode());
-		System.out.println("employeeCycleAssignment after save=" + employeeCycleAssignment);
 
 		// Change last assessment status to CONCLUDED
 		latestHeader.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
 		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(latestHeader);
-		System.out.println("######################## assessment status changed with status " + saved.getStatus());
 	}
 
 	private void validateBeforeConclude(long assignmentId, int assessedBy) throws ServiceException {

@@ -134,7 +134,7 @@
               </span>
             </li>
 	      </ul>
-		  <p>Designed, Arch & Developed By</p>
+		  <p>Designed, Arch and Developed By</p>
 		  <ul class="setting-list">
 			<li><span>Srikanth Ragi</span></li>
 		  </ul>

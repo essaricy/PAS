@@ -15,9 +15,10 @@ import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
-import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.ipm.pms.email.repo.EmailRepository;
 import com.softvision.ipm.pms.role.service.RoleService;
 
 @Service
@@ -30,6 +31,8 @@ public class ManagerPhaseAssignmentService {
 	@Autowired private RoleService roleService;
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
+
+	@Autowired private EmailRepository emailRepository;
 
 	public void assignPhaseToAnotherManager(long phaseAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
@@ -50,11 +53,14 @@ public class ManagerPhaseAssignmentService {
 		if (!roleService.isManager(toEmployeeId)) {
 			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
 		}
+		employeePhaseAssignment.setAssignedBy(toEmployeeId);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Check if from and to employees are managers.
-		boolean changed = managerAssignmentRepository.changePhaseManager(phaseAssignId, toEmployeeId);
+		/*boolean changed = managerAssignmentRepository.changePhaseManager(phaseAssignId, toEmployeeId);
 		if (!changed) {
 			throw new ServiceException("Unable to change assigned-by-manager");
-		}
+		}*/
+		// TODO: change assigned manager in phase_assess_header
 	}
 
 	public void enablePhaseAppraisal(long phaseAssignId, int fromEmployeeId) throws ServiceException {
@@ -84,7 +90,8 @@ public class ManagerPhaseAssignmentService {
 		if (!changed) {
 			throw new ServiceException("Unable to change assigned-by-manager");
 		}
-		// TODO email trigger
+		// email trigger
+		emailRepository.sendEnableMail(employeePhaseAssignment.getPhaseId(),assignedBy,employeeId);
 	}
 
 	public List<ManagerCycleAssignmentDto> getAllCycles(int employeeId) {

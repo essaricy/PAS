@@ -93,6 +93,8 @@ public class AssessmentRest {
 	public Result review(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
 		Result result = new Result();
 		try {
+			cycleAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
+			cycleAssessmentHeader.setAssessDate(new Date());
 			cycleAssessmentService.review(cycleAssessmentHeader);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
@@ -107,6 +109,8 @@ public class AssessmentRest {
 	public Result conclude(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
 		Result result = new Result();
 		try {
+			cycleAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
+			cycleAssessmentHeader.setAssessDate(new Date());
 			cycleAssessmentService.reviewAndConclude(cycleAssessmentHeader);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

@@ -5,6 +5,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
+import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
@@ -18,13 +20,11 @@ public class ManagerCycleAssignmentService {
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
+	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
+
 	@Transactional
 	public void assignCycleToNextManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		System.out.println("cycleAssignId= " + cycleAssignId);
-		System.out.println("fromEmployeeId= " + fromEmployeeId);
-		System.out.println("toEmployeeId= " + toEmployeeId);
-
 		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
@@ -49,8 +49,14 @@ public class ManagerCycleAssignmentService {
 		}*/
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
-		EmployeeCycleAssignment saved = cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		System.out.println("saved=" + saved);
+		EmployeeCycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		System.out.println("savedAssignment=" + savedAssignment);
+		
+		CycleAssessHeader cycleAssessHeader = cycleAssessmentHeaderDataRepository.findByAssignId(cycleAssignId);
+		cycleAssessHeader.setAssessedBy(toEmployeeId);
+		cycleAssessHeader.setStatus(CycleAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
+		CycleAssessHeader savedAssess = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
+		System.out.println("savedAssess=" + savedAssess);
 	}
 
 }

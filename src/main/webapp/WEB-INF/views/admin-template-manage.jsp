@@ -75,7 +75,7 @@
                   </div>
                 </fieldset>
 
-                <h3>Choose Assessments & Parameters</h3>
+                <h3>Choose Assessments and Parameters</h3>
                 <fieldset>
                   <div class="col-xs-12 ol-sm-12 col-md-12 col-lg-12" style="padding:0px">
 	                <div class="panel-group" id="Goals_Accordion" role="tablist" aria-multiselectable="true">

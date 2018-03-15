@@ -77,8 +77,8 @@
 	                   </div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="AssignToAnotherManager" class="btn btn-link waves-effect">Assign1</button>
-						<button type="button" id="AssignToNextManager" class="btn btn-link waves-effect">Assign2</button>
+						<button type="button" id="AssignToAnotherManager" class="btn btn-link waves-effect">Assign</button>
+						<button type="button" id="AssignToNextManager" class="btn btn-link waves-effect">Assign</button>
 						<button type="button" class="btn btn-link waves-effect" data-dismiss="modal">CLOSE</button>
 					</div>
 				</div>

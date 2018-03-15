@@ -135,6 +135,12 @@ $(function () {
     	$(td).append(getAssignToNextManagerButton('cycle', id));
       } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
         $(td).append(getFillReviewButton('cycle', id));
+      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
+    	$(td).append(getFillReviewButton('cycle', id));
+    	$(td).append('&nbsp;');
+    	$(td).append(getConcludeButton('cycle', id));
+      } else if (status == CycleAssignmentStatus.CONCLUDED.code) {
+    	$(td).append(getViewFormButton('cycle', id));
       }
    	  return td;
     }
@@ -154,7 +160,7 @@ $(function () {
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
     	  $(td).append(getFillReviewButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	  $(td).append(getViewFormButton('phase', id));
+    	  $(td).append(getFillReviewButton('phase', id));
     	  $(td).append('&nbsp;');
     	  $(td).append(getConcludeButton('phase', id));
     	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
@@ -232,8 +238,14 @@ $(function () {
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
     		confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
     	}, function () {
+    	  var url=null;
+    	  if (type == 'cycle') {
+    		url=settings.contextpath + '/assignment/manager/change/cycle-status/conclude/' + id
+    	  } else if (type == 'phase') {
+    		url=settings.contextpath + '/assignment/manager/change/phase-status/conclude/' + id
+    	  }
     	  $.fn.ajaxPut({
-    	    url: settings.contextpath + '/assignment/manager/change/phase-status/conclude/' + id
+    	    url: url
     	  });
         });
       }
