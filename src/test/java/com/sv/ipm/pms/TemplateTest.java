@@ -28,7 +28,6 @@ import com.softvision.ipm.pms.template.service.TemplateService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
 public class TemplateTest {
 
 	@Autowired TemplateService templateService;
@@ -95,6 +94,7 @@ public class TemplateTest {
 	}
 
 	@Test
+	@Ignore
 	public void test3_update() throws ServiceException {
 		System.out.println("test3_update");
 
@@ -106,6 +106,13 @@ public class TemplateTest {
 
 		ValidationUtil.validate(templateDto);
 		//templateService.update(templateDto);
+	}
+
+	@Test
+    @Ignore
+	public void test4_isTemplateInUse() throws ServiceException {
+		boolean inUse = templateService.isInUse(6);
+		System.out.println("inUse = " + inUse);
 	}
 
 }

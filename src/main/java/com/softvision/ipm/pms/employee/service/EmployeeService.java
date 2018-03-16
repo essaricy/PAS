@@ -74,7 +74,6 @@ public class EmployeeService {
 				result.setCode(Result.SUCCESS);
 				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " updated");
 			}catch (Exception e) {
-				System.out.println(employee);
 				result.setCode(Result.FAILURE);
 				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " update failed. Error = "+ e.getMessage());
 			}

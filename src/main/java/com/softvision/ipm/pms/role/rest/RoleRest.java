@@ -47,6 +47,7 @@ public class RoleRest {
 	public @ResponseBody List<Role> getRolesBylogin(@PathVariable(value = "loginId", required = true) String loginId) {
 		return roleService.getRolesbyLoginId(loginId);
 	}
+
 	@RequestMapping(value = "/delete/{employeeId}/{roleId}", method = RequestMethod.PUT)
 	@PreAuthorize("hasPermission(authentication, 'Admin')")
 	public Result delete(@PathVariable(required = true) @NotNull Integer employeeId,

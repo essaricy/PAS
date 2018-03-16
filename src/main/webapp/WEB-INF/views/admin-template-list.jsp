@@ -105,14 +105,15 @@
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
 <script>
 $('.templates_card').cardManager({
   type: 'list-with-links',
   loadUrl: '<%=request.getContextPath()%>/template/list',
   manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
-  //deleteUrl: '<%=request.getContextPath()%>/template/delete',
-  menuActions: ["Add", "Update"],
+  deleteUrl: '<%=request.getContextPath()%>/template/delete',
+  menuActions: ["Add", "Update", "Delete"],
   onClickCallback: renderTemplateInformation,
 });
 

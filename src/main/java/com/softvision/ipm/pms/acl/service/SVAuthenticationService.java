@@ -68,7 +68,6 @@ public class SVAuthenticationService {
 			} else if (namingException instanceof CommunicationException) {
 				throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
 			}
-			namingException.printStackTrace();
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
 		} catch (Exception exception) {
 			String message = exception.getMessage();

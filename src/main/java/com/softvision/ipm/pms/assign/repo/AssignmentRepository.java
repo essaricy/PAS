@@ -46,7 +46,7 @@ public class AssignmentRepository extends AbstractRepository {
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase appraisalPhase : phases) {
 			Integer phaseId = appraisalPhase.getId();
-			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId.intValue(), templateId, employeeId);
+			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndTemplateId(phaseId.intValue(), employeeId, templateId);
 			if (employeePhaseAssignment != null) {
 				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
 			}

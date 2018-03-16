@@ -94,7 +94,7 @@ public class AssignmentService {
 					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
 				// check if already assigned.
-				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndTemplateIdAndEmployeeId(cycleId, templateId, employeeId);
+				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeIdAndTemplateId(cycleId, employeeId, templateId);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}

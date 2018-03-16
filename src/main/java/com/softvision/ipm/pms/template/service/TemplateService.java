@@ -8,6 +8,9 @@ import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
@@ -24,11 +27,15 @@ import com.softvision.ipm.pms.template.repo.TemplateSpecs;
 @Service
 public class TemplateService {
 
-	@Autowired private TemplateDataRepository templateDataRepository;
-
 	@Autowired private GoalService goalService;
 
 	@Autowired private TemplateRepository templateRepository;
+
+	@Autowired private TemplateDataRepository templateDataRepository;
+
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
+
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
 	public List<TemplateDto> getTemplates() {
 		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAllByOrderByUpdatedAtDesc());
@@ -50,6 +57,10 @@ public class TemplateService {
 			}
 			ValidationUtil.validate(templateDto);
 
+			long templateId = templateDto.getId();
+			if (templateId > 0 && isInUse(templateId)) {
+				throw new ServiceException("Template is already in use. Cannot update now.");
+			}
 			List<TemplateHeaderDto> headers = templateDto.getHeaders();
 			int totalWeightage=0;
 
@@ -89,7 +100,6 @@ public class TemplateService {
 			templateRepository.save(template);
 			templateDto=TemplateAssembler.getTemplateDto(template);
 		} catch (Exception exception) {
-			exception.printStackTrace();
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
@@ -98,6 +108,9 @@ public class TemplateService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
+			if (id > 0 && isInUse(id)) {
+				throw new ServiceException("Template is already in use. Cannot delete now.");
+			}
 			templateDataRepository.delete(id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
@@ -110,6 +123,23 @@ public class TemplateService {
 			return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
 		}
 		return null;
+	}
+
+	public boolean isInUse(long templateId) throws ServiceException {
+		try {
+			EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findFirstByTemplateId(templateId);
+			if (cycleAssignment != null) {
+				return true;
+			}
+			EmployeeCycleAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
+			if (phaseAssignement != null) {
+				return true;
+			}
+		} catch (Exception exception) {
+			String message = ExceptionUtil.getExceptionMessage(exception);
+			throw new ServiceException(message, exception);
+		}
+		return false;
 	}
 
 }

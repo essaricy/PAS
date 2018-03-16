@@ -3,6 +3,7 @@ package com.softvision.ipm.pms.template.rest;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,20 @@ public class TemplateRest {
 	public @ResponseBody List<TemplateDto> search(
     		@PathVariable(value="searchString", required=true) String searchString) {
 		return templateService.searchName(searchString);
+    }
+
+	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+    public @ResponseBody Result delete(@PathVariable(required=true) @NotNull @Min(1) long id) {
+		Result result = new Result();
+		try {
+			templateService.delete(id);
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
     }
 
 }

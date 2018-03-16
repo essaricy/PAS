@@ -169,8 +169,6 @@
   </style>
   </head>
   <body class="login-page">
-	<video autoplay loop poster muted class="bg-video" src="<%=request.getContextPath()%>/images/I_Just_Wanted.mp4">
-	</video>
     <div class="login-box">
       <div class="logo">
         <a href="javascript:void(0);"><b>SOFTVISION</b></a>
@@ -198,7 +196,7 @@
                 <i class="material-icons">lock</i>
               </span>
               <div class="form-line">
-                <input type="password" class="form-control" name="password" placeholder="Password" required value="$oftvision@123">
+                <input type="password" class="form-control" name="password" placeholder="Password" required value="">
               </div>
             </div>
             <div class="row">
@@ -224,5 +222,7 @@
     <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
     <!-- Custom Js -->
     <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+    <video autoplay loop poster muted class="bg-video" src="<%=request.getContextPath()%>/images/I_Just_Wanted.mp4">
+	</video>
   </body>
 </html>
