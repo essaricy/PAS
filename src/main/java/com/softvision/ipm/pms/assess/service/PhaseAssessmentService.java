@@ -22,6 +22,7 @@ import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.email.repo.EmailRepository;
+import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -44,18 +45,11 @@ public class PhaseAssessmentService {
 
 	@Autowired private EmailRepository emailRepository;
 
+	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
+		System.out.println("################### getByAssignment()");
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-
-		// Allow this form only to the employee and to the manager to whom its been assigned
-		int assignedBy = employeePhaseAssignment.getAssignedBy();
-		int employeeId = employeePhaseAssignment.getEmployeeId();
-
-		if (requestedEmployeeId != assignedBy
-				&& requestedEmployeeId != employeeId) {
-			throw new ServiceException("No allowed to view other's appraisal forms");
-		}
+		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
 		phaseAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeePhaseAssignment));
 
 		int phaseId = employeePhaseAssignment.getPhaseId();
