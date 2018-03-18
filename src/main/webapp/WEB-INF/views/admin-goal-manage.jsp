@@ -154,8 +154,7 @@
           params[params.length]=param;
    		});
      	goal.params=params;
-      	$.fn.postJSON({url : '<%=request.getContextPath()%>/goal/update', data: goal});
-      	//postJSON("<%=request.getContextPath()%>/goal/update", goal, null, null, null);
+      	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/goal/update', data: goal});
       }
     });
 

@@ -19,7 +19,7 @@ $.fn.ajaxPut = function(options) {
   });
 };
 
-$.fn.postJSON = function(options) {
+$.fn.ajaxPost = function(options) {
 	$.fn.ajaxWrapper({
 	  type: 'POST',
 	  url: options.url,
@@ -119,6 +119,11 @@ $.fn.ajaxWrapper = function(options) {
     console.log(options.url + ': fail: ' + JSON.stringify(error));
     if (options.onFail) {
       options.onFail(error);
+    } else {
+      if (error.responseJSON) {
+    	var errorJson=error.responseJSON;
+    	swal({ title: errorJson.message, text: errorJson.status + " " + errorJson.error, type: "error"});
+      }
     }
   }).always(function() {
 	console.log(options.url + ': always: ');

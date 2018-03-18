@@ -133,7 +133,7 @@
     	$('.weightage').each(function(index, weightage) {
     		template.headers[index].weightage=$(this).val();
     	});
-    	$.fn.postJSON({url : '<%=request.getContextPath()%>/template/save', data: template});
+    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/template/save', data: template});
       },
 	});
 

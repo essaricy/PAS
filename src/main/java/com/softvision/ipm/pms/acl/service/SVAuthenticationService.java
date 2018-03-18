@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.acl.repo.SVLdapRepository;
 import com.softvision.ipm.pms.acl.repo.SVProjectRepository;
-import com.softvision.ipm.pms.common.constants.Roles;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.repo.RoleDataRepository;
 import com.softvision.ipm.pms.user.model.User;

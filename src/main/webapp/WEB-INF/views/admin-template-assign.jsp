@@ -242,7 +242,7 @@ $(function () {
 	  }, function () {
 	      $(button).attr('disabled', true);
 		  $('.assign_result_row').hide();
-		  $.fn.postJSON({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+		  $.fn.ajaxPost({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
 		  onSuccess: function(result) {
     		var results_container_error=$('#Assign_Results_Error');
     		var results_container_Success=$('#Assign_Results_Success');

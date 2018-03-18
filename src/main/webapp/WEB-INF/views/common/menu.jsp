@@ -50,25 +50,26 @@
             <span>Dashboard</span>
           </a>
         </li>
-        <c:if test='${fn:contains(privilige, "Manager")}'>  
-	        <li>
-	          <a href="javascript:void(0);" class="menu-toggle">
-	            <i class="material-icons">album</i>
-	            <span>Goal Setting</span>
-	          </a>
-	          <ul class="ml-menu">
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
-	            </li>
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
-	            </li>
-	            <li>
-                  <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
-                </li>
-	          </ul>
-	        </li>
-	     </c:if>
+        <sec:authorize access="hasAuthority('MANAGER')">
+        <li>
+          <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">album</i>
+            <span>Goal Setting</span>
+          </a>
+          <ul class="ml-menu">
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
+            </li>
+            <li>
+                 <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
+               </li>
+          </ul>
+        </li>
+        </sec:authorize>
+        <sec:authorize access="hasAuthority('EMPLOYEE')">
         <li>
           <a href="javascript:void(0);" class="menu-toggle">
             <i class="material-icons">flag</i>
@@ -80,28 +81,29 @@
             </li>
           </ul>
         </li>
-        <c:if test='${fn:contains(privilige, "Admin")}'> 
-	        <li>
-	          <a href="javascript:void(0);" class="menu-toggle">
-	            <i class="material-icons">settings</i>
-	            <span>Admin</span>
-	          </a>
-	          <ul class="ml-menu">
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/cycles/list">Appraisal Cycles</a>
-	            </li>
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/goal/list">Goal Settings</a>
-	            </li>
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
-	            </li>
-	            <li>
-	              <a href="<%=request.getContextPath()%>/admin/appraisal/status">Appraisal Status Report</a>
-	            </li>
-	          </ul>
-	        </li>
-        </c:if>
+        </sec:authorize>
+        <sec:authorize access="hasAuthority('ADMIN')">
+        <li>
+          <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">settings</i>
+            <span>Admin</span>
+          </a>
+          <ul class="ml-menu">
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/cycles/list">Appraisal Cycles</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/goal/list">Goal Settings</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/appraisal/status">Appraisal Status Report</a>
+            </li>
+          </ul>
+        </li>
+        </sec:authorize>
       </ul>
     </div>
     <!-- #Menu -->

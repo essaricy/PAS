@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.template.model.TemplateDto;
@@ -41,6 +43,7 @@ public class TemplateRest {
 		return templateService.getNewTemplate();
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
 	@RequestMapping(value="save", method=RequestMethod.POST)
     public Result save(@RequestBody(required=true) @NotNull TemplateDto template) {
 		Result result = new Result();
@@ -65,6 +68,7 @@ public class TemplateRest {
 		return templateService.searchName(searchString);
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
     public @ResponseBody Result delete(@PathVariable(required=true) @NotNull @Min(1) long id) {
 		Result result = new Result();

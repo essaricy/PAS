@@ -225,7 +225,7 @@
 			phases[phases.length]=phase;
 		});
     	apprCycle.phases=phases;
-    	$.fn.postJSON({url : '<%=request.getContextPath()%>/appraisal/update', data: apprCycle});
+    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/appraisal/update', data: apprCycle});
       },
 	});
 

@@ -372,7 +372,7 @@ $(function () {
 
       if(buttonName=='Save') {
    		url=options.contextPath + '/assessment/phase/save';
-   		$.fn.postJSON({ url: url, data: currentForm });
+   		$.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonName=='Submit') {
     	url=options.contextPath + '/assessment/phase/submit';
     	swal({
@@ -380,12 +380,12 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
-          $.fn.postJSON({ url: url, data: currentForm });
+          $.fn.ajaxPost({ url: url, data: currentForm });
         });
    	  } else if(buttonName=='Save Review') {
    		//reivewAppraisalForm();
    		url=options.contextPath + '/assessment/phase/review';
-   		$.fn.postJSON({ url: url, data: currentForm });
+   		$.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonName=='Conclude') {
     	swal({
           title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
@@ -393,11 +393,9 @@ $(function () {
         	confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
         }, function () {
        	  url=options.contextPath + '/assessment/phase/conclude';
-          $.fn.postJSON({ url: url, data: currentForm });
+          $.fn.ajaxPost({ url: url, data: currentForm });
         });
       }
-      //delete currentForm.render;
-      //delete currentForm.status;
     }
 
     function onErrorAssessments(error) {

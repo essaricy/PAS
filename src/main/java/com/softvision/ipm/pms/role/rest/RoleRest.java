@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.role.entity.Role;
@@ -48,8 +49,9 @@ public class RoleRest {
 		return roleService.getRolesbyLoginId(loginId);
 	}
 
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value = "/delete/{employeeId}/{roleId}", method = RequestMethod.PUT)
-	@PreAuthorize("hasPermission(authentication, 'Admin')")
+	//@PreAuthorize("hasPermission(authentication, 'Admin')")
 	public Result delete(@PathVariable(required = true) @NotNull Integer employeeId,
 			@PathVariable(required = true) @NotNull int roleId) {
 		Result result = new Result();
@@ -63,8 +65,10 @@ public class RoleRest {
 		}
 		return result;
 	}
+
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value = "/assign/{employeeId}/{roleId}", method = RequestMethod.PUT)
-	@PreAuthorize("hasPermission(authentication, 'Admin')")
+	//@PreAuthorize("hasPermission(authentication, 'Admin')")
 	public Result assign(@PathVariable(required = true) @NotNull Integer employeeId,
 			@PathVariable(required = true) @NotNull int roleId) {
 		Result result = new Result();
@@ -78,7 +82,8 @@ public class RoleRest {
 		}
 		return result;
 	}
-	@PreAuthorize("hasPermission(authentication, 'Admin')")
+
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value = "/all-test", method = RequestMethod.GET)
 	public @ResponseBody List<Role> test() {
 		return roleService.getRoles();

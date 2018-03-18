@@ -1,4 +1,4 @@
-package com.softvision.ipm.pms.common.constants;
+package com.softvision.ipm.pms.role.constant;
 
 public enum Roles {
 	ADMIN("Admin"), MANAGER("Manager"), EMPLOYEE("Employee");

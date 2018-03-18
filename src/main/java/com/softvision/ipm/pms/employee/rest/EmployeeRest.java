@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
@@ -49,6 +51,7 @@ public class EmployeeRest {
 		return employeeService.roleSearch(searchString);
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="/save/byLogin/{loginId:.+}", method=RequestMethod.PUT)
     public @ResponseBody Result saveEmployee(
     		@PathVariable(value="loginId", required=true) String loginId) {
@@ -64,7 +67,8 @@ public class EmployeeRest {
 		}
 		return result;
     }
-	
+
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="/sync", method=RequestMethod.PUT)
     public @ResponseBody Result syncEmployees() {
 		Result result = new Result();

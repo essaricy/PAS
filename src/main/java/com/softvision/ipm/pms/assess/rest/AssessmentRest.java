@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
@@ -56,11 +58,14 @@ public class AssessmentRest {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/review", method=RequestMethod.POST)
 	public Result reviewPhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
 	public Result concludePhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
 		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);

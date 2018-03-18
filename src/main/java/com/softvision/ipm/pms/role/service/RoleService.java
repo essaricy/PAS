@@ -7,10 +7,10 @@ import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.common.constants.Roles;
 import com.softvision.ipm.pms.common.util.CollectionUtil;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
+import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.repo.RoleDataRepository;
 import com.softvision.ipm.pms.role.repo.RoleRepository;

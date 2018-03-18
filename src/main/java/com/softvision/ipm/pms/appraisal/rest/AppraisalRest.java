@@ -6,6 +6,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
+import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 
 @RestController
@@ -41,6 +43,7 @@ public class AppraisalRest {
 		return appraisalService.getActiveCycle();
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull AppraisalCycleDto dto) {
 		Result result = new Result();
@@ -56,6 +59,7 @@ public class AppraisalRest {
 		return result;
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="/activate/{id}", method=RequestMethod.PUT)
     public Result activate(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
@@ -84,6 +88,7 @@ public class AppraisalRest {
 		return result;
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
     public Result delete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
