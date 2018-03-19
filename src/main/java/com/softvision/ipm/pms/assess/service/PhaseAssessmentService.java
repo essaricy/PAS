@@ -65,21 +65,28 @@ public class PhaseAssessmentService {
 		return phaseAssessment;
 	}
 
-	@Transactional
-	public void save(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto)
+	public void save(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
+		save(phaseAssessmentHeaderDto.getAssignId(), requestedEmployeeId, phaseAssessmentHeaderDto);
+	}
+
+	public void submit(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
+		submit(phaseAssessmentHeaderDto.getAssignId(), requestedEmployeeId, phaseAssessmentHeaderDto);
+	}
+
+	public void review(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
+		review(phaseAssessmentHeaderDto.getAssignId(), requestedEmployeeId, phaseAssessmentHeaderDto);
+	}
+
+	public void reviewAndConclude(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto)
 			throws ServiceException {
-		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
+		reviewAndConclude(phaseAssessmentHeaderDto.getAssignId(), requestedEmployeeId, phaseAssessmentHeaderDto);
+	}
+
+	@Transactional
+	@PreSecureAssignment(permitEmployee=true)
+	private void save(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto)
+			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-		if (employeePhaseAssignment == null) {
-			throw new ServiceException("No such assignment");
-		}
-		// Can be saved by the same person whom it has been assigned to.
-		int employeeId = employeePhaseAssignment.getEmployeeId();
-		int assignedBy = employeePhaseAssignment.getAssignedBy();
-		if (employeeId != requestedEmployeeId) {
-			throw new ServiceException("Assignment can only be saved by the employee to whom its been assigned to");
-		}
-		phaseAssessmentHeaderDto.setAssessedBy(assignedBy);
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		if (latestHeader != null) {
@@ -89,31 +96,22 @@ public class PhaseAssessmentService {
 				throw new ServiceException("The assessment form is not in a state to modify now.");
 			}
 		}
+		// Change assignment status to 20
+		phaseAssessmentHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println(saved);
-		// Change assignment status to 20
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.getCode());
+		employeePhaseAssignment.setStatus(saved.getStatus());
 		// Move assignment to next status
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 	}
 
 	@Transactional
-	public void submit(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
+	@PreSecureAssignment(permitEmployee=true)
+	private void submit(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto)
+			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-		if (employeePhaseAssignment == null) {
-			throw new ServiceException("No such assignment");
-		}
-		// Can be saved by the same person whom it has been assigned to.
-		int employeeId = employeePhaseAssignment.getEmployeeId();
-		int assignedBy = employeePhaseAssignment.getAssignedBy();
-		if (employeeId != requestedEmployeeId) {
-			throw new ServiceException("Assignment can only be submitted by the employee to whom its been assigned to");
-		}
-		phaseAssessmentHeaderDto.setAssessedBy(assignedBy);
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		if (latestHeader != null) {
@@ -123,33 +121,25 @@ public class PhaseAssessmentService {
 				throw new ServiceException("The assessment form is not in a state to submit now.");
 			}
 		}
+		// Change assignment status to 30
+		phaseAssessmentHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println(saved);
-		// Change assignment status to 30
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.getCode());
 		// Move assignment to next status
+		employeePhaseAssignment.setStatus(saved.getStatus());
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Email Trigger
-	
 		emailRepository.sendEmployeeSubmitMail(employeePhaseAssignment.getPhaseId(),
 				phaseAssessmentHeaderDto.getAssessedBy(), employeePhaseAssignment.getEmployeeId());
 	}
 
 	@Transactional
-	public void review(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
+	@PreSecureAssignment(permitManager=true)
+	public void review(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto)
+			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-		if (employeePhaseAssignment == null) {
-			throw new ServiceException("No such assignment");
-		}
-		// Can be saved by the same person whom it has been assigned to.
-		int assignedBy = employeePhaseAssignment.getAssignedBy();
-		if (assignedBy != requestedEmployeeId) {
-			throw new ServiceException("Assignment can only be reviewed by the manager to whom its been assigned to");
-		}
 		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		if (latestHeader == null) {
@@ -160,50 +150,49 @@ public class PhaseAssessmentService {
 				&& latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			throw new ServiceException("Review can only be done when the employee appraisal form is submitted.");
 		}
-		phaseAssessmentHeaderDto.setAssessedBy(assignedBy);
-		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
-		ValidationUtil.validate(phaseAssessmentHeaderDto);
-		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
-		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println(saved);
 		// Change assignment status to 40
-		employeePhaseAssignment.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
-		// Move assignment to next status
-		phaseAssignmentDataRepository.save(employeePhaseAssignment);
-	}
-
-	@Transactional
-	public void reviewAndConclude(int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
-		long assignmentId = phaseAssessmentHeaderDto.getAssignId();
-		//int assessedBy = phaseAssessmentHeaderDto.getAssessedBy();
-
-		validateBeforeConclude(assignmentId, requestedEmployeeId);
-		// Save the form first
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		phaseAssessmentHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
 		phaseAssessmentHeaderDto.setStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.getCode());
 		ValidationUtil.validate(phaseAssessmentHeaderDto);
 		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessmentHeaderDto);
 		PhaseAssessHeader saved = phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		System.out.println(saved);
+		employeePhaseAssignment.setStatus(saved.getStatus());
+		// Move assignment to next status
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
+	}
+
+	@Transactional
+	@PreSecureAssignment(permitManager=true)
+	public void reviewAndConclude(long assignmentId, int requestedEmployeeId,
+			PhaseAssessHeaderDto phaseAssessmentHeaderDto) throws ServiceException {
+		// Save the form first
+		review(assignmentId, requestedEmployeeId, phaseAssessmentHeaderDto);
 		// CONCLUDE the assignment
 		conclude(assignmentId, requestedEmployeeId);
 	}
 
 	@Transactional
+	@PreSecureAssignment(permitManager=true)
 	public void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		validateBeforeConclude(assignmentId, requestedEmployeeId);
-
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+
+		// Check the latest assessment. Status must be self-appraisal pending.
 		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
+		if (latestHeader == null) {
+			throw new ServiceException("The assessment form is not in a state to CONCLUDE now.");
+		}
+		PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
+		if (latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
+			throw new ServiceException("CONCLUDE can only be done when the manager review is completed.");
+		}
 
 		// Change assignment status to CONCLUDED
 		boolean changed = managerAssignmentRepository.changeStatus(assignmentId, PhaseAssignmentStatus.CONCLUDED.getCode());
 		if (!changed) {
 			throw new ServiceException("Unable to CONCLUDE this assignment");
 		}
-		employeePhaseAssignment = phaseAssignmentDataRepository
-				.findByPhaseIdAndEmployeeIdAndStatus(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(), PhaseAssignmentStatus.CONCLUDED.getCode());
+		employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(
+				employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(), PhaseAssignmentStatus.CONCLUDED.getCode());
 
 		// Change last assessment status to CONCLUDED
 		latestHeader.setStatus(PhaseAssignmentStatus.CONCLUDED.getCode());
@@ -214,27 +203,6 @@ public class PhaseAssessmentService {
 		cycleAssessmentService.abridge(employeePhaseAssignment.getEmployeeId());
 		// email trigger
 		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(),requestedEmployeeId,employeePhaseAssignment.getEmployeeId());
-	}
-
-	private void validateBeforeConclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-		if (employeePhaseAssignment == null) {
-			throw new ServiceException("No such assignment");
-		}
-		// Can be saved by the same person whom it has been assigned to.
-		int assignedBy = employeePhaseAssignment.getAssignedBy();
-		if (requestedEmployeeId != assignedBy) {
-			throw new ServiceException("Assignment can only be concluded by the manager to whom its been assigned to");
-		}
-		// Check the latest assessment. Status must be self-appraisal pending.
-		PhaseAssessHeader latestHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		if (latestHeader == null) {
-			throw new ServiceException("The assessment form is not in a state to CONCLUDE now.");
-		}
-		PhaseAssignmentStatus latestStatus = PhaseAssignmentStatus.get(latestHeader.getStatus());
-		if (latestStatus != PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-			throw new ServiceException("CONCLUDE can only be done when the manager review is completed.");
-		}
 	}
 
 }
