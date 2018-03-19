@@ -75,7 +75,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="AssignToAnotherManager" class="btn btn-primary waves-effect">Assign</button>
-						<button type="button" id="AssignToNextManager" class="btn btn-primary waves-effect">Assign</button>
+						<button type="button" id="SubmitToNextLevelManager" class="btn btn-primary waves-effect">Assign</button>
 						<button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">Close</button>
 					</div>
 				</div>
@@ -132,12 +132,12 @@ $(function () {
 	var type=$invoker.attr('item-type');
 	if (type == 'AssignToAnotherManager') {
 	  $('#AssignToAnotherManager').show();
-	  $('#AssignToNextManager').hide();
+	  $('#SubmitToNextLevelManager').hide();
 	  $('#EmployeeSearchModalLabel').text('Assign To Another Manager');
-	} else if (type == 'AssignToNextManager') {
+	} else if (type == 'SubmitToNextLevelManager') {
 	  $('#AssignToAnotherManager').hide();
-	  $('#AssignToNextManager').show();
-	  $('#EmployeeSearchModalLabel').text('Assign To Next Manager');
+	  $('#SubmitToNextLevelManager').show();
+	  $('#EmployeeSearchModalLabel').text('Assign To Next Level Manager');
 	}
     $($.fn.dataTable.tables( true )).css('width', '100%');
     $($.fn.dataTable.tables( true )).DataTable().columns.adjust().draw();
@@ -180,7 +180,7 @@ $(function () {
     }
   });
 
-  $('#AssignToNextManager').click(function() {
+  $('#SubmitToNextLevelManager').click(function() {
 	var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
     if (SelectedManagerId) {
       $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/cycle-assign/' + assignmentId + '/' + SelectedManagerId});

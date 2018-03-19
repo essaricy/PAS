@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
-import com.softvision.ipm.pms.assign.service.ManagerCycleAssignmentService;
-import com.softvision.ipm.pms.assign.service.ManagerPhaseAssignmentService;
+import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 
@@ -24,13 +23,11 @@ public class ManagerAssignmentRest {
 
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
-	@Autowired private ManagerPhaseAssignmentService managerPhaseAssignmentService;
-
-	@Autowired private ManagerCycleAssignmentService managerCycleAssignmentService;
+	@Autowired private ManagerAssignmentService managerAssignmentService;
 
 	@RequestMapping(value="list", method=RequestMethod.GET)
     public List<ManagerCycleAssignmentDto> getAllCycles() {
-		return managerPhaseAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
+		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
     }
 
 	@RequestMapping(value="change/phase-assign/{phaseAssignId}/{toEmployeeId}", method=RequestMethod.PUT)
@@ -39,7 +36,7 @@ public class ManagerAssignmentRest {
 			@PathVariable(required=true) @Min(1) int toEmployeeId) {
 		Result result = new Result();
 		try {
-			managerPhaseAssignmentService.assignPhaseToAnotherManager(phaseAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
+			managerAssignmentService.assignPhaseToAnotherManager(phaseAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -54,7 +51,7 @@ public class ManagerAssignmentRest {
 			@PathVariable(required=true) @Min(1) long phaseAssignId) {
 		Result result = new Result();
 		try {
-			managerPhaseAssignmentService.enablePhaseAppraisal(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			managerAssignmentService.enablePhaseAppraisal(phaseAssignId, RestUtil.getLoggedInEmployeeId());
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -79,12 +76,13 @@ public class ManagerAssignmentRest {
     }
 
 	@RequestMapping(value="change/cycle-assign/{cycleAssignId}/{toEmployeeId}", method=RequestMethod.PUT)
-	public Result assignCycleToAnotherManager(
+	public Result assignCycleToNextLevelManager(
 			@PathVariable(name="cycleAssignId", required=true) @Min(1) long cycleAssignId,
 			@PathVariable(name="toEmployeeId", required=true) @Min(1) int toEmployeeId) {
 		Result result = new Result();
 		try {
-			managerCycleAssignmentService.assignCycleToNextManager(cycleAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
+			managerAssignmentService.assignCycleToNextLevelManager(
+					cycleAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

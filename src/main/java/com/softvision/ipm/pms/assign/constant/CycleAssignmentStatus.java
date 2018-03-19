@@ -7,13 +7,9 @@ public enum CycleAssignmentStatus {
 
 	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
 
-	ABRIDGED(10, "Abridged", "Phases summarized and cycle assessment available"),
+	ABRIDGED(100, "Abridged", "Phases summarized and cycle assessment available"),
 
-	MANAGER_REVIEW_PENDING(20, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
-
-	MANAGER_REVIEW_SAVED(30, "Review Saved", "Manager review is saved but not concluded"),
-
-	CONCLUDED(40, "Concluded", "Assessment is concluded");
+	CONCLUDED(500, "Concluded", "Assessment is concluded");
 
 	private int code;
 

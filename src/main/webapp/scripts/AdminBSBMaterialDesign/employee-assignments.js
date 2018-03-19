@@ -129,14 +129,6 @@ $(function () {
       var id=ea.assignmentId;
       var td=$('<td>');
       $(td).append('&nbsp;');
-
-      /*if (status == CycleAssignmentStatus.NOT_INITIATED.code) {
-      	$(td).append('&nbsp;');
-      } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
-      	$(td).append(getAssignToNextManagerButton('cycle', id));
-      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-        $(td).append(getFillReviewButton('cycle', id));
-      }*/
       return td;
     }
 

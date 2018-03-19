@@ -7,15 +7,15 @@ public enum PhaseAssignmentStatus {
 
 	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
 
-	SELF_APPRAISAL_PENDING(10, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
+	SELF_APPRAISAL_PENDING(100, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
 
-	SELF_APPRAISAL_SAVED(20, "Self-Appraisal drafted", "Self-Appraisal is saved but not submitted"),
+	SELF_APPRAISAL_SAVED(200, "Self-Appraisal drafted", "Self-Appraisal is saved but not submitted"),
 
-	MANAGER_REVIEW_PENDING(30, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
+	MANAGER_REVIEW_PENDING(300, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
-	MANAGER_REVIEW_SAVED(40, "Review Saved", "Manager review is saved but not concluded"),
+	MANAGER_REVIEW_SAVED(400, "Review Saved", "Manager review is saved but not concluded"),
 
-	CONCLUDED(50, "Concluded", "Assessment is concluded");
+	CONCLUDED(500, "Concluded", "Assessment is concluded");
 
 	private int code;
 

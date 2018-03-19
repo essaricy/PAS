@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softvision.ipm.pms.assess.model.CycleAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
@@ -75,7 +74,6 @@ public class AssessmentRest {
 		Result result = new Result();
 		try {
 			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
-			//phaseAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
 			phaseAssessmentHeader.setAssessDate(new Date());
 			if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
 				phaseAssessmentService.save(requestedEmployeeId, phaseAssessmentHeader);
@@ -94,37 +92,5 @@ public class AssessmentRest {
 		}
 		return result;
     }
-
-	@RequestMapping(value="cycle/review", method=RequestMethod.POST)
-	public Result review(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
-		Result result = new Result();
-		try {
-			cycleAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
-			cycleAssessmentHeader.setAssessDate(new Date());
-			cycleAssessmentService.review(cycleAssessmentHeader);
-			result.setCode(Result.SUCCESS);
-		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-			result.setContent(exception);
-		}
-		return result;
-	}
-
-	@RequestMapping(value="cycle/conclude", method=RequestMethod.POST)
-	public Result conclude(@RequestBody(required = true) @NotNull CycleAssessHeaderDto cycleAssessmentHeader) {
-		Result result = new Result();
-		try {
-			cycleAssessmentHeader.setAssessedBy(RestUtil.getLoggedInEmployeeId());
-			cycleAssessmentHeader.setAssessDate(new Date());
-			cycleAssessmentService.reviewAndConclude(cycleAssessmentHeader);
-			result.setCode(Result.SUCCESS);
-		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-			result.setContent(exception);
-		}
-		return result;
-	}
 
 }

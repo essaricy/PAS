@@ -132,13 +132,7 @@ $(function () {
       if (status == CycleAssignmentStatus.NOT_INITIATED.code) {
     	$(td).append('&nbsp;');
       } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
-    	$(td).append(getAssignToNextManagerButton('cycle', id));
-      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-        $(td).append(getFillReviewButton('cycle', id));
-      } else if (status == CycleAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	$(td).append(getFillReviewButton('cycle', id));
-    	$(td).append('&nbsp;');
-    	$(td).append(getConcludeButton('cycle', id));
+    	$(td).append(getUpRootButton('cycle', id));
       } else if (status == CycleAssignmentStatus.CONCLUDED.code) {
     	$(td).append(getViewFormButton('cycle', id));
       }
@@ -169,11 +163,11 @@ $(function () {
     	return td;
       }
 
-      function getAssignToNextManagerButton(type, id) {
-        var assignToNextManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
-          'title="Assign to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
-          'item-id="' + id + '" item-type="AssignToNextManager"><i class="material-icons">call_merge</i></button>');
-  		return assignToNextManagerButton;
+      function getUpRootButton(type, id) {
+        var submitToNextLevelManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
+          'title="Submit to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
+          'item-id="' + id + '" item-type="SubmitToNextLevelManager"><i class="material-icons">call_merge</i></button>');
+  		return submitToNextLevelManagerButton;
       }
 
       function getAssignToManagerButton(type, id) {
