@@ -87,7 +87,7 @@ $(function () {
       $(divRow).append(table);
       $(table).append(thead);
       $(thead).append(headRow);
-      $(headRow).append('<th>Competency Assessment</th>');
+      $(headRow).append('<th>Goal</th>');
       $(headRow).append('<th>Weightage [%]</th>');
       $(table).append(tbody);
       $(table).append(tfoot);

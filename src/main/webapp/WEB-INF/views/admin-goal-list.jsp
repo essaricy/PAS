@@ -42,7 +42,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Competency Assessments
+        <h2>Goal Management
           <small>Add and update organization level competency assessments and parameters</small>
         </h2>
       </div>
@@ -51,7 +51,7 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
           <div class="card ca_card">
             <div class="header">
-              <h2>Competency Assessment</h2>
+              <h2>Goals</h2>
               <ul class="header-dropdown m-r--5">
                 <li class="dropdown">
                 </li>

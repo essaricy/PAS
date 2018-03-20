@@ -37,7 +37,7 @@ CREATE TABLE appr_phase (
 -- #######################################################
 -- Goals Module
 -- #######################################################
--- Competency Assessment
+-- Goal
 CREATE TABLE goal (
 	ID			SMALLINT NOT NULL,
 	NAME		VARCHAR(40) NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE goal (
 	CHECK (ID > 0),
 	CHECK (NAME <> '')
 );
--- Competency Assessment Parameters
+-- Goal Parameters
 CREATE TABLE goal_param (
 	ID			SMALLINT NOT NULL,
 	GOAL_ID		SMALLINT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE goal_param (
 -- #######################################################
 -- Template Module
 -- #######################################################
--- Competency Assessment Template
+-- Goal Template
 CREATE TABLE template (
 	ID			BIGINT NOT NULL,
 	NAME		VARCHAR(100) NOT NULL,

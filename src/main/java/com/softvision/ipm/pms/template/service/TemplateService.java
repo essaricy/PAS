@@ -53,7 +53,7 @@ public class TemplateService {
 	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
 			if (templateDto == null) {
-				throw new ServiceException("Competency Assessment information is not provided.");
+				throw new ServiceException("Template information is not provided.");
 			}
 			ValidationUtil.validate(templateDto);
 

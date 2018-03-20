@@ -46,7 +46,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Assign Competency Assessment Templates to Employees
+        <h2>Assign Templates to Employees
           <small>Assign templates to employee(s)</small>
         </h2>
       </div>

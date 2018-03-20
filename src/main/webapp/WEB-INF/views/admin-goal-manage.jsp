@@ -43,27 +43,27 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Competency Assessment
-          <small>Add, Edit or Delete competency assessments or assessment parameters</small>
+        <h2>Goal
+          <small>Add, Edit or Delete goals or goal parameters</small>
         </h2>
       </div>
       <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
             <div class="header">
-              <h2>Manage Competency Assessment</h2>
+              <h2>Manage Goals</h2>
             </div>
             <div class="body">
-              <form id="Competency_Form" method="POST">
-                <h3>Create Competency</h3>
+              <form id="Goal_Form" method="POST">
+                <h3>Create Goal</h3>
                 <fieldset>
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
-                    <label for="Competency_Name">Competency Name</label>
+                    <label for="Goal_Name">Goal Name</label>
                   </div>
                   <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
                     <div class="form-group form-float">
                       <div class="form-line">
-		                <input type="text" id="Competency_Name" class="form-control" minlength="3" required >
+		                <input type="text" id="Goal_Name" class="form-control" minlength="3" required >
 		              </div>
 		            </div>
                   </div>
@@ -73,15 +73,15 @@
                   <div class="col-lg-10 col-md-10 col-sm-8 col-xs-6">
                     <div class="form-group">
                       <div class="form-line">
-                        <textarea id="CompetencyParam_Name" rows="2" class="form-control no-resize" placeholder="Please type what you want..."></textarea>
+                        <textarea id="GoalParam_Name" rows="2" class="form-control no-resize" placeholder="Please type what you want..."></textarea>
                       </div>
                     </div>
                   </div>
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                    <button type="button" id="CompetencyParam_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                    <button type="button" id="GoalParam_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
                   </div>
 
-                  <table id="CompetencyParam_Table" class="table table-striped">
+                  <table id="GoalParam_Table" class="table table-striped">
                     <thead>
                       <tr>
                         <th width="90%">Parameter</th>
@@ -135,17 +135,17 @@
 
   <script>
   $(function () {
-	var table = '#CompetencyParam_Table';
+	var table = '#GoalParam_Table';
     var id="${param.id}";
 
-    $('#Competency_Form').formValidator({
+    $('#Goal_Form').formValidator({
       onFinishing: function () {
         var goal={};
 	    var params=[];
 	    goal.id=id;
-	    goal.name=$('#Competency_Name').val();
+	    goal.name=$('#Goal_Name').val();
 
-     	$('#CompetencyParam_Table > tbody tr').each(function(index, row) {
+     	$('#GoalParam_Table > tbody tr').each(function(index, row) {
       	  var $tds = $(this).find('td')
           var param={};
       	  param.id=$tds.eq(0).attr('item-id');
@@ -163,7 +163,7 @@
       $.get(url, {sid: new Date().getTime()}, function() {})
       .done(function(result) {
         if (result) {
-	      $('#Competency_Name').val(result.name);
+	      $('#Goal_Name').val(result.name);
 	      $(result.params).each(function(index, param) {
 	    	appendRow(table, param);
 	      });
@@ -171,10 +171,10 @@
       });
     }
 
-    $('#CompetencyParam_Add').click(function() {
+    $('#GoalParam_Add').click(function() {
 	  // Validate the input fields
-	  appendRow(table, {id:0, name: ""+$('#CompetencyParam_Name').val(), applicable: 'Y'});
-   	  $('#CompetencyParam_Name').val('');
+	  appendRow(table, {id:0, name: ""+$('#GoalParam_Name').val(), applicable: 'Y'});
+   	  $('#GoalParam_Name').val('');
     });
 
     function appendRow(tableSelector, param) {

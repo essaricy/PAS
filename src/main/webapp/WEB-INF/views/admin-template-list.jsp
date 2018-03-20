@@ -42,7 +42,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Competency Assessment Templates
+        <h2>Goal Templates
           <small>Create or update the assessment templates that fits to your project or employee groups</small>
         </h2>
       </div>
@@ -64,14 +64,14 @@
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
           <div class="card template_header_card">
             <div class="header">
-              <h2>Competency Assessments</h2>
+              <h2>Goals</h2>
             </div>
             <div class="body">
             </div>
           </div>
           <div class="card template_detail_card">
             <div class="header">
-              <h2>Assessment Parameters</h2>
+              <h2>Goal Parameters</h2>
             </div>
             <div class="body">
             </div>
@@ -132,7 +132,7 @@ function renderTemplateInformation(template) {
   $(headerCard).find('.header h2').append('<small>Updated By <code>' + template.updatedBy + '</code> on ' + template.updatedAt +'</small>');
 
   var table=$('<table class="table table-striped">');
-  $(table).append('<thead><tr><th>Competency Assessment</th><th>Weightage</th></tr></thead>');
+  $(table).append('<thead><tr><th>Goal</th><th>Weightage</th></tr></thead>');
   var tbody=$('<tbody>');
   $(table).append(tbody);
   $(headerCard).find('.body').append(table);

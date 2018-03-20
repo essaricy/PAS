@@ -42,7 +42,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Appraisal Cycle Managemet
+        <h2>Appraisal Cycle Management
           <small>Add and update appraisal cycles and phases. Create Drafts, Kick Off or Complete Appraisal Cycle</small>
         </h2>
       </div>
