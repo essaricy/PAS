@@ -30,8 +30,8 @@ public class TemplateHeaderDto implements Serializable {
 	@NotBlank(message="Provide a name for template header")
 	private String goalName;
 
-	@Min(value=0, message="weightage must be greater than or equal to 0")
-	@Max(value=100, message="weightage must be less than or equal to 100")
+	@Min(value=0, message="weightage must be greater than or equal to {value}")
+	@Max(value=100, message="weightage must be less than or equal to {value}")
 	private int weightage;
 
 	@NotEmpty(message="At least one detail must be provided")

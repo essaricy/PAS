@@ -21,7 +21,7 @@ public class GoalParamDto implements Serializable {
 	private String name;
 
 	@NotBlank(message="Provide applicable flag for parameter")
-	@Pattern(regexp = "Y|N", flags = Pattern.Flag.CASE_INSENSITIVE)
+	@Pattern(regexp = "Y|N", flags = Pattern.Flag.CASE_INSENSITIVE, message="Allowed values for applicable are {regexp}")
 	private String applicable;
 
 	@Override

@@ -21,16 +21,16 @@ public class CycleAssessDetailDto implements Serializable {
 	@Min(0)
 	private long templateHeaderId;
 
-	@Min(value=0, message="Rating min value is 0")
-	@Max(value=5, message="Rating max value is 5")
+	@Min(value=0, message="Rating min value is {value}")
+	@Max(value=5, message="Rating max value is {value}")
 	private double rating;
 
 	@NotBlank(message="Comments are mandatory")
-	@Size(min=1, max=500, message="Comments must be between 1 and 500 characters")
+	@Size(min=1, max=500, message="Comments must be between {min} and {max} characters")
 	private String comments;
 
-	@Min(value=0, message="Score min value is 0")
-	@Max(value=5, message="Score max value is 5")
+	@Min(value=0, message="Score min value is {value}")
+	@Max(value=5, message="Score max value is {value}")
 	private double score;
 
 	@Override

@@ -24,7 +24,7 @@ public class TemplateDetailDto implements Serializable {
 	private String paramName;
 
 	@NotBlank(message="Provide applicable flag for parameter")
-	@Pattern(regexp = "Y|N", flags = Pattern.Flag.CASE_INSENSITIVE)
+	@Pattern(regexp = "Y|N", flags = Pattern.Flag.CASE_INSENSITIVE, message="apply must match {regexp}")
 	private String apply;
 
 	@Override
