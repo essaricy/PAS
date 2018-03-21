@@ -151,14 +151,16 @@ $(function () {
     	} else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
     			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
     	  $(td).append(getSendReminderButton('phase', id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-    	  $(td).append(getFillReviewButton('phase', id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	  $(td).append(getFillReviewButton('phase', id));
-    	  $(td).append('&nbsp;');
-    	  $(td).append(getConcludeButton('phase', id));
-    	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
+    			|| status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
+    	  $(td).append(getPerformReviewButton('phase', id));
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code
+    			|| status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
+    			|| status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code
+    			|| status == PhaseAssignmentStatus.CONCLUDED.code) {
     	  $(td).append(getViewFormButton('phase', id));
+    	} else {
+    	  $(td).append('-');
     	}
     	return td;
       }
@@ -188,12 +190,13 @@ $(function () {
       function getSendReminderButton(type, id) {
         var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
         $(reminderButton).click(function() {
+          sendReminderToSubmit(id);
   	    });
    	    return reminderButton;
       }
 
-      function getFillReviewButton(type, id) {
-    	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Review"><i class="material-icons">assignment</i></button>');
+      function getPerformReviewButton(type, id) {
+    	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Perform Review"><i class="material-icons">assignment</i></button>');
     	$(fillReviewButton).click(function() {
           location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
     	});
@@ -208,19 +211,11 @@ $(function () {
   	    return viewFormButton;
       }
 
-      function getConcludeButton(type, id) {
-        var concludeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Conclude"><i class="material-icons">assignment_turned_in</i></button>');
-        $(concludeButton).click(function() {
-          concludeAssignment(type, id);
-  	    });
-  	    return concludeButton;
-      }
-
       function enableSelfSubmission(type, id) {
         swal({
     	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-    		confirmButtonText: "Yes, Enable!", closeOnConfirm: false
+    		confirmButtonText: "Yes, Enable!", closeOnConfirm: true
     	}, function () {
     	  $.fn.ajaxPut({
     	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + id
@@ -228,21 +223,15 @@ $(function () {
         });
       }
 
-      function concludeAssignment(type, id) {
-        swal({
-    	  title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
-    	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-    		confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
-    	}, function () {
-    	  var url=null;
-    	  if (type == 'cycle') {
-    		url=settings.contextpath + '/assignment/manager/change/cycle-status/conclude/' + id
-    	  } else if (type == 'phase') {
-    		url=settings.contextpath + '/assignment/manager/change/phase-status/conclude/' + id
-    	  }
-    	  $.fn.ajaxPut({
-    	    url: url
-    	  });
+      function sendReminderToSubmit(type, id) {
+          swal({
+      	  title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
+      	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+      		confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: true
+      	}, function () {
+      	  $.fn.ajaxPut({
+      	    url: settings.contextpath + '/assignment/manager/reminder/tosubmit/' + id
+      	  });
         });
       }
 

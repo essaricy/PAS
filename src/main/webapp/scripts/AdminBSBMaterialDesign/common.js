@@ -1,16 +1,13 @@
 var PhaseAssignmentStatus={
-	NOT_INITIATED:
-		{code: 0, 	name: "Not Initiated", 			colorClass: "bg-grey", 			description: "Appraisal Form has not been initiated"},
-	SELF_APPRAISAL_PENDING: 
-		{code: 100, 	name: "Self-Appraisal Pending", colorClass: "bg-amber", 		description: "Initiated and self-appraisal is pending"},
-	SELF_APPRAISAL_SAVED: 
-		{code: 200, 	name: "Self-Appraisal Drafted", colorClass: "bg-orange", 		description: "self-appraisal is drafted"},
-	MANAGER_REVIEW_PENDING:
-		{code: 300, 	name: "Review Pending", 		colorClass: "bg-deep-orange", 	description: "Self-Appraisal is completed and manager review is pending"},
-	MANAGER_REVIEW_SAVED:
-		{code: 400, 	name: "Review Completed", 		colorClass: "bg-green", 		description: "Manager review is completed"},
-    CONCLUDED:
-		{code: 500, 	name: "Concluded", 				colorClass: "bg-deep-purple", 	description: "Assessment is concluded"},
+	NOT_INITIATED: 				{code: 0, 	name: "Not Initiated", 				colorClass: "bg-grey", 			description: "Appraisal Form has not been initiated"},
+	SELF_APPRAISAL_PENDING: 	{code: 50,	name: "Self-Appraisal Pending", 	colorClass: "bg-amber", 		description: "Initiated and self-appraisal is pending"},
+	SELF_APPRAISAL_SAVED: 		{code: 100,	name: "Self-Appraisal in Progess", 	colorClass: "bg-lime", 			description: "self-appraisal is drafted"},
+	MANAGER_REVIEW_PENDING:		{code: 150,	name: "Review Pending", 			colorClass: "bg-orange", 		description: "Self-Appraisal is completed and manager review is pending"},
+	MANAGER_REVIEW_SAVED:		{code: 200, name: "Review in Progress", 		colorClass: "bg-light-green", 	description: "Manager review is in progress"},
+	MANAGER_REVIEW_SUBMITTED:	{code: 250, name: "Reviewed", 					colorClass: "bg-indigo", 		description: "Manager review is completed"},
+	EMPLOYEE_AGREED:			{code: 300, name: "Agreed with Review",			colorClass: "bg-green", 		description: "Employee Agreed to the review"},
+	EMPLOYEE_ESCALATED:			{code: 350, name: "Escalated", 					colorClass: "bg-red", 			description: "Employee disagreed with the rating and escalated"},
+	CONCLUDED:					{code: 500,	name: "Concluded", 					colorClass: "bg-green", 		description: "Assessment is concluded"},
 };
 
 var CycleAssignmentStatus={

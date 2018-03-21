@@ -137,47 +137,65 @@ $(function () {
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+          var phaseAssessHeader=phaseAssessHeaders[0];
     	  phaseAssessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-        if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+    	  var phaseAssessHeader=phaseAssessHeaders[0];
     	  phaseAssessHeader.render=getSelfRatingRenderer(false);
-        } else if (role == 'Manager') {
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
-
+        if (role == 'Manager') {
           phaseAssessHeader=getBlankPhaseAssessHeader();
        	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
        	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
      	  assignment.render.buttons.push('Save Review');
-     	  assignment.render.buttons.push('Conclude');
+     	  assignment.render.buttons.push('Submit Review');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-        if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[0];
-          phaseAssessHeader.render=getSelfRatingRenderer(false);
-
-          var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getManagerRatingRenderer(false);
-        } else if (role == 'Manager') {
-          var phaseAssessHeader=phaseAssessHeaders[0];
-      	  phaseAssessHeader.render=getSelfRatingRenderer(false);
-
+        var phaseAssessHeader=phaseAssessHeaders[0];
+        phaseAssessHeader.render=getSelfRatingRenderer(false);
+        if (role == 'Manager') {
           phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
       	  phaseAssessHeader.render=getManagerRatingRenderer(true);
 
       	  assignment.render.buttons.push('Save Review');
-       	  assignment.render.buttons.push('Conclude');
+       	  assignment.render.buttons.push('Submit Review');
         }
-      } else if (status == PhaseAssignmentStatus.CONCLUDED) {
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
+    	var phaseAssessHeader=phaseAssessHeaders[0];
+    	phaseAssessHeader.render=getSelfRatingRenderer(false);
+
+    	var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+    	phaseAssessHeader.render=getManagerRatingRenderer(false);
+        
+    	if (role == 'Employee') {
+          assignment.render.buttons.push('Agree');
+          assignment.render.buttons.push('Disagree');
+        } else if (role == 'Manager') {
+        }
+      } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED
+    		  || status == PhaseAssignmentStatus.CONCLUDED) {
         var phaseAssessHeader=phaseAssessHeaders[0];
         phaseAssessHeader.render=getSelfRatingRenderer(false);
 
+        phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+        phaseAssessHeader.render=getManagerRatingRenderer(false);
+      } else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
+        var phaseAssessHeader=phaseAssessHeaders[0];
+        phaseAssessHeader.render=getSelfRatingRenderer(false);
+
+        if (role == 'Employee') {
+          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+          phaseAssessHeader.render=getManagerRatingRenderer(false);
+          assignment.render.buttons.push('Agree');
+        } else if (role == 'Manager') {
+          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
+          phaseAssessHeader.render=getManagerRatingRenderer(true);
+
+          assignment.render.buttons.push('Update Review');
+        }
         phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
         phaseAssessHeader.render=getManagerRatingRenderer(false);
       }
@@ -376,23 +394,37 @@ $(function () {
       } else if(buttonName=='Submit') {
     	url=options.contextPath + '/assessment/phase/submit';
     	swal({
-          title: "Are you sure?", text: "Do you want want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
+          title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: true
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
    	  } else if(buttonName=='Save Review') {
-   		//reivewAppraisalForm();
-   		url=options.contextPath + '/assessment/phase/review';
+   		url=options.contextPath + '/assessment/phase/save-review';
    		$.fn.ajaxPost({ url: url, data: currentForm });
-      } else if(buttonName=='Conclude') {
+      } else if(buttonName=='Submit Review') {
+    	url=options.contextPath + '/assessment/phase/submit-review';
     	swal({
-          title: "Are you sure?", text: "Do you want to conclude this assignment? This cannot be undone!!!", type: "warning",
-            showCancelButton: true, confirmButtonColor: "#DD6B55",
-        	confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
+          title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
+          showCancelButton: true, confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: true
         }, function () {
-       	  url=options.contextPath + '/assessment/phase/conclude';
+          $.fn.ajaxPost({ url: url, data: currentForm });
+        });
+   	  } else if(buttonName=='Agree') {
+   		url=options.contextPath + '/assessment/phase/agree';
+   		$.fn.ajaxPost({ url: url, data: currentForm });
+      } else if(buttonName=='Disagree') {
+   		url=options.contextPath + '/assessment/phase/disagree';
+   		$.fn.ajaxPost({ url: url, data: currentForm });
+      } else if(buttonName=='Update Review') {
+    	swal({
+          title: "Are you sure?", text: "Do you want to update the review?", type: "warning",
+            showCancelButton: true, confirmButtonColor: "#DD6B55",
+        	confirmButtonText: "Yes, Update!", closeOnConfirm: true
+        }, function () {
+       	  url=options.contextPath + '/assessment/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       }

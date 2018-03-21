@@ -158,7 +158,7 @@ public class CycleAssessmentService {
 		cycleAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
 
 		List<CycleAssessHeader> cycleAssessHeaders = cycleAssessmentHeaderDataRepository.findByAssignIdOrderByStatusAsc(assignmentId);
-		cycleAssessment.setCycleAssessmentHeaders(CycleAssessmentAssembler.getCycleAssessHeaderDtos(cycleAssessHeaders));
+		cycleAssessment.setCycleAssessHeaders(CycleAssessmentAssembler.getCycleAssessHeaderDtos(cycleAssessHeaders));
 		return cycleAssessment;
 	}
 

@@ -7,13 +7,19 @@ public enum PhaseAssignmentStatus {
 
 	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
 
-	SELF_APPRAISAL_PENDING(100, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
+	SELF_APPRAISAL_PENDING(50, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
 
-	SELF_APPRAISAL_SAVED(200, "Self-Appraisal drafted", "Self-Appraisal is saved but not submitted"),
+	SELF_APPRAISAL_SAVED(100, "Self-Appraisal in Progess", "Self-Appraisal is saved but not submitted"),
 
-	MANAGER_REVIEW_PENDING(300, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
+	MANAGER_REVIEW_PENDING(150, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
-	MANAGER_REVIEW_SAVED(400, "Review Saved", "Manager review is saved but not concluded"),
+	MANAGER_REVIEW_SAVED(200, "Review in Progress", "Manager review is saved but not concluded"),
+
+	MANAGER_REVIEW_SUBMITTED(250, "Reviewed", "Manager review is completed and awaiting employee agreement"),
+
+	EMPLOYEE_AGREED(300, "Agreed with Review", "Employee Agreed to the review"),
+
+	EMPLOYEE_ESCALATED(350, "Escalated", "Employee disagreed with the review and escalated"),
 
 	CONCLUDED(500, "Concluded", "Assessment is concluded");
 
@@ -21,14 +27,11 @@ public enum PhaseAssignmentStatus {
 
 	private String name;
 
-	private String title;
-
 	private String description;
 
-	private PhaseAssignmentStatus(int code, String title, String desciption) {
+	private PhaseAssignmentStatus(int code, String name, String desciption) {
 		this.code=code;
-		this.name=this.toString();
-		this.title=title;
+		this.name=name;
 		this.description=desciption;
 	}
 
@@ -38,10 +41,6 @@ public enum PhaseAssignmentStatus {
 
 	public String getName() {
 		return name;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public String getDescription() {
@@ -57,11 +56,14 @@ public enum PhaseAssignmentStatus {
 		return null;
 	}
 
+	public static PhaseAssignmentStatus getNext(PhaseAssignmentStatus status) {
+		return getNext(status.getCode());
+	}
+
 	public static PhaseAssignmentStatus getNext(int currentCode) {
 		PhaseAssignmentStatus next=null;
 		for (PhaseAssignmentStatus status : values()) {
 			if (status.getCode() > currentCode) {
-				//return status;
 				if (next == null || status.getCode() < next.getCode()) {
 					next=status;
 					continue;
@@ -71,7 +73,24 @@ public enum PhaseAssignmentStatus {
 		return next;
 	}
 
-	public static PhaseAssignmentStatus getNext(PhaseAssignmentStatus status) {
-		return getNext(status.getCode());
+	public static PhaseAssignmentStatus getPrevious(PhaseAssignmentStatus status) {
+		return getPrevious(status.getCode());
+	}
+
+	public static PhaseAssignmentStatus getPrevious(int currentCode) {
+		PhaseAssignmentStatus previous=null;
+		for (PhaseAssignmentStatus status : values()) {
+			if (status.getCode() < currentCode) {
+				if (previous == null || status.getCode() > previous.getCode()) {
+					previous=status;
+					continue;
+				}
+			}
+		}
+		return previous;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(getPrevious(PhaseAssignmentStatus.EMPLOYEE_AGREED));
 	}
 }

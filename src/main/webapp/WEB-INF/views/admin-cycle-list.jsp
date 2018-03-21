@@ -177,7 +177,7 @@ function activate(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to activate this appraisal cycle?", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Activate!", closeOnConfirm: false
+    confirmButtonText: "Yes, Activate!", closeOnConfirm: true
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
   });
@@ -186,7 +186,7 @@ function complete(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to complete this appraisal cycle? Please make sure that al eligible employees have completed thier appraisals.", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Complete!", closeOnConfirm: false
+    confirmButtonText: "Yes, Complete!", closeOnConfirm: true
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
   });

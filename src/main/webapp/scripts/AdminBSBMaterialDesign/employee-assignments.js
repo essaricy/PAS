@@ -137,17 +137,26 @@ $(function () {
     	var id=ea.assignmentId;
     	var td=$('<td>');
 
-    	if (status == PhaseAssignmentStatus.NOT_INITIATED.code) {
-    	  $(td).append('-');
-    	} else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
+    	if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
     			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
     	  $(td).append(getFillFormButton(id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
-    	  $(td).append(getViewFormButton(id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-    	  $(td).append(getViewFormButton(id));
-    	} else if (status == PhaseAssignmentStatus.CONCLUDED.code) {
-    	  $(td).append(getViewFormButton(id));
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
+    			|| status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code
+    			|| status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
+    			|| status == PhaseAssignmentStatus.CONCLUDED.code) {
+    	  $(td).append(getViewFormButton('phase', id));
+    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code) {
+    	  $(td).append(getViewFormButton('phase', id));
+      	  $(td).append('&nbsp;');
+      	  $(td).append(getAgreeReviewButton(id));
+    	  $(td).append('&nbsp;');
+    	  $(td).append(getEscalateReviewButton(id));
+    	} else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code) {
+    	  $(td).append(getViewFormButton('phase', id));
+    	  $(td).append('&nbsp;');
+    	  $(td).append(getAgreeReviewButton(id));
+    	} else {
+    	  $(td).append('-');
     	}
     	return td;
       }
@@ -160,12 +169,54 @@ $(function () {
   	    return fillFormButton;
       }
 
-      function getViewFormButton(id) {
+      function getViewFormButton(type, id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
         $(viewFormButton).click(function() {
-          location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
+          location.href=settings.contextPath + '/employee/assessment/' + type + '?aid=' + id;
   	    });
   	    return viewFormButton;
+      }
+
+      function getAgreeReviewButton(id) {
+        var agreeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Agree"><i class="material-icons">sentiment_very_satisfied</i></button>');
+        $(agreeButton).click(function() {
+          agreeReview(type, id);
+  	    });
+   	    return agreeButton;
+      }
+
+      function getEscalateReviewButton(id) {
+        var escalateButton=$('<button class="btn btn-xs btn-info waves-effect" title="Escalate"><i class="material-icons">sentiment_very_dissatisfied</i></button>');
+        $(escalateButton).click(function() {
+          escalateReview(type, id);
+  	    });
+   	    return escalateButton;
+      }
+
+      function agreeReview(type, id) {
+          swal({
+      	  title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
+      	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+      		confirmButtonText: "Yes, Agree!", closeOnConfirm: true
+      	}, function () {
+      	  var url=settings.contextpath + '/assignment/employee/change/phase-status/agree/' + id
+      	  $.fn.ajaxPut({
+      	    url: url
+      	  });
+        });
+      }
+
+      function escalateReview(type, id) {
+          swal({
+      	  title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
+      	    showCancelButton: true, confirmButtonColor: "#DD6B55",
+      		confirmButtonText: "Yes, Escalate!", closeOnConfirm: true
+      	}, function () {
+      	  var url=settings.contextpath + '/assignment/employee/change/phase-status/escalate/' + id
+      	  $.fn.ajaxPut({
+      	    url: url
+      	  });
+        });
       }
 
       function onErrorAssignedEmployees(error) {

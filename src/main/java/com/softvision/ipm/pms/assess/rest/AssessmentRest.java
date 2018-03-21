@@ -48,41 +48,85 @@ public class AssessmentRest {
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
-	public Result savePhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
+	public Result save(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
     }
 
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
-	public Result submitPhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
+	public Result submit(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
-	@RequestMapping(value="phase/review", method=RequestMethod.POST)
-	public Result reviewPhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
+	@RequestMapping(value="phase/save-review", method=RequestMethod.POST)
+	public Result saveReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
-
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
-	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
-	public Result concludePhase(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessmentHeader) {
-		return changePhaseStatus(phaseAssessmentHeader, PhaseAssignmentStatus.CONCLUDED);
+	@RequestMapping(value="phase/submit-review", method=RequestMethod.POST)
+	public Result submitReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
 	}
 
-	public Result changePhaseStatus(PhaseAssessHeaderDto phaseAssessmentHeader, PhaseAssignmentStatus status) {
+	@RequestMapping(value="phase/agree", method=RequestMethod.POST)
+	public Result agree(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.EMPLOYEE_AGREED);
+	}
+
+	@RequestMapping(value="phase/disagree", method=RequestMethod.POST)
+	public Result disgree(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
+	}
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+	@RequestMapping(value="phase/update-review", method=RequestMethod.POST)
+	public Result updateReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
 		Result result = new Result();
 		try {
+			if (phaseAssessHeader == null) {
+				throw new ServiceException("Assessment information is missing");
+			}
+			long assignId = phaseAssessHeader.getAssignId();
+			if (assignId == 0) {
+				throw new ServiceException("Invalid assignment");
+			}
 			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
-			phaseAssessmentHeader.setAssessDate(new Date());
+			phaseAssessHeader.setAssessDate(new Date());
+			phaseAssessmentService.updateReview(assignId, requestedEmployeeId, phaseAssessHeader);
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			result.setContent(exception);
+		}
+		return result;
+    }
+
+	public Result changePhaseStatus(PhaseAssessHeaderDto phaseAssessHeader, PhaseAssignmentStatus status) {
+		Result result = new Result();
+		try {
+			if (phaseAssessHeader == null) {
+				throw new ServiceException("Assessment information is missing");
+			}
+			long assignId = phaseAssessHeader.getAssignId();
+			if (assignId == 0) {
+				throw new ServiceException("Invalid assignment");
+			}
+			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
+			phaseAssessHeader.setAssessDate(new Date());
 			if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
-				phaseAssessmentService.save(requestedEmployeeId, phaseAssessmentHeader);
+				phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
 			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-				phaseAssessmentService.submit(requestedEmployeeId, phaseAssessmentHeader);
+				phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
 			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-				phaseAssessmentService.review(requestedEmployeeId, phaseAssessmentHeader);
-			} else if (status == PhaseAssignmentStatus.CONCLUDED) {
-				phaseAssessmentService.reviewAndConclude(requestedEmployeeId, phaseAssessmentHeader);
+				phaseAssessmentService.saveReview(assignId, requestedEmployeeId, phaseAssessHeader);
+			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
+				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, phaseAssessHeader);
+			} else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED) {
+				phaseAssessmentService.agree(assignId, requestedEmployeeId);
+			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
+				phaseAssessmentService.escalate(assignId, requestedEmployeeId);
 			}
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
