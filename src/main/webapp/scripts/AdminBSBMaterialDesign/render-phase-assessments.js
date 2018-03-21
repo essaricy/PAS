@@ -35,7 +35,7 @@ $(function () {
       phase=result.phase;
       templateHeaders=result.templateHeaders;
   	  status=getPhaseAssignmentStatus(assignment.status);
-  	  phaseAssessHeaders=result.phaseAssessmentHeaders;
+  	  phaseAssessHeaders=result.phaseAssessHeaders;
 	}
 
 	function renderAssessments() {
@@ -143,8 +143,8 @@ $(function () {
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-    	  var phaseAssessHeader=phaseAssessHeaders[0];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(false);
+    	var phaseAssessHeader=phaseAssessHeaders[0];
+    	phaseAssessHeader.render=getSelfRatingRenderer(false);
         if (role == 'Manager') {
           phaseAssessHeader=getBlankPhaseAssessHeader();
        	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
@@ -196,8 +196,6 @@ $(function () {
 
           assignment.render.buttons.push('Update Review');
         }
-        phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-        phaseAssessHeader.render=getManagerRatingRenderer(false);
       }
     }
 
@@ -214,7 +212,7 @@ $(function () {
        	var renderScore=render.score;
        	
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderRating.name + '</th>');
-        $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderComments.name + '</th>');
+        $(thead).find('th:last').after('<th class="' + status.colorClass + '" style="width: 300px; word-break: break-all;">' + renderComments.name + '</th>');
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderScore.name + '</th>');
 
         $(tbody).find('tr').each(function (index, row) {
@@ -298,7 +296,7 @@ $(function () {
       var property=commentsParams.property;
       var value=data[property];
 
-   	  var commentsTd=$('<td>');
+   	  var commentsTd=$('<td style="width: 300px; word-break: break-all;">');
    	  if (enable) {
         var comments=$('<textarea class="' + cClass + '" rows="6" cols="30" maxlength="500">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
@@ -396,7 +394,7 @@ $(function () {
     	swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit!", closeOnConfirm: true
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
@@ -408,21 +406,33 @@ $(function () {
     	swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit!", closeOnConfirm: true
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
    	  } else if(buttonName=='Agree') {
-   		url=options.contextPath + '/assessment/phase/agree';
-   		$.fn.ajaxPost({ url: url, data: currentForm });
+   		swal({
+          title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
+          showCancelButton: true, confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, Agree!", closeOnConfirm: false
+        }, function () {
+        	url=options.contextPath + '/assessment/phase/agree';
+        	$.fn.ajaxPost({ url: url, data: currentForm });
+        });
       } else if(buttonName=='Disagree') {
-   		url=options.contextPath + '/assessment/phase/disagree';
-   		$.fn.ajaxPost({ url: url, data: currentForm });
+        swal({
+       	  title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
+          showCancelButton: true, confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
+       	}, function () {
+   		  url=options.contextPath + '/assessment/phase/disagree';
+       	  $.fn.ajaxPost({ url: url, data: currentForm });
+        });
       } else if(buttonName=='Update Review') {
     	swal({
           title: "Are you sure?", text: "Do you want to update the review?", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-        	confirmButtonText: "Yes, Update!", closeOnConfirm: true
+        	confirmButtonText: "Yes, Update!", closeOnConfirm: false
         }, function () {
        	  url=options.contextPath + '/assessment/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });

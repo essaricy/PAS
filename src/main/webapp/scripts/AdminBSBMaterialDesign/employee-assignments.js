@@ -191,7 +191,7 @@ $(function () {
         var agreeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Agree with the review"><i class="material-icons">sentiment_very_satisfied</i></button>');
         $(agreeButton).tooltip({container: 'body'});
         $(agreeButton).click(function() {
-          agreeReview(type, id);
+          agreeReview(id);
   	    });
    	    return agreeButton;
       }
@@ -200,31 +200,31 @@ $(function () {
         var escalateButton=$('<button class="btn btn-xs btn-info waves-effect" title="Disagree with the review"><i class="material-icons">sentiment_very_dissatisfied</i></button>');
         $(escalateButton).tooltip({container: 'body'});
         $(escalateButton).click(function() {
-          escalateReview(type, id);
+          escalateReview(id);
   	    });
    	    return escalateButton;
       }
 
-      function agreeReview(type, id) {
-          swal({
+      function agreeReview(id) {
+        swal({
       	  title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
       	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-      		confirmButtonText: "Yes, Agree!", closeOnConfirm: true
+      		confirmButtonText: "Yes, Agree!", closeOnConfirm: false
       	}, function () {
-      	  var url=settings.contextpath + '/assignment/employee/change/phase-status/agree/' + id
+      	  var url=settings.contextPath + '/assignment/employee/change/phase-status/agree/' + id
       	  $.fn.ajaxPut({
       	    url: url
       	  });
         });
       }
 
-      function escalateReview(type, id) {
-          swal({
+      function escalateReview(id) {
+        swal({
       	  title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
       	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-      		confirmButtonText: "Yes, Escalate!", closeOnConfirm: true
+      		confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
       	}, function () {
-      	  var url=settings.contextpath + '/assignment/employee/change/phase-status/escalate/' + id
+      	  var url=settings.contextPath + '/assignment/employee/change/phase-status/escalate/' + id
       	  $.fn.ajaxPut({
       	    url: url
       	  });

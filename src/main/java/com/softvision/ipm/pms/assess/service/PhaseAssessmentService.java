@@ -78,7 +78,7 @@ public class PhaseAssessmentService {
 			if (requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
 				phaseAssessHeaders.remove(phaseAssessHeaders.size() - 1);
 			}
-		} else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
+		} else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			// remove the top phase header if its requested by the employee
 			if (requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
 				phaseAssessHeaders.remove(phaseAssessHeaders.size() - 1);
@@ -143,7 +143,7 @@ public class PhaseAssessmentService {
 	public void submitReview(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
 		update(phaseAssessHeaderDto, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, "submit",
-				PhaseAssignmentStatus.SELF_APPRAISAL_PENDING, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
+				PhaseAssignmentStatus.MANAGER_REVIEW_PENDING, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 		// TODO Email Trigger
 		/*
 		 * emailRepository.sendManagerSubmitMail(employeePhaseAssignment.getPhaseId(),
@@ -183,7 +183,7 @@ public class PhaseAssessmentService {
 	}
 
 	@Transactional
-	@PreSecureAssignment(permitEmployee=true)
+	@PreSecureAssignment(permitManager=true)
 	public void updateReview(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
 		update(phaseAssessHeaderDto, PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "update review",

@@ -124,7 +124,7 @@ public class AssessmentRest {
 				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, phaseAssessHeader);
 			} else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED) {
 				phaseAssessmentService.agree(assignId, requestedEmployeeId);
-			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
+			} else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
 				phaseAssessmentService.escalate(assignId, requestedEmployeeId);
 			}
 			result.setCode(Result.SUCCESS);

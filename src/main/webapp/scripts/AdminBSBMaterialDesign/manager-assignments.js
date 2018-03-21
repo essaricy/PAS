@@ -228,7 +228,7 @@ $(function () {
         swal({
     	  title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
     	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-    		confirmButtonText: "Yes, Enable!", closeOnConfirm: true
+    		confirmButtonText: "Yes, Enable!", closeOnConfirm: false
     	}, function () {
     	  $.fn.ajaxPut({
     	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + id
@@ -240,7 +240,7 @@ $(function () {
           swal({
       	  title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
       	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-      		confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: true
+      		confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false
       	}, function () {
       	  $.fn.ajaxPut({
       	    url: settings.contextpath + '/assignment/manager/reminder/tosubmit/' + id
