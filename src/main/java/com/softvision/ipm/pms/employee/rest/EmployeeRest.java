@@ -63,7 +63,6 @@ public class EmployeeRest {
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());
-			result.setContent(exception);
 		}
 		return result;
     }
@@ -79,7 +78,6 @@ public class EmployeeRest {
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());
-			result.setContent(exception);
 		}
 		return result;
     }

@@ -2,10 +2,6 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page import="com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus" %>
 
-<c:set var="AppraisalCycleStatus_DRAFT" value="<%=AppraisalCycleStatus.DRAFT%>"/>
-<c:set var="AppraisalCycleStatus_ACTIVE" value="<%=AppraisalCycleStatus.ACTIVE%>"/>
-<c:set var="AppraisalCycleStatus_COMPLETE" value="<%=AppraisalCycleStatus.COMPLETE%>"/>
-
 <style>
 @font-face {
   font-family: 'Material Icons';

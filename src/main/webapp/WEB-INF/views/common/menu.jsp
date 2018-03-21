@@ -151,7 +151,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>0.A</span></li>
+			<li><span>0.C</span></li>
 		  </ul>
 		</div>
       </div>

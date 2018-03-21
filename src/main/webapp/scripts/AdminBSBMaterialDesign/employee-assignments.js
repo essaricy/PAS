@@ -14,14 +14,22 @@ $(function () {
     });
     
     function renderAssignments(data) {
-      $(data).each(function (index, cycleAssignment) {
+      //$(data).each(function (index, cycleAssignment) {
+      for (var index = 0; index < data.length; index++) {
+    	var cycleAssignment = data[index];
     	var cycle=cycleAssignment.cycle;
+    	var cycleStatus=getAppraisalCycleStatus(cycle.status);
+    	if (cycleStatus == AppraisalCycleStatus.DRAFT) {
+    		continue;
+    	}	
 
         var cardRow=$('<div class="row clearfix">');
         var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
         var card=$('<div class="card">');
         var cardHeader=$('<div class="header">');
-        var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
+        $(cardHeader).addClass(cycleStatus.colorClass);
+        //var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
+        var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
         var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
         		+ '<li role="presentation" class="active"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
@@ -121,7 +129,7 @@ $(function () {
         $(cardBody).append(tabContent);
         $(tabContent).append(cycleTabPanel);
         $(tabContent).append(phaseTabPanel);
-      });
+      }//);
     }
 
     function getCycleActionCell(ea) {
@@ -163,6 +171,7 @@ $(function () {
 
       function getFillFormButton(id) {
         var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment</i></button>');
+        $(fillFormButton).tooltip({container: 'body'});
         $(fillFormButton).click(function() {
           location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
   	    });
@@ -171,6 +180,7 @@ $(function () {
 
       function getViewFormButton(type, id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
+    	$(viewFormButton).tooltip({container: 'body'});
         $(viewFormButton).click(function() {
           location.href=settings.contextPath + '/employee/assessment/' + type + '?aid=' + id;
   	    });
@@ -178,7 +188,8 @@ $(function () {
       }
 
       function getAgreeReviewButton(id) {
-        var agreeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Agree"><i class="material-icons">sentiment_very_satisfied</i></button>');
+        var agreeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Agree with the review"><i class="material-icons">sentiment_very_satisfied</i></button>');
+        $(agreeButton).tooltip({container: 'body'});
         $(agreeButton).click(function() {
           agreeReview(type, id);
   	    });
@@ -186,7 +197,8 @@ $(function () {
       }
 
       function getEscalateReviewButton(id) {
-        var escalateButton=$('<button class="btn btn-xs btn-info waves-effect" title="Escalate"><i class="material-icons">sentiment_very_dissatisfied</i></button>');
+        var escalateButton=$('<button class="btn btn-xs btn-info waves-effect" title="Disagree with the review"><i class="material-icons">sentiment_very_dissatisfied</i></button>');
+        $(escalateButton).tooltip({container: 'body'});
         $(escalateButton).click(function() {
           escalateReview(type, id);
   	    });

@@ -133,16 +133,8 @@ $('.appr_cycles_card').cardManager({
   afterLoadCallback: function (items, data) {
     $(items).each(function(index, item) {
       var dataItem=data[index];
-      var status=dataItem.status;
-      var class1=null;
-      if (status == '${AppraisalCycleStatus_DRAFT}') {
-      	class1='bg-amber';
-      } else if (status == '${AppraisalCycleStatus_ACTIVE}') {
-      	class1='bg-light-blue';
-      } else if (status == '${AppraisalCycleStatus_COMPLETE}') {
-      	class1='bg-grey';
-      }
-      $(this).append('<span class="badge ' + class1 + '">' + status + '</span>');
+      var appraisalCycleStatus=getAppraisalCycleStatus(dataItem.status);
+      $(this).append('<span class="badge ' + appraisalCycleStatus.colorClass + '">' + appraisalCycleStatus.code + '</span>');
     });
   }
 }); 
@@ -158,26 +150,29 @@ function renderCycleInformation(item) {
   $(table).append(tbody);
   $('.appr_cycle_card .body').append(table);
 
-  var status=item.status;
-  $('.appr_cycle_card .header .dropdown').empty();
-  if (status == '${AppraisalCycleStatus_DRAFT}') {
-	var button=$('<button class="activate btn bg-light-blue waves-effect">Activate</button>');
-	$(button).click(function() {activate(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${AppraisalCycleStatus_ACTIVE}') {
-    var button=$('<button class="activate btn bg-light-blue waves-effect">Complete</button>');
-	$(button).click(function() {complete(item.id) });
-	$('.appr_cycle_card .header .dropdown').append(button);
-  } else if (status == '${AppraisalCycleStatus_COMPLETE}') {
-  	class1='bg-green';
+  var status=getAppraisalCycleStatus(item.status);
+  //var button=$('<button class="btn bg-light-blue waves-effect">' + status.label + '</button>');
+  var button=$('<button class="btn bg-light-blue waves-effect">');
+  if (status == AppraisalCycleStatus.DRAFT) {
+	$(button).text(AppraisalCycleStatus.ACTIVE.label);
+	$(button).click(function() {
+      activate(item.id);
+	});
+  } else if (status == AppraisalCycleStatus.ACTIVE) {
+	$(button).text(AppraisalCycleStatus.COMPLETE.label);
+	$(button).click(function() {
+		complete(item.id);
+	});
   }
+  $('.appr_cycle_card .header .dropdown').empty();
+  $('.appr_cycle_card .header .dropdown').append(button);
 }
 
 function activate(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to activate this appraisal cycle?", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Activate!", closeOnConfirm: true
+    confirmButtonText: "Yes, Activate!", closeOnConfirm: false
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
   });
@@ -186,7 +181,7 @@ function complete(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to complete this appraisal cycle? Please make sure that al eligible employees have completed thier appraisals.", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Complete!", closeOnConfirm: true
+    confirmButtonText: "Yes, Complete!", closeOnConfirm: false
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
   });

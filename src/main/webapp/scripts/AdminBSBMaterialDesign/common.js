@@ -1,3 +1,9 @@
+var AppraisalCycleStatus= {
+	DRAFT:		{code: "DRAFT",		name: "Draft",		label: "Draft",			colorClass: "bg-amber"},
+	ACTIVE: 	{code: "ACTIVE",	name: "Active",		label: "Activate",		colorClass: "bg-green"},
+	COMPLETE: 	{code: "COMPLETE",	name: "Complete",	label: "Mark Complete",	colorClass: "bg-blue-grey"},
+};
+
 var PhaseAssignmentStatus={
 	NOT_INITIATED: 				{code: 0, 	name: "Not Initiated", 				colorClass: "bg-grey", 			description: "Appraisal Form has not been initiated"},
 	SELF_APPRAISAL_PENDING: 	{code: 50,	name: "Self-Appraisal Pending", 	colorClass: "bg-amber", 		description: "Initiated and self-appraisal is pending"},
@@ -11,13 +17,20 @@ var PhaseAssignmentStatus={
 };
 
 var CycleAssignmentStatus={
-	NOT_INITIATED:
-		{code: 0, 	name: "Not Initiated",			colorClass: "bg-grey", 			description: "Created but not effective"},
-	ABRIDGED:
-		{code: 100, 	name: "Abridged", 			colorClass: "bg-amber", 		description: "Phases summarized and cycle assessment available"},
-	CONCLUDED:
-		{code: 500, 	name: "Concluded", 			colorClass: "bg-deep-purple", 	description: "Assessment is frozen"},
+	NOT_INITIATED:	{code: 0, 	name: "Not Initiated",	colorClass: "bg-grey", 			description: "Created but not effective"},
+	ABRIDGED:		{code: 100, name: "Abridged", 		colorClass: "bg-amber", 		description: "Phases summarized and cycle assessment available"},
+	CONCLUDED: 		{code: 500, name: "Concluded", 		colorClass: "bg-deep-purple", 	description: "Assessment is frozen"},
 };
+
+function getAppraisalCycleStatus(code) {
+  for (var key in AppraisalCycleStatus) {
+	var data=AppraisalCycleStatus[key];
+	if (code == data.code) {
+	  return data;
+    }
+  }
+  return null;
+}
 
 function getPhaseAssignmentStatus(code) {
   for (var key in PhaseAssignmentStatus) {

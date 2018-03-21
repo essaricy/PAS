@@ -74,6 +74,7 @@ public class AssignmentService {
 		}
 		for (Integer employeeId : employeeIds) {
 			Result result = new Result();
+			result.setContent(employeeId);
 			try {
 				if (employeeId == 0) {
 					throw new ServiceException("Invalid Employee ID");
@@ -94,7 +95,7 @@ public class AssignmentService {
 					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
 				// check if already assigned.
-				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeIdAndTemplateId(cycleId, employeeId, templateId);
+				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}

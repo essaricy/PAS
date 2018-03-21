@@ -241,7 +241,7 @@
 	var phaseId='0';
 	$('#SearchTable').DataTable({
         responsive: true,
-        paging: false,
+        paging: true,
 		searching: true,
 		ordering: true,
 		info: true,
@@ -295,7 +295,7 @@
   
 	$('#SearchPhaseTable').DataTable({
       responsive: true,
-      paging: false,
+      paging: true,
 		searching: true,
 		ordering: true,
 		info: true,

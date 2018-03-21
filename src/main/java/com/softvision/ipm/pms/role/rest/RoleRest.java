@@ -61,7 +61,6 @@ public class RoleRest {
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());
-			result.setContent(exception);
 		}
 		return result;
 	}
@@ -78,7 +77,6 @@ public class RoleRest {
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());
-			result.setContent(exception);
 		}
 		return result;
 	}

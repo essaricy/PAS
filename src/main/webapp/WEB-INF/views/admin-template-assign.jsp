@@ -93,33 +93,31 @@
                 </div>
               </div>
               <div class="row clearfix">
-			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
-                  <label for="Selected_Employees_List">Selected Employees</label>
+			    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">&nbsp;</div>
+                <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+		          <table class="table table-striped" id="Selected_Employees_Table">
+		            <thead>
+		              <tr>
+		                <th>ID</th>
+		                <th>Name</th>
+		                <th>Designation</th>
+		                <th>Band</th>
+		                <th>Action</th>
+		                <th>Status</th>
+		              </tr>
+		            </thead>
+		            <tbody>
+		            </tbody>
+                  </table>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-		          <ul class="list-group" id="Selected_Employees_List">
-                  </ul>
-                </div>
+			    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">&nbsp;</div>
               </div>
               <div class="row clearfix">
 			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		          <button id="Assign_Button" name="assign" class="btn btn-primary center-block">Assign</button>
-                </div>
-              </div>
-              <div class="row clearfix assign_result_row">
-			    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                  <button id="Show_Assign_Results_Success" class="btn btn-success waves-effect" type="button">Successful<span class="badge"></span></button>
-                </div>
-				<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                  <button id="Show_Assign_Results_Error" class="btn btn-warning waves-effect pull-right" type="button">Errors<span class="badge"></span></button>
-                </div>
-              </div>
-              <div class="row clearfix assign_result_row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                  <ul class="list-group" id="Assign_Results_Success" style="display: none;">
-		          </ul>
-		          <ul class="list-group" id="Assign_Results_Error" style="display: none;">
-		          </ul>
+			    <div class="text-right">
+		          <button id="Reset_Button" class="btn btn-primary">Reset</button>
+		          <button id="Assign_Button" class="btn btn-primary">Assign</button>
+		          </div>
                 </div>
               </div>
             </div>
@@ -162,9 +160,10 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/active-cycle-check.js"></script>
 <script>
 var bulkAssignment={};
-/* bulkAssignment.templateId=4;
-bulkAssignment.cycleId=11;
+/* bulkAssignment.templateId=5;
+bulkAssignment.cycleId=4;
 bulkAssignment.employeeIds=[1136,2388,2006]; */
+
 bulkAssignment.templateId=0;
 bulkAssignment.cycleId=0;
 bulkAssignment.employeeIds=[];
@@ -174,7 +173,6 @@ $(function () {
 	contextPath: '<%=request.getContextPath()%>',
 	errorMessage: 'There is no Appraisal Cycle ACTIVE right now! You can assign a template to employees only when there is an appraisal cycle is ACTIVE',
 	onAvailable: function (cycle) {
-		console.log('#####################' + cycle);
 	  bulkAssignment.cycleId=cycle.id;
 	}
   });
@@ -215,18 +213,33 @@ $(function () {
 		var data=$("#Search_Employees").getSelectedItemData();
 		var itemId=data.EmployeeId;
 		var itemValue=data.FirstName + " " + data.LastName;
+		var table=$('#Selected_Employees_Table');
+		var tbody=$(table).find('tbody');
 
-		if(!$('#Selected_Employees_List li:contains("' + itemValue + '")').length) {
- 		  // Insert your new li
- 		  bulkAssignment.employeeIds.push(itemId);
- 		 $('#Selected_Employees_List').append('<li class="list-group-item" item-id="' + itemId + '">' + itemValue + '<span class="pull-right"><i class="material-icons" style="cursor: pointer;" onclick="javascript: removeDataItem(this, ' + itemId + ');">clear</i></span></li>');
+		if($(tbody).find('tr:has(td:first:contains("' + itemId + '"))').length == 0) {
+		  var row=$('<tr>');
+		  $(row).append('<td>' + itemId + '</td>');
+		  $(row).append('<td>' + itemValue + '</td>');
+		  $(row).append('<td>' + data.Designation + '</td>');
+		  $(row).append('<td>' + data.Band + '</td>');
+		  var deleteIcon=$('<i class="material-icons col-orange" style="cursor: pointer;">delete</i>');
+		  $(deleteIcon).click(function() {
+			  $(row).remove();
+			  bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
+		  });
+		  $(deleteIcon).tooltip({container: 'body'});
+		  var actionCell=$('<td>');
+		  $(actionCell).append(deleteIcon);
+		  $(row).append(actionCell);
+		  $(row).append('<td>&nbsp;</td>');
+		  $(tbody).append(row);
+
+		  bulkAssignment.employeeIds.push(itemId);
 		}
 		$("#Search_Employees").val('');
 	  }	
 	}
   });
-
-  $('.assign_result_row').hide();
 
   $('#Assign_Button').click(function() {
 	var button=this;
@@ -238,53 +251,51 @@ $(function () {
    	  swal({
 		title: "Are you sure?", text: "Do you want to assign this template to the selected employees?", type: "warning",
 		showCancelButton: true, confirmButtonColor: "#DD6B55",
-	    confirmButtonText: "Yes, Assign!", closeOnConfirm: true
+	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false
 	  }, function () {
 	      $(button).attr('disabled', true);
-		  $('.assign_result_row').hide();
 		  $.fn.ajaxPost({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
 		  onSuccess: function(result) {
-    		var results_container_error=$('#Assign_Results_Error');
-    		var results_container_Success=$('#Assign_Results_Success');
-      		$(results_container_error).empty();
-      		$(results_container_Success).empty();
-
-   	  	    swal({ title: "Data has been saved successfully!", text: "", type: "success"}, function () { });
-      		$(result).each(function(index, aResult) {
+			var table=$('#Selected_Employees_Table');
+			var tbody=$(table).find('tbody');
+			$(result).each(function(index, aResult) {
+			  var employeeId=aResult.content;
+			  var actionStatus=null;
 			  if (aResult.code=='SUCCESS') {
-      		    $(results_container_Success).append('<li class="list-group-item bg-green">' + aResult.message + '<span class="pull-right"><i class="material-icons">done</i></span></li>');
+				actionStatus=$('<i class="material-icons col-green" data-toggle="tooltip" data-placement="top" title="' + aResult.message + '">check_circle</i>');
 			  } else {
-      			$(results_container_error).append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
+				actionStatus=$('<i class="material-icons col-red" data-toggle="tooltip" data-placement="top" title="' + aResult.message + '">error</i>');
 			  }
+			  $(actionStatus).tooltip({container: 'body'});
+			  var cell=$(tbody).find('tr td:contains(' + employeeId + ')');
+			  console.log('cell=' + $(cell).text());
+			  $(cell).siblings().last().html(actionStatus);
 		    });
 		  },
 		  onFail: function(message, content) {
 		  },
     	  onComplete : function () {
-      		$(button).attr('disabled', false);
-      		$('.assign_result_row').show();
-      		$('#Show_Assign_Results_Error').find('.badge').text($('#Assign_Results_Error').find('li').length);
-      		$('#Show_Assign_Results_Success').find('.badge').text($('#Assign_Results_Success').find('li').length);
+    		swal({ title: "Data has been saved successfully!", text: "", type: "success"}, function () { });
+    		$(button).attr('disabled', false);
   	      }
 	    });
 	  });
     }
   });
 
-  $('#Show_Assign_Results_Success').click(function() {
-  	$('#Assign_Results_Success').show();
-  	$('#Assign_Results_Error').hide();
+  $('#Reset_Button').click(function() {
+	bulkAssignment.templateId=0;
+	//bulkAssignment.cycleId=0;
+	bulkAssignment.employeeIds=[];
+	
+	$("#Template_Name").val('');
+	$("#Search_Employees").val('');
+	var table=$('#Selected_Employees_Table');
+	var tbody=$(table).find('tbody');
+	$(tbody).empty();
   });
-  $('#Show_Assign_Results_Error').click(function() {
-  	$('#Assign_Results_Success').hide();
-  	$('#Assign_Results_Error').show();
-  });
-});
 
-function removeDataItem(item, itemId) {
-  $(item).parent().parent().remove();
-  bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
-}
+});
 
 </script>
 </html>

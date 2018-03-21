@@ -46,7 +46,6 @@ public class GoalRest {
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
 			result.setMessage(exception.getMessage());
-			result.setContent(exception);
 		}
 		return result;
     }

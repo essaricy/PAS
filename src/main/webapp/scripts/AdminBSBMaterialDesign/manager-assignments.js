@@ -14,14 +14,21 @@ $(function () {
     });
     
     function renderAssignedEmployees(data) {
-      $(data).each(function (index, cycleAssignment) {
+      //$(data).each(function (index, cycleAssignment) {
+      for (var index = 0; index < data.length; index++) {
+    	var cycleAssignment = data[index];
     	var cycle=cycleAssignment.cycle;
-
+    	var cycleStatus=getAppraisalCycleStatus(cycle.status);
+    	if (cycleStatus == AppraisalCycleStatus.DRAFT) {
+    		continue;
+    	}
         var cardRow=$('<div class="row clearfix">');
         var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
         var card=$('<div class="card">');
         var cardHeader=$('<div class="header">');
-        var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
+        $(cardHeader).addClass(cycleStatus.colorClass);
+        //var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
+        var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
         var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
         		+ '<li role="presentation" class="active"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
@@ -47,7 +54,7 @@ $(function () {
           $(theadRow).append('<th>Action</th>');
 
           var tbody=$('<tbody>');
-          $(employeeAssignments).each(function(index, ea) {
+          $(employeeAssignments).each(function(jindex, ea) {
         	var assignedTo=ea.assignedTo;
         	var assignedBy=ea.assignedBy;
 
@@ -67,7 +74,7 @@ $(function () {
         // Render Phases Tab
         var phaseTabPanel=$('<div role="tabpanel" class="tab-pane fade out" id="PhasesTab_' + cycle.id +'">');
         var phaseAssignments=cycleAssignment.phaseAssignments;
-        $(phaseAssignments).each(function(index, phaseAssignment) {
+        $(phaseAssignments).each(function(jindex, phaseAssignment) {
           var phase=phaseAssignment.phase;
           
           var phaseTitle=$('<h5>Phase: ' + phase.name + '</h5>');
@@ -82,7 +89,7 @@ $(function () {
             var theadRow=$('<tr>');
 
             var tbody=$('<tbody>');
-            $(employeeAssignments).each(function(index, ea) {
+            $(employeeAssignments).each(function(kindex, ea) {
           	  var assignedTo=ea.assignedTo;
           	  var assignedBy=ea.assignedBy;
 
@@ -121,7 +128,7 @@ $(function () {
         $(cardBody).append(tabContent);
         $(tabContent).append(cycleTabPanel);
         $(tabContent).append(phaseTabPanel);
-      });
+      }//);
     }
 
     function getCycleActionCell(ea) {
@@ -169,6 +176,7 @@ $(function () {
         var submitToNextLevelManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
           'title="Submit to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
           'item-id="' + id + '" item-type="SubmitToNextLevelManager"><i class="material-icons">call_merge</i></button>');
+        $(submitToNextLevelManagerButton).tooltip({container: 'body'});
   		return submitToNextLevelManagerButton;
       }
 
@@ -176,11 +184,13 @@ $(function () {
     	var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
     	  'title="Assign to Another Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
     	  'item-id="' + id + '" item-type="AssignToAnotherManager"><i class="material-icons">trending_flat</i></button>');
+    	$(assignToManagerButton).tooltip({container: 'body'});
   		return assignToManagerButton;
       }
 
       function getEnableFormButton(type, id) {
         var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-Submission"><i class="material-icons">assignment_returned</i></button>');
+        $(enableFormButton).tooltip({container: 'body'});
   		$(enableFormButton).click(function() {
   		  enableSelfSubmission(type, id);
   		});
@@ -189,6 +199,7 @@ $(function () {
 
       function getSendReminderButton(type, id) {
         var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
+        $(reminderButton).tooltip({container: 'body'});
         $(reminderButton).click(function() {
           sendReminderToSubmit(id);
   	    });
@@ -197,6 +208,7 @@ $(function () {
 
       function getPerformReviewButton(type, id) {
     	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Perform Review"><i class="material-icons">assignment</i></button>');
+    	$(fillReviewButton).tooltip({container: 'body'});
     	$(fillReviewButton).click(function() {
           location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
     	});
@@ -205,6 +217,7 @@ $(function () {
 
       function getViewFormButton(type, id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
+    	$(viewFormButton).tooltip({container: 'body'});
         $(viewFormButton).click(function() {
           location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
   	    });

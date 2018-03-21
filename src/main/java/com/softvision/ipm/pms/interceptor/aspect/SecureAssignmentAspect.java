@@ -19,7 +19,6 @@ public class SecureAssignmentAspect {
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
-	//@Around("@annotation(com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment)")
 	@Around("@annotation(preSecureAssignment)")
 	public Object permit(ProceedingJoinPoint joinPoint, PreSecureAssignment preSecureAssignment) throws Throwable {
 		long assignmentId=0;

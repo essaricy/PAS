@@ -272,7 +272,12 @@
 
 	$('#Cycle_StartDate').change(function(e, date) {
 	  $('#Cycle_EndDate').bootstrapMaterialDatePicker('setMinDate', moment(date).add(1, 'day'));
-	  $('#Cycle_EligibilityDate').bootstrapMaterialDatePicker('setMaxDate', moment(date).subtract(1, 'day'));
+	  //$('#Cycle_EligibilityDate').bootstrapMaterialDatePicker('setMaxDate', moment(date).subtract(1, 'day'));
+	});
+
+	$('#Cycle_EndDate').change(function(e, date) {
+	  $('#Cycle_EligibilityDate').val("");
+	  $('#Cycle_EligibilityDate').bootstrapMaterialDatePicker('setMaxDate', moment(date).subtract(1, 'month'));
 	});
 
     $('#Phase_StartDate').change(function(e, date) {

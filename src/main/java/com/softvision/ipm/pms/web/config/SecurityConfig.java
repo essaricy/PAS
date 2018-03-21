@@ -17,21 +17,10 @@ import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
     @Autowired private SVAuthenticationProvider authenticationProvider;
-    //@Autowired private ApplicationContext applicationContext;
-    //@Autowired private PermissionEvaluator permissionEvaluator;
 
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(authenticationProvider);
-    } 
-
-    /*@Override
-    protected MethodSecurityExpressionHandler createExpressionHandler() {
-        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setPermissionEvaluator(permissionEvaluator);
-        expressionHandler.setApplicationContext(applicationContext);
-        return expressionHandler;
-    }*/
-
+    }
 
 	@Override
     protected void configure(HttpSecurity http) throws Exception {

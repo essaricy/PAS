@@ -62,11 +62,16 @@ public class PhaseAssessmentService {
 		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
 		phaseAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
 
+		System.out.println("employeePhaseAssignment=" + employeePhaseAssignment);
+
 		List<PhaseAssessHeader> phaseAssessHeaders = phaseAssessmentHeaderDataRepository
 				.findByAssignIdOrderByStatusAsc(assignmentId);
+		System.out.println("phaseAssessHeaders=" + phaseAssessHeaders);
 
 		int status = employeePhaseAssignment.getStatus();
 		PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
+		System.out.println("phaseAssignmentStatus= " + phaseAssignmentStatus);
+		System.out.println("requestedEmployeeId= " + requestedEmployeeId);
 		// Restrict viewing the form by employee if the state is
 		if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
 			// remove the top phase header if its requested by the manager
@@ -80,6 +85,7 @@ public class PhaseAssessmentService {
 			}
 		}
 		phaseAssessment.setPhaseAssessHeaders(PhaseAssessmentAssembler.getPhaseAssessHeaderDtos(phaseAssessHeaders));
+		System.out.println("phaseAssessment=" + phaseAssessment);
 		return phaseAssessment;
 	}
 
