@@ -77,7 +77,7 @@ $(function () {
 
     function renderTemplateInfo() {
       var divRow=$('<div class="row clearfix">');
-      var table=$('<table class="table table-striped">');
+      var table=$('<table class="table table-striped" style="overflow: auto;">');
       var thead=$('<thead>');
       var tbody=$('<tbody>');
       var tfoot=$('<tfoot>');
@@ -114,10 +114,10 @@ $(function () {
    		  });
    		});
 
-   		var linkTd=$('<td item-id="' + goalId + '">');
+   		var linkTd=$('<td item-id="' + goalId + '" style="max-width: 150px;">');
    		$(linkTd).append(link);
    		$(row).append(linkTd);
-   		$(row).append('<td class="weightage">' + weightage + '</td>');
+   		$(row).append('<td class="weightage" style="max-width: 60px; word-break: break-all;">' + weightage + '</td>');
         $(tbody).append(row);
    	  });
       $(tfoot).append('<tr><th>&nbsp</th><th>' + totalWeightage + '</th></tr>');
@@ -212,7 +212,7 @@ $(function () {
        	var renderScore=render.score;
        	
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderRating.name + '</th>');
-        $(thead).find('th:last').after('<th class="' + status.colorClass + '" style="width: 300px; word-break: break-all;">' + renderComments.name + '</th>');
+        $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderComments.name + '</th>');
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderScore.name + '</th>');
 
         $(tbody).find('tr').each(function (index, row) {
@@ -264,7 +264,7 @@ $(function () {
       var value=data[property];
       var sValue=data[sProperty];
 
-      var ratingTd=$('<td class="' + rClass + '">');
+      var ratingTd=$('<td class="' + rClass + '" style="min-width: 110px; word-break: break-all;">');
       var rating=$('<div>');
       var wClassSelector='.' + wClass;
       var sClassSelector='.' + sClass;
@@ -296,7 +296,7 @@ $(function () {
       var property=commentsParams.property;
       var value=data[property];
 
-   	  var commentsTd=$('<td style="width: 300px; word-break: break-all;">');
+   	  var commentsTd=$('<td style="min-width: 350px; word-break: break-all;">');
    	  if (enable) {
         var comments=$('<textarea class="' + cClass + '" rows="6" cols="30" maxlength="500">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
@@ -306,7 +306,7 @@ $(function () {
         $(comments).append(comments);
         $(commentsTd).append(comments);
    	  } else {
-   		$(commentsTd).append(value);
+   		$(commentsTd).text(value);
    	  }
       return commentsTd;
     }
@@ -319,7 +319,7 @@ $(function () {
       var property=scoreParams.property;
       var value=data[property];
 
-   	  var scoreTd=$('<td class="' + sClass + '">');
+   	  var scoreTd=$('<td class="' + sClass + '" style="min-width: 80px; word-break: break-all;">');
    	  $(scoreTd).text(value.toFixed(2));
       return scoreTd;
     }

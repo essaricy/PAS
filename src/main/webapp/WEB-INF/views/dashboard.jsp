@@ -34,7 +34,11 @@
       <div class="block-header">
         <h2>DASHBOARD</h2>
       </div>
-      
+
+      <!-- Basic Example -->
+      <div class="row clearfix PhasewiseEmployeeStatusCount_Row">
+      </div>
+
       <!-- Basic Example -->
       <div class="row clearfix">
         <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -74,6 +78,55 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
   <!-- Demo Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
-</body>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
+  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-Sprite-Preloaders/jquery.preloaders.min.js"></script>
+  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 
+  <script type="text/javascript">
+  $(function () {
+	<%-- $.fn.ajaxGet({
+  	  url: '<%=request.getContextPath()%>/dummy/delay/SUCCESS/5'
+    }); --%>
+    $.fn.ajaxGet({
+      url: '<%=request.getContextPath()%>/report/manager/phase/status/count',
+      onSuccess: function(phasewiseEmployeeStatusCounts) {
+    	var phasewiseEmployeeStatusCountRow = $('.PhasewiseEmployeeStatusCount_Row');
+    	$(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
+          var phaseStatus=getPhaseAssignmentStatus(phasewiseEmployeeStatusCount.phaseAssignmentStatus.code);
+          var iconName=phaseStatus.icon;
+          var count=phasewiseEmployeeStatusCount.count;
+          console.log(iconName);
+
+          var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
+          var infoBoxDiv=$('<div class="info-box hover-zoom-effect">');
+          var iconDiv=$('<div class="icon ' + phaseStatus.colorClass + '">');
+          var icon=$('<i class="material-icons">' + iconName + '</i>');
+          var contentDiv=$('<div class="content">');
+          var textDiv=$('<div class="text">' + phaseStatus.name + '</div>');
+          var countDiv=$('<div class="number">' + count + '</div>');
+
+          $(phasewiseEmployeeStatusCountRow).append(colDiv);
+          $(colDiv).append(infoBoxDiv);
+          $(infoBoxDiv).append(iconDiv);
+          $(iconDiv).append(icon);
+          $(infoBoxDiv).append(contentDiv);
+          $(contentDiv).append(textDiv);
+          $(contentDiv).append(countDiv);
+          /* $(phasewiseEmployeeStatusCountRow).append(
+            '<div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">' + 
+            '  <div class="info-box hover-zoom-effect">' +
+            '    <div class="icon bg-pink">' +
+            '      <i class="material-icons">email</i>' +
+            '    </div>' +
+            '    <div class="content">' +
+            '      <div class="text">MESSAGES</div>' +
+            '    <div class="number">15</div>' +
+            '  </div>' +
+            '</div>'); */
+    	});
+      }
+    });
+  });
+  </script>
+</body>
 </html>

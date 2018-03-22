@@ -32,12 +32,13 @@ $(function () {
         var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
         var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
-        		+ '<li role="presentation" class="active"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
-        		+ '<li role="presentation"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>');
+        		+ '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
+        		+ '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
+        		);
         var tabContent=$('<div class="tab-content">');
 
         // Render CYCLE Tab
-        var cycleTabPanel=$('<div role="tabpanel" class="tab-pane fade in active" id="CycleTab_' + cycle.id +'">');
+        var cycleTabPanel=$('<div role="tabpanel" class="tab-pane fade out" id="CycleTab_' + cycle.id +'">');
         var employeeAssignment=cycleAssignment.employeeAssignment;
         if (employeeAssignment==null) {
           $(cycleTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this cycle.</p>');
@@ -47,8 +48,8 @@ $(function () {
           var theadRow=$('<tr>');
           $(table).append(thead);
           $(thead).append(theadRow);
-          $(theadRow).append('<th>Employee Id</th>');
-          $(theadRow).append('<th>Employee Name</th>');
+          //$(theadRow).append('<th>Employee Id</th>');
+         // $(theadRow).append('<th>Employee Name</th>');
           $(theadRow).append('<th>Assigned By</th>');
           $(theadRow).append('<th>Assigned On</th>');
           $(theadRow).append('<th>Status</th>');
@@ -61,8 +62,8 @@ $(function () {
           var assignedBy=ea.assignedBy;
           
           var row=$('<tr>');
-          $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-          $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+          //$(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
+          //$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
           $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           $(row).append('<td>' + ea.assignedAt + '</td>');
           $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
@@ -73,12 +74,12 @@ $(function () {
         }
 
         // Render Phases Tab
-        var phaseTabPanel=$('<div role="tabpanel" class="tab-pane fade out" id="PhasesTab_' + cycle.id +'">');
+        var phaseTabPanel=$('<div role="tabpanel" class="tab-pane fade in active" id="PhasesTab_' + cycle.id +'">');
         var phaseAssignments=cycleAssignment.phaseAssignments;
         $(phaseAssignments).each(function(index, phaseAssignment) {
           var phase=phaseAssignment.phase;
           
-          var phaseTitle=$('<h5>Phase: ' + phase.name + '</h5>');
+          var phaseTitle=$('<h5 class="font-underline col-cyan">Phase: ' + phase.name + '</h5>');
           var employeeAssignments=phaseAssignment.employeeAssignments;
 
           if (employeeAssignments.length==0) {
@@ -87,16 +88,16 @@ $(function () {
           } else {
             var table=$('<table class="table table-striped">');
             var thead=$('<thead>');
+            var tbody=$('<tbody>');
             var theadRow=$('<tr>');
 
-            var tbody=$('<tbody>');
             $(employeeAssignments).each(function(index, ea) {
           	  var assignedTo=ea.assignedTo;
           	  var assignedBy=ea.assignedBy;
 
           	  var row=$('<tr>');
-          	  $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-          	  $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+          	  //$(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
+          	  //$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
           	  $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
           	  $(row).append('<td>' + ea.assignedAt + '</td>');
           	  $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
@@ -106,12 +107,12 @@ $(function () {
 
             $(table).append(thead);
             $(thead).append(theadRow);
-            $(theadRow).append('<th>Employee Id</th>');
-            $(theadRow).append('<th>Employee Name</th>');
-            $(theadRow).append('<th>Assigned By</th>');
-            $(theadRow).append('<th>Assigned On</th>');
-            $(theadRow).append('<th>Status</th>');
-            $(theadRow).append('<th>Action</th>');
+            //$(theadRow).append('<th>Employee Id</th>');
+            //$(theadRow).append('<th>Employee Name</th>');
+            $(theadRow).append('<th width="30%">Assigned By</th>');
+            $(theadRow).append('<th width="20%">Assigned On</th>');
+            $(theadRow).append('<th width="30%">Status</th>');
+            $(theadRow).append('<th width="20%">Action</th>');
             $(table).append(tbody);
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append(table);

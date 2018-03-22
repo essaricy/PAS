@@ -157,14 +157,7 @@ public class PhaseAssessmentService {
 	public void agree(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_AGREED, "agree review",
 				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
-		// TODO send email for agree
-		// Email Trigger
-		/*
-		 * emailRepository.sendManagerSubmitMail(employeePhaseAssignment.getPhaseId(),
-		 * phaseAssessHeaderDto.getAssessedBy(),
-		 * employeePhaseAssignment.getEmployeeId());
-		 */
-		// TODO conclude
+		// conclude
 		conclude(assignmentId, requestedEmployeeId);
 	}
 

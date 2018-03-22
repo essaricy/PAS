@@ -48,7 +48,7 @@ public class ManagerAssignmentService {
 			throws ServiceException {
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
-				PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
+				PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
 		if (!roleService.isManager(toEmployeeId)) {
 			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
 		}
