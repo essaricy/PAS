@@ -36,30 +36,31 @@
         <h2>DASHBOARD</h2>
       </div>
 
+	  <div class="row clearfix PhasewiseEmployeeStatusCount_Row">
+	  </div>
       <!-- Basic Example -->
-      <div class="row clearfix PhasewiseEmployeeStatusCount_Row">
+      <div class="row clearfix">
+      	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+		  <div class="card">
+		    <!-- user profile image -->
+            <img class="card-img-top" src="${imageUrl}" alt="${userName} Profile Picture" style="width:100%">
+            <div class="card-body text-center">
+              <!-- user name -->
+              <h4 class="card-title">${userName}</h4>
+              <!-- job title / company name -->
+              <p class="card-text font-bold col-pink">${designation}</p>
+              <h6>${employeeId} | ${band}</h6>
+              <p>Joined On: <fmt:formatDate pattern="MMM dd, yyyy" value="${joinedDate}" /></p>
+              <p>&nbsp;</p>
+            </div>
+          </div>
+      	</div>
+      	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+      	</div>
       </div>
 
       <!-- Basic Example -->
       <div class="row clearfix">
-        <%-- <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-          <div class="card">
-            <div class="header bg-orange">
-              <h2>
-                ${userName}
-                <small>${designation}, ${location}</small>
-              </h2>
-            </div>
-            <div class="body">
-              <div class="row clearfix">
-                <div class="col-md-6">Employee #</div><div class="col-md-6">${employeeId}</div>
-                <div class="col-md-6">Band</div><div class="col-md-6">${band}</div>
-                <div class="col-md-6">Joined Date</div><div class="col-md-6"><fmt:formatDate pattern="MMM dd, yyyy" value="${joinedDate}" /></div>
-              </div>
-            </div>
-          </div>
-        </div> --%>
-        <!-- <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12"> -->
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <!-- <div class="card">
             <div class="header">
@@ -134,6 +135,9 @@
             console.log(iconName);
 
             var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
+            //var colDiv=$('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">');
+            //var colDiv=$('<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">');
+            //var colDiv=$('<div>');
             var infoBoxDiv=$('<div class="info-box hover-zoom-effect ' + phaseStatus.colorClass + '">');
             var iconDiv=$('<div class="icon">');
             var icon=$('<i class="material-icons">' + iconName + '</i>');

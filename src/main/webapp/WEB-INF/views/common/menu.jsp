@@ -18,7 +18,7 @@
     <!-- User Info -->
     <div class="user-info">
       <div class="image">
-        <img src="<%=request.getContextPath()%>/images/user.png" width="48" height="48" alt="${userName}" />
+        <img src="${imageUrl}" width="48" height="48" alt="${userName}" />
         <%-- <c:if test="${empty imageUrl}">
           <img src="<%=request.getContextPath()%>/images/user.png" width="48" height="48" alt="${userName}" />
         </c:if>
