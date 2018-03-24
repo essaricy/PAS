@@ -80,13 +80,13 @@ public class ManagerAssignmentRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
-	@RequestMapping(value="change/cycle-assign/{cycleAssignId}/{toEmployeeId}", method=RequestMethod.PUT)
+	@RequestMapping(value="cycle/submit/{cycleAssignId}/{toEmployeeId}", method=RequestMethod.PUT)
 	public Result assignCycleToNextLevelManager(
 			@PathVariable(name="cycleAssignId", required=true) @Min(1) long cycleAssignId,
 			@PathVariable(name="toEmployeeId", required=true) @Min(1) int toEmployeeId) {
 		Result result = new Result();
 		try {
-			managerAssignmentService.assignCycleToNextLevelManager(
+			managerAssignmentService.submitCycle(
 					cycleAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

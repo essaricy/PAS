@@ -12,8 +12,6 @@ import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
-import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
-import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
@@ -40,8 +38,6 @@ public class ManagerAssignmentService {
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
-
-	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
 
 	@PreSecureAssignment(permitManager=true)
 	public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
@@ -84,7 +80,7 @@ public class ManagerAssignmentService {
 	}
 
 	@Transactional
-	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
+	public void submitCycle(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
 		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
@@ -103,16 +99,10 @@ public class ManagerAssignmentService {
 		if (!roleService.isManager(toEmployeeId)) {
 			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
 		}
-		employeeCycleAssignment.setAssignedBy(toEmployeeId);
+		employeeCycleAssignment.setSubmittedTo(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
 		EmployeeCycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		System.out.println("savedAssignment=" + savedAssignment);
-		
-		CycleAssessHeader cycleAssessHeader = cycleAssessmentHeaderDataRepository.findByAssignId(cycleAssignId);
-		cycleAssessHeader.setAssessedBy(toEmployeeId);
-		cycleAssessHeader.setStatus(savedAssignment.getStatus());
-		CycleAssessHeader savedAssess = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		System.out.println("savedAssess=" + savedAssess);
-	}
+			}
 
 }

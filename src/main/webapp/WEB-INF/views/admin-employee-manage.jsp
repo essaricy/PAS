@@ -50,7 +50,7 @@
     <div class="container-fluid">
       <div class="block-header">
         <h2>Employee Management
-          <small>Add, Lookup and Sync employees from SV Project</small>
+          <small>Add, Lookup and Sync employees from SV Project, view and modify roles</small>
         </h2>
       </div>
       <div class="row clearfix">
@@ -58,8 +58,8 @@
           <div class="card">
             <div class="body">
               <!-- Nav tabs -->
-              <ul class="nav nav-tabs tab-nav-right tab-col-deep-orange" role="tablist">
-                <li role="presentation" class="active"><a href="#Lookup_Employees" data-toggle="tab">LOOK UP</a></li>
+              <ul class="nav nav-tabs tab-nav-right tab-col-orange" role="tablist">
+                <li role="presentation" class="active"><a href="#Lookup_Employees" data-toggle="tab">LOOKUP</a></li>
                 <li role="presentation"><a href="#Sync_Employees" data-toggle="tab">Sync Employees</a></li>
                 <li role="presentation"><a href="#Roles" data-toggle="tab">Roles</a></li>
                 <li role="presentation"><a href="#Change_Roles" data-toggle="tab">Changes Roles</a></li>

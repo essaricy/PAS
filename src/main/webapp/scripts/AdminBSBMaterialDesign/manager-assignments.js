@@ -40,7 +40,7 @@ $(function () {
         var phaseAssignments=cycleAssignment.phaseAssignments;
         $(phaseAssignments).each(function(jindex, phaseAssignment) {
           var phase=phaseAssignment.phase;
-          var phaseTitle=$('<h4 class="font-underline col-cyan">Phase: ' + phase.name + '</h4>');
+          var phaseTitle=$('<h5 class="font-underline col-cyan">Phase: ' + phase.name + '</h5>');
           var employeeAssignments=phaseAssignment.employeeAssignments;
 
           if (employeeAssignments.length==0) {

@@ -21,6 +21,7 @@ import lombok.Data;
 
 @Data
 @Entity(name="cycle_assess_header")
+@Deprecated
 public class CycleAssessHeader implements Serializable {
 
 	private static final long serialVersionUID = 1L;

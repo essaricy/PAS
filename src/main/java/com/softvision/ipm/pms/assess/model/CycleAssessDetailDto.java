@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import lombok.Data;
 
 @Data
+@Deprecated
 public class CycleAssessDetailDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

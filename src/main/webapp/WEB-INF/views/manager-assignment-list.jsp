@@ -43,7 +43,7 @@
     <div class="container-fluid">
       <div class="block-header">
         <h2>Employee Assignments
-          <small>View status of the current employees those are assigned to you, change manager, send forms</small>
+          <small>View status of the current employees those are assigned to you, change manager, enable forms, view assessment or conclude</small>
         </h2>
       </div>
     </div>
@@ -184,7 +184,7 @@ $(function () {
   $('#SubmitToNextLevelManager').click(function() {
 	var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
     if (SelectedManagerId) {
-      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/cycle-assign/' + assignmentId + '/' + SelectedManagerId});
+      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/cycle/submit/' + assignmentId + '/' + SelectedManagerId});
     }
   });
 

@@ -34,4 +34,8 @@ public class EmployeeCycleAssignment implements Serializable {
 
 	private int status;
 
+	private double score;
+
+	private Integer submittedTo;
+
 }

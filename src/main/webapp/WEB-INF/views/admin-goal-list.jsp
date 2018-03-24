@@ -43,7 +43,7 @@
     <div class="container-fluid">
       <div class="block-header">
         <h2>Goal Management
-          <small>Add and update organization level competency assessments and parameters</small>
+          <small>Add and update organization level goals and contributing parameters</small>
         </h2>
       </div>
       <div class="row clearfix">

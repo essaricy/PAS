@@ -1,7 +1,5 @@
 package com.softvision.ipm.pms.assess.service;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +16,6 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.assess.assembler.CycleAssessmentAssembler;
 import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
 import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
-import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
-import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
@@ -58,82 +54,55 @@ public class CycleAssessmentService {
 
 	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
 
+	public String abridgeQuietly(int employeeId) {
+		try {
+			System.out.println("abridgeQuietly()");
+			abridge(employeeId);
+		} catch (Exception exception) {
+			return "Abridge Failed due to the error=" + exception.getMessage();
+		}
+		return null;
+	}
+
 	@Transactional
-	public boolean abridge(int employeeId) {
-		int lastPhaseAssignedBy=0;
+	public void abridge(int employeeId) throws ServiceException {
+		System.out.println("abridge(" + employeeId + ")");
 		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
 
+		// If all phases are done then update the cycle assignment with score
+		double cycleScore=0;
+		int assignedBy=0;
+		long templateId=0;
+		int numberOfPhases=phases.size();
+		// Check if all the assignments are concluded.
+		for (AppraisalPhase phase : phases) {
+			System.out.println("phase=" + phase.getName());
+			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(phase.getId(), employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
+			if (employeePhaseAssignment == null) {
+				throw new ServiceException("There is a missing assignment for the phase " + phase.getName() + " for the employee " + employeeId);
+			}
+			System.out.println("Score=" + employeePhaseAssignment.getScore());
+			cycleScore+=employeePhaseAssignment.getScore();
+			assignedBy=employeePhaseAssignment.getAssignedBy();
+			templateId=employeePhaseAssignment.getTemplateId();
+		}
 		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
-			return false;
+			System.out.println("employeeCycleAssignment does not exist. Creating a new one from the last phase assignment");
+			// There is a missing cycle assignment. create one.
+			employeeCycleAssignment = new EmployeeCycleAssignment();
+			employeeCycleAssignment.setAssignedAt(new Date());
+			employeeCycleAssignment.setAssignedBy(assignedBy);
+			employeeCycleAssignment.setCycleId(cycleId);
+			employeeCycleAssignment.setEmployeeId(employeeId);
+			employeeCycleAssignment.setTemplateId(templateId);
 		}
-		Long cycleAssignmentId = employeeCycleAssignment.getId();
-
-		CycleAssessHeader cycleAssessHeader = cycleAssessmentHeaderDataRepository.findByAssignId(cycleAssignmentId);
-		if (cycleAssessHeader != null) {
-			return false;
-		}
-		List<CycleAssessDetail> cycleAssessDetails = new ArrayList<>();
-		// Get phase assignments for each phase by employee id and phase id
-		for (AppraisalPhase phase : phases) {
-			int phaseId = phase.getId();
-			System.out.println("phaseId=" + phaseId + ", employeeId=" + employeeId + ", status=" + PhaseAssignmentStatus.CONCLUDED.getCode());
-			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository
-					.findByPhaseIdAndEmployeeIdAndStatus(phaseId, employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
-			System.out.println("Concluded employeePhaseAssignment for " + phase.getName() + " = " + employeePhaseAssignment);
-			if (employeePhaseAssignment == null) {
-				// There is no CONCLUDED assignment for this phase
-				// This assignment phase is not yet concluded. cannot abridge
-				return false;
-			}
-			Long assignmentId = employeePhaseAssignment.getId();
-			System.out.println("assignmentId = " + assignmentId);
-			PhaseAssessHeader concludedPhaseAssessHeader = phaseAssessmentHeaderDataRepository.findFirstByAssignIdAndStatus(assignmentId, PhaseAssignmentStatus.CONCLUDED.getCode());
-			if (concludedPhaseAssessHeader == null) {
-				// CONCLUDED Header is not found
-				return false;
-			}
-			lastPhaseAssignedBy = concludedPhaseAssessHeader.getAssessedBy();
-			List<PhaseAssessDetail> phaseAssessDetails = concludedPhaseAssessHeader.getPhaseAssessDetails();
-			for (PhaseAssessDetail phaseAssessDetail : phaseAssessDetails) {
-				double rating = phaseAssessDetail.getRating();
-				double score = phaseAssessDetail.getScore();
-				long templateHeaderId = phaseAssessDetail.getTemplateHeaderId();
-				CycleAssessDetail cycleAssessDetail = getByTemplateHeaderId(cycleAssessDetails, templateHeaderId);
-				String summary = MessageFormat.format(CYCLE_SUMMARY_FORMAT, phase.getName(), rating, score);
-
-				if (cycleAssessDetail == null) {
-					cycleAssessDetail = new CycleAssessDetail();
-					cycleAssessDetail.setRating(rating);
-					cycleAssessDetail.setScore(score);
-					cycleAssessDetail.setTemplateHeaderId(templateHeaderId);
-					cycleAssessDetail.setComments(summary);
-					cycleAssessDetails.add(cycleAssessDetail);
-				} else {
-					cycleAssessDetail.setRating(cycleAssessDetail.getRating() + rating);
-					cycleAssessDetail.setScore(cycleAssessDetail.getScore() + score);
-					cycleAssessDetail.setComments(cycleAssessDetail.getComments() + summary);
-				}
-			}
-		}
-		int numberOfPhases = phases.size();
-		for (CycleAssessDetail cycleAssessDetail : cycleAssessDetails) {
-			cycleAssessDetail.setRating(cycleAssessDetail.getRating()/numberOfPhases);
-			cycleAssessDetail.setScore(cycleAssessDetail.getScore()/numberOfPhases);
-		}
-		cycleAssessHeader = new CycleAssessHeader();
-		cycleAssessHeader.setAssignId(cycleAssignmentId);
-		cycleAssessHeader.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
-		cycleAssessHeader.setAssessDate(new Date());
-		cycleAssessHeader.setAssessedBy(lastPhaseAssignedBy); // last phase assigned by
-		cycleAssessHeader.setCycleAssessDetails(cycleAssessDetails);
-		CycleAssessHeader saved = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		// Update employeeCycleAssignment status to 10
-		employeeCycleAssignment.setStatus(saved.getStatus());
+		System.out.println("Cycle score=" + (cycleScore/numberOfPhases));
+		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
+		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		return true;
 	}
 
 	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {

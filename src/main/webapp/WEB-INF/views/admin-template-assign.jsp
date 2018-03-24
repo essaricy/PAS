@@ -223,7 +223,7 @@ $(function () {
 		  $(row).append('<td>' + itemValue + '</td>');
 		  $(row).append('<td>' + data.Designation + '</td>');
 		  $(row).append('<td>' + data.Band + '</td>');
-		  var deleteIcon=$('<i class="material-icons col-orange" style="cursor: pointer;">delete</i>');
+		  var deleteIcon=$('<i class="material-icons col-orange delete_icon" style="cursor: pointer;">delete</i>');
 		  $(deleteIcon).click(function() {
 			  $(row).remove();
 			  bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
@@ -269,7 +269,6 @@ $(function () {
 			  }
 			  $(actionStatus).tooltip({container: 'body'});
 			  var cell=$(tbody).find('tr td:contains(' + employeeId + ')');
-			  console.log('cell=' + $(cell).text());
 			  $(cell).siblings().last().html(actionStatus);
 		    });
 		  },

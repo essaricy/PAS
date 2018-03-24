@@ -58,7 +58,7 @@
           <div class="card">
             <div class="body">
               <!-- Nav tabs -->
-              <ul class="nav nav-tabs tab-nav-right tab-col-deep-orange" role="tablist">
+              <ul class="nav nav-tabs tab-nav-right tab-col-orange" role="tablist">
                 <li role="presentation" class="active"><a href="#cycle" data-toggle="tab">Cycle Wise</a></li>
                 <li role="presentation"><a href="#phase" data-toggle="tab">Phase wise</a></li>
               </ul>

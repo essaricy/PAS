@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assess.assembler.PhaseAssessmentAssembler;
+import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
 import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
 import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
@@ -166,7 +167,6 @@ public class PhaseAssessmentService {
 	public void escalate(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "escalate",
 				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
-		// TODO conclude
 		// TODO Email Trigger
 		/*
 		 * emailRepository.sendManagerSubmitMail(employeePhaseAssignment.getPhaseId(),
@@ -187,13 +187,30 @@ public class PhaseAssessmentService {
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	private void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
+		System.out.println("conclude()");
+		// Change the status to CONCLUDED
 		EmployeePhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
 				"conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
-		// Abridge Cycle Assignment
-		cycleAssessmentService.abridge(employeePhaseAssignment.getEmployeeId());
+		// Update score in employee assignment
+		PhaseAssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
+				.findFirstByAssignIdOrderByStatusDesc(assignmentId);
+		List<PhaseAssessDetail> phaseAssessDetails = phaseAssessHeader.getPhaseAssessDetails();
+		double totalScore=0;
+		for (PhaseAssessDetail phaseAssessDetail : phaseAssessDetails) {
+			totalScore+=phaseAssessDetail.getScore();
+		}
+		employeePhaseAssignment.setScore(totalScore);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// email trigger
 		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(), requestedEmployeeId,
 				employeePhaseAssignment.getEmployeeId());
+		// Abridge Cycle Assignment
+		String abridgeError = cycleAssessmentService.abridgeQuietly(employeePhaseAssignment.getEmployeeId());
+		if (abridgeError == null) {
+			System.out.println("Abridge has been completed successfully");
+		} else {
+			System.out.println("Abridge failed: " + abridgeError);
+		}
 	}
 
 	private EmployeePhaseAssignment update(PhaseAssessHeaderDto phaseAssessHeaderDto,

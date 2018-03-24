@@ -1,5 +1,8 @@
 package com.softvision.ipm.pms.interceptor.aspect;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -9,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Component;
 
+import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
@@ -16,6 +21,8 @@ import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 @Aspect
 @Component
 public class SecureAssignmentAspect {
+
+	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
@@ -39,6 +46,15 @@ public class SecureAssignmentAspect {
 		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new InvalidInputException("No such assignment exists");
+		}
+		int phaseId = employeePhaseAssignment.getPhaseId();
+		AppraisalPhase appraisalPhase = appraisalPhaseDataRepository.findById(phaseId);
+		if (appraisalPhase == null) {
+			throw new InvalidInputException("No such appraisal phase");
+		}
+		Date endDate = appraisalPhase.getEndDate();
+		if (endDate.after(Calendar.getInstance().getTime())) {
+			throw new InvalidInputException("you cannot modify an assignment from a phase which is in future");
 		}
 		// permit this form only to the employee and to the manager to whom its been assigned
 		int employeeId = employeePhaseAssignment.getEmployeeId();
