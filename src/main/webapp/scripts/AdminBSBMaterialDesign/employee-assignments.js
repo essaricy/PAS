@@ -241,7 +241,6 @@ $(function () {
       }
 
       function onErrorAssignedEmployees(error) {
-    	console.log('error=' + error);
     	showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
       }
   };

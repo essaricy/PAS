@@ -441,7 +441,7 @@ $(function () {
     }
 
     function onErrorAssessments(error) {
-      console.log('error=' + JSON.stringify(error));
+      showErrorCard('Errors occurred while retreiving assessment information. Cause: ' + JSON.stringify(error));
     }
   };
 

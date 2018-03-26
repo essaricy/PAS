@@ -49,9 +49,9 @@
         <td valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
           <b>Dear ${managerName},</b>
           
-          <P> Employee has submitted his/her self-appraisal form. Review is pending form your end.</P>
-          <p>Please arrange your time to have a one-on-one session with the employee, reivew the goals, convey the acheivements,come to an agreement on the rating.</p>
-          <p>Please make sure that your reivew well before time.</p>
+          <P>This is a remainder mail to inform you that employees has submitted his/her self-appraisal form for the <b> ${phase} </B>.</P>
+          <p>Please arrange your time to have a one-on-one session with the employee, review the goals, convey the achievements,come to an agreement on the rating.</p>
+          <p>Please make sure that your review well before time.</p>
         </td>
       </tr>
       

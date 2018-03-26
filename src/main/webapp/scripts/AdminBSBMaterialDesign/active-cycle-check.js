@@ -20,7 +20,6 @@ $.fn.activeCycleCheck=function(options) {
   }
 
   function onError(error) {
-	console.log('onError error=' + error);
 	showErrorCard(error);
   }
 

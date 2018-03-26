@@ -22,37 +22,37 @@ public class EmployeeRest {
 
 	@Autowired private EmployeeService employeeService;
 
-	@RequestMapping(value="/search/all", method=RequestMethod.GET)
+	@RequestMapping(value="search/all", method=RequestMethod.GET)
     public @ResponseBody List<Employee> getEmployees() {
 		return employeeService.getEmployees();
     }
 
-	@RequestMapping(value="/search/byId/{employeeId}", method=RequestMethod.GET)
+	@RequestMapping(value="search/byId/{employeeId}", method=RequestMethod.GET)
     public @ResponseBody Employee getEmployee(
     		@PathVariable(value="employeeId", required=true) int employeeId) {
 		return employeeService.getEmployee(employeeId);
     }
 
-	@RequestMapping(value="/search/byLogin/{loginId}", method=RequestMethod.GET)
+	@RequestMapping(value="search/byLogin/{loginId}", method=RequestMethod.GET)
     public @ResponseBody Employee getEmployee(
     		@PathVariable(value="loginId", required=true) String loginId) {
 		return employeeService.getEmployee(loginId);
     }
 
-	@RequestMapping(value="/search/{searchString}", method=RequestMethod.GET)
+	@RequestMapping(value="search/{searchString}", method=RequestMethod.GET)
     public @ResponseBody List<Employee> search(
     		@PathVariable(value="searchString", required=true) String searchString) {
 		return employeeService.search(searchString);
     }
 	
-	@RequestMapping(value="/role-search/{searchString}", method=RequestMethod.GET)
+	@RequestMapping(value="role-search/{searchString}", method=RequestMethod.GET)
     public @ResponseBody List<Employee> roleSearch(
     		@PathVariable(value="searchString", required=true) String searchString) {
 		return employeeService.roleSearch(searchString);
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value="/save/byLogin/{loginId:.+}", method=RequestMethod.PUT)
+	@RequestMapping(value="save/byLogin/{loginId:.+}", method=RequestMethod.PUT)
     public @ResponseBody Result saveEmployee(
     		@PathVariable(value="loginId", required=true) String loginId) {
 		Result result = new Result();
@@ -68,7 +68,7 @@ public class EmployeeRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value="/sync", method=RequestMethod.PUT)
+	@RequestMapping(value="sync", method=RequestMethod.PUT)
     public @ResponseBody Result syncEmployees() {
 		Result result = new Result();
 		try {
@@ -83,7 +83,7 @@ public class EmployeeRest {
     }
 	
 
-	@RequestMapping(value="/types", method=RequestMethod.GET)
+	@RequestMapping(value="types", method=RequestMethod.GET)
     public @ResponseBody List<String> getEmployeeTypes() {
 		return employeeService.getEmployeeTypes();
     }

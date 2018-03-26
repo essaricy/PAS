@@ -127,7 +127,6 @@ $.fn.ajaxWrapper = function(options) {
       }
     }
   }).always(function() {
-	console.log(options.url + ': always: ');
 	$.preloader.stop();
 
 	if (options.onComplete) {

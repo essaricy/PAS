@@ -1,13 +1,19 @@
 package com.softvision.ipm.pms.report.repo;
 
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
+
 public class ManagerReportSql {
 
 	public static final String SELECT_PHASEWISE_EMPLOYEE_STATUS_COUNT = "select "
-			+ "status as status, "
-			+ "count(*) as count "
+			+ "phase_assign.status as status, "
+			+ "count(phase_assign.id) as count "
 			+ "from phase_assign "
-			+ "where assigned_by=? "
-			+ "group by status "
-			+ "order by status asc";
+			+ "inner join appr_phase on phase_assign.phase_id=appr_phase.id "
+			+ "inner join appr_cycle on appr_cycle.id=appr_phase.cycle_id "
+			+ "where "
+			+ "appr_cycle.status = '" + AppraisalCycleStatus.ACTIVE.toString() + "' "
+			+ "and phase_assign.assigned_by=? "
+			+ "group by phase_assign.status "
+			+ "order by phase_assign.status asc";
 
 }

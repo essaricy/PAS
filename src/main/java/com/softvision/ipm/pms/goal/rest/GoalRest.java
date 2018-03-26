@@ -25,12 +25,12 @@ public class GoalRest {
 
 	@Autowired private GoalService goalService;
 
-	@RequestMapping(value="/list", method=RequestMethod.GET)
+	@RequestMapping(value="list", method=RequestMethod.GET)
     public @ResponseBody List<GoalDto> getGoals() {
 		return goalService.getGoals();
     }
 
-	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="list/{id}", method=RequestMethod.GET)
     public @ResponseBody GoalDto getGoal(@PathVariable(required=true) @NotNull long id) {
 		return goalService.getGoal(id);
     }

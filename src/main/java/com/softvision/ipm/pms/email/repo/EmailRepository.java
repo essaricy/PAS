@@ -47,15 +47,23 @@ public class EmailRepository {
 		try {
 			
 			String image = environment.getRequiredProperty("app.email.image");
-			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.KICK_OFF.toString());
-			
 			String templateFile = mailTemplate.getFileName();
-			String emailFrom = mailTemplate.getFromMail();
-			String emailTo = mailTemplate.getToMail();
+			String url = mailTemplate.getButtonUrl();
 			String subject = mailTemplate.getSubject();
 			
-			String url = mailTemplate.getButtonUrl();
+			String emailFrom = "";
+			String emailTo = "";
+
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = mailTemplate.getFromMail();
+				 emailTo = mailTemplate.getToMail();
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("cycle", appraisalCycle.getName());
@@ -74,11 +82,23 @@ public class EmailRepository {
 			
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CYCLE_CONCLUDE.toString());
 			String templateFile = mailTemplate.getFileName();
-			String emailFrom = mailTemplate.getFromMail();
-			String emailTo = mailTemplate.getToMail();
+			String emailFrom = "";
+			String emailTo = "";
 			String subject = mailTemplate.getSubject();
 			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = mailTemplate.getFromMail();
+				 emailTo = mailTemplate.getToMail();
+			}
+			
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("cycle", appraisalCycle.getName());
@@ -100,10 +120,23 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = employee.getLoginId()+domain;
-			String emailTo = manager.getLoginId()+domain;
+			String emailFrom = "";
+			String emailTo = "";
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
+			
+
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = employee.getLoginId()+domain;
+				 emailTo = manager.getLoginId()+domain;
+			}
+			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -128,11 +161,25 @@ public class EmailRepository {
 			String domain=  environment.getRequiredProperty("app.email.domain");
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String ccemal = mailTemplate.getCcMail();
-			String emailFrom = employee.getLoginId()+domain;
-			String emailTo = manager.getLoginId()+domain;
+			String ccemal = "";
+			String emailFrom = "";
+			String emailTo = "";
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 ccemal=testMail;
+			}else{
+				 emailFrom = employee.getLoginId()+domain;
+				 emailTo = manager.getLoginId()+domain;
+				  ccemal = mailTemplate.getCcMail();
+			}
+			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -156,11 +203,26 @@ public class EmailRepository {
 			String domain=  environment.getRequiredProperty("app.email.domain");
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String ccemal = mailTemplate.getCcMail();
-			String emailFrom = employee.getLoginId()+domain;
-			String emailTo = manager.getLoginId()+domain;
+			String ccemal = "";
+			String emailFrom = "";
+			String emailTo = "";
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 ccemal=testMail;
+			}else{
+				 ccemal = mailTemplate.getCcMail();
+				 emailFrom = employee.getLoginId()+domain;
+				 emailTo = manager.getLoginId()+domain;
+			}
+			
+			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -273,12 +335,26 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
+
+			String emailFrom = "";
+			String emailTo = "";
+			String ccEmail ="";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 ccEmail=testMail;
+			}else{
+				 emailFrom = manager.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+			// need discussion	
+				 ccEmail = emailFrom +mailTemplate.getCcMail();
+			}
 			
 			
-			String emailFrom = manager.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
-		// need discussion	
-			String ccEmail = emailFrom +mailTemplate.getCcMail();
 
 			System.out.println(" from:"+ emailFrom+" to "+ emailTo+" ->" +ccEmail);
 			String empName = employee.getFirstName();
@@ -305,10 +381,21 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = manager.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
-			
 			String empName = employee.getFirstName();
+			
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = manager.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -333,10 +420,21 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = manager.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
-			
 			String empName = employee.getFirstName();
+			
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = manager.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -361,10 +459,24 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = hr.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
-			String ccmail = manager.getLoginId()+domain;
 			String empName = employee.getFirstName();
+			
+			String ccmail = "";
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 ccmail=testMail;
+			}else{
+				 emailFrom = hr.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+				 ccmail = manager.getLoginId()+domain;
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -389,9 +501,21 @@ public class EmailRepository {
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = hr.getLoginId()+domain;
-			String emailTo = manager.getLoginId()+domain;
 			String managerName = manager.getFirstName();
+			
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = hr.getLoginId()+domain;
+				 emailTo = manager.getLoginId()+domain;
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -407,35 +531,38 @@ public class EmailRepository {
 	}
 	
 	
-	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
+	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee fManager, Employee tManager, Employee employee) throws EmailException {
 		try {
 			
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CHANGE_MGR.toString());
-			
-			String templateFile = mailTemplate.getFileName();
-			String domain = environment.getRequiredProperty("app.email.domain");
-
-			String subject = mailTemplate.getSubject();
+		
 			String image = environment.getRequiredProperty("app.email.image");
+			String domain = environment.getRequiredProperty("app.email.domain");
+			String templateFile = mailTemplate.getFileName();
+			String subject = mailTemplate.getSubject();
 			String url = mailTemplate.getButtonUrl();
-			String emailTo = employee.getLoginId() + domain;
-
-			String emailFrom = null;
-			String emailcc = null;
-
-			if (hr != null) {
-				emailFrom = hr.getLoginId() + domain;
-				emailcc = fManager.getLoginId() + domain + "," + tManager.getLoginId() + domain;
-			} else {
-				emailFrom = fManager.getLoginId() + domain;
-				emailcc = hr.getLoginId() + domain + "," + "hrmail";
-			}
-
 			String empName = employee.getFirstName();
-
 			String fromManager = fManager.getFirstName();
 			String toManager = tManager.getFirstName();
+			
+			String emailcc = "";
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 emailcc=testMail;
+			}else{
+				 emailTo = employee.getLoginId() + domain;
+				 emailFrom =  fManager.getLoginId() + domain;;
+				 emailcc = tManager.getLoginId()+domain;
+			}
+			
 
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -447,6 +574,7 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject,
 					new Object[] { appraisalCycle.getName(), appraisalPhase.getName(), empName });
+			
 			sendEmail(emailFrom, emailTo, emailcc, subject, reportContent);
 		} catch (MessagingException messagingException) {
 			throw new EmailException(messagingException.getMessage(), messagingException);
@@ -460,16 +588,24 @@ public class EmailRepository {
 			String domain=  environment.getRequiredProperty("app.email.domain");
 			
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMPLOYEE_ENABLE.toString());
-			
 			String templateFile = mailTemplate.getFileName();
-			
-			String emailFrom = manager.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
 			String subject = mailTemplate.getSubject();
-			
 			String url = mailTemplate.getButtonUrl();
-			
 			String empName = employee.getFirstName();
+			
+			String emailFrom = "";
+			String emailTo = "";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+			}else{
+				 emailFrom = manager.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -491,12 +627,26 @@ public class EmailRepository {
 			String domain=  environment.getRequiredProperty("app.email.domain");
 			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
-			String emailFrom = manager.getLoginId()+domain;
-			String emailTo = employee.getLoginId()+domain;
 			String subject = mailTemplate.getSubject();
 			String templateFile = mailTemplate.getFileName();
-			String ccEmail = mailTemplate.getCcMail();
 			String empName = employee.getFirstName();
+			
+			String emailFrom = "";
+			String emailTo = "";
+			String ccEmail="";
+			
+			String enableTestMail = environment.getRequiredProperty("app.email.test");
+			String testMail = environment.getRequiredProperty("app.email.emailid");
+			
+			if(enableTestMail.equalsIgnoreCase("true")){
+				 emailFrom = testMail;
+				 emailTo = testMail;
+				 ccEmail=testMail;
+			}else{
+				 emailFrom = manager.getLoginId()+domain;
+				 emailTo = employee.getLoginId()+domain;
+				 ccEmail = mailTemplate.getCcMail();
+			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -649,22 +799,17 @@ public class EmailRepository {
 		}
 	}
 	
-	public void sendChangeManager(int phaseId, int hrId, int employeeId,int fromManager,int toManager) {
+	public void sendChangeManager(int phaseId, int employeeId,int fromManager,int toManager) {
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 	
-		Employee hr=null;
-		if(hrId != 0){
-			 hr=employeeRepository.findByEmployeeId(employeeId);
-		}
-		
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee fManager=employeeRepository.findByEmployeeId(fromManager);
-		Employee tManager=employeeRepository.findByEmployeeId(fromManager);
+		Employee tManager=employeeRepository.findByEmployeeId(toManager);
 		
 		
 		try {
-			sendChangeManagerMail(appraisalCycle, appraisalPhase,hr,fManager,tManager, employee);
+			sendChangeManagerMail(appraisalCycle, appraisalPhase,fManager,tManager, employee);
 		} catch (EmailException e) {
 			e.printStackTrace();
 		}

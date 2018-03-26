@@ -49,7 +49,8 @@
         <td valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
           <b>Dear ${empName},</b>
           
-          <P> You appraisal form for the <b> ${phase} </B> is ready to be filled.</P>
+          <P>This is a remainder mail to inform you that your appraisal form for the <b> ${phase} </B> is ready to be filled. </P>
+          <P>We have noticed that your appraisal form is not yet submitted to your respective manager. </P>
           <p>Please make sure that you complete your self-appraisal forms and submit well before time.</p>
         </td>
       </tr>

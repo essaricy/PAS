@@ -23,14 +23,11 @@
     var cardHeader=$(obj).find('.header');
     var cardBody=$(obj).find('.body');
 
-    console.log('Loading data from ' + loadUrl);
     // Retrieve data from URL
     $.get(loadUrl, {sid: new Date().getTime()}, function() {})
     .done(function(data) {
       if (data) {
         if (data.length == 0) {
-          //var div=$('<div class="alert alert-danger">There are no records found</div>');
-          //var noRecordsNote=$('<p class="font-bold col-pink">There are no records found</p>');
           var noRecordsNote=$('<p class="col-pink">There are no records found</p>');
           $(cardBody).append(noRecordsNote);
         } 

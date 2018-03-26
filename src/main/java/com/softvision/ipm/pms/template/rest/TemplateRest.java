@@ -28,17 +28,17 @@ public class TemplateRest {
 
 	@Autowired private TemplateService templateService;
 
-	@RequestMapping(value="/list", method=RequestMethod.GET)
+	@RequestMapping(value="list", method=RequestMethod.GET)
     public @ResponseBody List<TemplateDto> geTemplates() {
 		return templateService.getTemplates();
     }
 
-	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="list/{id}", method=RequestMethod.GET)
     public @ResponseBody TemplateDto getTemplate(@PathVariable(required=true) @NotNull long id) {
 		return templateService.getTemplate(id);
     }
 
-	@RequestMapping(value="/list/new", method=RequestMethod.GET)
+	@RequestMapping(value="list/new", method=RequestMethod.GET)
     public @ResponseBody TemplateDto getNewTemplate() {
 		return templateService.getNewTemplate();
     }
@@ -61,14 +61,14 @@ public class TemplateRest {
 		return result;
     }
 
-	@RequestMapping(value="/search/byName/{searchString}", method=RequestMethod.GET)
+	@RequestMapping(value="search/byName/{searchString}", method=RequestMethod.GET)
 	public @ResponseBody List<TemplateDto> search(
     		@PathVariable(value="searchString", required=true) String searchString) {
 		return templateService.searchName(searchString);
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
-	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="delete/{id}", method=RequestMethod.DELETE)
     public @ResponseBody Result delete(@PathVariable(required=true) @NotNull @Min(1) long id) {
 		Result result = new Result();
 		try {

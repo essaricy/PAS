@@ -23,6 +23,7 @@ import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.util.AssignmentUtil;
 import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.ipm.pms.email.repo.EmailRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 import com.softvision.ipm.pms.role.service.RoleService;
 
@@ -38,6 +39,8 @@ public class ManagerAssignmentService {
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
+	
+	@Autowired private EmailRepository emailRepository;
 
 	@PreSecureAssignment(permitManager=true)
 	public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
@@ -50,10 +53,17 @@ public class ManagerAssignmentService {
 		}
 		employeePhaseAssignment.setAssignedBy(toEmployeeId);
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
+
+	  // email trigger
+		emailRepository.sendChangeManager(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
+				fromEmployeeId, toEmployeeId);
 	}
 
 	public void sendRemiderToSubmit(long phaseAssignId, int loggedInEmployeeId) {
-		// TODO Auto-generated method stub
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
+		// email trigger
+		emailRepository.sendEnableMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
+				employeePhaseAssignment.getEmployeeId());
 	}
 
 	

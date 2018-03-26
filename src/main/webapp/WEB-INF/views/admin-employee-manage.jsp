@@ -380,7 +380,6 @@
     	  url: '<%=request.getContextPath()%>/employee/sync',
     	  //refresh: "no",
     	  onSuccess: function (result) {
-    		console.log("success");
     		var results_container_error=$('#Sync_Results_Error');
     		var results_container_Success=$('#Sync_Results_Success');
       		$(results_container_error).empty();

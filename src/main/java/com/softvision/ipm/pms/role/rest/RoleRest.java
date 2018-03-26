@@ -26,32 +26,31 @@ public class RoleRest {
 	@Autowired
 	private RoleService roleService;
 
-	@RequestMapping(value = "/all", method = RequestMethod.GET)
+	@RequestMapping(value = "all", method = RequestMethod.GET)
 	public @ResponseBody List<Role> getRoles() {
 		return roleService.getRoles();
 	}
 
-	@RequestMapping(value = "/byId/{roleId}", method = RequestMethod.GET)
+	@RequestMapping(value = "byId/{roleId}", method = RequestMethod.GET)
 	public @ResponseBody List<Role> getRolesByRole(@PathVariable(value = "roleId", required = true) int roleId) {
 		return roleService.getRole(roleId);
 	}
 
-	@RequestMapping(value = "/emp-byRole/{roleId}", method = RequestMethod.GET)
+	@RequestMapping(value = "emp-byRole/{roleId}", method = RequestMethod.GET)
 	public @ResponseBody List<Employee> getEmployeeByRole(@PathVariable(value = "roleId", required = true) int roleId) {
 		return roleService.getEmployeesbyRoleId(roleId);
 	}
-	@RequestMapping(value = "/byEmployee/{empId}", method = RequestMethod.GET)
+	@RequestMapping(value = "byEmployee/{empId}", method = RequestMethod.GET)
 	public @ResponseBody List<Role> getRolesByEmp(@PathVariable(value = "empId", required = true) int employeeId) {
 		return roleService.getRolesbyEmployeeId(employeeId);
 	}
-	@RequestMapping(value = "/byLogin/{loginId}", method = RequestMethod.GET)
+	@RequestMapping(value = "byLogin/{loginId}", method = RequestMethod.GET)
 	public @ResponseBody List<Role> getRolesBylogin(@PathVariable(value = "loginId", required = true) String loginId) {
 		return roleService.getRolesbyLoginId(loginId);
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value = "/delete/{employeeId}/{roleId}", method = RequestMethod.PUT)
-	//@PreAuthorize("hasPermission(authentication, 'Admin')")
+	@RequestMapping(value = "delete/{employeeId}/{roleId}", method = RequestMethod.PUT)
 	public Result delete(@PathVariable(required = true) @NotNull Integer employeeId,
 			@PathVariable(required = true) @NotNull int roleId) {
 		Result result = new Result();
@@ -66,8 +65,7 @@ public class RoleRest {
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value = "/assign/{employeeId}/{roleId}", method = RequestMethod.PUT)
-	//@PreAuthorize("hasPermission(authentication, 'Admin')")
+	@RequestMapping(value = "assign/{employeeId}/{roleId}", method = RequestMethod.PUT)
 	public Result assign(@PathVariable(required = true) @NotNull Integer employeeId,
 			@PathVariable(required = true) @NotNull int roleId) {
 		Result result = new Result();
@@ -81,9 +79,4 @@ public class RoleRest {
 		return result;
 	}
 
-	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value = "/all-test", method = RequestMethod.GET)
-	public @ResponseBody List<Role> test() {
-		return roleService.getRoles();
-	}
 }

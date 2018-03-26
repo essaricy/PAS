@@ -21,6 +21,12 @@
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
   </head>
+  <style>
+  /* .progress-bar {
+    -webkit-transition: width 2.5s ease;
+    transition: width 2.5s ease;
+  } */
+  </style>
 </head>
 
 <body class="theme-red">
@@ -38,6 +44,7 @@
 
 	  <div class="row clearfix PhasewiseEmployeeStatusCount_Row">
 	  </div>
+
       <!-- Basic Example -->
       <div class="row clearfix">
       	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
@@ -56,6 +63,22 @@
           </div>
       	</div>
       	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+      	  <div class="card">
+      	    <div class="header"><h2>Current Appraisal Status</h2>
+      	    </div>
+      	    <div class="body">
+      	      <table class="table table-striped" width="100%" id="CurrentAppraisalStatus_Table">
+      	        <thead>
+      	          <tr>
+      	            <th>Phase</th>
+      	            <th>Progress</th>
+      	          </tr>
+      	        </thead>
+      	        <tbody>
+      	        </tbody>
+      	      </table>
+      	    </div>
+       	  </div>
       	</div>
       </div>
 
@@ -120,24 +143,18 @@
   $(function () {
 	var isAdmin=${isAdmin};
 	var isManager=${isManager};
-    console.log('isAdmin? ' + isAdmin);
-    console.log('isManager? ' + isManager);
 
     var getPhasewiseStatusCount=function() {
    	  $.fn.ajaxGet({
         url: '<%=request.getContextPath()%>/report/manager/phase/status/count',
         onSuccess: function(phasewiseEmployeeStatusCounts) {
       	var phasewiseEmployeeStatusCountRow = $('.PhasewiseEmployeeStatusCount_Row');
-      	$(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
+      	  $(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
             var phaseStatus=getPhaseAssignmentStatus(phasewiseEmployeeStatusCount.phaseAssignmentStatus.code);
             var iconName=phaseStatus.icon;
             var count=phasewiseEmployeeStatusCount.count;
-            console.log(iconName);
 
             var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
-            //var colDiv=$('<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">');
-            //var colDiv=$('<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">');
-            //var colDiv=$('<div>');
             var infoBoxDiv=$('<div class="info-box hover-zoom-effect ' + phaseStatus.colorClass + '">');
             var iconDiv=$('<div class="icon">');
             var icon=$('<i class="material-icons">' + iconName + '</i>');
@@ -152,14 +169,61 @@
             $(infoBoxDiv).append(contentDiv);
             $(contentDiv).append(textDiv);
             $(contentDiv).append(countDiv);
-      	});
+      	  });
         }
       });
     }
 
+    var getCurrentAppraisalStatus=function() {
+   	  $.fn.ajaxGet({
+        url: '<%=request.getContextPath()%>/report/employee/cycle/status',
+        onSuccess: function(phaseAssignments) {
+          var currentAppraisalStatus_Table = $('#CurrentAppraisalStatus_Table');
+          var tbody=$(currentAppraisalStatus_Table).find('tbody');
+          $(phaseAssignments).each(function(index, phaseAssignment) {
+        	var employeeAssignment = phaseAssignment.employeeAssignments[0];
+            var phaseStatus=getPhaseAssignmentStatus(employeeAssignment.status);
+
+            var row=$('<tr>');
+            var phaseNameTd=$('<td width="20%">');
+            $(phaseNameTd).append(phaseAssignment.phase.name);
+
+            var percentage=100;
+            var progressClass="bg-grey";
+            var progressAnimationClass="";
+            var progressText="Not assigned";
+            if (phaseStatus != null && phaseStatus != PhaseAssignmentStatus.NOT_INITIATED) {
+              percentage=(phaseStatus.code/PhaseAssignmentStatus.CONCLUDED.code)*100;
+              progressClass=phaseStatus.colorClass;
+              progressText=phaseStatus.description;
+
+              if (phaseStatus != PhaseAssignmentStatus.CONCLUDED) {
+                progressAnimationClass="progress-bar-striped active";
+              }
+            }
+            var progressTd=$('<td>');
+            var progressDiv=$('<div class="progress" title="' + progressText + '">');
+            var progressBarDiv=$('<div class="progress-bar ' + progressClass + " " + progressAnimationClass + '" role="progressbar" '
+            		+ 'aria-valuenow="' + percentage + '" aria-valuemin="0" '
+            		+ 'aria-valuemax="100">');
+            $(progressDiv).tooltip({container: 'body'});
+            $(progressBarDiv).append(progressText);
+            $(progressBarDiv).animate({width: percentage + "%"}, 1000);
+
+            $(row).append(phaseNameTd);
+            $(tbody).append(row);
+            $(progressDiv).append(progressBarDiv);
+            $(progressTd).append(progressDiv);
+            $(row).append(progressTd);            
+        	});
+          }
+        });
+      }
+
     if (isManager) {
     	getPhasewiseStatusCount();
     }
+   	getCurrentAppraisalStatus();
     <%-- $.fn.ajaxGet({
   	  url: '<%=request.getContextPath()%>/dummy/delay/SUCCESS/5'
     }); --%>

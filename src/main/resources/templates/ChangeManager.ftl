@@ -49,7 +49,7 @@
         <td valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
           <b>Dear ${empName},</b>
           
-          <P> You manger for the appraisal <b> ${phase} </b> has been changed from ${fromManager}  to ${toManager}.</P>
+          <P>This mail is to inform you that the manger for the appraisal <b> ${phase} </b> has been changed from  <B>${fromManager}</B>  to <B> ${toManager} <B/>.</P>
           <p>Please reach out to HR or the manager if you need any clarification.</p>
         </td>
       </tr>

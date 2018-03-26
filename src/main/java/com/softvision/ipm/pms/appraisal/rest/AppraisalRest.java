@@ -27,18 +27,18 @@ public class AppraisalRest {
 	@Autowired
 	private AppraisalService appraisalService;
 
-	@RequestMapping(value="/list", method=RequestMethod.GET)
+	@RequestMapping(value="list", method=RequestMethod.GET)
     public @ResponseBody List<AppraisalCycleDto> getCycles() {
 		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
 		return cycles;
     }
 
-	@RequestMapping(value="/list/{id}", method=RequestMethod.GET)
+	@RequestMapping(value="list/{id}", method=RequestMethod.GET)
     public @ResponseBody AppraisalCycleDto getCycle(@PathVariable(required=true) @NotNull Integer id) {
 		return appraisalService.getCycle(id);
     }
 
-	@RequestMapping(value="/get/active", method=RequestMethod.GET)
+	@RequestMapping(value="get/active", method=RequestMethod.GET)
     public @ResponseBody AppraisalCycleDto getActiveCycle() {
 		return appraisalService.getActiveCycle();
     }
@@ -59,7 +59,7 @@ public class AppraisalRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value="/activate/{id}", method=RequestMethod.PUT)
+	@RequestMapping(value="activate/{id}", method=RequestMethod.PUT)
     public Result activate(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
@@ -72,7 +72,7 @@ public class AppraisalRest {
 		return result;
     }
 
-	@RequestMapping(value="/complete/{id}", method=RequestMethod.PUT)
+	@RequestMapping(value="complete/{id}", method=RequestMethod.PUT)
     public Result complete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
@@ -86,7 +86,7 @@ public class AppraisalRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
-	@RequestMapping(value="/delete/{id}", method=RequestMethod.DELETE)
+	@RequestMapping(value="delete/{id}", method=RequestMethod.DELETE)
     public Result delete(@PathVariable(required=true) @NotNull Integer id) {
 		Result result = new Result();
 		try {
