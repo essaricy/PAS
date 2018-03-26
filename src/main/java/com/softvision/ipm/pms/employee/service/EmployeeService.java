@@ -82,4 +82,8 @@ public class EmployeeService {
 		}
 		return resultList;
 	}
+
+	public void delete(int employeeId) {
+		employeeRepository.delete(employeeId);
+	}
 }

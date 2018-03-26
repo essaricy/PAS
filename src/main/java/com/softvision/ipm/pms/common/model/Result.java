@@ -19,4 +19,9 @@ public class Result implements Serializable {
 
 	private Object content;
 
+	@Override
+	public String toString() {
+		return "Result [code=" + code + ", message=" + message + ", content=" + content + "]";
+	}
+
 }

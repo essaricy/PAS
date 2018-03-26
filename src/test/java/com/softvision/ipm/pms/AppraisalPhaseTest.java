@@ -1,4 +1,4 @@
-package com.sv.ipm.pms;
+package com.softvision.ipm.pms;
 
 import java.util.List;
 

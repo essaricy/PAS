@@ -31,7 +31,7 @@ public class Template implements Serializable {
 	@Column(unique=true)
 	private String name;
 
-	private String updatedBy;
+	private int updatedBy;
 
 	private Date updatedAt;
 

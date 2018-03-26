@@ -1,4 +1,4 @@
-package com.sv.ipm.pms;
+package com.softvision.ipm.pms;
 
 import org.junit.Ignore;
 import org.junit.Test;

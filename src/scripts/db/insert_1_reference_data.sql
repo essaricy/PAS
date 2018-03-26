@@ -10,8 +10,6 @@ INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Communication');
 INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Business Domain');
 INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Technical Solutions');
 INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Process Awareness & Compliance');
-INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Corporate Initiatives');
-
 
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'),
 	(select id from goal where name='Client Orientation/Customer Focus'),
@@ -256,16 +254,16 @@ values(13,'CHANGE_MGR','ChangeManager.ftl','[{0},{1}]   [{2}] Assign
 Manager Changed!!','http://localhost:9000/',null,null,null);
 
 ---- ######################### email_template for TEST
-insert into email_template values(1,'KICK_OFF','AppraisalKickoff.ftl','Appraisal Kick off - {0} !!!','http://localhost:9000/','HR-App','rohith.ramesh@softvision.com','');
+insert into email_template values(1,'KICK_OFF','AppraisalKickoff.ftl','Appraisal Kick off - {0} !!!','http://localhost:9000/','HR-App','srikanth.kumar@softvision.com','');
 insert into email_template values(2,'EMPLOYEE_ENABLE','EmploeeEnable.ftl','[{0},{1}]   [{2}]  Self Appraisal form available!','http://localhost:9000/','','','');
 insert into email_template values(3,'EMPLOYEE_SUBMITED','EmployeeSubmitted.ftl','[{0},{1}]   [{2}] Self Appraisal submitted!!','http://localhost:9000/','','','');
 insert into email_template values(4,'MGR_TO_EMP_REMAINDER','ManagerToEmploeeRemainder.ftl','[{0},{1}]  [{2}] Self Appraisal pending Remainder!!','http://localhost:9000/','','','');
 insert into email_template values(5,'MANAGER_REVIEW','ManagerReviewCompleted.ftl','[{0},{1}]   [{2}] Self Appraisal Reviewed!!','http://localhost:9000/','','','');
 insert into email_template values(6,'MANAGER_FROZEN','ManagerReviewFrozen.ftl','[{0},{1}]   [{2}] Self Appraisal Concluded!!','http://localhost:9000/','','','');
-insert into email_template values(7,'EMP_ACCEPTED','EmploeeAccepted.ftl','[{0},{1}]   [{2}] Self Appraisal Accepted!!','http://localhost:9000/','','','rohith.ramesh@softvision.com');
-insert into email_template values(8,'EMP_REJECTED','EmploeeRejected.ftl','[{0},{1}]   [{2}] Self Appraisal Rejected!!','http://localhost:9000/','','','rohith.ramesh@softvision.com');
-insert into email_template values(9,'UPDATE_REVIEW','UpdateReviewEmp.ftl','[{0},{1}]   [{2}] Self Appraisal Re visited!!','http://localhost:9000/','','','rohith.ramesh@softvision.com');
-insert into email_template values(10,'HR_TO_EMP_REM','HrToEmploeeRemainder.ftl','[{0},{1}]   [{2}] Self Appraisal pending!!','http://localhost:9000/','','','rohith.ramesh@softvision.com');
+insert into email_template values(7,'EMP_ACCEPTED','EmploeeAccepted.ftl','[{0},{1}]   [{2}] Self Appraisal Accepted!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
+insert into email_template values(8,'EMP_REJECTED','EmploeeRejected.ftl','[{0},{1}]   [{2}] Self Appraisal Rejected!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
+insert into email_template values(9,'UPDATE_REVIEW','UpdateReviewEmp.ftl','[{0},{1}]   [{2}] Self Appraisal Re visited!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
+insert into email_template values(10,'HR_TO_EMP_REM','HrToEmploeeRemainder.ftl','[{0},{1}]   [{2}] Self Appraisal pending!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
 insert into email_template values(11,'HR_TO_MGR_REM','HrToManagerRemainder.ftl','[{0},{1}]   [{2}] Self Appraisal Review pending!!','http://localhost:9000/','','','');
-insert into email_template values(12,'CYCLE_CONCLUDE','Appraisalconcluded.ftl','Appraisal {0} has been conclude !!!','','HR-App',' rohith.ramesh@softvision.com','');
-insert into email_template values(13,'CHANGE_MGR','ChangeManager.ftl','[{0},{1}]   [{2}] Assign manager change!!','http://localhost:9000/','HR-App','rohith.ramesh@softvision.com','');
+insert into email_template values(12,'CYCLE_CONCLUDE','Appraisalconcluded.ftl','Appraisal {0} has been conclude !!!','','HR-App',' srikanth.kumar@softvision.com','');
+insert into email_template values(13,'CHANGE_MGR','ChangeManager.ftl','[{0},{1}]   [{2}] Assign manager change!!','http://localhost:9000/','HR-App','srikanth.kumar@softvision.com','');

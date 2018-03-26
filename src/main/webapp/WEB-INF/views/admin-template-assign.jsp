@@ -174,8 +174,9 @@ $(function () {
 	getValue: "name",
 	template: {
 	  type: "custom",
-	  method: function(value, item) {
-		return "<b>" + item.name + "</b><small> - Updated By <code>" + item.updatedBy + "</code> on <code>" + item.updatedAt + "</code></small>";
+	  method: function(value, template) {
+		var employeeName=template.updatedBy.FirstName + " " + template.updatedBy.LastName;
+		return "<b>" + template.name + "</b><small> - Updated By <code>" + employeeName + "</code> on <code>" + template.updatedAt + "</code></small>";
 	  }
 	},
 	list: {

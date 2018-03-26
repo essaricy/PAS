@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import com.softvision.ipm.pms.employee.entity.Employee;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Long>, JpaSpecificationExecutor<Employee> {
+public interface EmployeeRepository extends CrudRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
 
 	Employee findByEmployeeId(Integer employeeId);
 

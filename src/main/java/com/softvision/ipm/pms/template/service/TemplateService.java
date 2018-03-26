@@ -14,6 +14,7 @@ import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
@@ -37,12 +38,18 @@ public class TemplateService {
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
+	@Autowired private EmployeeRepository employeeRepository;
+
 	public List<TemplateDto> getTemplates() {
-		return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAllByOrderByUpdatedAtDesc());
+		List<TemplateDto> templateDtoList = TemplateAssembler.getTemplateDtoList(templateDataRepository.findAllByOrderByUpdatedAtDesc());
+		updateTemplateDtoList(templateDtoList);
+		return templateDtoList;
 	}
 
 	public TemplateDto getTemplate(long id) {
-		return TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
+		TemplateDto templateDto = TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
+		updateTemplateDto(templateDto);
+		return templateDto;
 	}
 
 	public TemplateDto getNewTemplate() {
@@ -119,10 +126,12 @@ public class TemplateService {
 	}
 
 	public List<TemplateDto> searchName(String searchString) {
+		List<TemplateDto> templateDtoList = null;
 		if (searchString != null) {
-			return TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
+			templateDtoList = TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
+			updateTemplateDtoList(templateDtoList);
 		}
-		return null;
+		return templateDtoList;
 	}
 
 	public boolean isInUse(long templateId) throws ServiceException {
@@ -140,6 +149,20 @@ public class TemplateService {
 			throw new ServiceException(message, exception);
 		}
 		return false;
+	}
+
+	private void updateTemplateDtoList(List<TemplateDto> templateDtoList) {
+		if (templateDtoList != null && !templateDtoList.isEmpty()) {
+			for (TemplateDto templateDto : templateDtoList) {
+				updateTemplateDto(templateDto);
+			}
+		}
+	}
+
+	private void updateTemplateDto(TemplateDto templateDto) {
+		if (templateDto != null) {
+			templateDto.setUpdatedBy(employeeRepository.findByEmployeeId(templateDto.getUpdatedBy().getEmployeeId()));
+		}
 	}
 
 }

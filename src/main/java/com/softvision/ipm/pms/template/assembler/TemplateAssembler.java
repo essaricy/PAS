@@ -3,6 +3,7 @@ package com.softvision.ipm.pms.template.assembler;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
 import com.softvision.ipm.pms.goal.model.GoalDto;
@@ -30,7 +31,9 @@ public class TemplateAssembler {
 			dto = new TemplateDto();
 			dto.setId(object.getId());
 			dto.setName(object.getName());
-			dto.setUpdatedBy(object.getUpdatedBy());
+			Employee updatedBy = new Employee();
+			updatedBy.setEmployeeId(object.getUpdatedBy());
+			dto.setUpdatedBy(updatedBy);
 			dto.setUpdatedAt(object.getUpdatedAt());
 			dto.setHeaders(getTemplateHeaderDtoList(object.getTemplateHeaders()));
 		}
@@ -88,7 +91,10 @@ public class TemplateAssembler {
 			object = new Template();
 			object.setId(dto.getId());
 			object.setName(dto.getName());
-			object.setUpdatedBy(dto.getUpdatedBy());
+			Employee updatedBy = dto.getUpdatedBy();
+			if (updatedBy != null) {
+				object.setUpdatedBy(updatedBy.getEmployeeId());
+			}
 			object.setUpdatedAt(dto.getUpdatedAt());
 			object.setTemplateHeaders(getTemplateHeaders(dto.getHeaders()));
 		}

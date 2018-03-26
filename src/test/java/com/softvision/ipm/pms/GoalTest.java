@@ -1,4 +1,4 @@
-package com.sv.ipm.pms;
+package com.softvision.ipm.pms;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

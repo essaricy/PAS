@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
+import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.service.TemplateService;
 
@@ -49,7 +50,10 @@ public class TemplateRest {
 		Result result = new Result();
 		try {
 			// set updatedBy & updatedAt
-			template.setUpdatedBy(RestUtil.getLoggedInLoginId());
+			int loggedInEmployeeId = RestUtil.getLoggedInEmployeeId();
+			Employee updatedBy = new Employee();
+			updatedBy.setEmployeeId(loggedInEmployeeId);
+			template.setUpdatedBy(updatedBy);
 			template.setUpdatedAt(new Date());
 			TemplateDto updated = templateService.update(template);
 			result.setCode(Result.SUCCESS);
