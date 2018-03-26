@@ -20,7 +20,7 @@ public class EmployeeCycleAssignmentDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ManagerCycleAssignmentDto [cycle=" + cycle + ", employeeAssignment=" + employeeAssignment
+		return "EmployeeCycleAssignmentDto [cycle=" + cycle + ", employeeAssignment=" + employeeAssignment
 				+ ", phaseAssignments=" + phaseAssignments + "]";
 	}
 

@@ -33,6 +33,16 @@ EMPLOYEE_SUBMITED {
         return "EMPLOYEE_SUBMITED";
     }
 },
+MGR_TO_EMP_REMAINDER {
+    public String toString() {
+        return "MGR_TO_EMP_REMAINDER";
+    }
+},
+MANAGER_REVIEW {
+    public String toString() {
+        return "MANAGER_REVIEW";
+    }
+},
 
 MANAGER_REMAINDER {
     public String toString() {
@@ -45,9 +55,40 @@ MANAGER_FROZEN {
     }
 },
 
-MANAGER_REVIEW {
+EMP_ACCEPTED {
     public String toString() {
-        return "MANAGER_REVIEW";
+        return "EMP_ACCEPTED";
+    }
+},
+EMP_REJECTED {
+    public String toString() {
+        return "EMP_REJECTED";
+    }
+},
+UPDATE_REVIEW {
+    public String toString() {
+        return "UPDATE_REVIEW";
+    }
+},
+HR_TO_EMP_REM {
+    public String toString() {
+        return "HR_TO_EMP_REM";
+    }
+},
+HR_TO_MGR_REM {
+    public String toString() {
+        return "HR_TO_MGR_REM";
+    }
+},
+CYCLE_CONCLUDE {
+    public String toString() {
+        return "CYCLE_CONCLUDE";
+    }
+},
+CHANGE_MGR {
+    public String toString() {
+        return "CHANGE_MGR";
     }
 }
+
 }

@@ -23,7 +23,7 @@ $(function () {
 	var phase=null;
     var templateHeaders=null;
 	var status=null;
-	var phaseAssessHeaders=null;
+	var assessHeaders=null;
 
 	function parseResult(result) {
 	  updateData(result);
@@ -35,7 +35,7 @@ $(function () {
       phase=result.phase;
       templateHeaders=result.templateHeaders;
   	  status=getPhaseAssignmentStatus(assignment.status);
-  	  phaseAssessHeaders=result.phaseAssessHeaders;
+  	  assessHeaders=result.assessHeaders;
 	}
 
 	function renderAssessments() {
@@ -129,46 +129,46 @@ $(function () {
 
       if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
        	if (role == 'Employee') {
-       	  var phaseAssessHeader=getBlankPhaseAssessHeader();
-       	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getSelfRatingRenderer(true);
+       	  var assessHeader=getBlankAssessHeader();
+       	  assessHeaders[assessHeaders.length]=assessHeader;
+       	  assessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == 'Employee') {
-          var phaseAssessHeader=phaseAssessHeaders[0];
-    	  phaseAssessHeader.render=getSelfRatingRenderer(true);
+          var assessHeader=assessHeaders[0];
+    	  assessHeader.render=getSelfRatingRenderer(true);
    	      assignment.render.buttons.push('Save');
    	      assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-    	var phaseAssessHeader=phaseAssessHeaders[0];
-    	phaseAssessHeader.render=getSelfRatingRenderer(false);
+    	var assessHeader=assessHeaders[0];
+    	assessHeader.render=getSelfRatingRenderer(false);
         if (role == 'Manager') {
-          phaseAssessHeader=getBlankPhaseAssessHeader();
-       	  phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-       	  phaseAssessHeader.render=getManagerRatingRenderer(true);
+          assessHeader=getBlankAssessHeader();
+       	  assessHeaders[assessHeaders.length]=assessHeader;
+       	  assessHeader.render=getManagerRatingRenderer(true);
 
      	  assignment.render.buttons.push('Save Review');
      	  assignment.render.buttons.push('Submit Review');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-        var phaseAssessHeader=phaseAssessHeaders[0];
-        phaseAssessHeader.render=getSelfRatingRenderer(false);
+        var assessHeader=assessHeaders[0];
+        assessHeader.render=getSelfRatingRenderer(false);
         if (role == 'Manager') {
-          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-      	  phaseAssessHeader.render=getManagerRatingRenderer(true);
+          assessHeader=assessHeaders[assessHeaders.length-1];
+      	  assessHeader.render=getManagerRatingRenderer(true);
 
       	  assignment.render.buttons.push('Save Review');
        	  assignment.render.buttons.push('Submit Review');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
-    	var phaseAssessHeader=phaseAssessHeaders[0];
-    	phaseAssessHeader.render=getSelfRatingRenderer(false);
+    	var assessHeader=assessHeaders[0];
+    	assessHeader.render=getSelfRatingRenderer(false);
 
-    	var phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-    	phaseAssessHeader.render=getManagerRatingRenderer(false);
+    	var assessHeader=assessHeaders[assessHeaders.length-1];
+    	assessHeader.render=getManagerRatingRenderer(false);
         
     	if (role == 'Employee') {
           assignment.render.buttons.push('Agree');
@@ -177,22 +177,22 @@ $(function () {
         }
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED
     		  || status == PhaseAssignmentStatus.CONCLUDED) {
-        var phaseAssessHeader=phaseAssessHeaders[0];
-        phaseAssessHeader.render=getSelfRatingRenderer(false);
+        var assessHeader=assessHeaders[0];
+        assessHeader.render=getSelfRatingRenderer(false);
 
-        phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-        phaseAssessHeader.render=getManagerRatingRenderer(false);
+        assessHeader=assessHeaders[assessHeaders.length-1];
+        assessHeader.render=getManagerRatingRenderer(false);
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
-        var phaseAssessHeader=phaseAssessHeaders[0];
-        phaseAssessHeader.render=getSelfRatingRenderer(false);
+        var assessHeader=assessHeaders[0];
+        assessHeader.render=getSelfRatingRenderer(false);
 
         if (role == 'Employee') {
-          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getManagerRatingRenderer(false);
+          assessHeader=assessHeaders[assessHeaders.length-1];
+          assessHeader.render=getManagerRatingRenderer(false);
           assignment.render.buttons.push('Agree');
         } else if (role == 'Manager') {
-          phaseAssessHeader=phaseAssessHeaders[phaseAssessHeaders.length-1];
-          phaseAssessHeader.render=getManagerRatingRenderer(true);
+          assessHeader=assessHeaders[assessHeaders.length-1];
+          assessHeader.render=getManagerRatingRenderer(true);
 
           assignment.render.buttons.push('Update Review');
         }
@@ -205,8 +205,8 @@ $(function () {
       var tbody=$(table).find('tbody');
       var tfoot=$(table).find('tfoot');
     	
-      $(phaseAssessHeaders).each(function(index, phaseAssessHeader) {
-       	var render=phaseAssessHeader.render;
+      $(assessHeaders).each(function(index, assessHeader) {
+       	var render=assessHeader.render;
        	var renderRating=render.rating;
        	var renderComments=render.comments;
        	var renderScore=render.score;
@@ -216,16 +216,16 @@ $(function () {
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderScore.name + '</th>');
 
         $(tbody).find('tr').each(function (index, row) {
-          var phaseAssessDetail=phaseAssessHeader.phaseAssessDetails[index];
+          var assessDetail=assessHeader.assessDetails[index];
           var ratingParams={
-            data: phaseAssessDetail, property: 'rating', sProperty: 'score', enable: render.editable,
+            data: assessDetail, property: 'rating', sProperty: 'score', enable: render.editable,
             rClass: renderRating.className, wClass: 'weightage', sClass: renderScore.className
           };
           var commentsParams= {
-            data: phaseAssessDetail, property: 'comments', enable: render.editable, cClass: renderComments.className
+            data: assessDetail, property: 'comments', enable: render.editable, cClass: renderComments.className
           };
           var scoreParams={
-        	data: phaseAssessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
+        	data: assessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
           };
           $(row).find('td:last').after(getRatingCell(ratingParams));
           $(row).find('td:last').after(getCommentsCell(commentsParams));
@@ -296,7 +296,7 @@ $(function () {
       var property=commentsParams.property;
       var value=data[property];
 
-   	  var commentsTd=$('<td style="min-width: 350px; word-break: break-all;">');
+   	  var commentsTd=$('<td style="min-width: 100px; max-width: 350px;">');
    	  if (enable) {
         var comments=$('<textarea class="' + cClass + '" rows="6" cols="30" maxlength="500">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
@@ -345,23 +345,23 @@ $(function () {
    	  return td;
     }
 
-    function getBlankPhaseAssessHeader() {
-      var phaseAssessHeader={};
-      phaseAssessHeader.id=0;
-      phaseAssessHeader.assignId=assignment.assignmentId;
-      var phaseAssessDetails=[];
-      phaseAssessHeader.phaseAssessDetails=phaseAssessDetails;
+    function getBlankAssessHeader() {
+      var assessHeader={};
+      assessHeader.id=0;
+      assessHeader.assignId=assignment.assignmentId;
+      var assessDetails=[];
+      assessHeader.assessDetails=assessDetails;
       $(templateHeaders).each(function(index, templateHeader) {
-        var phaseAssessDetail={};
-        phaseAssessDetail.id=0;
-        phaseAssessDetail.templateHeaderId=templateHeader.id;
-        phaseAssessDetail.rating=0;
-        phaseAssessDetail.comments='';
-        phaseAssessDetail.score=0;
-        phaseAssessDetails[phaseAssessDetails.length]=phaseAssessDetail;
+        var assessDetail={};
+        assessDetail.id=0;
+        assessDetail.templateHeaderId=templateHeader.id;
+        assessDetail.rating=0;
+        assessDetail.comments='';
+        assessDetail.score=0;
+        assessDetails[assessDetails.length]=assessDetail;
       });
-      //phaseAssessHeaders[phaseAssessHeaders.length]=phaseAssessHeader;
-      return phaseAssessHeader;
+      //assessHeaders[assessHeaders.length]=assessHeader;
+      return assessHeader;
     }
 
     function getSelfRatingRenderer(editable) {
@@ -384,7 +384,7 @@ $(function () {
 
     function sendAssessmentForm(buttonName) {
       var url=null;
-      var currentForm=phaseAssessHeaders[phaseAssessHeaders.length-1];
+      var currentForm=assessHeaders[assessHeaders.length-1];
 
       if(buttonName=='Save') {
    		url=options.contextPath + '/assessment/phase/save';

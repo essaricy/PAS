@@ -32,12 +32,12 @@ public class PhaseAssessmentDto implements Serializable {
 	@NotEmpty(message="At least one assessment must be provided")
 	@NotContainNull(message="Assess list cannot contain null")
 	@Valid
-	private List<PhaseAssessHeaderDto> phaseAssessHeaders;
+	private List<AssessHeaderDto> assessHeaders;
 
 	@Override
 	public String toString() {
 		return "PhaseAssessmentDto [phase=" + phase + ", employeeAssignment=" + employeeAssignment
-				+ ", templateHeaders=" + templateHeaders + ", phaseAssessHeaders=" + phaseAssessHeaders + "]";
+				+ ", templateHeaders=" + templateHeaders + ", assessHeaders=" + assessHeaders + "]";
 	}
 
 }

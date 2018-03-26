@@ -4,19 +4,19 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 
-public interface PhaseAssignmentDataRepository extends CrudRepository<EmployeePhaseAssignment, Long> {
+public interface PhaseAssignmentDataRepository extends CrudRepository<PhaseAssignment, Long> {
 
-	List<EmployeePhaseAssignment> findAll();
+	List<PhaseAssignment> findAll();
 
-	EmployeePhaseAssignment findById(Long id);
+	PhaseAssignment findById(Long id);
 
-	EmployeeCycleAssignment findFirstByTemplateId(Long id);
+	CycleAssignment findFirstByTemplateId(Long id);
 
-	EmployeePhaseAssignment findByPhaseIdAndEmployeeIdAndStatus(Integer phaseId, Integer employeeId, int status);
+	PhaseAssignment findByPhaseIdAndEmployeeIdAndStatus(Integer phaseId, Integer employeeId, int status);
 
-	EmployeePhaseAssignment findByPhaseIdAndEmployeeIdAndTemplateId(Integer phaseId, Integer employeeId, Long templateId);
+	PhaseAssignment findByPhaseIdAndEmployeeIdAndTemplateId(Integer phaseId, Integer employeeId, Long templateId);
 
 }

@@ -1,14 +1,14 @@
 -- #######################################################
 -- Assessment Module
 -- #######################################################
-DROP TABLE IF EXISTS emp_phase_assess CASCADE;
-DROP TABLE IF EXISTS emp_cycle_assess CASCADE;
+DROP TABLE IF EXISTS assess_detail CASCADE;
+DROP TABLE IF EXISTS assess_header CASCADE;
 
 -- #######################################################
 -- Assignment Module
 -- #######################################################
-DROP TABLE IF EXISTS emp_phase_assign CASCADE;
-DROP TABLE IF EXISTS emp_cycle_assign CASCADE;
+DROP TABLE IF EXISTS phase_assign CASCADE;
+DROP TABLE IF EXISTS cycle_assign CASCADE;
 
 -- #######################################################
 -- Employee Module

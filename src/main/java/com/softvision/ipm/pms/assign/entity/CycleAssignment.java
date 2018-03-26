@@ -12,14 +12,14 @@ import javax.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
-@Entity(name="emp_cycle_assign")
-public class EmployeeCycleAssignment implements Serializable {
+@Entity(name="cycle_assign")
+public class CycleAssignment implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="emp_cycle_assign_id_seq",sequenceName="emp_cycle_assign_id_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="emp_cycle_assign_id_seq")
+	@SequenceGenerator(name="cycle_assign_id_seq",sequenceName="cycle_assign_id_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="cycle_assign_id_seq")
 	private Long id;
 
 	private int cycleId;
@@ -37,5 +37,12 @@ public class EmployeeCycleAssignment implements Serializable {
 	private double score;
 
 	private Integer submittedTo;
+
+	@Override
+	public String toString() {
+		return "CycleAssignment [id=" + id + ", cycleId=" + cycleId + ", templateId=" + templateId + ", employeeId="
+				+ employeeId + ", assignedBy=" + assignedBy + ", assignedAt=" + assignedAt + ", status=" + status
+				+ ", score=" + score + ", submittedTo=" + submittedTo + "]";
+	}
 
 }

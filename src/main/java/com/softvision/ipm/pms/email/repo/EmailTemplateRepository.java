@@ -25,7 +25,7 @@ public class EmailTemplateRepository {
 		Writer writer = null;
 		try {
 			// Load template from source folder
-			Template template = configuration.getTemplate(templateName);
+			Template template = configuration.getTemplate(templateName.trim());
 			writer = new StringWriter();
 			template.process(emailData, writer);
 			return writer.toString();

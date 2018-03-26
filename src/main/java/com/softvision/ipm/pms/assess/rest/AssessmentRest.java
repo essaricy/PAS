@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
-import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
+import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
@@ -48,40 +48,40 @@ public class AssessmentRest {
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
-	public Result save(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result save(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
     }
 
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
-	public Result submit(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result submit(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/save-review", method=RequestMethod.POST)
-	public Result saveReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result saveReview(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/submit-review", method=RequestMethod.POST)
-	public Result submitReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result submitReview(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
 	}
 
 	@RequestMapping(value="phase/agree", method=RequestMethod.POST)
-	public Result agree(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result agree(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.EMPLOYEE_AGREED);
 	}
 
 	@RequestMapping(value="phase/disagree", method=RequestMethod.POST)
-	public Result disgree(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result disgree(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
 	}
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/update-review", method=RequestMethod.POST)
-	public Result updateReview(@RequestBody(required = true) @NotNull PhaseAssessHeaderDto phaseAssessHeader) {
+	public Result updateReview(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		Result result = new Result();
 		try {
 			if (phaseAssessHeader == null) {
@@ -102,7 +102,7 @@ public class AssessmentRest {
 		return result;
     }
 
-	public Result changePhaseStatus(PhaseAssessHeaderDto phaseAssessHeader, PhaseAssignmentStatus status) {
+	public Result changePhaseStatus(AssessHeaderDto phaseAssessHeader, PhaseAssignmentStatus status) {
 		Result result = new Result();
 		try {
 			if (phaseAssessHeader == null) {

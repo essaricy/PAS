@@ -25,11 +25,11 @@ DROP SEQUENCE IF EXISTS template_detail_id_seq CASCADE;
 -- #######################################################
 -- Assignment Module
 -- #######################################################
-DROP SEQUENCE IF EXISTS emp_cycle_assign_id_seq CASCADE;
-DROP SEQUENCE IF EXISTS emp_phase_assign_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS cycle_assign_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS phase_assign_id_seq CASCADE;
 
 -- #######################################################
 -- Assessment Module
 -- #######################################################
-DROP SEQUENCE IF EXISTS emp_cycle_assess_id_seq CASCADE;
-DROP SEQUENCE IF EXISTS emp_phase_assess_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS assess_header_id_seq CASCADE;
+DROP SEQUENCE IF EXISTS assess_detail_id_seq CASCADE;

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
@@ -95,11 +95,11 @@ public class AssignmentService {
 					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
 				// check if already assigned.
-				EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
+				CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
 				}
-				cycleAssignment = new EmployeeCycleAssignment();
+				cycleAssignment = new CycleAssignment();
 				cycleAssignment.setAssignedAt(assignedAt);
 				cycleAssignment.setAssignedBy(bulkAssignmentDto.getAssignedBy());
 				cycleAssignment.setCycleId(cycleId);

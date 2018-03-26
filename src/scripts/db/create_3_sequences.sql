@@ -25,14 +25,11 @@ CREATE SEQUENCE template_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1
 -- #######################################################
 -- Assignment Module
 -- #######################################################
-CREATE SEQUENCE emp_cycle_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000000	CACHE 1;
-CREATE SEQUENCE emp_phase_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
+CREATE SEQUENCE cycle_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000000	CACHE 1;
+CREATE SEQUENCE phase_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
 
 -- #######################################################
 -- Assessment Module
 -- #######################################################
-CREATE SEQUENCE cycle_assess_header_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
-CREATE SEQUENCE cycle_assess_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
-
-CREATE SEQUENCE phase_assess_header_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
-CREATE SEQUENCE phase_assess_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
+CREATE SEQUENCE assess_header_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
+CREATE SEQUENCE assess_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;

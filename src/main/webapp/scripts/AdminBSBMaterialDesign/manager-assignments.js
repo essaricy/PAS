@@ -1,7 +1,7 @@
 $(function () {
   $.fn.managerAssignment=function( options ) {
     var settings=$.extend({
-      contextpath: null,
+      contextPath: null,
 	  url: null,
 	}, options );
 
@@ -9,10 +9,18 @@ $(function () {
 
     $.fn.ajaxGet({
    	  url: settings.url,
-      onSuccess: renderAssignedEmployees,
+      onSuccess: renderAssignments,
       onError: onErrorAssignedEmployees
     });
-    
+
+    function renderAssignments(data) {
+      if (data == null || data.length == 0) {
+    	showErrorCard('There are no assignments found');
+      } else{
+    	renderAssignedEmployees(data);
+      }
+    }
+
     function renderAssignedEmployees(data) {
       for (var index = 0; index < data.length; index++) {
     	var cycleAssignment = data[index];
@@ -141,7 +149,8 @@ $(function () {
       } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
     	$(td).append(getUpRootButton('cycle', id));
       } else if (status == CycleAssignmentStatus.CONCLUDED.code) {
-    	$(td).append(getViewFormButton('cycle', id));
+    	//$(td).append(getViewFormButton('cycle', id));
+    	  $(td).append('&nbsp;');
       }
    	  return td;
     }
@@ -165,7 +174,7 @@ $(function () {
     			|| status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
     			|| status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code
     			|| status == PhaseAssignmentStatus.CONCLUDED.code) {
-    	  $(td).append(getViewFormButton('phase', id));
+    	  $(td).append(getViewFormButton(id));
     	} else {
     	  $(td).append('-');
     	}
@@ -210,16 +219,16 @@ $(function () {
     	var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Perform Review"><i class="material-icons">assignment</i></button>');
     	$(fillReviewButton).tooltip({container: 'body'});
     	$(fillReviewButton).click(function() {
-          location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
+          location.href=settings.contextPath + '/manager/assessment/' + type + '?aid=' + id;
     	});
     	return fillReviewButton;
       }
 
-      function getViewFormButton(type, id) {
+      function getViewFormButton(id) {
     	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
     	$(viewFormButton).tooltip({container: 'body'});
         $(viewFormButton).click(function() {
-          location.href=settings.contextpath + '/manager/assessment/' + type + '?aid=' + id;
+          location.href=settings.contextPath + '/manager/assessment/phase?aid=' + id;
   	    });
   	    return viewFormButton;
       }
@@ -231,25 +240,26 @@ $(function () {
     		confirmButtonText: "Yes, Enable!", closeOnConfirm: false
     	}, function () {
     	  $.fn.ajaxPut({
-    	    url: settings.contextpath + '/assignment/manager/change/phase-status/enable/' + id
+    	    url: settings.contextPath + '/assignment/manager/change/phase-status/enable/' + id
     	  });
         });
       }
 
-      function sendReminderToSubmit(type, id) {
+      function sendReminderToSubmit(id) {
           swal({
       	  title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
       	    showCancelButton: true, confirmButtonColor: "#DD6B55",
       		confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false
       	}, function () {
       	  $.fn.ajaxPut({
-      	    url: settings.contextpath + '/assignment/manager/reminder/tosubmit/' + id
+      	    url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
       	  });
         });
       }
 
       function onErrorAssignedEmployees(error) {
     	console.log('error=' + error);
+    	showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
       }
   };
 });

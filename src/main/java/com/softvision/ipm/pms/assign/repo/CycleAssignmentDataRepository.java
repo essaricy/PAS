@@ -4,20 +4,20 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 
-public interface CycleAssignmentDataRepository extends CrudRepository<EmployeeCycleAssignment, Long> {
+public interface CycleAssignmentDataRepository extends CrudRepository<CycleAssignment, Long> {
 
-	List<EmployeeCycleAssignment> findAll();
+	List<CycleAssignment> findAll();
 
-	EmployeeCycleAssignment findById(Long id);
+	CycleAssignment findById(Long id);
 
-	EmployeeCycleAssignment findFirstByTemplateId(Long id);
+	CycleAssignment findFirstByTemplateId(Long id);
 
-	EmployeeCycleAssignment findByCycleIdAndEmployeeId(Integer cycleId, Integer employeeId);
+	CycleAssignment findByCycleIdAndEmployeeId(Integer cycleId, Integer employeeId);
 
-	EmployeeCycleAssignment findByCycleIdAndEmployeeIdAndTemplateId(Integer cycleId, Integer employeeId, Long templateId);
+	CycleAssignment findByCycleIdAndEmployeeIdAndTemplateId(Integer cycleId, Integer employeeId, Long templateId);
 
-	EmployeeCycleAssignment findByCycleIdAndEmployeeIdAndStatus(Integer cycleId, Integer employeeId, Integer code);
+	CycleAssignment findByCycleIdAndEmployeeIdAndStatus(Integer cycleId, Integer employeeId, Integer code);
 
 }

@@ -14,8 +14,8 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
@@ -42,7 +42,7 @@ public class ManagerAssignmentService {
 	@PreSecureAssignment(permitManager=true)
 	public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
 				PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
 		if (!roleService.isManager(toEmployeeId)) {
@@ -82,7 +82,7 @@ public class ManagerAssignmentService {
 	@Transactional
 	public void submitCycle(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
 		}
@@ -101,7 +101,7 @@ public class ManagerAssignmentService {
 		}
 		employeeCycleAssignment.setSubmittedTo(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
-		EmployeeCycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		CycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		System.out.println("savedAssignment=" + savedAssignment);
 			}
 

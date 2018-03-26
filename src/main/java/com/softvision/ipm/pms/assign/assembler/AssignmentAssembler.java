@@ -1,13 +1,13 @@
 package com.softvision.ipm.pms.assign.assembler;
 
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.employee.entity.Employee;
 
 public class AssignmentAssembler {
 
-	public static EmployeeAssignmentDto get(EmployeePhaseAssignment employeePhaseAssignment) {
+	public static EmployeeAssignmentDto get(PhaseAssignment employeePhaseAssignment) {
 		EmployeeAssignmentDto employeeAssignmentDto = null;
 		if (employeePhaseAssignment != null) {
 			employeeAssignmentDto = new EmployeeAssignmentDto();
@@ -29,7 +29,7 @@ public class AssignmentAssembler {
 		return employeeAssignmentDto;
 	}
 
-	public static EmployeeAssignmentDto get(EmployeeCycleAssignment employeeCycleAssignment) {
+	public static EmployeeAssignmentDto get(CycleAssignment employeeCycleAssignment) {
 		EmployeeAssignmentDto employeeAssignmentDto = null;
 		if (employeeCycleAssignment != null) {
 			employeeAssignmentDto = new EmployeeAssignmentDto();

@@ -12,8 +12,16 @@ $(function () {
       onSuccess: renderAssignments,
       onError: onErrorAssignedEmployees
     });
-    
+
     function renderAssignments(data) {
+      if (data == null || data.length == 0) {
+     	showErrorCard('There are no assignments found');
+      } else{
+    	renderEmployeeAssignments(data);
+      }
+    }
+
+    function renderEmployeeAssignments(data) {
       //$(data).each(function (index, cycleAssignment) {
       for (var index = 0; index < data.length; index++) {
     	var cycleAssignment = data[index];
@@ -234,6 +242,7 @@ $(function () {
 
       function onErrorAssignedEmployees(error) {
     	console.log('error=' + error);
+    	showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
       }
   };
 });

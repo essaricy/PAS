@@ -8,7 +8,7 @@ import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -127,11 +127,11 @@ public class TemplateService {
 
 	public boolean isInUse(long templateId) throws ServiceException {
 		try {
-			EmployeeCycleAssignment cycleAssignment = cycleAssignmentDataRepository.findFirstByTemplateId(templateId);
+			CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findFirstByTemplateId(templateId);
 			if (cycleAssignment != null) {
 				return true;
 			}
-			EmployeeCycleAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
+			CycleAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
 			if (phaseAssignement != null) {
 				return true;
 			}

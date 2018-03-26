@@ -68,6 +68,7 @@ public class AppraisalService {
 
 	public void changeStatus(Integer id, AppraisalCycleStatus status) throws ServiceException {
 		boolean sendActivationEmail=false;
+		boolean sendConcludeEmail=false;
 		if (id <= 0) {
 			throw new ServiceException("Invalid id");
 		}
@@ -100,6 +101,7 @@ public class AppraisalService {
 				throw new ServiceException("Appraisal Cycle is already ACTIVE");
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
 				// TODO check if any assigned are not completed. otherwise allow.
+				sendConcludeEmail= true;
 			}
 		} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
 			throw new ServiceException("Cannot change the status of appraisal cycle. Its already COMPLETE.");
@@ -110,6 +112,15 @@ public class AppraisalService {
 			try {
 				// Send email to whole group
 				emailRepository.sendApprasialKickOff(appraisalCycle);
+			} catch (EmailException emailException) {
+				emailException.printStackTrace();
+			}
+		}
+		
+		if (sendConcludeEmail) {
+			try {
+				// Send email to whole group
+				emailRepository.sendApprasialCycleConclude(appraisalCycle);
 			} catch (EmailException emailException) {
 				emailException.printStackTrace();
 			}

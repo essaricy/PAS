@@ -14,8 +14,8 @@ import org.springframework.stereotype.Repository;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssember;
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.repo.AbstractRepository;
@@ -26,7 +26,7 @@ public class AssignmentRepository extends AbstractRepository {
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Transactional
-	public void assign(EmployeeCycleAssignment cycleAssignment, AppraisalCycle cycle, String employeeName)
+	public void assign(CycleAssignment cycleAssignment, AppraisalCycle cycle, String employeeName)
 			throws ServiceException {
 
 		Date assignedAt = cycleAssignment.getAssignedAt();
@@ -36,9 +36,9 @@ public class AssignmentRepository extends AbstractRepository {
 		int cycleId = cycleAssignment.getCycleId();
 
 		int inserted = jdbcTemplate.update(
-				"INSERT INTO emp_cycle_assign("
+				"INSERT INTO cycle_assign("
 						+ "ID, CYCLE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-						+ "VALUES(nextval('emp_cycle_assign_id_seq'), ?, ?, ?, ?, ?)",
+						+ "VALUES(nextval('cycle_assign_id_seq'), ?, ?, ?, ?, ?)",
 						cycleId, templateId, employeeId, assignedBy, assignedAt);
 		if (inserted!=1) {
 			throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal cycle ");
@@ -46,14 +46,14 @@ public class AssignmentRepository extends AbstractRepository {
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase appraisalPhase : phases) {
 			Integer phaseId = appraisalPhase.getId();
-			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndTemplateId(phaseId.intValue(), employeeId, templateId);
+			PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndTemplateId(phaseId.intValue(), employeeId, templateId);
 			if (employeePhaseAssignment != null) {
 				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
 			}
 			inserted = jdbcTemplate.update(
-					"INSERT INTO emp_phase_assign("
+					"INSERT INTO phase_assign("
 							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-							+ "VALUES(nextval('emp_phase_assign_id_seq'), ?, ?, ?, ?, ?)",
+							+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
 							phaseId, templateId, employeeId, assignedBy, assignedAt);
 			if (inserted != 1) {
 				throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal phase ");
@@ -98,9 +98,9 @@ public class AssignmentRepository extends AbstractRepository {
 				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
 			}
 			int inserted = jdbcTemplate.update(
-					"INSERT INTO emp_phase_assign("
+					"INSERT INTO phase_assign("
 							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-							+ "VALUES(nextval('emp_phase_assign_id_seq'), ?, ?, ?, ?, ?)",
+							+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
 							phaseId, templateId, employeeId, assignedBy, assignedAt);
 			if (inserted != 1) {
 				throw new ServiceException("Employee (" + employeeId + ") - Unable to assign appraisal phase ");
@@ -115,9 +115,9 @@ public class AssignmentRepository extends AbstractRepository {
 			cycleAssignment.getTemplateId();
 			assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId, templateId, employeeId)
 			int inserted = jdbcTemplate.update(
-					"INSERT INTO emp_phase_assign("
+					"INSERT INTO phase_assign("
 							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-							+ "VALUES(nextval('emp_phase_assign_id_seq'), ?, ?, ?, ?, ?)",
+							+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
 							cycleAssignment.getCycleId(), cycleAssignment.getEmployeeId(),
 							cycleAssignment.getAssignedBy(), cycleAssignment.getAssignedAt());
 		}

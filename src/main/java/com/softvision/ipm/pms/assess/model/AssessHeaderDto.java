@@ -17,8 +17,7 @@ import lombok.Data;
 
 @Data
 @Validated
-@Deprecated
-public class CycleAssessHeaderDto implements Serializable {
+public class AssessHeaderDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,12 +39,12 @@ public class CycleAssessHeaderDto implements Serializable {
 	@NotEmpty(message="At least one assess detail must be provided")
 	@NotContainNull(message="Assess detail list cannot contain null")
 	@Valid
-	private List<CycleAssessDetailDto> cycleAssessDetails;
+	private List<AssessDetailDto> assessDetails;
 
 	@Override
 	public String toString() {
-		return "CycleAssessHeaderDto [id=" + id + ", assignId=" + assignId + ", status=" + status + ", assessDate="
-				+ assessDate + ", assessedBy=" + assessedBy + ", cycleAssessDetails=" + cycleAssessDetails + "]";
+		return "AssessHeaderDto [id=" + id + ", assignId=" + assignId + ", status=" + status + ", assessDate="
+				+ assessDate + ", assessedBy=" + assessedBy + ", assessDetails=" + assessDetails + "]";
 	}
 
 }

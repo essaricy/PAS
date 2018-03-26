@@ -51,12 +51,12 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 	}
 
 	public boolean changeStatus(long phaseAssignId, int toStatusId) {
-		int updated = jdbcTemplate.update("UPDATE emp_phase_assign SET status=? where id=?", toStatusId, phaseAssignId);
+		int updated = jdbcTemplate.update("UPDATE phase_assign SET status=? where id=?", toStatusId, phaseAssignId);
 		return updated==1;
 	}
 
 	public boolean changeCycleManager(Long phaseAssignId, int toEmployeeId) {
-		int updated = jdbcTemplate.update("UPDATE emp_cycle_assign SET assigned_by=? where id=?", toEmployeeId, phaseAssignId);
+		int updated = jdbcTemplate.update("UPDATE cycle_assign SET assigned_by=? where id=?", toEmployeeId, phaseAssignId);
 		return updated==1;
 	}
 

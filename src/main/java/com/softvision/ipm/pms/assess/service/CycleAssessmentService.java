@@ -13,17 +13,12 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
-import com.softvision.ipm.pms.assess.assembler.CycleAssessmentAssembler;
-import com.softvision.ipm.pms.assess.entity.CycleAssessDetail;
-import com.softvision.ipm.pms.assess.entity.CycleAssessHeader;
 import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
-import com.softvision.ipm.pms.assess.repo.CycleAssessmentHeaderDataRepository;
-import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
-import com.softvision.ipm.pms.assign.entity.EmployeeCycleAssignment;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -36,8 +31,6 @@ import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 @Service
 public class CycleAssessmentService {
 
-	private static final String CYCLE_SUMMARY_FORMAT= "{0} : Rating= {1}, Score= {2}\n";
-
 	@Autowired private RoleService roleService;
 
 	@Autowired private AppraisalRepository appraisalRepository;
@@ -49,10 +42,6 @@ public class CycleAssessmentService {
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
-
-	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
-
-	@Autowired private CycleAssessmentHeaderDataRepository cycleAssessmentHeaderDataRepository;
 
 	public String abridgeQuietly(int employeeId) {
 		try {
@@ -79,7 +68,7 @@ public class CycleAssessmentService {
 		// Check if all the assignments are concluded.
 		for (AppraisalPhase phase : phases) {
 			System.out.println("phase=" + phase.getName());
-			EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(phase.getId(), employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
+			PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(phase.getId(), employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
 			if (employeePhaseAssignment == null) {
 				throw new ServiceException("There is a missing assignment for the phase " + phase.getName() + " for the employee " + employeeId);
 			}
@@ -88,11 +77,11 @@ public class CycleAssessmentService {
 			assignedBy=employeePhaseAssignment.getAssignedBy();
 			templateId=employeePhaseAssignment.getTemplateId();
 		}
-		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
 			System.out.println("employeeCycleAssignment does not exist. Creating a new one from the last phase assignment");
 			// There is a missing cycle assignment. create one.
-			employeeCycleAssignment = new EmployeeCycleAssignment();
+			employeeCycleAssignment = new CycleAssignment();
 			employeeCycleAssignment.setAssignedAt(new Date());
 			employeeCycleAssignment.setAssignedBy(assignedBy);
 			employeeCycleAssignment.setCycleId(cycleId);
@@ -107,7 +96,7 @@ public class CycleAssessmentService {
 
 	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		CycleAssessmentDto cycleAssessment = new CycleAssessmentDto();
-		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
 		
 		// Allow this form only to the employee and to the manager to whom its been assigned
 		int assignedBy = employeeCycleAssignment.getAssignedBy();
@@ -125,25 +114,13 @@ public class CycleAssessmentService {
 		Template template = templateDataRepository.findById(templateId);
 		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
 		cycleAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
-
-		List<CycleAssessHeader> cycleAssessHeaders = cycleAssessmentHeaderDataRepository.findByAssignIdOrderByStatusAsc(assignmentId);
-		cycleAssessment.setCycleAssessHeaders(CycleAssessmentAssembler.getCycleAssessHeaderDtos(cycleAssessHeaders));
 		return cycleAssessment;
-	}
-
-	private CycleAssessDetail getByTemplateHeaderId(List<CycleAssessDetail> cycleAssessDetails, long templateHeaderId) {
-		for (CycleAssessDetail cycleAssessDetail : cycleAssessDetails) {
-			if (templateHeaderId == cycleAssessDetail.getTemplateHeaderId()) {
-				return cycleAssessDetail;
-			}
-		}
-		return null;
 	}
 
 	@Transactional
 	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		EmployeeCycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
 		}
@@ -162,14 +139,8 @@ public class CycleAssessmentService {
 		}
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
-		EmployeeCycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		CycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		System.out.println("savedAssignment=" + savedAssignment);
-		
-		CycleAssessHeader cycleAssessHeader = cycleAssessmentHeaderDataRepository.findByAssignId(cycleAssignId);
-		cycleAssessHeader.setAssessedBy(toEmployeeId);
-		cycleAssessHeader.setStatus(savedAssignment.getStatus());
-		CycleAssessHeader savedAssess = cycleAssessmentHeaderDataRepository.save(cycleAssessHeader);
-		System.out.println("savedAssess=" + savedAssess);
 	}
 
 }

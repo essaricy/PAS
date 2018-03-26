@@ -122,8 +122,7 @@ CREATE TABLE employee (
 	CHECK (FIRST_NAME <> ''),
 	CHECK (LAST_NAME <> ''),
 	CHECK (EMPLOYMENT_TYPE <> ''),
-	CHECK (BAND <> ''),
-	CHECK (DESIGNATION <> '')
+	CHECK (BAND <> '')
 );
 CREATE TABLE role (
 	ID		BIGINT NOT NULL,
@@ -149,8 +148,8 @@ CREATE TABLE employee_role (
 -- #######################################################
 -- Assignment Module
 -- #######################################################
--- drop table emp_cycle_assign;
-CREATE TABLE emp_cycle_assign (
+-- drop table cycle_assign;
+CREATE TABLE cycle_assign (
 	ID				BIGINT NOT NULL,
     CYCLE_ID		SMALLINT NOT NULL,
     TEMPLATE_ID		BIGINT NOT NULL,
@@ -179,8 +178,8 @@ CREATE TABLE emp_cycle_assign (
 	CHECK (SCORE >= 0)
 );
 
--- drop table emp_phase_assign;
-CREATE TABLE emp_phase_assign (
+-- drop table phase_assign;
+CREATE TABLE phase_assign (
 	ID						BIGINT NOT NULL,
 	PHASE_ID				SMALLINT NOT NULL,
     TEMPLATE_ID		        BIGINT NOT NULL,
@@ -206,7 +205,7 @@ CREATE TABLE emp_phase_assign (
 -- #######################################################
 -- Assessment Module
 -- #######################################################
-CREATE TABLE phase_assess_header (
+CREATE TABLE assess_header (
 	ID				BIGINT NOT NULL,
 	ASSIGN_ID		BIGINT NOT NULL,
 	STATUS			SMALLINT NOT NULL DEFAULT 0,
@@ -214,13 +213,13 @@ CREATE TABLE phase_assess_header (
 	ASSESSED_BY		SMALLINT NOT NULL,
 
 	PRIMARY KEY (ID),
-	FOREIGN KEY (ASSIGN_ID) REFERENCES emp_phase_assign (ID),
+	FOREIGN KEY (ASSIGN_ID) REFERENCES phase_assign (ID),
 	UNIQUE(ASSIGN_ID, STATUS),
 	CHECK (ID > 0),
 	CHECK (ASSESSED_BY >= 0)
 );
 
-CREATE TABLE phase_assess_detail (
+CREATE TABLE assess_detail (
 	ID					BIGINT NOT NULL,
 	ASSESS_HEADER_ID	BIGINT NOT NULL,
 	TEMPLATE_HEADER_ID	SMALLINT NOT NULL,
@@ -228,11 +227,26 @@ CREATE TABLE phase_assess_detail (
 	COMMENTS			text NOT NULL,
 	SCORE				DECIMAL(3,2) NOT NULL,
 	PRIMARY KEY (ID),
-	FOREIGN KEY (ASSESS_HEADER_ID) REFERENCES phase_assess_header (ID),
+	FOREIGN KEY (ASSESS_HEADER_ID) REFERENCES assess_header (ID),
 	FOREIGN KEY (TEMPLATE_HEADER_ID) REFERENCES template_header (ID),
 	UNIQUE(ASSESS_HEADER_ID, TEMPLATE_HEADER_ID),
 	CHECK (ID > 0),
 	CHECK (RATING >= 0),
 	CHECK (SCORE >= 0),
 	CHECK (COMMENTS <> '')
+);
+
+CREATE TABLE email_template (
+	ID			SMALLINT NOT NULL,
+	NAME		VARCHAR(100) NOT NULL,
+	FILE_NAME	VARCHAR(100) NOT NULL,
+	SUBJECT 	VARCHAR(200) NOT NULL,
+	BUTTON_URL	VARCHAR(200) NOT NULL,
+	FROM_MAIL	VARCHAR(100) NULL,
+	TO_MAIL	    VARCHAR(100) NULL,
+	CC_MAIL	    VARCHAR(100) NULL,
+	PRIMARY KEY (ID),
+	UNIQUE (NAME),
+	CHECK (ID > 0),
+	CHECK (NAME <> '')
 );

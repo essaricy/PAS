@@ -51,18 +51,6 @@
         </h2>
       </div>
       <%@include file="common/no-cycle.jsp" %>
-      <!-- <div class="row clearfix">
-        <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
-          <div class="card">
-            <div class="header bg-red">
-              <h2>No Data Available!</h2>
-            </div>
-            <div class="body">
-              There is no Appraisal Cycle ACTIVE right now. You can assign a template to employees only when there is an appraisal cycle is ACTIVE.
-            </div>
-          </div>
-        </div>
-      </div> -->
 
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">

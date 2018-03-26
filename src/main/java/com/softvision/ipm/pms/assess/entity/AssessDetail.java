@@ -11,15 +11,14 @@ import javax.persistence.SequenceGenerator;
 import lombok.Data;
 
 @Data
-@Entity(name="cycle_assess_detail")
-@Deprecated
-public class CycleAssessDetail implements Serializable {
+@Entity(name="assess_detail")
+public class AssessDetail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="cycle_assess_detail_id_seq",sequenceName="cycle_assess_detail_id_seq", allocationSize=1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="cycle_assess_detail_id_seq")
+	@SequenceGenerator(name="assess_detail_id_seq",sequenceName="assess_detail_id_seq", allocationSize=1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator="assess_detail_id_seq")
 	private Long id;
 
 	private long templateHeaderId;
@@ -32,7 +31,7 @@ public class CycleAssessDetail implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CycleAssessDetail [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
+		return "AssessDetail [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
 				+ ", comments=" + comments + ", score=" + score + "]";
 	}
 

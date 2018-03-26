@@ -20,3 +20,13 @@ INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_d
 
 INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 13, (select id from goal_param where name='Ontime resolutions'));
 INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_detail_id_seq'), 13, (select id from goal_param where name='Ontime zero defect deliveries'));
+
+insert into employee values(2006,'rohith.ramesh','Rohith','Ramesh','Regular Employee','3Y','senior software engineer','2009-06-14T00:00:00','India');
+insert into employee values(1136,'srikanth.kumar','srikanth','kumar','Regular Employee','5Y','Associate Technical Manager','2009-06-14T00:00:00','India');
+
+-- Insert Employees
+INSERT INTO employee_role(id, role_id, employee_id) VALUES (nextval('emp_role_id_seq'), 1, 1136);
+INSERT INTO employee_role(id, role_id, employee_id) VALUES (nextval('emp_role_id_seq'), 2, 1136);
+INSERT INTO employee_role(id, role_id, employee_id) VALUES (nextval('emp_role_id_seq'), 2, 2388);
+INSERT INTO employee_role(id, role_id, employee_id) VALUES (nextval('emp_role_id_seq'), 2, 2006);
+

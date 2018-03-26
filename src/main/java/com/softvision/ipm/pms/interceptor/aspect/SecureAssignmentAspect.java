@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 
@@ -43,7 +43,7 @@ public class SecureAssignmentAspect {
 		System.out.println("assignmentId=" + assignmentId + ", requestedEmployeeId=" + requestedEmployeeId
 				+ ", permitEmployee=" + permitEmployee + ", permitManager=" + permitManager);
 
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
 			throw new InvalidInputException("No such assignment exists");
 		}

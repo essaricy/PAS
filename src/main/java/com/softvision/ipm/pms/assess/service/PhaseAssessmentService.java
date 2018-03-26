@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
-import com.softvision.ipm.pms.assess.assembler.PhaseAssessmentAssembler;
-import com.softvision.ipm.pms.assess.entity.PhaseAssessDetail;
-import com.softvision.ipm.pms.assess.entity.PhaseAssessHeader;
-import com.softvision.ipm.pms.assess.model.PhaseAssessHeaderDto;
+import com.softvision.ipm.pms.assess.assembler.AssessmentAssembler;
+import com.softvision.ipm.pms.assess.entity.AssessDetail;
+import com.softvision.ipm.pms.assess.entity.AssessHeader;
+import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
-import com.softvision.ipm.pms.assess.repo.PhaseAssessmentHeaderDataRepository;
+import com.softvision.ipm.pms.assess.repo.AssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
-import com.softvision.ipm.pms.assign.entity.EmployeePhaseAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
@@ -40,7 +40,7 @@ public class PhaseAssessmentService {
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
-	@Autowired private PhaseAssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
+	@Autowired private AssessmentHeaderDataRepository phaseAssessmentHeaderDataRepository;
 
 	@Autowired private CycleAssessmentService cycleAssessmentService;
 
@@ -51,7 +51,7 @@ public class PhaseAssessmentService {
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		System.out.println("################### getByAssignment()");
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
 		phaseAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeePhaseAssignment));
 
@@ -65,9 +65,9 @@ public class PhaseAssessmentService {
 
 		System.out.println("employeePhaseAssignment=" + employeePhaseAssignment);
 
-		List<PhaseAssessHeader> phaseAssessHeaders = phaseAssessmentHeaderDataRepository
+		List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
 				.findByAssignIdOrderByStatusAsc(assignmentId);
-		System.out.println("phaseAssessHeaders=" + phaseAssessHeaders);
+		System.out.println("assessHeaders=" + assessHeaders);
 
 		int status = employeePhaseAssignment.getStatus();
 		PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
@@ -77,22 +77,22 @@ public class PhaseAssessmentService {
 		if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
 			// remove the top phase header if its requested by the manager
 			if (requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
-				phaseAssessHeaders.remove(phaseAssessHeaders.size() - 1);
+				assessHeaders.remove(assessHeaders.size() - 1);
 			}
 		} else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
 			// remove the top phase header if its requested by the employee
 			if (requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
-				phaseAssessHeaders.remove(phaseAssessHeaders.size() - 1);
+				assessHeaders.remove(assessHeaders.size() - 1);
 			}
 		}
-		phaseAssessment.setPhaseAssessHeaders(PhaseAssessmentAssembler.getPhaseAssessHeaderDtos(phaseAssessHeaders));
+		phaseAssessment.setAssessHeaders(AssessmentAssembler.getAssessHeaderDtos(assessHeaders));
 		System.out.println("phaseAssessment=" + phaseAssessment);
 		return phaseAssessment;
 	}
 
 	@PreSecureAssignment(permitManager=true)
 	public void enablePhaseAppraisal(long assignmentId, int fromEmployeeId) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssignmentStatus nextStatus = AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "enable",
 				PhaseAssignmentStatus.NOT_INITIATED);
 		int employeeId = employeePhaseAssignment.getEmployeeId();
@@ -104,7 +104,7 @@ public class PhaseAssessmentService {
 					"Make sure that assignments in previous phase are concluded for this employee before assigning new one");
 		}
 		employeePhaseAssignment.setStatus(nextStatus.getCode());
-		EmployeePhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
+		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		System.out.println(saved);
 		// email trigger
 		emailRepository.sendEnableMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
@@ -114,7 +114,7 @@ public class PhaseAssessmentService {
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	public void saveSelfAppraisal(long assignmentId, int requestedEmployeeId,
-			PhaseAssessHeaderDto phaseAssessHeaderDto) throws ServiceException {
+			AssessHeaderDto phaseAssessHeaderDto) throws ServiceException {
 		update(phaseAssessHeaderDto, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED, "save",
 				PhaseAssignmentStatus.SELF_APPRAISAL_PENDING, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
 	}
@@ -122,18 +122,18 @@ public class PhaseAssessmentService {
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	public void submitSelfAppraisal(long assignmentId, int requestedEmployeeId,
-			PhaseAssessHeaderDto phaseAssessHeaderDto) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = update(phaseAssessHeaderDto,
+			AssessHeaderDto phaseAssessHeaderDto) throws ServiceException {
+		PhaseAssignment employeePhaseAssignment = update(phaseAssessHeaderDto,
 				PhaseAssignmentStatus.MANAGER_REVIEW_PENDING, "submit", PhaseAssignmentStatus.SELF_APPRAISAL_PENDING,
 				PhaseAssignmentStatus.SELF_APPRAISAL_SAVED);
 		// Email Trigger
 		emailRepository.sendEmployeeSubmitMail(employeePhaseAssignment.getPhaseId(),
-				phaseAssessHeaderDto.getAssessedBy(), employeePhaseAssignment.getEmployeeId());
+				employeePhaseAssignment.getEmployeeId(),phaseAssessHeaderDto.getAssessedBy());
 	}
 
 	@Transactional
 	@PreSecureAssignment(permitManager=true)
-	public void saveReview(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessHeaderDto)
+	public void saveReview(long assignmentId, int requestedEmployeeId, AssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
 		update(phaseAssessHeaderDto, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED, "save review",
 				PhaseAssignmentStatus.MANAGER_REVIEW_PENDING, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
@@ -141,23 +141,26 @@ public class PhaseAssessmentService {
 
 	@Transactional
 	@PreSecureAssignment(permitManager=true)
-	public void submitReview(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessHeaderDto)
+	public void submitReview(long assignmentId, int requestedEmployeeId, AssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
-		update(phaseAssessHeaderDto, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, "submit",
-				PhaseAssignmentStatus.MANAGER_REVIEW_PENDING, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
-		// TODO Email Trigger
-		/*
-		 * emailRepository.sendManagerSubmitMail(employeePhaseAssignment.getPhaseId(),
-		 * phaseAssessHeaderDto.getAssessedBy(),
-		 * employeePhaseAssignment.getEmployeeId());
-		 */
+		PhaseAssignment employeePhaseAssignment = update(phaseAssessHeaderDto,
+				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, "submit", PhaseAssignmentStatus.MANAGER_REVIEW_PENDING,
+				PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
+		//  Email Trigger
+		emailRepository.sendReviewCompleted(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
+				employeePhaseAssignment.getEmployeeId());
 	}
 
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	public void agree(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_AGREED, "agree review",
-				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
+		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_AGREED,
+				"agree review", PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED,
+				PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
+		System.out.println("--->agree  " + assignmentId + "  requestedEmployeeId " + requestedEmployeeId);
+		// Email Trigger
+		emailRepository.sendEmployeeAcceptence(employeePhaseAssignment.getPhaseId(),
+				employeePhaseAssignment.getEmployeeId(), employeePhaseAssignment.getAssignedBy());
 		// conclude
 		conclude(assignmentId, requestedEmployeeId);
 	}
@@ -165,23 +168,22 @@ public class PhaseAssessmentService {
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	public void escalate(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "escalate",
-				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
-		// TODO Email Trigger
-		/*
-		 * emailRepository.sendManagerSubmitMail(employeePhaseAssignment.getPhaseId(),
-		 * phaseAssessHeaderDto.getAssessedBy(),
-		 * employeePhaseAssignment.getEmployeeId());
-		 */
+		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_ESCALATED,
+				"escalate", PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
+		//  Email Trigger
+		emailRepository.sendEmployeeRejected(employeePhaseAssignment.getPhaseId(),
+				employeePhaseAssignment.getEmployeeId(), employeePhaseAssignment.getAssignedBy());
 	}
 
 	@Transactional
 	@PreSecureAssignment(permitManager=true)
-	public void updateReview(long assignmentId, int requestedEmployeeId, PhaseAssessHeaderDto phaseAssessHeaderDto)
+	public void updateReview(long assignmentId, int requestedEmployeeId, AssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
-		update(phaseAssessHeaderDto, PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "update review",
-				PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
 		// TODO Email trigger
+		PhaseAssignment employeePhaseAssignment = update(phaseAssessHeaderDto,
+				PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "update review", PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
+		//  Email trigger
+		emailRepository.sendUdatedReviewMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),employeePhaseAssignment.getEmployeeId());
 	}
 
 	@Transactional
@@ -189,20 +191,20 @@ public class PhaseAssessmentService {
 	private void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		System.out.println("conclude()");
 		// Change the status to CONCLUDED
-		EmployeePhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
+		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
 				"conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
 		// Update score in employee assignment
-		PhaseAssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
+		AssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);
-		List<PhaseAssessDetail> phaseAssessDetails = phaseAssessHeader.getPhaseAssessDetails();
+		List<AssessDetail> assessDetails = phaseAssessHeader.getAssessDetails();
 		double totalScore=0;
-		for (PhaseAssessDetail phaseAssessDetail : phaseAssessDetails) {
-			totalScore+=phaseAssessDetail.getScore();
+		for (AssessDetail assessDetail : assessDetails) {
+			totalScore+=assessDetail.getScore();
 		}
 		employeePhaseAssignment.setScore(totalScore);
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// email trigger
-		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(), requestedEmployeeId,
+		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
 				employeePhaseAssignment.getEmployeeId());
 		// Abridge Cycle Assignment
 		String abridgeError = cycleAssessmentService.abridgeQuietly(employeePhaseAssignment.getEmployeeId());
@@ -213,33 +215,33 @@ public class PhaseAssessmentService {
 		}
 	}
 
-	private EmployeePhaseAssignment update(PhaseAssessHeaderDto phaseAssessHeaderDto,
+	private PhaseAssignment update(AssessHeaderDto phaseAssessHeaderDto,
 			PhaseAssignmentStatus statusToUpdate, String message, PhaseAssignmentStatus... previousStatusesToCheck)
 			throws ServiceException {
 		long assignmentId = phaseAssessHeaderDto.getAssignId();
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		phaseAssessHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
 		ValidationUtil.validate(phaseAssessHeaderDto);
 		// Change assignment status to statusToUpdate
 		employeePhaseAssignment.setStatus(statusToUpdate.getCode());
-		EmployeePhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
+		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Update the assessment header status
 		phaseAssessHeaderDto.setStatus(saved.getStatus());
-		PhaseAssessHeader phaseAssessHeader = PhaseAssessmentAssembler.getPhaseAssessHeader(phaseAssessHeaderDto);
+		AssessHeader phaseAssessHeader = AssessmentAssembler.getAssessHeader(phaseAssessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		return employeePhaseAssignment;
 	}
 
-	private EmployeePhaseAssignment update(long assignmentId, PhaseAssignmentStatus statusToUpdate, String message,
+	private PhaseAssignment update(long assignmentId, PhaseAssignmentStatus statusToUpdate, String message,
 			PhaseAssignmentStatus... previousStatusesToCheck) throws ServiceException {
-		EmployeePhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		// Change assignment status to statusToUpdate
 		employeePhaseAssignment.setStatus(statusToUpdate.getCode());
-		EmployeePhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
+		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Update the assessment header status
-		PhaseAssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
+		AssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		phaseAssessHeader.setStatus(saved.getStatus());
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);

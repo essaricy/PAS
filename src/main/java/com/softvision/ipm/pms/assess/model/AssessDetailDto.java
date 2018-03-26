@@ -11,8 +11,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-@Deprecated
-public class CycleAssessDetailDto implements Serializable {
+public class AssessDetailDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +35,7 @@ public class CycleAssessDetailDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CycleAssessDetailDto [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
+		return "AssessDetail [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
 				+ ", comments=" + comments + ", score=" + score + "]";
 	}
 

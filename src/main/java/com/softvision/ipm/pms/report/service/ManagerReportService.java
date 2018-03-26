@@ -38,14 +38,12 @@ public class ManagerReportService {
 
 		PhasewiseEmployeeStatusCountDto employeeAckPendingCounts = new PhasewiseEmployeeStatusCountDto();
 		employeeAckPendingCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
-		employeeAckPendingCounts.setCount(get(phasewiseEmployeeStatusCounts,
-				PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED));
+		employeeAckPendingCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED));
 		finalCounts.add(employeeAckPendingCounts);
 
 		PhasewiseEmployeeStatusCountDto escalatedCounts = new PhasewiseEmployeeStatusCountDto();
 		escalatedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
-		escalatedCounts.setCount(get(phasewiseEmployeeStatusCounts,
-				PhaseAssignmentStatus.EMPLOYEE_ESCALATED, PhaseAssignmentStatus.EMPLOYEE_ESCALATED));
+		escalatedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.EMPLOYEE_ESCALATED));
 		finalCounts.add(escalatedCounts);
 
 		/*PhasewiseEmployeeStatusCountDto concludedCounts = new PhasewiseEmployeeStatusCountDto();

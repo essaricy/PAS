@@ -46,6 +46,7 @@
           <small>View and submit the appraisal forms</small>
         </h2>
       </div>
+      <%@include file="common/no-cycle.jsp" %>
     </div>
   </section>
 </body>

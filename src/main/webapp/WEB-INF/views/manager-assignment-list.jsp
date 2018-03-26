@@ -46,6 +46,7 @@
           <small>View status of the current employees those are assigned to you, change manager, enable forms, view assessment or conclude</small>
         </h2>
       </div>
+      <%@include file="common/no-cycle.jsp" %>
     </div>
 	  	<!-- Large Size -->
 		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1" role="dialog">
@@ -122,7 +123,7 @@ $(function () {
   var MANAGER_ROLE_ID='Manager';
 
   $('.container-fluid').managerAssignment({
-	contextpath: '<%=request.getContextPath()%>',
+	contextPath: '<%=request.getContextPath()%>',
   	url: '<%=request.getContextPath()%>/assignment/manager/list',
   });
 
