@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,8 @@ import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 @Service
 public class CycleAssessmentService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(CycleAssessmentService.class);
+
 	@Autowired private RoleService roleService;
 
 	@Autowired private AppraisalRepository appraisalRepository;
@@ -43,19 +47,20 @@ public class CycleAssessmentService {
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
-	public String abridgeQuietly(int employeeId) {
+	public void abridgeQuietly(int employeeId) {
 		try {
-			System.out.println("abridgeQuietly()");
+			LOGGER.info("abridgeQuietly(" + employeeId + ")");
 			abridge(employeeId);
+			LOGGER.info("abridgeQuietly(" + employeeId + ") COMPLETED");
 		} catch (Exception exception) {
-			return "Abridge Failed due to the error=" + exception.getMessage();
+			String error = "Abridge Failed due to the error=" + exception.getMessage();
+			LOGGER.info("abridgeQuietly: FAILED. Error=" + error);
 		}
-		return null;
 	}
 
 	@Transactional
 	public void abridge(int employeeId) throws ServiceException {
-		System.out.println("abridge(" + employeeId + ")");
+		LOGGER.info("abridge(" + employeeId + ")");
 		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
@@ -67,19 +72,17 @@ public class CycleAssessmentService {
 		int numberOfPhases=phases.size();
 		// Check if all the assignments are concluded.
 		for (AppraisalPhase phase : phases) {
-			System.out.println("phase=" + phase.getName());
 			PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(phase.getId(), employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
 			if (employeePhaseAssignment == null) {
 				throw new ServiceException("There is a missing assignment for the phase " + phase.getName() + " for the employee " + employeeId);
 			}
-			System.out.println("Score=" + employeePhaseAssignment.getScore());
 			cycleScore+=employeePhaseAssignment.getScore();
 			assignedBy=employeePhaseAssignment.getAssignedBy();
 			templateId=employeePhaseAssignment.getTemplateId();
 		}
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
-			System.out.println("employeeCycleAssignment does not exist. Creating a new one from the last phase assignment");
+			LOGGER.warn("employeeCycleAssignment does not exist. Creating a new one from the last phase assignment");
 			// There is a missing cycle assignment. create one.
 			employeeCycleAssignment = new CycleAssignment();
 			employeeCycleAssignment.setAssignedAt(new Date());
@@ -88,10 +91,10 @@ public class CycleAssessmentService {
 			employeeCycleAssignment.setEmployeeId(employeeId);
 			employeeCycleAssignment.setTemplateId(templateId);
 		}
-		System.out.println("Cycle score=" + (cycleScore/numberOfPhases));
 		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		LOGGER.info("abridge(" + employeeId + ") COMPLETED");
 	}
 
 	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
@@ -103,6 +106,7 @@ public class CycleAssessmentService {
 		// TODO: Allow it to employee?
 		//int employeeId = employeeCycleAssignment.getEmployeeId();
 		if (requestedEmployeeId != assignedBy) {
+			LOGGER.warn("UNAUTHORIZED ACCESS ATTEMPT: assignmentId: " + assignmentId + ", requestedEmployeeId:" + requestedEmployeeId);
 			throw new ServiceException("No allowed to view appraisal form");
 		}
 		cycleAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeeCycleAssignment));
@@ -120,6 +124,7 @@ public class CycleAssessmentService {
 	@Transactional
 	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
+		LOGGER.warn("assignCycleToNextLevelManager(" + cycleAssignId + ", " + fromEmployeeId + ", " + toEmployeeId + ")");
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
@@ -139,8 +144,8 @@ public class CycleAssessmentService {
 		}
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
-		CycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		System.out.println("savedAssignment=" + savedAssignment);
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		LOGGER.warn("assignCycleToNextLevelManager(" + cycleAssignId + ", " + fromEmployeeId + ", " + toEmployeeId + ") Completed");
 	}
 
 }

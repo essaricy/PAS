@@ -90,7 +90,4 @@ public enum PhaseAssignmentStatus {
 		return previous;
 	}
 
-	public static void main(String[] args) {
-		System.out.println(getPrevious(PhaseAssignmentStatus.EMPLOYEE_AGREED));
-	}
 }

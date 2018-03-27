@@ -4,14 +4,20 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
@@ -21,13 +27,14 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.common.constants.EmailConstant;
-import com.softvision.ipm.pms.common.exception.EmailException;
 import com.softvision.ipm.pms.email.entity.MailTemplate;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 
 @Repository
 public class EmailRepository {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmailRepository.class);
 
 	@Autowired Environment environment;
 
@@ -43,27 +50,35 @@ public class EmailRepository {
 	
 	@Autowired private MailTemplateDataRepository mailDataRepository;
 	
-	public void sendApprasialKickOff(AppraisalCycle appraisalCycle) throws EmailException {
+	@Value("${app.email.image}")
+	private String image;
+	
+	@Value("${app.email.domain}")
+	private String domain;
+	
+	@Value("${app.email.mode:on}")
+	private String mode;
+	
+	@Value("${app.email.always-send-to:#{null}}")
+	private String alwaysSendTo;
+
+	private boolean turnOffEmails;
+
+	@PostConstruct
+	private void init() {
+		turnOffEmails = mode != null && mode.trim().equalsIgnoreCase("off");
+		alwaysSendTo = alwaysSendTo == null || alwaysSendTo.trim().length() == 0 ? null: alwaysSendTo;
+	}
+
+	public void sendApprasialKickOff(AppraisalCycle appraisalCycle) {
 		try {
-			
-			String image = environment.getRequiredProperty("app.email.image");
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
+			LOGGER.info("Sending email for "+ EmailConstant.KICK_OFF);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.KICK_OFF.toString());
 			String templateFile = mailTemplate.getFileName();
 			String url = mailTemplate.getButtonUrl();
 			String subject = mailTemplate.getSubject();
-			
-			String emailFrom = "";
-			String emailTo = "";
-
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = mailTemplate.getFromMail();
-				 emailTo = mailTemplate.getToMail();
-			}
+			String emailFrom = mailTemplate.getFromMail();
+			String emailTo = mailTemplate.getToMail();
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("cycle", appraisalCycle.getName());
@@ -72,33 +87,20 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.KICK_OFF, exception);
 		}
 	}
 
-	public void sendApprasialCycleConclude(AppraisalCycle appraisalCycle) throws EmailException {
+	public void sendApprasialCycleConclude(AppraisalCycle appraisalCycle) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.CYCLE_CONCLUDE);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CYCLE_CONCLUDE.toString());
 			String templateFile = mailTemplate.getFileName();
-			String emailFrom = "";
-			String emailTo = "";
+			String emailFrom = mailTemplate.getFromMail();
+			String emailTo = mailTemplate.getToMail();
 			String subject = mailTemplate.getSubject();
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = mailTemplate.getFromMail();
-				 emailTo = mailTemplate.getToMail();
-			}
-			
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("cycle", appraisalCycle.getName());
@@ -107,35 +109,23 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.CYCLE_CONCLUDE, exception);
 		}
 	}
-	
-	private void sendApprasialEmployeeSubmitted(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+
+	private void sendApprasialEmployeeSubmitted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			String image = environment.getRequiredProperty("app.email.image");
-			String domain=  environment.getRequiredProperty("app.email.domain");
+			LOGGER.info("Sending email for "+ EmailConstant.EMPLOYEE_SUBMITED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMPLOYEE_SUBMITED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String emailFrom = "";
-			String emailTo = "";
+			String emailFrom = employee.getLoginId() + domain;
+			String emailTo = manager.getLoginId() + domain;
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
-			
-
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = employee.getLoginId()+domain;
-				 emailTo = manager.getLoginId()+domain;
-			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -146,39 +136,24 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.EMPLOYEE_SUBMITED, exception);
 		}
 	}
 	
-	
-	private void sendEmployeeAcceptenceMail(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendEmployeeAcceptenceMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.EMP_ACCEPTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_ACCEPTED.toString());
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
-			String domain=  environment.getRequiredProperty("app.email.domain");
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String ccemal = "";
-			String emailFrom = "";
-			String emailTo = "";
+			String ccEmail = mailTemplate.getCcMail();
+			String emailFrom = employee.getLoginId()+domain;
+			String emailTo = manager.getLoginId()+domain;
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 ccemal=testMail;
-			}else{
-				 emailFrom = employee.getLoginId()+domain;
-				 emailTo = manager.getLoginId()+domain;
-				  ccemal = mailTemplate.getCcMail();
-			}
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -188,40 +163,25 @@ public class EmailRepository {
 			emailData.put("managerName", managerName);
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-			sendEmail(emailFrom, emailTo, ccemal,subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.EMP_ACCEPTED, exception);
 		}
 	}
 	
-	private void sendEmployeeRejectionMail(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendEmployeeRejectionMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.EMP_REJECTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_REJECTED.toString());
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
-			String domain=  environment.getRequiredProperty("app.email.domain");
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-			String ccemal = "";
-			String emailFrom = "";
-			String emailTo = "";
+			String ccEmail = mailTemplate.getCcMail();
+			String emailFrom = employee.getLoginId()+domain;
+			String emailTo = manager.getLoginId()+domain;
 			String empName = employee.getFirstName();
 			String managerName = manager.getFirstName();
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 ccemal=testMail;
-			}else{
-				 ccemal = mailTemplate.getCcMail();
-				 emailFrom = employee.getLoginId()+domain;
-				 emailTo = manager.getLoginId()+domain;
-			}
-			
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -231,134 +191,25 @@ public class EmailRepository {
 			emailData.put("managerName", managerName);
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-			sendEmail(emailFrom, emailTo, ccemal,subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.EMP_REJECTED, exception);
 		}
 	}
 	
-	public void sendGenericMail(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager,String emailType) throws EmailException {
-//		try {
-//			
-//		
-//			String domain=  environment.getRequiredProperty("app.email.domain");
-//			String image = environment.getRequiredProperty("app.email.image");
-//			String url = environment.getRequiredProperty("app.email.url");
-//			
-//			String templateFile ="";
-//			String subject = "";
-//			String ccEmail = null;
-//			String emailFrom = "";
-//			String emailTo = "";
-//			String empName="";
-//			String managerName="";
-//			
-//			EmailConstant enumObj = EmailConstant.valueOf(emailType);
-//
-//			if(enumObj != null && enumObj == EmailConstant.KICK_OFF){
-//				
-//				 templateFile = environment.getRequiredProperty("app.email.template.kickoff.file");
-//				 emailFrom = environment.getRequiredProperty("app.email.template.kickoff.from");
-//				 emailTo = environment.getRequiredProperty("app.email.template.kickoff.to");
-//				 subject = environment.getRequiredProperty("app.email.template.kickoff.subject");
-//				 subject = MessageFormat.format(subject, appraisalCycle.getName());
-//				
-//			}else if(enumObj != null && enumObj == EmailConstant.EMPLOYEE_ENABLE){
-//				 subject = environment.getRequiredProperty("app.email.template.enable.subject");
-//				 templateFile = environment.getRequiredProperty("app.email.template.enable.file");
-//				 emailFrom = manager.getLoginId()+domain;
-//				 emailTo = employee.getLoginId()+domain;
-//				 subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-//					
-//			}else if(enumObj != null && enumObj == EmailConstant.EMPLOYEE_SUBMITED){
-//				 templateFile = environment.getRequiredProperty("app.email.template.employeesubmit.file");
-//				 subject = environment.getRequiredProperty("app.email.template.employeesubmit.subject");
-//				 ccEmail = environment.getRequiredProperty("app.email.template.employeesubmit.cc");
-//				 emailFrom = employee.getLoginId()+domain;
-//				 emailTo = manager.getLoginId()+domain;
-//				 empName = employee.getFirstName();
-//				 managerName = manager.getFirstName();
-//				 subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-//				
-//			}else if(enumObj != null && enumObj == EmailConstant.MANAGER_REMAINDER){
-//				 templateFile = environment.getRequiredProperty("app.email.template.mangerreview.file");
-//				 subject = environment.getRequiredProperty("app.email.template.mangerreview.subject");
-//				 ccEmail = environment.getRequiredProperty("app.email.template.mangerreview.cc");
-//				 emailFrom = manager.getLoginId()+domain;
-//				 emailTo = employee.getLoginId()+domain;
-//				 empName = employee.getFirstName();
-//				 subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-//				
-//			}else if(enumObj != null && enumObj == EmailConstant.MANAGER_REVIEW){
-//				
-//				 templateFile = environment.getRequiredProperty("app.email.template.mangerreview.file");
-//				 subject = environment.getRequiredProperty("app.email.template.mangerreview.subject");
-//				 ccEmail = environment.getRequiredProperty("app.email.template.mangerreview.cc");
-//				 emailFrom = manager.getLoginId()+domain;
-//				 emailTo = employee.getLoginId()+domain;
-//				 empName = employee.getFirstName();
-//				 subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-//				 
-//			}else if(enumObj != null && enumObj == EmailConstant.MANAGER_FROZEN){
-//				
-//				 templateFile = environment.getRequiredProperty("app.email.template.mangerfrozen.file");
-//				 subject = environment.getRequiredProperty("app.email.template.mangerfrozen.subject");
-//				 ccEmail = environment.getRequiredProperty("app.email.template.mangerfrozen.cc");
-//				 emailFrom = manager.getLoginId()+domain;
-//				 emailTo = employee.getLoginId()+domain;
-//				 empName = employee.getFirstName();
-//				 subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-//			}
-//			
-//		
-//			Map<String, Object> emailData = new HashMap<>();
-//			emailData.put("phase", appraisalPhase.getName());
-//			emailData.put("imagePath", image);
-//			emailData.put("url", url);
-//			emailData.put("empName", empName);
-//			emailData.put("managerName", managerName);
-//			emailData.put("cycle", appraisalCycle.getName());
-//			
-//			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
-//			sendEmail(emailFrom, emailTo,ccEmail, subject, reportContent);
-//			
-//		} catch (MessagingException messagingException) {
-//			throw new EmailException(messagingException.getMessage(), messagingException);
-//		}
-	}
-	
-	private void sendManagerReviewFrozen(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendManagerReviewFrozen(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
+			LOGGER.info("Sending email for "+ EmailConstant.MANAGER_FROZEN);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_FROZEN.toString());
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
-
-			String emailFrom = "";
-			String emailTo = "";
-			String ccEmail ="";
+			String emailFrom = manager.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
+			String ccEmail = emailFrom + mailTemplate.getCcMail();
 			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 ccEmail=testMail;
-			}else{
-				 emailFrom = manager.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-			// need discussion	
-				 ccEmail = emailFrom +mailTemplate.getCcMail();
-			}
-			
-			
-
-			System.out.println(" from:"+ emailFrom+" to "+ emailTo+" ->" +ccEmail);
 			String empName = employee.getFirstName();
-			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -367,35 +218,22 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo,ccEmail, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.MANAGER_FROZEN, exception);
 		}
 	}
 	
-	private void sendManagerReviewCompleted(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendManagerReviewCompleted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.MANAGER_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_REVIEW.toString());
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String empName = employee.getFirstName();
-			
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = manager.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-			}
+			String emailFrom = manager.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -405,36 +243,22 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.MANAGER_REVIEW, exception);
 		}
 	}
 	
-	private void sendManagerToEmployeeRemainder(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendManagerToEmployeeRemainder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			
-			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMAINDER.toString());
-			
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
+			LOGGER.info("Sending email for "+ EmailConstant.MGR_TO_EMP_REMAINDER);
+			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMAINDER.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String empName = employee.getFirstName();
-			
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = manager.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-			}
+			String emailFrom = manager.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -444,40 +268,25 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.MGR_TO_EMP_REMAINDER, exception);
 		}
 	}
 			
-	private void sendHrToEmployeeRemainder(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee hr,Employee employee,Employee manager) throws EmailException {
+	private void sendHrToEmployeeRemainder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
+			Employee employee, Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_EMP_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_EMP_REM.toString());
-			// to do
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String empName = employee.getFirstName();
-			
-			String ccmail = "";
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 ccmail=testMail;
-			}else{
-				 emailFrom = hr.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-				 ccmail = manager.getLoginId()+domain;
-			}
-			
+
+			String emailFrom = hr.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
+			String ccEmail = manager.getLoginId() + domain;
+
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -485,38 +294,25 @@ public class EmailRepository {
 			emailData.put("empName", empName);
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
-			sendEmail(emailFrom, emailTo, ccmail,subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.HR_TO_EMP_REM, exception);
 		}
 	}
 	
-	private void sendHrToManagerRemainderMail(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee hr,Employee manager) throws EmailException {
+	private void sendHrToManagerRemainderMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
+			Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_MGR_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_MGR_REM.toString());
-			
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String managerName = manager.getFirstName();
 			
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = hr.getLoginId()+domain;
-				 emailTo = manager.getLoginId()+domain;
-			}
-			
+			String emailFrom = hr.getLoginId() + domain;
+			String emailTo = manager.getLoginId() + domain;
+		
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
 			emailData.put("imagePath", image);
@@ -525,44 +321,26 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),managerName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.HR_TO_MGR_REM, exception);
 		}
 	}
 	
 	
-	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
-			Employee fManager, Employee tManager, Employee employee) throws EmailException {
+	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee fManager,
+			Employee tManager, Employee employee) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.CHANGE_MGR);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CHANGE_MGR.toString());
-		
-			String image = environment.getRequiredProperty("app.email.image");
-			String domain = environment.getRequiredProperty("app.email.domain");
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String url = mailTemplate.getButtonUrl();
 			String empName = employee.getFirstName();
 			String fromManager = fManager.getFirstName();
 			String toManager = tManager.getFirstName();
-			
-			String emailcc = "";
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 emailcc=testMail;
-			}else{
-				 emailTo = employee.getLoginId() + domain;
-				 emailFrom =  fManager.getLoginId() + domain;;
-				 emailcc = tManager.getLoginId()+domain;
-			}
-			
+			String emailTo = employee.getLoginId() + domain;
+			String emailFrom = fManager.getLoginId() + domain;
+			String emailcc = tManager.getLoginId() + domain;
 
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -574,38 +352,23 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject,
 					new Object[] { appraisalCycle.getName(), appraisalPhase.getName(), empName });
-			
 			sendEmail(emailFrom, emailTo, emailcc, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.CHANGE_MGR, exception);
 		}
 	}
 	
-	private void sendApprasialManagerAssign(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendApprasialManagerAssign(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+			Employee employee, Employee manager) {
 		try {
-			
-			String image = environment.getRequiredProperty("app.email.image");
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			
-			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMPLOYEE_ENABLE.toString());
+			LOGGER.info("Sending email for "+ EmailConstant.EMPLOYEE_ENABLE);
+			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.EMPLOYEE_ENABLE.toString());
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
 			String url = mailTemplate.getButtonUrl();
 			String empName = employee.getFirstName();
-			
-			String emailFrom = "";
-			String emailTo = "";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-			}else{
-				 emailFrom = manager.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-			}
+			String emailFrom = manager.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -615,38 +378,24 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.EMPLOYEE_ENABLE, exception);
 		}
 	}
 
-	private void sendUdatedReviewMail(AppraisalCycle appraisalCycle,AppraisalPhase appraisalPhase,Employee employee,Employee manager) throws EmailException {
+	private void sendUdatedReviewMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee employee,
+			Employee manager) {
 		try {
-			
+			LOGGER.info("Sending email for "+ EmailConstant.UPDATE_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.UPDATE_REVIEW.toString());
-			String domain=  environment.getRequiredProperty("app.email.domain");
-			String image = environment.getRequiredProperty("app.email.image");
 			String url = mailTemplate.getButtonUrl();
 			String subject = mailTemplate.getSubject();
 			String templateFile = mailTemplate.getFileName();
 			String empName = employee.getFirstName();
 			
-			String emailFrom = "";
-			String emailTo = "";
-			String ccEmail="";
-			
-			String enableTestMail = environment.getRequiredProperty("app.email.test");
-			String testMail = environment.getRequiredProperty("app.email.emailid");
-			
-			if(enableTestMail.equalsIgnoreCase("true")){
-				 emailFrom = testMail;
-				 emailTo = testMail;
-				 ccEmail=testMail;
-			}else{
-				 emailFrom = manager.getLoginId()+domain;
-				 emailTo = employee.getLoginId()+domain;
-				 ccEmail = mailTemplate.getCcMail();
-			}
+			String emailFrom = manager.getLoginId() + domain;
+			String emailTo = employee.getLoginId() + domain;
+			String ccEmail = mailTemplate.getCcMail();
 			
 			Map<String, Object> emailData = new HashMap<>();
 			emailData.put("phase", appraisalPhase.getName());
@@ -656,219 +405,178 @@ public class EmailRepository {
 			String reportContent = emailTemplateEngine.getGeneratedContent(templateFile, emailData);
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
-		} catch (MessagingException messagingException) {
-			throw new EmailException(messagingException.getMessage(), messagingException);
+		} catch (Exception exception) {
+			LOGGER.error("Unable to email for " + EmailConstant.UPDATE_REVIEW, exception);
 		}
 	}
 
-	private void sendEmail(String from, String toAddresses, String subject, String content) throws MessagingException {
-		// Create a default MimeMessage object.
-		MimeMessage message = new MimeMessage(session);
-		// Set From: header field of the header.
-		message.setFrom(new InternetAddress(from));
-		// Set To: header field of the header.
-		if (toAddresses.indexOf(",") != -1) {
-			String[] split = toAddresses.split(",");
-			for (String toAddress : split) {
-				message.addRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
-			}
-		} else {
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toAddresses));
-		}
-		// Set Subject: header field
-		message.setSubject(subject);
-		// Now set the actual message
-		// message.setText(content);
-		message.setContent(content, "text/html");
-		// Send message
-		Transport.send(message);
-		System.out.println("Sent message successfully....");
-	}
-	private void sendEmail(String from, String toAddresses, String ccAddresses, String subject, String content) throws MessagingException {
-		// Create a default MimeMessage object.
-		MimeMessage message = new MimeMessage(session);
-		// Set From: header field of the header.
-		message.setFrom(new InternetAddress(from));
-		// Set To: header field of the header.
-		if(ccAddresses != null ){
-			
-			if (ccAddresses.indexOf(",") != -1) {
-				String[] split = ccAddresses.split(",");
-				for (String ccAddress : split) {
-					message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccAddress));
-				}
-			} else {
-				message.addRecipient(Message.RecipientType.CC, new InternetAddress(ccAddresses));
-			}
-
-		}
-		
-		if (toAddresses.indexOf(",") != -1) {
-			String[] split = toAddresses.split(",");
-			for (String toAddress : split) {
-				message.addRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
-			}
-		} else {
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(toAddresses));
-		}
-		// Set Subject: header field
-		message.setSubject(subject);
-		// Now set the actual message
-		// message.setText(content);
-		message.setContent(content, "text/html");
-		// Send message
-		Transport.send(message);
-		System.out.println("Sent message successfully....");
-	}
-
-	
 	public void sendEnableMail(int phaseId, int assignedBy, int employeeId) {
+		LOGGER.info("Sending email for sendEnableMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(assignedBy);
-		
-		try {
-			sendApprasialManagerAssign(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendApprasialManagerAssign(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
-	public void sendEmployeeSubmitMail(int phaseId,int employeeId,int managerId) {
+	public void sendEmployeeSubmitMail(int phaseId, int employeeId, int managerId) {
+		LOGGER.info("Sending email for sendEmployeeSubmitMail(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		try {
-			sendApprasialEmployeeSubmitted(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
-		
+		sendApprasialEmployeeSubmitted(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 	public void sendReviewCompleted(int phaseId, int managerId, int employeeId) {
+		LOGGER.info("Sending email for sendReviewCompleted(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		try {
-			sendManagerReviewCompleted(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendManagerReviewCompleted(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 
 	public void sendEmployeeAcceptence(int phaseId, int employeeId,int managerId) {
+		LOGGER.info("Sending email for sendEmployeeAcceptence(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		try {
-			sendEmployeeAcceptenceMail(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendEmployeeAcceptenceMail(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 	public void sendEmployeeRejected(int phaseId, int employeeId,int managerId) {
+		LOGGER.info("Sending email for sendEmployeeRejected(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		try {
-			sendEmployeeRejectionMail(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendEmployeeRejectionMail(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 	
-	public void sendUdatedReviewMail(int phaseId, int assignedBy, int employeeId) {
+	public void sendUpdatedReviewMail(int phaseId, int assignedBy, int employeeId) {
+		LOGGER.info("Sending email for sendUpdatedReviewMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(assignedBy);
-		
-		try {
-			sendUdatedReviewMail(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendUdatedReviewMail(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
-	public void sendChangeManager(int phaseId, int employeeId,int fromManager,int toManager) {
+	public void sendChangeManager(int phaseId, int employeeId, int fromManager, int toManager) {
+		LOGGER.info("Sending email for sendChangeManager(" + phaseId + ", " + employeeId + ", "+ fromManager + ", " + toManager + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
-	
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee fManager=employeeRepository.findByEmployeeId(fromManager);
 		Employee tManager=employeeRepository.findByEmployeeId(toManager);
-		
-		
-		try {
-			sendChangeManagerMail(appraisalCycle, appraisalPhase,fManager,tManager, employee);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendChangeManagerMail(appraisalCycle, appraisalPhase,fManager,tManager, employee);
 	}
-	
-	
-	
 
 	public void sendManagerToEmployeeRemainder(int phaseId,int managerId, int employeeId) {
+		LOGGER.info("Sending email for sendManagerToEmployeeRemainder(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		
-		try {
-			sendManagerToEmployeeRemainder(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendManagerToEmployeeRemainder(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 	
 	public void sendHrToEmployeeRemainder(int phaseId,int hrId, int employeeId,int managerId) {
+		LOGGER.info("Sending email for sendHrToEmployeeRemainder(" + phaseId + ", " + hrId + ", "+ employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
 		Employee hr=employeeRepository.findByEmployeeId(hrId);
-		
-		try {
-			sendHrToEmployeeRemainder(appraisalCycle, appraisalPhase,hr, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendHrToEmployeeRemainder(appraisalCycle, appraisalPhase,hr, employee, manager);
 	}
 	
 	
 	public void sendHrToManagerRemainder(int phaseId,int hrId, int managerId) {
+		LOGGER.info("Sending email for sendHrToManagerRemainder(" + phaseId + ", " + hrId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
 		Employee hr=employeeRepository.findByEmployeeId(hrId);
-		
-		try {
-			sendHrToManagerRemainderMail(appraisalCycle, appraisalPhase,hr,manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
-		}
+		sendHrToManagerRemainderMail(appraisalCycle, appraisalPhase,hr,manager);
 	}
 
 	public void sendConcludeMail(int phaseId, int managerId, int employeeId) {
+		LOGGER.info("Sending email for sendConcludeMail(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		try {
-			sendManagerReviewFrozen(appraisalCycle, appraisalPhase, employee, manager);
-		} catch (EmailException e) {
-			e.printStackTrace();
+		sendManagerReviewFrozen(appraisalCycle, appraisalPhase, employee, manager);
+	}
+
+	private void sendEmail(String from, String toAddresses, String subject, String content) throws MessagingException {
+		if (!turnOffEmails) {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+			if (alwaysSendTo == null) {
+				// Set From: header field of the header.
+				message.setFrom(new InternetAddress(from));
+				// Set To: header field of the header.
+				addRecepients(message, toAddresses, Message.RecipientType.TO);
+			} else {
+				message.setFrom(new InternetAddress(alwaysSendTo));
+				message.addRecipient(Message.RecipientType.TO, new InternetAddress(alwaysSendTo));
+			}
+			// Set Subject: header field
+			message.setSubject(subject);
+			// Now set the actual message
+			// message.setText(content);
+			message.setContent(content, "text/html");
+			// Send message
+			Transport.send(message);
+			LOGGER.info("Email successfully sent to " + toAddresses + " with subject '" + subject + "'");
+		}
+	}
+
+	private void sendEmail(String from, String toAddresses, String ccAddresses, String subject, String content)
+			throws MessagingException {
+		if (!turnOffEmails) {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+			if (alwaysSendTo == null) {
+				// Set From: header field of the header.
+				message.setFrom(new InternetAddress(from));
+				// Set To: header field of the header.
+				addRecepients(message, toAddresses, Message.RecipientType.TO);
+				addRecepients(message, ccAddresses, Message.RecipientType.CC);
+			} else {
+				message.setFrom(new InternetAddress(alwaysSendTo));
+				addRecepients(message, alwaysSendTo, Message.RecipientType.TO);
+				addRecepients(message, alwaysSendTo, Message.RecipientType.CC);
+			}
+			// Set Subject: header field
+			message.setSubject(subject);
+			// Now set the actual message
+			// message.setText(content);
+			message.setContent(content, "text/html");
+			// Send message
+			Transport.send(message);
+			LOGGER.info("Email successfully sent2 to " + toAddresses + " with subject '" + subject + "'");
+		}
+	}
+
+	private void addRecepients(MimeMessage message, String addresses, RecipientType type)
+			throws AddressException, MessagingException {
+		if (addresses != null) {
+			if (addresses.indexOf(",") != -1) {
+				String[] split = addresses.split(",");
+				for (String toAddress : split) {
+					message.addRecipient(type, new InternetAddress(toAddress));
+				}
+			} else {
+				message.addRecipient(type, new InternetAddress(addresses));
+			}
 		}
 	}
 

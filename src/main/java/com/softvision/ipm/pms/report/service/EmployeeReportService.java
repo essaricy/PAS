@@ -40,7 +40,6 @@ public class EmployeeReportService {
 				phaseAssignments.add(phaseAssignment);
 			}
 		}
-		System.out.println("phaseAssignments= " + phaseAssignments);
 		return phaseAssignments;
 	}
 

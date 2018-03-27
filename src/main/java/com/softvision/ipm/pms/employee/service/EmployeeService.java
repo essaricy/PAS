@@ -3,6 +3,8 @@ package com.softvision.ipm.pms.employee.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import com.softvision.ipm.pms.employee.repo.EmployeeSpecs;
 
 @Service
 public class EmployeeService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
 
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -73,10 +77,11 @@ public class EmployeeService {
 				save(employee);
 				result.setCode(Result.SUCCESS);
 				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " updated");
-			}catch (Exception e) {
-				System.out.println(employee);
+			}catch (Exception exception) {
+				String message = employee.getFirstName() + " " + employee.getLastName() + " update failed. Error = "+ exception.getMessage();
+				LOGGER.error(message);
 				result.setCode(Result.FAILURE);
-				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " update failed. Error = "+ e.getMessage());
+				result.setMessage(message);
 			}
 			resultList.add(result);
 		}

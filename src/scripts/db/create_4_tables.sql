@@ -1,4 +1,47 @@
 -- #######################################################
+-- Employee Module
+-- #######################################################
+CREATE TABLE employee (
+	EMPLOYEE_ID		BIGINT NOT NULL,
+	LOGIN_ID		varchar(25) NOT NULL,
+	FIRST_NAME		varchar(60) NOT NULL,
+	LAST_NAME		varchar(60) NOT NULL,
+	EMPLOYMENT_TYPE	varchar(40) NOT NULL,
+	BAND			varchar(15) NOT NULL,
+	DESIGNATION		varchar(80) NULL,
+	HIRED_ON		date NOT NULL,
+	LOCATION		varchar(20),
+
+	PRIMARY KEY (EMPLOYEE_ID),
+	UNIQUE(LOGIN_ID),
+	CHECK (EMPLOYEE_ID > 0),
+	CHECK (FIRST_NAME <> ''),
+	CHECK (LAST_NAME <> ''),
+	CHECK (EMPLOYMENT_TYPE <> ''),
+	CHECK (BAND <> '')
+);
+CREATE TABLE role (
+	ID		BIGINT NOT NULL,
+	ROLE_NAME		varchar(25) NOT NULL,
+
+	PRIMARY KEY (ID),
+	UNIQUE(ROLE_NAME),
+	CHECK (ID > 0),
+	CHECK (ROLE_NAME <> '')
+);
+CREATE TABLE employee_role (
+	ID				BIGINT NOT NULL,
+	ROLE_ID		BIGINT NOT NULL,
+	EMPLOYEE_ID		BIGINT NOT NULL,
+
+	PRIMARY KEY (ID),
+	FOREIGN KEY (ROLE_ID) REFERENCES role (ID),
+	FOREIGN KEY (EMPLOYEE_ID) REFERENCES employee (EMPLOYEE_ID),
+	UNIQUE(ROLE_ID,EMPLOYEE_ID),
+	CHECK (ID > 0)
+);
+
+-- #######################################################
 -- Appraisal Module
 -- #######################################################
 CREATE TABLE appr_cycle (
@@ -101,49 +144,6 @@ CREATE TABLE template_detail (
 	FOREIGN KEY (PARAM_ID) REFERENCES goal_param (ID),
 	CHECK (ID > 0),
 	CHECK (APPLY IN ('Y', 'N'))
-);
-
--- #######################################################
--- Employee Module
--- #######################################################
-CREATE TABLE employee (
-	EMPLOYEE_ID		BIGINT NOT NULL,
-	LOGIN_ID		varchar(25) NOT NULL,
-	FIRST_NAME		varchar(60) NOT NULL,
-	LAST_NAME		varchar(60) NOT NULL,
-	EMPLOYMENT_TYPE	varchar(40) NOT NULL,
-	BAND			varchar(15) NOT NULL,
-	DESIGNATION		varchar(80) NULL,
-	HIRED_ON		date NOT NULL,
-	LOCATION		varchar(20),
-
-	PRIMARY KEY (EMPLOYEE_ID),
-	UNIQUE(LOGIN_ID),
-	CHECK (EMPLOYEE_ID > 0),
-	CHECK (FIRST_NAME <> ''),
-	CHECK (LAST_NAME <> ''),
-	CHECK (EMPLOYMENT_TYPE <> ''),
-	CHECK (BAND <> '')
-);
-CREATE TABLE role (
-	ID		BIGINT NOT NULL,
-	ROLE_NAME		varchar(25) NOT NULL,
-
-	PRIMARY KEY (ID),
-	UNIQUE(ROLE_NAME),
-	CHECK (ID > 0),
-	CHECK (ROLE_NAME <> '')
-);
-CREATE TABLE employee_role (
-	ID				BIGINT NOT NULL,
-	ROLE_ID		BIGINT NOT NULL,
-	EMPLOYEE_ID		BIGINT NOT NULL,
-
-	PRIMARY KEY (ID),
-	FOREIGN KEY (ROLE_ID) REFERENCES role (ID),
-	FOREIGN KEY (EMPLOYEE_ID) REFERENCES employee (EMPLOYEE_ID),
-	UNIQUE(ROLE_ID,EMPLOYEE_ID),
-	CHECK (ID > 0)
 );
 
 -- #######################################################

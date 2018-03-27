@@ -8,19 +8,21 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.softvision.ipm.pms.common.exception.EmailException;
-
+import freemarker.core.ParseException;
 import freemarker.template.Configuration;
+import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateNotFoundException;
 
 @Repository
 public class EmailTemplateRepository {
 
     @Autowired private Configuration configuration;
 
-    public String getGeneratedContent(String templateName, Map<String, Object> emailData)
-			throws EmailException {
+	public String getGeneratedContent(String templateName, Map<String, Object> emailData)
+			throws TemplateNotFoundException, MalformedTemplateNameException, ParseException, IOException,
+			TemplateException {
 		// Freemarker configuration object
 		Writer writer = null;
 		try {
@@ -29,10 +31,6 @@ public class EmailTemplateRepository {
 			writer = new StringWriter();
 			template.process(emailData, writer);
 			return writer.toString();
-		} catch (IOException ioException) {
-			throw new EmailException(ioException.getMessage(), ioException);
-		} catch (TemplateException templateException) {
-			throw new EmailException(templateException.getMessage(), templateException);
 		} finally {
 			IOUtils.closeQuietly(writer);
 		}

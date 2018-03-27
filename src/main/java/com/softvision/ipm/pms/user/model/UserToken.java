@@ -28,7 +28,6 @@ public class UserToken implements Authentication {
 			Roles roles = Roles.get(role.getRoleName());
 			authorities.add(new SimpleGrantedAuthority(roles.toString()));
 		}
-		System.out.println("##################" + user.getFirstName() + ": " + authorities);
 	}
 
 	@Override

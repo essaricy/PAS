@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Softvision | PMS</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon.ico">
     <!-- Bootstrap Core Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
@@ -307,8 +307,6 @@
         }
       });
     
-    var MANAGER_ROLE_ID=2;
-
     $("#Search_Employees").easyAutocomplete({
     	url: function(phrase) {
     	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
@@ -323,24 +321,45 @@
     	},
     	list: {
     	  onClickEvent: function() {
-    		  $('#Employee_Data').empty();    		
     		var data=$("#Search_Employees").getSelectedItemData();
     		var itemId=data.EmployeeId;
     		var itemValue=data.FirstName + " " + data.LastName;
     		availableRoles=[];
-    		var detailTable=$('<table class="table table-striped">');
-    	  	var detailTbody=$('<tbody>');
-     		var detailTfoot=$('<tfoot>');
-     		var detailThead=$('<thead>')
-    	  	$(detailTable).append(detailTbody);
-    	  	$(detailTable).append(detailTfoot);
-    	  	$(detailTable).append(detailThead);
-     		$('#Employee_Data').append(detailTable);
-     		$(detailThead).append('<tr><th>id</th><th>Name</th><th>Manager?</th></tr>');
-     		$(detailTbody).append('<tr id="emp_row"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="mgrcb"><span class="lever switch-col-green"></span></label></div></td></tr>');
-     		
-     		detailTfoot.append('<tr><td class="col-md-12" colspan="3"><button type="button" class="btn bg-light-blue waves-effect pull-right" id="save">Save</button></td></tr>')
-    		$("#Search_Employees").val('');
+    		if(!$('#Search_Employees_Table').length){
+    			var detailTable=$('<table class="table table-striped" id="Search_Employees_Table">');
+	    	  	var detailTbody=$('<tbody>');
+	     		var detailTfoot=$('<tfoot>');
+	     		var detailThead=$('<thead>')
+	    	  	$(detailTable).append(detailTbody);
+	    	  	$(detailTable).append(detailTfoot);
+	    	  	$(detailTable).append(detailThead);
+	     		$('#Employee_Data').append(detailTable);
+	     		$(detailThead).append('<tr><th>id</th><th>Name</th><th>Manager?</th></tr>');
+	     		$(detailTbody).append('<tr id="emp_row_' + data.EmployeeId + '"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.EmployeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
+	     		
+	     		detailTfoot.append('<tr><td class="col-md-12" colspan="2"><button type="button" class="btn bg-light-blue waves-effect pull-left" id="clear">clear</button></td><td class="col-md-12"><button type="button" class="btn bg-light-blue waves-effect pull-right" id="save">Save</button></td></tr>')
+	    		$("#Search_Employees").val('');
+	     		
+	     		$('#save').on('click',function(event) {
+					var employeeList = [];
+					$('tr[id^="emp_row_"]').each(function( index ) {
+					 var employeeId= $( this ).find("td:first").text();
+					 var isManager=$(this).find('input[type="checkbox"]').is(':checked');
+					 employeeList.push({id:employeeId,managerFlag:isManager}); 
+					});
+       			 	var apiUrl='<%=request.getContextPath()%>/role/changeManagerRole';
+       			 	$.fn.ajaxPost({url:apiUrl, data: employeeList,refresh:'no'});
+				});
+	     		$('#clear').on('click',function(event) {
+	     			$('#Employee_Data').empty();
+	     		});
+    		} else{
+	    		if(!$('#emp_row_'+ data.EmployeeId).length){
+	    			var detailTbody = $('#Search_Employees_Table > tbody');
+	    			$(detailTbody).append('<tr id="emp_row_' + data.EmployeeId + '"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.EmployeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
+	    		}
+	    		$("#Search_Employees").val('');
+    		}
 
     		$.fn.ajaxGet({
     			url: '<%=request.getContextPath()%>/role/byEmployee/'+itemId,
@@ -349,13 +368,8 @@
     					  availableRoles.push(role.RoleName);
     				  });
     				  if(availableRoles.indexOf('Manager')>-1){
-    				    $('#emp_row').find('input[type="checkbox"]').attr('checked', 'true');
+    				    $('#emp_row_'+itemId).find('input[type="checkbox"]').attr('checked', 'true');
     				  }
-    				  $('#save').on('click',function(event) {
-    					  var flag=$("#mgrcb").is(':checked');
-    					  var apiUrl='<%=request.getContextPath()%>/role/' + (flag ? "assign" : "delete") + '/' + itemId + '/' + MANAGER_ROLE_ID;
-    					  $.fn.ajaxPut({url: apiUrl, refresh: "no"});
-   					});
    				},
     			onError: function(message, content) {
     			}

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.role.constant.Roles;
+import com.softvision.ipm.pms.role.entity.EmployeeRole;
 import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.service.RoleService;
 
@@ -71,6 +74,20 @@ public class RoleRest {
 		Result result = new Result();
 		try {
 			roleService.assignRole(employeeId, roleId);
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+		}
+		return result;
+	}
+	
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
+	@RequestMapping(value = "changeManagerRole", method = RequestMethod.POST)
+	public Result changeManagerRole(@RequestBody(required = true) @NotNull EmployeeRole[] employeeList) {
+		Result result = new Result();
+		try {
+			roleService.changeManagerRole(employeeList, Roles.MANAGER_ROLE_ID);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

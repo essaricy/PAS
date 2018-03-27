@@ -56,7 +56,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**")
-        	.addResourceLocations("classpath:favicon.ico")
+        	//.addResourceLocations("classpath:favicon.ico")
         	.addResourceLocations("classpath:/AdminBSBMaterialDesign")
         	.addResourceLocations("classpath:/fonts")
         	.addResourceLocations("classpath:/scripts")

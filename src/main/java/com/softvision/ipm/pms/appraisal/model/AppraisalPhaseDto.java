@@ -38,7 +38,7 @@ public class AppraisalPhaseDto implements Serializable {
 
 	@Override
 	public String toString() {
-		return "\n\tAppraisalPhase [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
+		return "\n\tAppraisalPhaseDto [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
 				+ "]";
 	}
 

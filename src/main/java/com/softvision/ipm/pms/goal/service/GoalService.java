@@ -2,6 +2,8 @@ package com.softvision.ipm.pms.goal.service;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import com.softvision.ipm.pms.goal.repo.GoalDataRepository;
 
 @Service
 public class GoalService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(GoalService.class);
 
 	@Autowired
 	private GoalDataRepository goalDataRepository;
@@ -46,6 +50,7 @@ public class GoalService {
 
 	public GoalDto update(GoalDto goalDto) throws ServiceException {
 		try {
+			LOGGER.info("update: " + goalDto);
 			if (goalDto == null) {
 				throw new ServiceException("No Goal is provided.");
 			}
@@ -60,6 +65,7 @@ public class GoalService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
+			LOGGER.info("delete: " + id);
 			goalDataRepository.delete(id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);

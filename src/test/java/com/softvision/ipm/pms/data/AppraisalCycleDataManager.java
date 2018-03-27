@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
@@ -33,6 +34,13 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 	@Override
 	public void loadData() throws Exception {
 		createAppraisalCycles(2010, 10);
+		activateCycle();
+	}
+
+	private void activateCycle() throws ServiceException {
+		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
+		AppraisalCycleDto activeCycle = cycles.get(RANDOM.nextInt(cycles.size()));
+		appraisalService.changeStatus(activeCycle.getId(), AppraisalCycleStatus.ACTIVE);
 	}
 
 	private void createAppraisalCycles(int startYear, int numberOfYears) throws ServiceException {

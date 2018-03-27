@@ -3,6 +3,8 @@ package com.softvision.ipm.pms.appraisal.service;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +14,6 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
-import com.softvision.ipm.pms.common.exception.EmailException;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
@@ -20,6 +21,8 @@ import com.softvision.ipm.pms.email.repo.EmailRepository;
 
 @Service
 public class AppraisalService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppraisalService.class);
 
 	@Autowired private AppraisalRepository appraisalRepository;
 
@@ -37,6 +40,7 @@ public class AppraisalService {
 
 	public AppraisalCycleDto update(AppraisalCycleDto appraisalCycleDto) throws ServiceException {
 		try {
+			LOGGER.info("Updating appraisal cycle: " + appraisalCycleDto);
 			if (appraisalCycleDto == null) {
 				throw new ServiceException("Appraisal Cycle information is not provided.");
 			}
@@ -80,6 +84,7 @@ public class AppraisalService {
 			throw new ServiceException("Appraisal Cycle information is not provided.");
 		}
 		AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
+		LOGGER.info("Updating appraisal cycle status from " + existingStatus + " to " + status);
 		if (existingStatus == AppraisalCycleStatus.DRAFT) {
 			if (status == AppraisalCycleStatus.DRAFT) {
 				throw new ServiceException("Appraisal Cycle is already a DRAFT");
@@ -109,21 +114,11 @@ public class AppraisalService {
 		appraisalCycle.setStatus(status.toString());
 		appraisalCycleDataRepository.save(appraisalCycle);
 		if (sendActivationEmail) {
-			try {
-				// Send email to whole group
-				emailRepository.sendApprasialKickOff(appraisalCycle);
-			} catch (EmailException emailException) {
-				emailException.printStackTrace();
-			}
+			emailRepository.sendApprasialKickOff(appraisalCycle);
 		}
-		
 		if (sendConcludeEmail) {
-			try {
-				// Send email to whole group
-				emailRepository.sendApprasialCycleConclude(appraisalCycle);
-			} catch (EmailException emailException) {
-				emailException.printStackTrace();
-			}
+			// Send email to whole group
+			emailRepository.sendApprasialCycleConclude(appraisalCycle);
 		}
 	}
 

@@ -79,7 +79,8 @@ $.fn.ajaxWrapper = function(options) {
  	  	  options.onSuccess(result.content);
  	  	} else {
  	  	  var text=(result.message)?result.message:"Data has been saved successfully.";
- 	  	  swal({ title: "Updated!", text: text, type: "success"}, function () { location.reload(); });
+ 	  	  var refresh = (options.refresh)? ((options.refresh == "no") ? false: true) : true;
+ 	  	  swal({ title: "Updated!", text: text, type: "success"}, function () { if(refresh) { location.reload();} }); 
  	  	}
  	  }
     } else if (options.type == 'DELETE') {

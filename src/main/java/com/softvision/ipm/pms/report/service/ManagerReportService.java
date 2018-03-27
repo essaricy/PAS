@@ -51,8 +51,6 @@ public class ManagerReportService {
 		concludedCounts.setCount(get(phasewiseEmployeeStatusCounts,
 				PhaseAssignmentStatus.CONCLUDED, PhaseAssignmentStatus.CONCLUDED));
 		finalCounts.add(concludedCounts);*/
-
-		System.out.println("finalCounts= " + finalCounts);
 		return finalCounts;
 	}
 

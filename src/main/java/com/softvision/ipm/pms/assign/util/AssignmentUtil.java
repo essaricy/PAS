@@ -2,10 +2,15 @@ package com.softvision.ipm.pms.assign.util;
 
 import java.text.MessageFormat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 
 public class AssignmentUtil {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentUtil.class);
 
 	private static final String ERROR_MESSAGE = "The Appraisal form is not in a state to {0} now";
 
@@ -20,7 +25,9 @@ public class AssignmentUtil {
 			}
 		}
 		if (!found) {
-			throw new ServiceException(MessageFormat.format(ERROR_MESSAGE, desiredState));
+			String message = MessageFormat.format(ERROR_MESSAGE, desiredState);
+			LOGGER.warn(message);
+			throw new ServiceException(message);
 		}
 		return PhaseAssignmentStatus.getNext(status);
 	}

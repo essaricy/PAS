@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +17,8 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
-import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.DateUtil;
@@ -28,6 +30,8 @@ import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
 @Service
 public class AssignmentService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentService.class);
 
 	@Autowired private AssignmentRepository assignmentRepository;
 
@@ -50,7 +54,7 @@ public class AssignmentService {
 	public List<Result> bulkAssign(BulkAssignmentDto bulkAssignmentDto) throws ServiceException {
 		List<Result> results = new ArrayList<>();
 		Date assignedAt = Calendar.getInstance().getTime();
-
+		LOGGER.info("bulkAssign: " + bulkAssignmentDto);
 		if (bulkAssignmentDto == null) {
 			throw new ServiceException("No Assignments are provided.");
 		}
@@ -106,11 +110,16 @@ public class AssignmentService {
 				cycleAssignment.setEmployeeId(employeeId);
 				cycleAssignment.setTemplateId(templateId);
 				assignmentRepository.assign(cycleAssignment, cycle, employeeName);
+				LOGGER.info("bulkAssign: Successful for cycleId: " + cycleId + ", employeeId: " + employeeId
+						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy());
 				result.setCode(Result.SUCCESS);
 				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
 				result.setCode(Result.FAILURE);
 				result.setMessage(exception.getMessage());
+				LOGGER.info("bulkAssign: Failed for cycleId: " + cycleId + ", employeeId: " + employeeId
+						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy()
+						+ ", ERROR=" + exception.getMessage(), exception);
 			} finally {
 				results.add(result);
 			}

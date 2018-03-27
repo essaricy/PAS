@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +32,8 @@ import com.softvision.ipm.pms.role.service.RoleService;
 @Service
 public class ManagerAssignmentService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ManagerAssignmentService.class);
+
 	@Autowired private RoleService roleService;
 
 	@Autowired private ManagerAssignmentRepository managerAssignmentRepository;
@@ -45,16 +49,18 @@ public class ManagerAssignmentService {
 	@PreSecureAssignment(permitManager=true)
 	public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
+		LOGGER.warn("assignToAnotherManager(" + assignmentId + ", " + fromEmployeeId + ", " + toEmployeeId + ")");
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
 				PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
 		if (!roleService.isManager(toEmployeeId)) {
+			LOGGER.warn("assignToAnotherManager(" + assignmentId + ", " + fromEmployeeId + ", " + toEmployeeId + "): The employee that you are trying to assign to, is not a manager");
 			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
 		}
 		employeePhaseAssignment.setAssignedBy(toEmployeeId);
 		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 
-	  // email trigger
+		// email trigger
 		emailRepository.sendChangeManager(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
 				fromEmployeeId, toEmployeeId);
 	}
@@ -111,8 +117,7 @@ public class ManagerAssignmentService {
 		}
 		employeeCycleAssignment.setSubmittedTo(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
-		CycleAssignment savedAssignment = cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		System.out.println("savedAssignment=" + savedAssignment);
-			}
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+	}
 
 }

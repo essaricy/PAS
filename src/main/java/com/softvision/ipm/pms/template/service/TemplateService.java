@@ -5,6 +5,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 import javax.validation.ValidationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ import com.softvision.ipm.pms.template.repo.TemplateSpecs;
 
 @Service
 public class TemplateService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TemplateService.class);
 
 	@Autowired private GoalService goalService;
 
@@ -59,6 +63,7 @@ public class TemplateService {
 	@Transactional
 	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
+			LOGGER.info("update: " + templateDto);
 			if (templateDto == null) {
 				throw new ServiceException("Template information is not provided.");
 			}
@@ -106,6 +111,7 @@ public class TemplateService {
 			Template template = TemplateAssembler.getTemplate(templateDto);
 			templateRepository.save(template);
 			templateDto=TemplateAssembler.getTemplateDto(template);
+			LOGGER.info("update: completed. " + templateDto);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -115,10 +121,12 @@ public class TemplateService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
+			LOGGER.info("delete: " + id);
 			if (id > 0 && isInUse(id)) {
 				throw new ServiceException("Template is already in use. Cannot delete now.");
 			}
 			templateDataRepository.delete(id);
+			LOGGER.info("delete: successful for " + id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);

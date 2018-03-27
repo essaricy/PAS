@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,8 @@ import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 @Service
 public class PhaseAssessmentService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(PhaseAssessmentService.class);
+
 	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 
 	@Autowired private TemplateDataRepository templateDataRepository;
@@ -50,7 +54,6 @@ public class PhaseAssessmentService {
 
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		System.out.println("################### getByAssignment()");
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
 		phaseAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeePhaseAssignment));
@@ -63,16 +66,11 @@ public class PhaseAssessmentService {
 		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
 		phaseAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
 
-		System.out.println("employeePhaseAssignment=" + employeePhaseAssignment);
-
 		List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
 				.findByAssignIdOrderByStatusAsc(assignmentId);
-		System.out.println("assessHeaders=" + assessHeaders);
 
 		int status = employeePhaseAssignment.getStatus();
 		PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
-		System.out.println("phaseAssignmentStatus= " + phaseAssignmentStatus);
-		System.out.println("requestedEmployeeId= " + requestedEmployeeId);
 		// Restrict viewing the form by employee if the state is
 		if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
 			// remove the top phase header if its requested by the manager
@@ -86,7 +84,6 @@ public class PhaseAssessmentService {
 			}
 		}
 		phaseAssessment.setAssessHeaders(AssessmentAssembler.getAssessHeaderDtos(assessHeaders));
-		System.out.println("phaseAssessment=" + phaseAssessment);
 		return phaseAssessment;
 	}
 
@@ -104,8 +101,7 @@ public class PhaseAssessmentService {
 					"Make sure that assignments in previous phase are concluded for this employee before assigning new one");
 		}
 		employeePhaseAssignment.setStatus(nextStatus.getCode());
-		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
-		System.out.println(saved);
+		phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// email trigger
 		emailRepository.sendEnableMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
 				employeeId);
@@ -157,7 +153,6 @@ public class PhaseAssessmentService {
 		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.EMPLOYEE_AGREED,
 				"agree review", PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED,
 				PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
-		System.out.println("--->agree  " + assignmentId + "  requestedEmployeeId " + requestedEmployeeId);
 		// Email Trigger
 		emailRepository.sendEmployeeAcceptence(employeePhaseAssignment.getPhaseId(),
 				employeePhaseAssignment.getEmployeeId(), employeePhaseAssignment.getAssignedBy());
@@ -179,17 +174,16 @@ public class PhaseAssessmentService {
 	@PreSecureAssignment(permitManager=true)
 	public void updateReview(long assignmentId, int requestedEmployeeId, AssessHeaderDto phaseAssessHeaderDto)
 			throws ServiceException {
-		// TODO Email trigger
 		PhaseAssignment employeePhaseAssignment = update(phaseAssessHeaderDto,
 				PhaseAssignmentStatus.EMPLOYEE_ESCALATED, "update review", PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
 		//  Email trigger
-		emailRepository.sendUdatedReviewMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),employeePhaseAssignment.getEmployeeId());
+		emailRepository.sendUpdatedReviewMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),employeePhaseAssignment.getEmployeeId());
 	}
 
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
 	private void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		System.out.println("conclude()");
+		LOGGER.info("conclude(" + assignmentId + ", " + requestedEmployeeId + ")");
 		// Change the status to CONCLUDED
 		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
 				"conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
@@ -207,18 +201,14 @@ public class PhaseAssessmentService {
 		emailRepository.sendConcludeMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
 				employeePhaseAssignment.getEmployeeId());
 		// Abridge Cycle Assignment
-		String abridgeError = cycleAssessmentService.abridgeQuietly(employeePhaseAssignment.getEmployeeId());
-		if (abridgeError == null) {
-			System.out.println("Abridge has been completed successfully");
-		} else {
-			System.out.println("Abridge failed: " + abridgeError);
-		}
+		cycleAssessmentService.abridgeQuietly(employeePhaseAssignment.getEmployeeId());
 	}
 
 	private PhaseAssignment update(AssessHeaderDto phaseAssessHeaderDto,
 			PhaseAssignmentStatus statusToUpdate, String message, PhaseAssignmentStatus... previousStatusesToCheck)
 			throws ServiceException {
 		long assignmentId = phaseAssessHeaderDto.getAssignId();
+		LOGGER.info("update(" + assignmentId + ", operation=" + message + ", statusToUpdate=" + statusToUpdate + ")");
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		phaseAssessHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
@@ -230,11 +220,13 @@ public class PhaseAssessmentService {
 		phaseAssessHeaderDto.setStatus(saved.getStatus());
 		AssessHeader phaseAssessHeader = AssessmentAssembler.getAssessHeader(phaseAssessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
+		LOGGER.info("update(" + assignmentId + ", operation=" + message + ", statusToUpdate=" + statusToUpdate + ") SUCCESSFUL");
 		return employeePhaseAssignment;
 	}
 
 	private PhaseAssignment update(long assignmentId, PhaseAssignmentStatus statusToUpdate, String message,
 			PhaseAssignmentStatus... previousStatusesToCheck) throws ServiceException {
+		LOGGER.info("update2(" + assignmentId + ", operation=" + message + ", statusToUpdate=" + statusToUpdate + ")");
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		// Change assignment status to statusToUpdate
@@ -245,6 +237,7 @@ public class PhaseAssessmentService {
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		phaseAssessHeader.setStatus(saved.getStatus());
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
+		LOGGER.info("update2(" + assignmentId + ", operation=" + message + ", statusToUpdate=" + statusToUpdate + ") SUCCESSFUL");
 		return employeePhaseAssignment;
 	}
 

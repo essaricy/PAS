@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Softvision | PMS</title>
     <!-- Favicon-->
-    <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<%=request.getContextPath()%>/images/favicon.ico">
     <!-- Bootstrap Core Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
@@ -171,7 +171,8 @@
   <body class="login-page">
     <div class="login-box">
       <div class="logo">
-        <a href="javascript:void(0);"><b>SOFTVISION</b></a>
+       	<img src="<%=request.getContextPath()%>/images/logo1.png"  style="float: left;" width="82px" />
+       	<a href="javascript:void(0);"><b>SOFTVISION</b></a>
         <small>PMS - Performance Management System</small>
       </div>
       <div class="card">
@@ -196,7 +197,7 @@
                 <i class="material-icons">lock</i>
               </span>
               <div class="form-line">
-                <input type="password" class="form-control" name="password" placeholder="Password" required value="">
+                <input type="password" class="form-control" name="password" placeholder="Password" required value="gfre">
               </div>
             </div>
             <div class="row">

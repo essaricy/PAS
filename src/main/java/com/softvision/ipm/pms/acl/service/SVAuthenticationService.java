@@ -47,7 +47,7 @@ public class SVAuthenticationService {
 				// Employee does not exist in the system. Look up SV project.
 				employee = svProjectRepository.getEmployee(userid);
 				if (employee == null) {
-					throw new DisabledException("Employee not found. Probably disabled?");
+					throw new DisabledException("Invalid credentials");
 				}
 				employeeRepository.save(employee);
 			}

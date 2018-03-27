@@ -3,16 +3,19 @@ package com.softvision.ipm.pms.acl.repo;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.interceptor.annotations.AuditTransaction;
 
 @Repository
 public class SVProjectRepository {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(SVProjectRepository.class);
 
 	@Value("${app.role.svproject.api-key}")
 	private String apiKey;
@@ -23,9 +26,9 @@ public class SVProjectRepository {
 	@Value("${app.role.svproject.domain}")
 	private String domain;
 
-	@AuditTransaction
 	public Employee getEmployee(String userId) {
 		String email = userId + "@" + domain;
+		LOGGER.info("Looking up for the user " + email + " in SVProject");
 
 		// To enable tracing of request and response
 		/*RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
@@ -39,8 +42,6 @@ public class SVProjectRepository {
 		return employee;
 	}
 	
-	
-	@AuditTransaction
 	public List<Employee> getAllEmployees() {
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey);
