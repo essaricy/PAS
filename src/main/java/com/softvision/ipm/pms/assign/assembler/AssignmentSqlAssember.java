@@ -26,6 +26,7 @@ public class AssignmentSqlAssember {
 		assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
 		assignedTo.setLastName(rs.getString("assigned_to_last_name"));
 		employeeAssignment.setAssignedTo(assignedTo);
+		employeeAssignment.setScore(rs.getDouble("score"));
 		return employeeAssignment;
 	}
 

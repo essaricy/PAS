@@ -28,6 +28,8 @@ public class EmployeeAssignmentDto implements Serializable {
 
 	private int status;
 
+	private double score;
+
 	@Override
 	public String toString() {
 		return "EmployeeAssignmentDto [assignmentId=" + assignmentId + ", assignedTo=" + assignedTo + ", assignedBy="

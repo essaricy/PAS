@@ -146,7 +146,7 @@
 
     var getPhasewiseStatusCount=function() {
    	  $.fn.ajaxGet({
-        url: '<%=request.getContextPath()%>/report/manager/phase/status/count',
+        url: '<%=request.getContextPath()%>/manager/report/phase/status/count',
         onSuccess: function(phasewiseEmployeeStatusCounts) {
       	var phasewiseEmployeeStatusCountRow = $('.PhasewiseEmployeeStatusCount_Row');
       	  $(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {

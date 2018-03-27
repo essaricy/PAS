@@ -10,16 +10,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
+import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.report.model.PhasewiseEmployeeStatusCountDto;
 import com.softvision.ipm.pms.report.service.ManagerReportService;
 
 @RestController
-@RequestMapping(value="report/manager", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="manager/report", produces=MediaType.APPLICATION_JSON_VALUE)
 public class ManagerReportRest {
 
 	@Autowired private ManagerReportService managerReportService;
+
+	@Autowired private ManagerAssignmentService managerAssignmentService;
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/status/count", method=RequestMethod.GET)
@@ -27,6 +31,12 @@ public class ManagerReportRest {
 		List<PhasewiseEmployeeStatusCountDto> phasewiseEmployeeStatusCounts = managerReportService
 				.getPhasewiseEmployeeStatusCounts(RestUtil.getLoggedInEmployeeId());
 		return phasewiseEmployeeStatusCounts;
+    }
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+	@RequestMapping(value="score", method=RequestMethod.GET)
+    public @ResponseBody List<ManagerCycleAssignmentDto> getScoreReport() {
+		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
     }
 
 }

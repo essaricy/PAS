@@ -34,14 +34,16 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
         registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
+        registry.addViewController("/admin/appraisal/status").setViewName("admin-appraisal-status");
 
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
+        registry.addViewController("/manager/assessment/phase").setViewName("manager-phase-assessment");
+        registry.addViewController("/manager/report/phase-score").setViewName("manager-phase-score-report");
+        registry.addViewController("/manager/report/cycle-score").setViewName("manager-cycle-score-report");
 
         registry.addViewController("/employee/assignment/list").setViewName("employee-assignment-list");
         registry.addViewController("/employee/assessment/phase").setViewName("employee-phase-assessment");
 
-        registry.addViewController("/manager/assessment/phase").setViewName("manager-phase-assessment");
-        registry.addViewController("/admin/appraisal/status").setViewName("admin-appraisal-status");
     }
 
     @Override

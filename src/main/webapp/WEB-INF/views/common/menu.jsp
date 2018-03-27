@@ -64,8 +64,14 @@
               <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
             </li>
             <li>
-                 <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
-               </li>
+              <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/manager/report/phase-score">Phase Score Report</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/manager/report/cycle-score">Cycle Score Report</a>
+            </li>
           </ul>
         </li>
         </sec:authorize>

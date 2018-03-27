@@ -15,7 +15,8 @@ public class AssignmentRepositorySql {
 			"(select last_name from employee where employee_id=cycle_assign.employee_id) as assigned_to_last_name, " + 
 			"cycle_assign.assigned_by as assigned_by_id, " + 
 			"(select first_name from employee where employee_id=cycle_assign.assigned_by) as assigned_by_first_name, " + 
-			"(select last_name from employee where employee_id=cycle_assign.assigned_by) as assigned_by_last_name " + 
+			"(select last_name from employee where employee_id=cycle_assign.assigned_by) as assigned_by_last_name, " + 
+			"cycle_assign.score as score " +
 			"from cycle_assign " + 
 			"inner join appr_cycle " + 
 			"on appr_cycle.id=cycle_assign.cycle_id ";
@@ -44,7 +45,8 @@ public class AssignmentRepositorySql {
 			"(select last_name from employee where employee_id=phase_assign.employee_id) as assigned_to_last_name, " +
 			"phase_assign.assigned_by as assigned_by_id, " + 
 			"(select first_name from employee where employee_id=phase_assign.assigned_by) as assigned_by_first_name, " +
-			"(select last_name from employee where employee_id=phase_assign.assigned_by) as assigned_by_last_name " +
+			"(select last_name from employee where employee_id=phase_assign.assigned_by) as assigned_by_last_name, " +
+			"phase_assign.score as score " +
 			"from phase_assign " + 
 			"inner join appr_phase " + 
 			"on appr_phase.id=phase_assign.phase_id ";

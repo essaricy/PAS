@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
@@ -35,8 +34,6 @@ import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 public class EmailRepository {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailRepository.class);
-
-	@Autowired Environment environment;
 
 	@Autowired private Session session;
 
@@ -56,7 +53,7 @@ public class EmailRepository {
 	@Value("${app.email.domain}")
 	private String domain;
 	
-	@Value("${app.email.mode:on}")
+	@Value("${app.email.mode}")
 	private String mode;
 	
 	@Value("${app.email.always-send-to:#{null}}")
@@ -66,7 +63,7 @@ public class EmailRepository {
 
 	@PostConstruct
 	private void init() {
-		turnOffEmails = mode != null && mode.trim().equalsIgnoreCase("off");
+		turnOffEmails = mode != null && mode.trim().equalsIgnoreCase("disable");
 		alwaysSendTo = alwaysSendTo == null || alwaysSendTo.trim().length() == 0 ? null: alwaysSendTo;
 	}
 
