@@ -29,9 +29,9 @@ public class DataLoader {
 		clean();
 
 		appraisalCycleDataManager.loadData();
-		employeeDataManager.loadData();
-		templateDataManager.loadData();
-		assignmentDataManager.loadData();
+		//employeeDataManager.loadData();
+		//templateDataManager.loadData();
+		//assignmentDataManager.loadData();
 	}
 
 	private void clean() {
@@ -39,11 +39,11 @@ public class DataLoader {
 		clean("assess_header");
 		clean("phase_assign");
 		clean("cycle_assign");
-		clean("template_detail");
-		clean("template_header");
-		clean("template");
-		clean("employee_role");
-		clean("employee");
+		//clean("template_detail");
+		//clean("template_header");
+		//clean("template");
+		//clean("employee_role");
+		//clean("employee");
 		clean("appr_phase");
 		clean("appr_cycle");
 	}

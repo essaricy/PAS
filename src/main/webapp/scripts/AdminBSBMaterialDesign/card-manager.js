@@ -43,16 +43,16 @@
         if (activeItemSelector != null) {
           createMenuActions(data, activeItemSelector);
           if (data.length != 0) {
-        	  $(activeItemSelector).find(':first').click();
+            $(activeItemSelector).find(':first').click();
           }
         }
       }
       var items = $(''+activeItemSelector);
       if (items != null && items.length != 0) {
-   	    $(items)[0].click();
+        $(items)[0].click();
       }
       if (settings.afterLoadCallback) {
-    	settings.afterLoadCallback(items, data);
+      settings.afterLoadCallback(items, data);
       }
     })
     .fail(function(result) {
@@ -81,19 +81,19 @@
       if (listingType == 'hyperlinks') {
         $(data).each(function (index, item) {
           // Add links to the list
-    	  var link=$('<a href="#" class="list-group-item">');
-    	  $(link).attr('item-id', item['id']);
-    	  $(link).attr('item-name', item['name']);
-    	  //var heading=$('<h4 class="list-group-item-heading">' + item['name'] + '</h4>');
-    	  //$(link).append(heading);
-    	  $(link).text(item['name']);
-    	  $(container).append(link);
+        var link=$('<a href="#" class="list-group-item">');
+        $(link).attr('item-id', item['id']);
+        $(link).attr('item-name', item['name']);
+        //var heading=$('<h4 class="list-group-item-heading">' + item['name'] + '</h4>');
+        //$(link).append(heading);
+        $(link).text(item['name']);
+        $(container).append(link);
           $(link).click(function() {
             $(this).addClass('active').siblings().removeClass('active');
             // Show items in child container
             renderChildren(item);
             if (settings.onClickCallback) {
-            	settings.onClickCallback(item);
+              settings.onClickCallback(item);
             }
           });
         });
@@ -151,7 +151,7 @@
             renderTable(config, data[renderFromNode]);
           }
         }
-      });	
+      }); 
     }
 
     function createMenuActions(data, itemsSelector) {
@@ -212,15 +212,15 @@
           swal(
             {
               title: "Are you sure?", text: "You will not be able to recover this data!", type: "warning",
-        	  showCancelButton: true, confirmButtonColor: "#DD6B55",
-        	  confirmButtonText: "Yes, Delete!", closeOnConfirm: false
-        	}, function () {
+            showCancelButton: true, confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, Delete!", closeOnConfirm: false
+          }, function () {
               $.fn.ajaxDelete({url:deleteUrl + "/" + itemId});
             }
           );
         }
       });
-	  $(delete_li).append(delete_link);
+    $(delete_li).append(delete_link);
       $(actionsMenu).append(delete_li);
     }
     

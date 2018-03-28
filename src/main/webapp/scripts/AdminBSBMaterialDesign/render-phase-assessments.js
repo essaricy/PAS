@@ -4,42 +4,42 @@ $(function () {
   $.fn.renderAssessment=function( options ) {
     var settings=$.extend({
       contextPath: null,
-	  url: null,
-	  role: 'Employee',
-	}, options );
+    url: null,
+    role: 'Employee',
+  }, options );
 
     var card=$(this);
     var cardHeader=$(card).find('.header');
     var cardBody=$(card).find('.body');
     var rateYoOptions={ halfStar: true, starWidth: "18px", normalFill: '#CCC', ratedFill: '#4CAF50'};
 
-	$.fn.ajaxGet({
-   	  url: settings.url,
+  $.fn.ajaxGet({
+      url: settings.url,
       onSuccess: parseResult,
       onError: onErrorAssessments
     });
 
-	var assignment=null;
-	var phase=null;
+  var assignment=null;
+  var phase=null;
     var templateHeaders=null;
-	var status=null;
-	var assessHeaders=null;
+  var status=null;
+  var assessHeaders=null;
 
-	function parseResult(result) {
-	  updateData(result);
-	  renderAssessments();
-	}
+  function parseResult(result) {
+    updateData(result);
+    renderAssessments();
+  }
 
-	function updateData(result) {
+  function updateData(result) {
       assignment=result.employeeAssignment;
       phase=result.phase;
       templateHeaders=result.templateHeaders;
-  	  status=getPhaseAssignmentStatus(assignment.status);
-  	  assessHeaders=result.assessHeaders;
-	}
+      status=getPhaseAssignmentStatus(assignment.status);
+      assessHeaders=result.assessHeaders;
+  }
 
-	function renderAssessments() {
-	  renderTitles();
+  function renderAssessments() {
+    renderTitles();
       renderGoalPopup();
       renderTemplateInfo();
 
@@ -95,88 +95,88 @@ $(function () {
       // Append template headers
       var totalWeightage=0;
       $(templateHeaders).each(function(index, templateHeader) {
-   		var goalId=templateHeader.goalId;
-   		var goalName=templateHeader.goalName;
-   		var weightage=templateHeader.weightage;
-   		totalWeightage+=weightage;
+      var goalId=templateHeader.goalId;
+      var goalName=templateHeader.goalName;
+      var weightage=templateHeader.weightage;
+      totalWeightage+=weightage;
 
-   		var modal=$('#GoalParamsModal');
-   		var row=$('<tr>');
-   		var link=$('<a data-toggle="modal" data-target="#' + $(modal).attr('id') + '">');
-   		$(link).append(goalName);
-   		$(link).click(function() {
-   		  $(modal).find('.modal-title').text(goalName);
-   		  $(modal).find('.modal-body').empty();
-   		  var ol=$('<ol>');
-   		  $(modal).find('.modal-body').append(ol);
-   		  $(templateHeader.details).each(function (index, detail) {
-		    $(ol).append('<li>' + detail.paramName + "</li>");
-   		  });
-   		});
+      var modal=$('#GoalParamsModal');
+      var row=$('<tr>');
+      var link=$('<a data-toggle="modal" data-target="#' + $(modal).attr('id') + '">');
+      $(link).append(goalName);
+      $(link).click(function() {
+        $(modal).find('.modal-title').text(goalName);
+        $(modal).find('.modal-body').empty();
+        var ol=$('<ol>');
+        $(modal).find('.modal-body').append(ol);
+        $(templateHeader.details).each(function (index, detail) {
+        $(ol).append('<li>' + detail.paramName + "</li>");
+        });
+      });
 
-   		var linkTd=$('<td item-id="' + goalId + '" style="max-width: 150px;">');
-   		$(linkTd).append(link);
-   		$(row).append(linkTd);
-   		$(row).append('<td class="weightage" style="max-width: 60px; word-break: break-all;">' + weightage + '</td>');
+      var linkTd=$('<td item-id="' + goalId + '" style="max-width: 150px;">');
+      $(linkTd).append(link);
+      $(row).append(linkTd);
+      $(row).append('<td class="weightage" style="max-width: 60px; word-break: break-all;">' + weightage + '</td>');
         $(tbody).append(row);
-   	  });
+      });
       $(tfoot).append('<tr><th>&nbsp</th><th>' + totalWeightage + '</th></tr>');
     }
 
     function updateModelByFormStatus() {
       assignment.render={ buttons: [] };
-	  var role=options.role;
+    var role=options.role;
 
       if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
-       	if (role == 'Employee') {
-       	  var assessHeader=getBlankAssessHeader();
-       	  assessHeaders[assessHeaders.length]=assessHeader;
-       	  assessHeader.render=getSelfRatingRenderer(true);
-   	      assignment.render.buttons.push('Save');
-   	      assignment.render.buttons.push('Submit');
+        if (role == 'Employee') {
+          var assessHeader=getBlankAssessHeader();
+          assessHeaders[assessHeaders.length]=assessHeader;
+          assessHeader.render=getSelfRatingRenderer(true);
+          assignment.render.buttons.push('Save');
+          assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == 'Employee') {
           var assessHeader=assessHeaders[0];
-    	  assessHeader.render=getSelfRatingRenderer(true);
-   	      assignment.render.buttons.push('Save');
-   	      assignment.render.buttons.push('Submit');
+        assessHeader.render=getSelfRatingRenderer(true);
+          assignment.render.buttons.push('Save');
+          assignment.render.buttons.push('Submit');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-    	var assessHeader=assessHeaders[0];
-    	assessHeader.render=getSelfRatingRenderer(false);
+      var assessHeader=assessHeaders[0];
+      assessHeader.render=getSelfRatingRenderer(false);
         if (role == 'Manager') {
           assessHeader=getBlankAssessHeader();
-       	  assessHeaders[assessHeaders.length]=assessHeader;
-       	  assessHeader.render=getManagerRatingRenderer(true);
+          assessHeaders[assessHeaders.length]=assessHeader;
+          assessHeader.render=getManagerRatingRenderer(true);
 
-     	  assignment.render.buttons.push('Save Review');
-     	  assignment.render.buttons.push('Submit Review');
+        assignment.render.buttons.push('Save Review');
+        assignment.render.buttons.push('Submit Review');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
         var assessHeader=assessHeaders[0];
         assessHeader.render=getSelfRatingRenderer(false);
         if (role == 'Manager') {
           assessHeader=assessHeaders[assessHeaders.length-1];
-      	  assessHeader.render=getManagerRatingRenderer(true);
+          assessHeader.render=getManagerRatingRenderer(true);
 
-      	  assignment.render.buttons.push('Save Review');
-       	  assignment.render.buttons.push('Submit Review');
+          assignment.render.buttons.push('Save Review');
+          assignment.render.buttons.push('Submit Review');
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
-    	var assessHeader=assessHeaders[0];
-    	assessHeader.render=getSelfRatingRenderer(false);
+      var assessHeader=assessHeaders[0];
+      assessHeader.render=getSelfRatingRenderer(false);
 
-    	var assessHeader=assessHeaders[assessHeaders.length-1];
-    	assessHeader.render=getManagerRatingRenderer(false);
+      var assessHeader=assessHeaders[assessHeaders.length-1];
+      assessHeader.render=getManagerRatingRenderer(false);
         
-    	if (role == 'Employee') {
+      if (role == 'Employee') {
           assignment.render.buttons.push('Agree');
           assignment.render.buttons.push('Disagree');
         } else if (role == 'Manager') {
         }
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED
-    		  || status == PhaseAssignmentStatus.CONCLUDED) {
+          || status == PhaseAssignmentStatus.CONCLUDED) {
         var assessHeader=assessHeaders[0];
         assessHeader.render=getSelfRatingRenderer(false);
 
@@ -204,13 +204,13 @@ $(function () {
       var thead=$(table).find('thead');
       var tbody=$(table).find('tbody');
       var tfoot=$(table).find('tfoot');
-    	
+      
       $(assessHeaders).each(function(index, assessHeader) {
-       	var render=assessHeader.render;
-       	var renderRating=render.rating;
-       	var renderComments=render.comments;
-       	var renderScore=render.score;
-       	
+        var render=assessHeader.render;
+        var renderRating=render.rating;
+        var renderComments=render.comments;
+        var renderScore=render.score;
+        
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderRating.name + '</th>');
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderComments.name + '</th>');
         $(thead).find('th:last').after('<th class="' + status.colorClass + '">' + renderScore.name + '</th>');
@@ -225,7 +225,7 @@ $(function () {
             data: assessDetail, property: 'comments', enable: render.editable, cClass: renderComments.className
           };
           var scoreParams={
-        	data: assessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
+          data: assessDetail, property: 'score', enable: render.editable, sClass: renderScore.className
           };
           $(row).find('td:last').after(getRatingCell(ratingParams));
           $(row).find('td:last').after(getCommentsCell(commentsParams));
@@ -243,11 +243,11 @@ $(function () {
       var render=assignment.render;
       var buttonsDiv=$('<div class="action-buttons pull-right">');
       $(render.buttons).each(function(index, buttonName) {
-    	var button=$('<button type="button" class="btn btn-primary waves-effect">' + buttonName + '</button>');
+      var button=$('<button type="button" class="btn btn-primary waves-effect">' + buttonName + '</button>');
         $(buttonsDiv).append(button);
         $(button).click(function() {
           sendAssessmentForm(buttonName);
-   	    });
+        });
       });
       $(card).find('.body').find('table').after(buttonsDiv);
     }
@@ -296,8 +296,8 @@ $(function () {
       var property=commentsParams.property;
       var value=data[property];
 
-   	  var commentsTd=$('<td style="min-width: 100px; max-width: 350px;">');
-   	  if (enable) {
+      var commentsTd=$('<td style="min-width: 100px; max-width: 350px;">');
+      if (enable) {
         var comments=$('<textarea class="' + cClass + '" rows="6" cols="30" maxlength="500">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
           // Update modal
@@ -305,9 +305,9 @@ $(function () {
         });
         $(comments).append(comments);
         $(commentsTd).append(comments);
-   	  } else {
-   		$(commentsTd).text(value);
-   	  }
+      } else {
+      $(commentsTd).text(value);
+      }
       return commentsTd;
     }
 
@@ -319,30 +319,30 @@ $(function () {
       var property=scoreParams.property;
       var value=data[property];
 
-   	  var scoreTd=$('<td class="' + sClass + '" style="min-width: 80px; word-break: break-all;">');
-   	  $(scoreTd).text(value.toFixed(2));
+      var scoreTd=$('<td class="' + sClass + '" style="min-width: 80px; word-break: break-all;">');
+      $(scoreTd).text(value.toFixed(2));
       return scoreTd;
     }
 
     function setColumnSum(className) {
-   	  var tbody=$(card).find('.body table tbody');
+      var tbody=$(card).find('.body table tbody');
       var tfoot=$(card).find('.body table tfoot');
       var totalScore=0;
       $('.' + className).each(function(index, td) {
-       	totalScore+=parseFloat($(td).text());	
+        totalScore+=parseFloat($(td).text()); 
       });
       $(tfoot).find('.total-' + className).text(''+totalScore.toFixed(2));
     }
 
     function getAssessmentAction(status) {
-	  var td=$('<td>');
-   	  if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
-   		var addButton=$('<button class="btn btn-xs btn-info waves-effect" title="Add Rating"><i class="material-icons">star</i></button>')
-   		$(td).append(addButton);
+    var td=$('<td>');
+      if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
+      var addButton=$('<button class="btn btn-xs btn-info waves-effect" title="Add Rating"><i class="material-icons">star</i></button>')
+      $(td).append(addButton);
       } else {
-    	$(td).append('-');
+      $(td).append('-');
       }
-   	  return td;
+      return td;
     }
 
     function getBlankAssessHeader() {
@@ -366,10 +366,10 @@ $(function () {
 
     function getSelfRatingRenderer(editable) {
       return {
-    	editable: editable,
-    	rating: {name: 'Self Rating', className:'self-rating'},
-     	comments: {name: 'Comments', className: 'self-comments'},
-     	score: {name: 'Score', className: 'self-score'},
+      editable: editable,
+      rating: {name: 'Self Rating', className:'self-rating'},
+      comments: {name: 'Comments', className: 'self-comments'},
+      score: {name: 'Score', className: 'self-score'},
      };
     }
 
@@ -377,8 +377,8 @@ $(function () {
       return {
         editable: editable,
         rating: {name: 'Manager Rating', className:'manager-rating'},
-       	comments: {name: 'Manager Comments', className: 'manager-comments'},
-       	score: {name: 'Manager Score', className: 'manager-score'},
+        comments: {name: 'Manager Comments', className: 'manager-comments'},
+        score: {name: 'Manager Score', className: 'manager-score'},
       };
     }
 
@@ -387,54 +387,54 @@ $(function () {
       var currentForm=assessHeaders[assessHeaders.length-1];
 
       if(buttonName=='Save') {
-   		url=options.contextPath + '/assessment/phase/save';
-   		$.fn.ajaxPost({ url: url, data: currentForm });
+      url=options.contextPath + '/assessment/phase/save';
+      $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonName=='Submit') {
-    	url=options.contextPath + '/assessment/phase/submit';
-    	swal({
+      url=options.contextPath + '/assessment/phase/submit';
+      swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-   	  } else if(buttonName=='Save Review') {
-   		url=options.contextPath + '/assessment/phase/save-review';
-   		$.fn.ajaxPost({ url: url, data: currentForm });
+      } else if(buttonName=='Save Review') {
+      url=options.contextPath + '/assessment/phase/save-review';
+      $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonName=='Submit Review') {
-    	url=options.contextPath + '/assessment/phase/submit-review';
-    	swal({
+      url=options.contextPath + '/assessment/phase/submit-review';
+      swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Submit!", closeOnConfirm: false
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-   	  } else if(buttonName=='Agree') {
-   		swal({
+      } else if(buttonName=='Agree') {
+      swal({
           title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Agree!", closeOnConfirm: false
         }, function () {
-        	url=options.contextPath + '/assessment/phase/agree';
-        	$.fn.ajaxPost({ url: url, data: currentForm });
+          url=options.contextPath + '/assessment/phase/agree';
+          $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonName=='Disagree') {
         swal({
-       	  title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
+          title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
-       	}, function () {
-   		  url=options.contextPath + '/assessment/phase/disagree';
-       	  $.fn.ajaxPost({ url: url, data: currentForm });
+        }, function () {
+        url=options.contextPath + '/assessment/phase/disagree';
+          $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonName=='Update Review') {
-    	swal({
+      swal({
           title: "Are you sure?", text: "Do you want to update the review?", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-        	confirmButtonText: "Yes, Update!", closeOnConfirm: false
+          confirmButtonText: "Yes, Update!", closeOnConfirm: false
         }, function () {
-       	  url=options.contextPath + '/assessment/phase/update-review';
+          url=options.contextPath + '/assessment/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       }

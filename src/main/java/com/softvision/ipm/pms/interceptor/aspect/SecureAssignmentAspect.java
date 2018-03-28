@@ -6,7 +6,6 @@ import java.util.Date;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.eclipse.jdt.core.compiler.InvalidInputException;
 import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,16 +44,16 @@ public class SecureAssignmentAspect {
 
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		if (employeePhaseAssignment == null) {
-			throw new InvalidInputException("No such assignment exists");
+			throw new ServiceException("No such assignment exists");
 		}
 		int phaseId = employeePhaseAssignment.getPhaseId();
 		AppraisalPhase appraisalPhase = appraisalPhaseDataRepository.findById(phaseId);
 		if (appraisalPhase == null) {
-			throw new InvalidInputException("No such appraisal phase");
+			throw new ServiceException("No such appraisal phase");
 		}
 		Date endDate = appraisalPhase.getEndDate();
 		if (endDate.after(Calendar.getInstance().getTime())) {
-			throw new InvalidInputException("you cannot modify an assignment from a phase which is in future");
+			throw new ServiceException("you cannot modify an assignment from a phase which is in future");
 		}
 		// permit this form only to the employee and to the manager to whom its been assigned
 		int employeeId = employeePhaseAssignment.getEmployeeId();

@@ -36,7 +36,12 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(<%=request.getContextPath()%>/fonts/materialicons/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+  src:
+    local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.woff2) format('woff2'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.woff) format('woff'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.ttf) format('truetype');
 }
 .material-icons {
   font-family: 'Material Icons';
@@ -171,7 +176,7 @@
   <body class="login-page">
     <div class="login-box">
       <div class="logo">
-       	<img src="<%=request.getContextPath()%>/images/logo1.png"  style="float: left;" width="82px" />
+       	<img src="<%=request.getContextPath()%>/images/logo.png"  style="float: left;" width="82px" />
        	<a href="javascript:void(0);"><b>SOFTVISION</b></a>
         <small>PMS - Performance Management System</small>
       </div>

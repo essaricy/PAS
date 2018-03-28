@@ -42,7 +42,7 @@ public class ManagerReportRest {
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="cycle/score", method=RequestMethod.GET)
     public @ResponseBody List<ManagerCycleAssignmentDto> getCycleScoreReport() {
-		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
+		return managerAssignmentService.getSubmittedCycles(RestUtil.getLoggedInEmployeeId());
     }
 
 }

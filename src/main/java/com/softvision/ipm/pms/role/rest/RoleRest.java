@@ -87,7 +87,7 @@ public class RoleRest {
 	public Result changeManagerRole(@RequestBody(required = true) @NotNull EmployeeRole[] employeeList) {
 		Result result = new Result();
 		try {
-			roleService.changeManagerRole(employeeList, Roles.MANAGER_ROLE_ID);
+			roleService.changeManagerRole(employeeList, Roles.MANAGER.getCode());
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

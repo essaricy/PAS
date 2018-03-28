@@ -28,10 +28,10 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
-	public List<EmployeeAssignmentDto> getSubmittedToAssignmentsOfCycle(int assignedBy, int cycleId) {
+	public List<EmployeeAssignmentDto> getSubmittedToAssignmentsOfCycle(int submittedTo, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_SUBMITTED_TO,
-			    new Object[] {assignedBy, cycleId},
+			    new Object[] {submittedTo, cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
 			            return AssignmentSqlAssember.getEmployeeAssignment(rs);

@@ -32,7 +32,9 @@
       <tr>
         <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 24px; font-weight: bold; line-height: 130%; padding-top: 10px; color: #000000; font-family: sans-serif;">
           <!-- LOGO -->
-          <a target="_blank" style="text-decoration: none;" href="${imagePath}"><img border="0" vspace="0" hspace="0" src="${imagePath}" width="90" height="80" style="float: left; color: #000000; font-size: 10px; margin: 0; padding: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border: none; display: block;" /></a><div style="padding-top: 5px; font-size: 20px;"></div>
+          <a target="_blank" style="text-decoration: none;" href="${imagePath}"><img border="0" vspace="0" hspace="0" src="${imagePath}" width="90" height="80" style="float: left; color: #000000; font-size: 10px; margin: 0; padding: 0; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; border: none; display: block;" /></a>
+          <div style="padding-top: 20px; font-size: 30px; letter-spacing: 4px; font-family: sans-serif;">SOFTVISION</div>
+          <div style="padding-top: 5px; font-size: 20px;"></div>
         </td>
       </tr>
 
@@ -66,11 +68,28 @@
       <tr>
       	<td  valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 4.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
       	
-      	<table border="0" cellpadding="0" cellspacing="0" align="left" bgcolor="#FFFFFF" width="100%" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit; max-width: 560px;">
-      	 <tr> <td style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;" ><p> For any queries, feel free to reach out to your BizHR.</P></td> </tr>
-      	 <tr> <td style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;" >Thanks,</td> </tr>
-      	 <tr> <td style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;" >Team HR</td> </tr>
-      	</table>
+      	<table border="0" cellpadding="4" cellspacing="0" align="left"		bgcolor="#FFFFFF" width="100%"
+								style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit; max-width: 560px;">
+								<tr>
+									<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;"><p>
+											For any queries, feel free to reach out to your BizHR.</P></td>
+								</tr>
+								<tr>
+									<td>
+										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px;" >
+											<tr>
+												<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;">Thanks,</td>
+											</tr>
+											<tr>
+												<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;">Team
+													HR
+												</td>
+											</tr>
+										</table>
+									</td>
+
+								</tr>
+							</table>
 
       	</td>
       </tr>

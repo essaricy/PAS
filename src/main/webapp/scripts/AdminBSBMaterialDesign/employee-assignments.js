@@ -2,34 +2,34 @@ $(function () {
   $.fn.employeeAssignment=function( options ) {
     var settings=$.extend({
       contextPath: null,
-	  url: null,
-	}, options );
+    url: null,
+  }, options );
 
     var obj=$(this);
 
     $.fn.ajaxGet({
-   	  url: settings.url,
+      url: settings.url,
       onSuccess: renderAssignments,
       onError: onErrorAssignedEmployees
     });
 
     function renderAssignments(data) {
       if (data == null || data.length == 0) {
-     	showErrorCard('There are no assignments found');
+      showErrorCard('There are no assignments found');
       } else{
-    	renderEmployeeAssignments(data);
+      renderEmployeeAssignments(data);
       }
     }
 
     function renderEmployeeAssignments(data) {
       //$(data).each(function (index, cycleAssignment) {
       for (var index = 0; index < data.length; index++) {
-    	var cycleAssignment = data[index];
-    	var cycle=cycleAssignment.cycle;
-    	var cycleStatus=getAppraisalCycleStatus(cycle.status);
-    	if (cycleStatus == AppraisalCycleStatus.DRAFT) {
-    		continue;
-    	}	
+      var cycleAssignment = data[index];
+      var cycle=cycleAssignment.cycle;
+      var cycleStatus=getAppraisalCycleStatus(cycle.status);
+      if (cycleStatus == AppraisalCycleStatus.DRAFT) {
+        continue;
+      } 
 
         var cardRow=$('<div class="row clearfix">');
         var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
@@ -40,9 +40,9 @@ $(function () {
         var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
         var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
-        		+ '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
-        		+ '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
-        		);
+            + '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
+            + '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
+            );
         var tabContent=$('<div class="tab-content">');
 
         // Render CYCLE Tab
@@ -91,8 +91,8 @@ $(function () {
           var employeeAssignments=phaseAssignment.employeeAssignments;
 
           if (employeeAssignments.length==0) {
-        	$(phaseTabPanel).append(phaseTitle);
-       	    $(phaseTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this phase.</p>');
+          $(phaseTabPanel).append(phaseTitle);
+            $(phaseTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this phase.</p>');
           } else {
             var table=$('<table class="table table-striped">');
             var thead=$('<thead>');
@@ -100,17 +100,17 @@ $(function () {
             var theadRow=$('<tr>');
 
             $(employeeAssignments).each(function(index, ea) {
-          	  var assignedTo=ea.assignedTo;
-          	  var assignedBy=ea.assignedBy;
+              var assignedTo=ea.assignedTo;
+              var assignedBy=ea.assignedBy;
 
-          	  var row=$('<tr>');
-          	  //$(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-          	  //$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
-          	  $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
-          	  $(row).append('<td>' + ea.assignedAt + '</td>');
-          	  $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
-          	  $(row).append(getPhaseActionCell(ea));
-          	  $(tbody).append(row);
+              var row=$('<tr>');
+              //$(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
+              //$(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+              $(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
+              $(row).append('<td>' + ea.assignedAt + '</td>');
+              $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
+              $(row).append(getPhaseActionCell(ea));
+              $(tbody).append(row);
             });
 
             $(table).append(thead);
@@ -150,32 +150,32 @@ $(function () {
     }
 
     function getPhaseActionCell(ea) {
-    	var status=ea.status;
-    	var id=ea.assignmentId;
-    	var td=$('<td>');
+      var status=ea.status;
+      var id=ea.assignmentId;
+      var td=$('<td>');
 
-    	if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
-    			|| status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
-    	  $(td).append(getFillFormButton(id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
-    			|| status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code
-    			|| status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
-    			|| status == PhaseAssignmentStatus.CONCLUDED.code) {
-    	  $(td).append(getViewFormButton('phase', id));
-    	} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code) {
-    	  $(td).append(getViewFormButton('phase', id));
-      	  $(td).append('&nbsp;');
-      	  $(td).append(getAgreeReviewButton(id));
-    	  $(td).append('&nbsp;');
-    	  $(td).append(getEscalateReviewButton(id));
-    	} else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code) {
-    	  $(td).append(getViewFormButton('phase', id));
-    	  $(td).append('&nbsp;');
-    	  $(td).append(getAgreeReviewButton(id));
-    	} else {
-    	  $(td).append('-');
-    	}
-    	return td;
+      if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
+          || status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
+        $(td).append(getFillFormButton(id));
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
+          || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code
+          || status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
+          || status == PhaseAssignmentStatus.CONCLUDED.code) {
+        $(td).append(getViewFormButton('phase', id));
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code) {
+        $(td).append(getViewFormButton('phase', id));
+          $(td).append('&nbsp;');
+          $(td).append(getAgreeReviewButton(id));
+        $(td).append('&nbsp;');
+        $(td).append(getEscalateReviewButton(id));
+      } else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code) {
+        $(td).append(getViewFormButton('phase', id));
+        $(td).append('&nbsp;');
+        $(td).append(getAgreeReviewButton(id));
+      } else {
+        $(td).append('-');
+      }
+      return td;
       }
 
       function getFillFormButton(id) {
@@ -183,17 +183,17 @@ $(function () {
         $(fillFormButton).tooltip({container: 'body'});
         $(fillFormButton).click(function() {
           location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
-  	    });
-  	    return fillFormButton;
+        });
+        return fillFormButton;
       }
 
       function getViewFormButton(type, id) {
-    	var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
-    	$(viewFormButton).tooltip({container: 'body'});
+      var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
+      $(viewFormButton).tooltip({container: 'body'});
         $(viewFormButton).click(function() {
           location.href=settings.contextPath + '/employee/assessment/' + type + '?aid=' + id;
-  	    });
-  	    return viewFormButton;
+        });
+        return viewFormButton;
       }
 
       function getAgreeReviewButton(id) {
@@ -201,8 +201,8 @@ $(function () {
         $(agreeButton).tooltip({container: 'body'});
         $(agreeButton).click(function() {
           agreeReview(id);
-  	    });
-   	    return agreeButton;
+        });
+        return agreeButton;
       }
 
       function getEscalateReviewButton(id) {
@@ -210,38 +210,38 @@ $(function () {
         $(escalateButton).tooltip({container: 'body'});
         $(escalateButton).click(function() {
           escalateReview(id);
-  	    });
-   	    return escalateButton;
+        });
+        return escalateButton;
       }
 
       function agreeReview(id) {
         swal({
-      	  title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
-      	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-      		confirmButtonText: "Yes, Agree!", closeOnConfirm: false
-      	}, function () {
-      	  var url=settings.contextPath + '/assignment/employee/change/phase-status/agree/' + id
-      	  $.fn.ajaxPut({
-      	    url: url
-      	  });
+          title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
+            showCancelButton: true, confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, Agree!", closeOnConfirm: false
+        }, function () {
+          var url=settings.contextPath + '/assignment/employee/change/phase-status/agree/' + id
+          $.fn.ajaxPut({
+            url: url
+          });
         });
       }
 
       function escalateReview(id) {
         swal({
-      	  title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
-      	    showCancelButton: true, confirmButtonColor: "#DD6B55",
-      		confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
-      	}, function () {
-      	  var url=settings.contextPath + '/assignment/employee/change/phase-status/escalate/' + id
-      	  $.fn.ajaxPut({
-      	    url: url
-      	  });
+          title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
+            showCancelButton: true, confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
+        }, function () {
+          var url=settings.contextPath + '/assignment/employee/change/phase-status/escalate/' + id
+          $.fn.ajaxPut({
+            url: url
+          });
         });
       }
 
       function onErrorAssignedEmployees(error) {
-    	showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
+      showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
       }
   };
 });

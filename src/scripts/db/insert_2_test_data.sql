@@ -23,6 +23,7 @@ INSERT INTO template_detail(id, header_ID, param_id) VALUES (nextval('template_d
 
 insert into employee values(2006,'rohith.ramesh','Rohith','Ramesh','Regular Employee','3Y','senior software engineer','2009-06-14T00:00:00','India');
 insert into employee values(1136,'srikanth.kumar','srikanth','kumar','Regular Employee','5Y','Associate Technical Manager','2009-06-14T00:00:00','India');
+insert into employee values(2388,'mallikarjun.gongati','Mallikarjuna Reddy','Gongati','Regular Employee','4Y','Associate Technical Lead','2010-12-29T00:00:00','India');
 
 -- Insert Employees
 INSERT INTO employee_role(id, role_id, employee_id) VALUES (nextval('emp_role_id_seq'), 1, 1136);

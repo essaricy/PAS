@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
+import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
@@ -26,6 +27,10 @@ public class EmployeeAssignmentService {
 		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
 		for (AppraisalCycle cycle : allCycles) {
 			int cycleId = cycle.getId();
+			AppraisalCycleStatus appraisalCycleStatus = AppraisalCycleStatus.get(cycle.getStatus());
+			if (appraisalCycleStatus == AppraisalCycleStatus.DRAFT) {
+			    continue;
+			}
 			EmployeeCycleAssignmentDto cycleAssignment = new EmployeeCycleAssignmentDto();
 			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
 			cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getEmployeeAssignmentInCycle(employeeId, cycleId));

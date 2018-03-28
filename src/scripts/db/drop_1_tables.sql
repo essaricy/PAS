@@ -35,3 +35,6 @@ DROP TABLE IF EXISTS goal CASCADE;
 -- #######################################################
 DROP TABLE IF EXISTS appr_cycle CASCADE;
 DROP TABLE IF EXISTS appr_phase CASCADE;
+
+--
+DROP TABLE IF EXISTS email_template CASCADE;

@@ -2,8 +2,8 @@
 
   $.fn.formValidator=function( options ) {
     var settings=$.extend({
-    	onFinishing: null,
-    	onFinished: null
+      onFinishing: null,
+      onFinished: null
     }, options );
 
     // Advanced form with validation
@@ -41,15 +41,15 @@
         form.validate().settings.ignore = ':disabled';
         var isValid=form.valid();
         if (isValid && settings.onFinishing) {
-        	settings.onFinishing();
+          settings.onFinishing();
         }
         return isValid;
       },
       onFinished: function (event, currentIndex) {
-    	if (settings.onFinished) {
+      if (settings.onFinished) {
           settings.onFinished();
         } else {
-        	//swal("Good job!", "Submitted!", "success");
+          //swal("Good job!", "Submitted!", "success");
         }
       }
     });

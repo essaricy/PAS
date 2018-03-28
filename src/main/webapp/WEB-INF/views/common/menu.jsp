@@ -2,6 +2,28 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!-- #Top Bar -->
+<style>
+.cell img {
+	float: left;
+    border-top-left-radius:5px 5px;
+    border-top-right-radius:5px 5px;
+    position: static;
+    border-radius:  50%;
+    width: 40px;
+    height: 40px;
+}
+
+.cell .text{
+    height: 100%;
+    float: left;
+    top: 0;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+    padding: 8px;
+    text-align: left;
+}
+</style>
 <section>
   <sec:authentication property="details.imageUrl" var="imageUrl"/>
   <sec:authentication property="details.employeeId" var="employeeId" />
@@ -113,16 +135,6 @@
       </ul>
     </div>
     <!-- #Menu -->
-    <!-- Footer -->
-<!--     <div class="legal">
-      <div class="copyright">
-        Designed Using <a href="javascript:void(0);">AdminBSB - Material Design</a>.
-      </div>
-      <div class="version">
-        <b>Version: </b> 0.A
-      </div>
-    </div>
- -->    <!-- #Footer -->
   </aside>
   <!-- #END# Left Sidebar -->
   <!-- Right Sidebar -->
@@ -133,6 +145,12 @@
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="settings">
         <div class="demo-settings">
+          <div class="logo">
+       		<img src="<%=request.getContextPath()%>/images/logo.png"  style="float: left;" width="82px" />
+       		<a href="javascript:void(0);"><b>SOFTVISION</b></a><br/>
+    	    <small>PMS - Performance Management System</small>
+	      </div>
+	      <div style="clear: both;"></div>
           <ul class="setting-list">
             <li>
               <span>
@@ -142,22 +160,37 @@
               </span>
             </li>
 	      </ul>
-		  <p>Designed, Arch and Developed By</p>
+		  <p style="clear: both;">Designed, Arch and Developed By</p>
 		  <ul class="setting-list">
-			<li><span>Srikanth Ragi</span></li>
+			<li>
+			  <div class="span8 cell">
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/1136.jpg">    
+			    <div class="text">Srikanth Ragi</div>
+			  </div>
+      	    </li>
 		  </ul>
-		  <p>Full Stack Developers</p>
+		  <p style="clear: both; margin-top: 50px;">Full Stack Developers</p>
 		  <ul class="setting-list">
-			<li><span>Mallikarjun Gongati</span></li>
-			<li><span>Rohit Ramesh</span></li>
+			<li style="clear: both;">
+			  <div class="span8 cell">
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2388.jpg">    
+			    <div class="text">Mallikarjun Gongati</div>
+			  </div>
+      	    </li>
+      		<li style="clear: both;">
+			  <div class="span8 cell">
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2006.jpg">    
+			    <div class="text">Rohit Ramesh</div>
+			  </div>
+      	    </li>
 		  </ul>
-		  <p>Designed Using</p>
+		  <p style="clear: both; margin-top: 50px;">Designed Using</p>
 		  <ul class="setting-list">
 			<li><span>AdminBSB - Material Design</span></li>
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>0.C</span></li>
+			<li><span>1.0</span></li>
 		  </ul>
 		</div>
       </div>
