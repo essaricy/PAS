@@ -28,6 +28,11 @@ public class AssignmentRepositorySql {
 	public static final String SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_BY = SELECT_CYCLE_ASSIGNMENTS +
 			"where cycle_assign.assigned_by=? " + 
 		 	"and appr_cycle.id=? " +
+		 	"order by cycle_assign.employee_id asc ";
+
+	public static final String SELECT_CYCLE_ASSIGNMENTS_SUBMITTED_TO = SELECT_CYCLE_ASSIGNMENTS +
+			"where cycle_assign.submitted_to=? " + 
+		 	"and appr_cycle.id=? " +
 		 	"order by cycle_assign.employee_id asc "; 
 
 	public static final String SELECT_MANAGER_ALL_CYCLE_ASSIGNMENTS = SELECT_CYCLE_ASSIGNMENTS + 
@@ -62,6 +67,11 @@ public class AssignmentRepositorySql {
 			"and appr_phase.cycle_id=? " + 
 			"and appr_phase.id=? ";
 
+	public static final String SELECT_PHASE_ASSIGNMENTS_SUBMITTED_TO = SELECT_PHASE_ASSIGNMENTS + 
+			"where appr_phase.cycle_id=? " + 
+			"and appr_phase.id=? " +
+			"and phase_assign.assigned_by in (?) "; 
+
 	public static final String SELECT_INCOMPLETE_PREVIOUS_PHASE_ASSIGNMENTS = SELECT_PHASE_ASSIGNMENTS + 
 			"where " +
 			"phase_assign.id != ? " +
@@ -75,5 +85,6 @@ public class AssignmentRepositorySql {
 	public static final String SELECT_MANAGER_ALL_PHASE_ASSIGNMENTS = SELECT_PHASE_ASSIGNMENTS + 
 			"where appr_phase.cycle_id=? " + 
 			"and appr_phase.id=? ";
+
 
 }

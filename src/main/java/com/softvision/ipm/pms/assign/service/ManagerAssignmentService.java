@@ -1,7 +1,9 @@
 package com.softvision.ipm.pms.assign.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -18,6 +20,7 @@ import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
+import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
@@ -118,6 +121,38 @@ public class ManagerAssignmentService {
 		employeeCycleAssignment.setSubmittedTo(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+	}
+
+	public List<ManagerCycleAssignmentDto> getSubmittedCycles(int employeeId) {
+		List<ManagerCycleAssignmentDto> cycleAssignments = new ArrayList<>();
+		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
+		for (AppraisalCycle cycle : allCycles) {
+			int cycleId = cycle.getId();
+			ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
+			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+			List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository.getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
+			// Get all the manager ids
+			Set<Integer> managerIds = new HashSet<>();
+			if (employeeAssignments != null && !employeeAssignments.isEmpty()) {
+				for (EmployeeAssignmentDto employeeAssignmentDto : employeeAssignments) {
+					managerIds.add(employeeAssignmentDto.getAssignedBy().getEmployeeId());
+				}
+			}
+			System.out.println("managerIds=" + managerIds);
+			cycleAssignment.setEmployeeAssignments(employeeAssignments);
+			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
+			cycleAssignment.setPhaseAssignments(phaseAssignments);
+			List<AppraisalPhase> phases = cycle.getPhases();
+			for (AppraisalPhase phase : phases) {
+				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
+				phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
+				phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
+						.getAssignedByAssignmentsOfPhase(cycleId, phase.getId(), managerIds));
+				phaseAssignments.add(phaseAssignment);
+			}
+			cycleAssignments.add(cycleAssignment);
+		}
+		return cycleAssignments;
 	}
 
 }

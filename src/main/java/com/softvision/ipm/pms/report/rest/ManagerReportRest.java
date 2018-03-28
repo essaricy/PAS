@@ -34,8 +34,14 @@ public class ManagerReportRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
-	@RequestMapping(value="score", method=RequestMethod.GET)
-    public @ResponseBody List<ManagerCycleAssignmentDto> getScoreReport() {
+	@RequestMapping(value="phase/score", method=RequestMethod.GET)
+    public @ResponseBody List<ManagerCycleAssignmentDto> getPhaseScoreReport() {
+		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
+    }
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+	@RequestMapping(value="cycle/score", method=RequestMethod.GET)
+    public @ResponseBody List<ManagerCycleAssignmentDto> getCycleScoreReport() {
 		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
     }
 
