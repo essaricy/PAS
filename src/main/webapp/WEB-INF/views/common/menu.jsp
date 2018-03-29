@@ -154,7 +154,7 @@
           <ul class="setting-list">
             <li>
               <span>
-                This product is a collaborative effort of HR-Ops and Java Community under the leadership of 
+                This product is a collaborative effort of HR-Team and Java Community under the leadership of 
                 <label>Nithya Somaiah</label> and 
                 <label>Naveed A Hagalwadi</label> of Mysore Studio, Softvision.
               </span>
