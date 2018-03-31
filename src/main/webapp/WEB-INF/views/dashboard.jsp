@@ -26,6 +26,9 @@
     -webkit-transition: width 2.5s ease;
     transition: width 2.5s ease;
   } */
+  .progress-bar {
+    text-transform: uppercase;
+  }
   </style>
 </head>
 

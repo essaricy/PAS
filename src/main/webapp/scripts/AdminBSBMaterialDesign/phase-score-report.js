@@ -65,7 +65,7 @@ $(function() {
               // $(row).append('<td>' + getPhaseStatusLabel(ea.status) +
               // '</td>');
               if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
-                $(row).append('<td><b>' + ea.score + '</b></td>');
+                $(row).append('<td><b>' + (ea.score).toFixed(2) + '</b></td>');
               } else {
                 $(row).append('<td>-</td>');
               }

@@ -3,14 +3,13 @@ package com.softvision.ipm.pms.assign.repo;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssember;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.common.repo.AbstractRepository;
 
 @Repository
@@ -74,17 +73,14 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return updated==1;
 	}
 
-	public List<EmployeeAssignmentDto> getAssignedByAssignmentsOfPhase(int cycleId, int phaseId,
-			Set<Integer> managerIds) {
-		/*MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("assigned_by_ids", managerIds);*/
-
-		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
-				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_SUBMITTED_TO,
-			    new Object[] {cycleId, phaseId, StringUtils.join(managerIds, ",")},
-			    new RowMapper<EmployeeAssignmentDto>() {
-			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+	public List<EmployeePhaseAssignmentDto> getPhaseAssignmentsInCycle(int cycleId, int employeeId) {
+	    System.out.println(AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE);
+		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
+				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE,
+			    new Object[] {cycleId, employeeId},
+			    new RowMapper<EmployeePhaseAssignmentDto>() {
+			        public EmployeePhaseAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssember.getEmployeePhaseAssignment(rs);
 			        }
 			    });
 		return list;

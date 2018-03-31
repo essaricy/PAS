@@ -89,30 +89,30 @@ $(function () {
   $.fn.scoreReport1=function( options ) {
     var settings=$.extend({
       contextPath: null,
-	  url: null,
-	}, options );
+      url: null,
+    }, options );
     var obj=$(this);
     $.fn.ajaxGet({
-   	  url: settings.url,
+      url: settings.url,
       onSuccess: renderAssignments,
       onError: onErrorScoreReport
     });
     function renderAssignments(data) {
       if (data == null || data.length == 0) {
-    	showErrorCard('There are no scores found');
+        showErrorCard('There are no scores found');
       } else{
-    	renderScoreReport(data);
+        renderScoreReport(data);
       }
     }
 
     function renderScoreReport(data) {
       for (var index = 0; index < data.length; index++) {
-       	var cycleAssignment = data[index];
-       	var cycle=cycleAssignment.cycle;
-       	var cycleStatus=getAppraisalCycleStatus(cycle.status);
-	       	if (cycleStatus == AppraisalCycleStatus.DRAFT) {
-       		continue;
-       	}
+        var cycleAssignment = data[index];
+        var cycle=cycleAssignment.cycle;
+        var cycleStatus=getAppraisalCycleStatus(cycle.status);
+        if (cycleStatus == AppraisalCycleStatus.DRAFT) {
+          continue;
+        }
         var cardRow=$('<div class="row clearfix">');
         var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
         var card=$('<div class="card">');
@@ -135,15 +135,15 @@ $(function () {
           $(theadRow).append('<th width="15%">Score</th>');
 
           $(employeeAssignments).each(function(jindex, ea) {
-   	        var assignedTo=ea.assignedTo;
+            var assignedTo=ea.assignedTo;
             var assignedBy=ea.assignedBy;
-       	    var phaseStatus=getPhaseAssignmentStatus(ea.status);
-       	    var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
-       	    if(row.length == 0) {
-   	  	      row=$('<tr>');
-       	      $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
+            var phaseStatus=getPhaseAssignmentStatus(ea.status);
+            var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
+            if(row.length == 0) {
+            row=$('<tr>');
+              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
               $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
-       	    }
+            }
             if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
               var cycleScoreLink=$('<a href="#">');
               $(cycleScoreLink).append(ea.score.toFixed(2));
@@ -151,7 +151,7 @@ $(function () {
               $(scoreTd).append(cycleScoreLink);
               $(row).append(scoreTd);
               $(cycleScoreLink).click(function() {
-            	  showPhaseScores(ea.assignmentId);
+                showPhaseScores(ea.assignmentId);
               });
             } else {
               $(row).append('<td>-</td>');
@@ -163,11 +163,11 @@ $(function () {
             $(thead).append(theadRow);
           });
           $(table).DataTable({
-        	  responsive: true,
-              paging: false,
-      		searching: false,
-      		ordering: true,
-      		info: true,
+            responsive: true,
+            paging: false,
+            searching: false,
+            ordering: true,
+            info: true,
           });
         }
         $(obj).append(cardRow);
@@ -180,7 +180,11 @@ $(function () {
     }
 
     function showPhaseScores(assignmentId) {
-    	alert(assignmentId);
+      $.fn.ajaxGet({
+        url: '<%=request.getContextPath()%>/manager/report/cycle/phases/' + assignmentId,
+        onSuccess: function() {},
+        onError: function() {}
+      });
     }
 
     function onErrorScoreReport(error) {
@@ -189,9 +193,10 @@ $(function () {
   }
 
   $('.container-fluid').scoreReport1({
-	contextPath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/manager/report/cycle/score',
+    contextPath: '<%=request.getContextPath()%>',
+    url: '<%=request.getContextPath()%>/manager/report/cycle/score',
   });
+
 });
 
 </script>
