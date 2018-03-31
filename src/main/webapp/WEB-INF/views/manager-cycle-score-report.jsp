@@ -120,56 +120,55 @@ $(function () {
         $(cardHeader).addClass(cycleStatus.colorClass);
         var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
-        var phaseAssignments=cycleAssignment.phaseAssignments;
 
-        if (phaseAssignments == null || phaseAssignments.length == 0) {
-          $(cardBody).append('<p class="font-bold col-pink">No Employees were submitted to you for this phase.</p>');
+        var employeeAssignments=cycleAssignment.employeeAssignments;
+
+        if (employeeAssignments == null || employeeAssignments.length == 0) {
+          $(cardBody).append('<p class="font-bold col-pink">No Employees were submitted to you for this cycle.</p>');
         } else {
-        var table=$('<table class="table table-striped">');
-        var thead=$('<thead>');
-        var tbody=$('<tbody>');
-        var theadRow=$('<tr>');
-        $(theadRow).append('<th width="15%">Employee ID</th>');
-        $(theadRow).append('<th width="35%">Employee Name</th>');
+          var table=$('<table class="table table-bordered table-striped table-hover dataTable">');
+          var thead=$('<thead>');
+          var tbody=$('<tbody>');
+          var theadRow=$('<tr>');
+          $(theadRow).append('<th width="35%">Employee ID</th>');
+          $(theadRow).append('<th width="50%">Employee Name</th>');
+          $(theadRow).append('<th width="15%">Score</th>');
 
-        $(phaseAssignments).each(function(jindex, phaseAssignment) {
-          var phase=phaseAssignment.phase;
-	      $(theadRow).append('<th>' + phase.name + '</th>');
-          var employeeAssignments=phaseAssignment.employeeAssignments;
-          if (employeeAssignments != null) {
-       	    $(employeeAssignments).each(function(kindex, ea) {
-  	    	  var assignedTo=ea.assignedTo;
-           	  var assignedBy=ea.assignedBy;
-           	  var phaseStatus=getPhaseAssignmentStatus(ea.status);
-           	  var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
-           	  if(row.length == 0) {
-   	    	    row=$('<tr>');
-           	    $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-                $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
-           	  }
-              //$(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
-              if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
-                $(row).append('<td><b>' + ea.score + '</b></td>');
-              } else {
-                $(row).append('<td>-</td>');
-              }
-              $(tbody).append(row);
-        	});
-       	    var expectedNumberOfColums=2+(jindex+1);
-       	    console.log('expectedNumberOfColums=' + expectedNumberOfColums);
-       	    $(tbody).find('tr').each(function (rowIndex, row) {
-   	    	  // add empty rows
-       	      var numberOfEmptyCellsToAdd=expectedNumberOfColums-$(row).find('td').length;
-		      for (var missingCellIndex = 0; missingCellIndex < numberOfEmptyCellsToAdd; missingCellIndex++) {
-		        $(row).append('<td>N/A</td>');
-		      }
-		    });
-          }
-          $(cardBody).append(table);
-          $(table).append(thead);
-          $(table).append(tbody);
-          $(thead).append(theadRow);
-        });
+          $(employeeAssignments).each(function(jindex, ea) {
+   	        var assignedTo=ea.assignedTo;
+            var assignedBy=ea.assignedBy;
+       	    var phaseStatus=getPhaseAssignmentStatus(ea.status);
+       	    var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
+       	    if(row.length == 0) {
+   	  	      row=$('<tr>');
+       	      $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
+              $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+       	    }
+            if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
+              var cycleScoreLink=$('<a href="#">');
+              $(cycleScoreLink).append(ea.score.toFixed(2));
+              var scoreTd=$('<td>');
+              $(scoreTd).append(cycleScoreLink);
+              $(row).append(scoreTd);
+              $(cycleScoreLink).click(function() {
+            	  showPhaseScores(ea.assignmentId);
+              });
+            } else {
+              $(row).append('<td>-</td>');
+            }
+            $(tbody).append(row);
+            $(cardBody).append(table);
+            $(table).append(thead);
+            $(table).append(tbody);
+            $(thead).append(theadRow);
+          });
+          $(table).DataTable({
+        	  responsive: true,
+              paging: false,
+      		searching: false,
+      		ordering: true,
+      		info: true,
+          });
         }
         $(obj).append(cardRow);
         $(cardRow).append(cardColumn);
@@ -179,6 +178,11 @@ $(function () {
         $(card).append(cardBody);
       }
     }
+
+    function showPhaseScores(assignmentId) {
+    	alert(assignmentId);
+    }
+
     function onErrorScoreReport(error) {
       showErrorCard('Errors occurred while retreiving report. Cause: ' + JSON.stringify(error));
     }
