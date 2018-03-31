@@ -129,32 +129,33 @@ public class ManagerAssignmentService {
 	}
 
 	public List<ManagerCycleAssignmentDto> getSubmittedCycles(int employeeId) {
-        // Get all the cycles, ignore DRAFT cycles
-        // For each cycle, get cycle assignment for this employee
-	    // select * from cycle_assign where submitted_to=2582 and cycle_id=?
 	    // select * from phase_assign 
 	    // where phase_id in (select id from appr_phase where cycle_id=78)
 	    // and employee_id=3822
 
 		List<ManagerCycleAssignmentDto> cycleAssignments = new ArrayList<>();
 		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
+		// Get all the cycles, ignore DRAFT cycles
 		for (AppraisalCycle cycle : allCycles) {
 			int cycleId = cycle.getId();
 			AppraisalCycleStatus appraisalCycleStatus = AppraisalCycleStatus.get(cycle.getStatus());
             if (appraisalCycleStatus == AppraisalCycleStatus.DRAFT) {
                 continue;
             }
+            // For each cycle, get cycle assignment for this employee
+            // select * from cycle_assign where submitted_to=2582 and cycle_id=?
 			ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
 			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
 			List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository.getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
 			cycleAssignment.setEmployeeAssignments(employeeAssignments);
+
 			// Get all the manager ids
-			Set<Integer> managerIds = new HashSet<>();
+			/*Set<Integer> managerIds = new HashSet<>();
 			if (employeeAssignments != null && !employeeAssignments.isEmpty()) {
 				for (EmployeeAssignmentDto employeeAssignmentDto : employeeAssignments) {
 					managerIds.add(employeeAssignmentDto.getAssignedBy().getEmployeeId());
 				}
-			}
+			}*/
 			/*System.out.println("############# managerIds=" + managerIds);
 			if (!managerIds.isEmpty()) {
 			    List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();

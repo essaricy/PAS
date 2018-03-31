@@ -89,10 +89,19 @@
               <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/manager/report/phase-score">Phase Score Report</a>
-            </li>
-            <li>
-              <a href="<%=request.getContextPath()%>/manager/report/cycle-score">Cycle Score Report</a>
+              <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block"><span>Reports</span></a>
+			  <ul class="ml-menu" style="display: none;">
+                <li>
+                  <a href="<%=request.getContextPath()%>/manager/report/phase-score" class=" waves-effect waves-block">
+                    <span>Phase Score Report</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="<%=request.getContextPath()%>/manager/report/cycle-score" class=" waves-effect waves-block">
+                    <span>Cycle Score Report</span>
+                  </a>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>
