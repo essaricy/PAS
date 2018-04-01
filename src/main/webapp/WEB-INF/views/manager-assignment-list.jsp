@@ -48,41 +48,46 @@
       </div>
       <%@include file="common/no-cycle.jsp" %>
     </div>
-	  	<!-- Large Size -->
-		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1" role="dialog">
+		<!-- Large Size -->
+		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1"
+			role="dialog">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title" id="EmployeeSearchModalLabel"></h4>
 					</div>
 					<div class="modal-body">
-	                   <div class="row clearfix">
-	                     <div class="table-responsive">
-	                       <table id="SearchRoleTable" class="table table-bordered table-striped table-hover dataTable">
-	                         <thead>
-	                           <tr>
-	                             <th>Employee ID</th>
-	                             <th>First Name</th>
-	                             <th>Last Name</th>
-	                             <th>Band</th>
-	                             <th>Designation</th>
-	                           </tr>
-	                         </thead>
-	                         <tbody>
-	                         </tbody>
-	                       </table>
-	                     </div>
-	                   </div>
+						<div class="row clearfix">
+							<div class="table-responsive">
+								<table id="SearchRoleTable"
+									class="table table-bordered table-striped table-hover dataTable">
+									<thead>
+										<tr>
+											<th>Employee ID</th>
+											<th>First Name</th>
+											<th>Last Name</th>
+											<th>Band</th>
+											<th>Designation</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="AssignToAnotherManager" class="btn btn-primary waves-effect">Assign</button>
-						<button type="button" id="SubmitToNextLevelManager" class="btn btn-primary waves-effect">Assign</button>
-						<button type="button" class="btn btn-primary waves-effect" data-dismiss="modal">Close</button>
+						<button type="button" id="AssignToAnotherManager"
+							class="btn btn-primary waves-effect">Assign</button>
+						<button type="button" id="SubmitToNextLevelManager"
+							class="btn btn-primary waves-effect">Assign</button>
+						<button type="button" class="btn btn-primary waves-effect"
+							data-dismiss="modal">Close</button>
 					</div>
 				</div>
 			</div>
 		</div>
-  </section>
+	</section>
 </body>
 
 <!-- Jquery Core Js -->
@@ -115,8 +120,8 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-Sprite-Preloaders/jquery.preloaders.min.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/manager-assignments.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments-manager.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
 $(function () {

@@ -92,14 +92,10 @@
               <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">Reports</a>
 			  <ul class="ml-menu" style="display: none;">
                 <li>
-                  <a href="<%=request.getContextPath()%>/manager/report/phase-score" class=" waves-effect waves-block">
-                    <span>Phase Score Report</span>
-                  </a>
+                  <a href="<%=request.getContextPath()%>/manager/report/score/phase" class=" waves-effect waves-block">Phasewise Score Report</a>
                 </li>
                 <li>
-                  <a href="<%=request.getContextPath()%>/manager/report/cycle-score" class=" waves-effect waves-block">
-                    <span>Cycle Score Report</span>
-                  </a>
+                  <a href="<%=request.getContextPath()%>/manager/report/score/cycle" class=" waves-effect waves-block">Cyclewise Score Report</a>
                 </li>
               </ul>
             </li>

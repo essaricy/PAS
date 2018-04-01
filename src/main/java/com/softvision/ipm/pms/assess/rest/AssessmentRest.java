@@ -79,6 +79,11 @@ public class AssessmentRest {
 		return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
 	}
 
+	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
+    public Result conclude(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
+        return changePhaseStatus(phaseAssessHeader, PhaseAssignmentStatus.CONCLUDED);
+    }
+
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/update-review", method=RequestMethod.POST)
 	public Result updateReview(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
@@ -125,8 +130,10 @@ public class AssessmentRest {
 			} else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED) {
 				phaseAssessmentService.agree(assignId, requestedEmployeeId);
 			} else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
-				phaseAssessmentService.escalate(assignId, requestedEmployeeId);
-			}
+                phaseAssessmentService.escalate(assignId, requestedEmployeeId);
+            } else if (status == PhaseAssignmentStatus.CONCLUDED) {
+                phaseAssessmentService.conclude(assignId, requestedEmployeeId);
+            }
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

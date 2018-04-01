@@ -31,7 +31,7 @@ public class AppraisalPhaseTest {
 	public void test1_getLastPhase() {
 		System.out.println("test1_getLastPhase()");
 		Integer id = 2 + 1 + 1;
-		List<AppraisalPhase> nextPhases = appraisalPhaseDataRepository.findNextPhases(id);
+		List<AppraisalPhase> nextPhases = appraisalPhaseDataRepository.findInActiveNextPhases(id);
 		System.out.println(nextPhases);
 	}
 

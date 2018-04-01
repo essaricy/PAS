@@ -25,24 +25,21 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         // Views with ADMIN privileges
         registry.addViewController("/admin/cycles/list").setViewName("admin-cycle-list");
         registry.addViewController("/admin/cycles/manage").setViewName("admin-cycle-manage");
-
         registry.addViewController("/admin/goal/list").setViewName("admin-goal-list");
         registry.addViewController("/admin/goal/manage").setViewName("admin-goal-manage");
-
         registry.addViewController("/admin/employee/manage").setViewName("admin-employee-manage");
-
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
         registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
         registry.addViewController("/admin/appraisal/status").setViewName("admin-appraisal-status");
 
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
-        registry.addViewController("/manager/assessment/phase").setViewName("manager-phase-assessment");
-        registry.addViewController("/manager/report/phase-score").setViewName("manager-phase-score-report");
-        registry.addViewController("/manager/report/cycle-score").setViewName("manager-cycle-score-report");
+        registry.addViewController("/manager/assessment").setViewName("manager-assessment");
+        registry.addViewController("/manager/report/score/cycle").setViewName("mangaer-report-score-cycle");
+        registry.addViewController("/manager/report/score/phase").setViewName("mangaer-report-score-phase");
 
         registry.addViewController("/employee/assignment/list").setViewName("employee-assignment-list");
-        registry.addViewController("/employee/assessment/phase").setViewName("employee-phase-assessment");
+        registry.addViewController("/employee/assessment").setViewName("employee-assessment");
 
     }
 

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assess.assembler.AssessmentAssembler;
 import com.softvision.ipm.pms.assess.entity.AssessDetail;
@@ -156,8 +157,6 @@ public class PhaseAssessmentService {
 		// Email Trigger
 		emailRepository.sendEmployeeAcceptence(employeePhaseAssignment.getPhaseId(),
 				employeePhaseAssignment.getEmployeeId(), employeePhaseAssignment.getAssignedBy());
-		// conclude
-		conclude(assignmentId, requestedEmployeeId);
 	}
 
 	@Transactional
@@ -182,11 +181,27 @@ public class PhaseAssessmentService {
 
 	@Transactional
 	@PreSecureAssignment(permitEmployee=true)
-	private void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
+	public void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		LOGGER.info("conclude(" + assignmentId + ", " + requestedEmployeeId + ")");
 		// Change the status to CONCLUDED
 		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
 				"conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
+
+		int employeeId = employeePhaseAssignment.getEmployeeId();
+		int phaseId = employeePhaseAssignment.getPhaseId();
+		AppraisalPhase nextPhase = appraisalPhaseDataRepository.findNextPhase(phaseId);
+		System.out.println("nextPhase= " + nextPhase);
+
+		// There must be goal set for next phase. Otherwise conclude is not allowed
+		if (nextPhase == null) {
+		    LOGGER.warn("There is no next phase set up for the phase " + phaseId);
+		} else {
+		    PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(phaseId, employeeId);
+		    System.out.println("nextAssignment= " + nextAssignment);
+		    if (nextAssignment == null) {
+		        throw new ServiceException("Assignment is not set for the next phase. You can only conclude this when assignment is set for the next phase for this employee.");
+		    }
+		}
 		// Update score in employee assignment
 		AssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);

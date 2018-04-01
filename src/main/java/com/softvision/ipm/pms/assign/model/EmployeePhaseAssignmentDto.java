@@ -11,11 +11,11 @@ public class EmployeePhaseAssignmentDto extends EmployeeAssignmentDto {
 
     private static final long serialVersionUID = 1L;
 
-    private AppraisalPhaseDto phaseDto;
+    private AppraisalPhaseDto phase;
 
     @Override
     public String toString() {
-        return "EmployeePhaseAssignmentDto [phaseDto=" + phaseDto + "]";
+        return "EmployeePhaseAssignmentDto [phase=" + phase + "]";
     }
 
 

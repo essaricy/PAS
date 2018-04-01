@@ -47,6 +47,32 @@
         </h2>
       </div>
       <%@include file="common/no-cycle.jsp" %>
+      <!-- Large Size -->
+      <div class="modal fade" id="EmployeePhaseAssignments_Modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="EmployeePhaseAssignments_Title"></h4>
+            </div>
+            <div class="modal-body">
+              <div class="row clearfix">
+                <div class="table-responsive">
+                  <table id="EmployeePhaseAssignments_Table" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>Phase</th>
+                        <th>Assessed By</th>
+                        <th>Status</th>
+                        <th>Score</th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </body>
@@ -81,8 +107,8 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-Sprite-Preloaders/jquery.preloaders.min.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/card-manager.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/cycle-score-report.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-report-score-cycle.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
 $(function () {
@@ -140,13 +166,16 @@ $(function () {
             var phaseStatus=getPhaseAssignmentStatus(ea.status);
             var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
             if(row.length == 0) {
-            row=$('<tr>');
+              row=$('<tr>');
               $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
               $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
             }
             if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
-              var cycleScoreLink=$('<a href="#">');
+              var cycleScoreLink=$('<a href="#" data-toggle="modal" data-target="#EmployeePhaseAssignments_Modal" >');
               $(cycleScoreLink).append(ea.score.toFixed(2));
+              $(cycleScoreLink).attr('data-employee-id', assignedTo.EmployeeId);
+              $(cycleScoreLink).attr('data-employee-name', assignedTo.FirstName + ' ' + assignedTo.LastName);
+
               var scoreTd=$('<td>');
               $(scoreTd).append(cycleScoreLink);
               $(row).append(scoreTd);
@@ -182,9 +211,37 @@ $(function () {
     function showPhaseScores(assignmentId) {
       $.fn.ajaxGet({
         url: '<%=request.getContextPath()%>/manager/report/cycle/phases/' + assignmentId,
-        onSuccess: function() {},
-        onError: function() {}
+        onSuccess: showEmployeePhaseScores,
+        onError: showEmployeePhaseScoreError
       });
+    }
+
+    $("#EmployeePhaseAssignments_Modal" ).on('shown.bs.modal', function(e) {
+      var $invoker = $(e.relatedTarget);
+      $('#EmployeePhaseAssignments_Title').text($invoker.attr('data-employee-name'));
+    });
+
+    function showEmployeePhaseScores(employeePhaseAssignments) {
+      if (employeePhaseAssignments == null || employeePhaseAssignments.length == 0) {
+        swal({ title: "Failed!", text: 'There are no phase scores found for this employee', type: "error"});
+      } else {
+        var tbody=$('#EmployeePhaseAssignments_Table tbody');
+        $(tbody).empty();
+        $(employeePhaseAssignments).each(function (index, employeePhaseAssignment) {
+          var row=$('<tr>');
+          $(row).append('<td>' + employeePhaseAssignment.phase.name + '</td>');
+          $(row).append('<td>' + employeePhaseAssignment.assignedBy.FirstName + ' '
+              + employeePhaseAssignment.assignedBy.LastName + '</td>');
+          $(row).append('<td>' + getPhaseStatusLabel(employeePhaseAssignment.status) + '</td>');
+          $(row).append('<td><b>' + employeePhaseAssignment.score.toFixed(2) + '</b></td>');
+          $(tbody).append(row);
+        });
+        $('#EmployeePhaseAssignments_Modal').show();
+      }
+    }
+
+    function showEmployeePhaseScoreError(error) {
+      swal({ title: "Failed!", text: JSON.stringify(error), type: "error"});
     }
 
     function onErrorScoreReport(error) {

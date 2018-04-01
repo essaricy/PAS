@@ -23,24 +23,22 @@ $(function () {
 
     function renderAssignedEmployees(data) {
       for (var index = 0; index < data.length; index++) {
-      var cycleAssignment = data[index];
-      var cycle=cycleAssignment.cycle;
-      var cycleStatus=getAppraisalCycleStatus(cycle.status);
-      if (cycleStatus == AppraisalCycleStatus.DRAFT) {
-        continue;
-      }
+        var cycleAssignment = data[index];
+        var cycle=cycleAssignment.cycle;
+        var cycleStatus=getAppraisalCycleStatus(cycle.status);
+        if (cycleStatus == AppraisalCycleStatus.DRAFT) {
+          continue;
+        }
         var cardRow=$('<div class="row clearfix">');
         var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
         var card=$('<div class="card">');
         var cardHeader=$('<div class="header">');
         $(cardHeader).addClass(cycleStatus.colorClass);
-        //var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
         var cardTitle=$('<h2>' + cycle.name + '</h2>');
         var cardBody=$('<div class="body">');
         var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
-            + '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
-            + '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
-            );
+          + '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
+          + '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>');
         var tabContent=$('<div class="tab-content">');
 
         // Render Phases Tab - START
@@ -50,24 +48,20 @@ $(function () {
           var phase=phaseAssignment.phase;
           var phaseTitle=$('<h5 class="font-underline col-cyan">Phase: ' + phase.name + '</h5>');
           var employeeAssignments=phaseAssignment.employeeAssignments;
-
           if (employeeAssignments.length==0) {
-          $(phaseTabPanel).append(phaseTitle);
-          $(phaseTabPanel).append('<p class="font-bold col-pink">No Employees were assigned to you for this phase.</p>');
+            $(phaseTabPanel).append(phaseTitle);
+            $(phaseTabPanel).append('<p class="font-bold col-pink">No Employees were assigned to you for this phase.</p>');
           } else {
             var table=$('<table class="table table-striped">');
             var thead=$('<thead>');
             var theadRow=$('<tr>');
-
             var tbody=$('<tbody>');
             $(employeeAssignments).each(function(kindex, ea) {
               var assignedTo=ea.assignedTo;
               var assignedBy=ea.assignedBy;
-
               var row=$('<tr>');
               $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
               $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
-              //$(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
               $(row).append('<td>' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
@@ -77,7 +71,6 @@ $(function () {
             $(thead).append(theadRow);
             $(theadRow).append('<th width="15%">Employee Id</th>');
             $(theadRow).append('<th width="30%">Employee Name</th>');
-            //$(theadRow).append('<th>Assigned By</th>');
             $(theadRow).append('<th width="15%">Assigned On</th>');
             $(theadRow).append('<th width="25%">Status</th>');
             $(theadRow).append('<th width="15%">Action</th>');
@@ -105,16 +98,13 @@ $(function () {
           $(theadRow).append('<th>Assigned On</th>');
           $(theadRow).append('<th>Status</th>');
           $(theadRow).append('<th>Action</th>');
-          
           var tbody=$('<tbody>');
           $(employeeAssignments).each(function(jindex, ea) {
             var assignedTo=ea.assignedTo;
             var assignedBy=ea.assignedBy;
-            
             var row=$('<tr>');
             $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
             $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
-            //$(row).append('<td>' + assignedBy.FirstName + ' ' + assignedBy.LastName + '</td>');
             $(row).append('<td>' + ea.assignedAt + '</td>');
             $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
             $(row).append(getCycleActionCell(ea));
@@ -145,11 +135,11 @@ $(function () {
       var td=$('<td>');
 
       if (status == CycleAssignmentStatus.NOT_INITIATED.code) {
-      $(td).append('&nbsp;');
+        $(td).append('&nbsp;');
       } else if (status == CycleAssignmentStatus.ABRIDGED.code) {
-      $(td).append(getUpRootButton('cycle', id));
+        $(td).append(getUpRootButton(id));
       } else if (status == CycleAssignmentStatus.CONCLUDED.code) {
-      //$(td).append(getViewFormButton('cycle', id));
+        //$(td).append(getViewFormButton(id));
         $(td).append('&nbsp;');
       }
       return td;
@@ -169,9 +159,10 @@ $(function () {
         $(td).append(getSendReminderButton('phase', id));
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
           || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
-        $(td).append(getPerformReviewButton('phase', id));
+        $(td).append(getPerformReviewButton(id));
+      } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code) {
+        $(td).append(getConcludeButton(id));
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code
-          || status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
           || status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code
           || status == PhaseAssignmentStatus.CONCLUDED.code) {
         $(td).append(getViewFormButton(id));
@@ -179,86 +170,99 @@ $(function () {
         $(td).append('-');
       }
       return td;
-      }
+    }
 
-      function getUpRootButton(type, id) {
-        var submitToNextLevelManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
-          'title="Submit to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
-          'item-id="' + id + '" item-type="SubmitToNextLevelManager"><i class="material-icons">call_merge</i></button>');
-        $(submitToNextLevelManagerButton).tooltip({container: 'body'});
+    function getUpRootButton(id) {
+      var submitToNextLevelManagerButton=$('<button class="btn btn-xs btn-info waves-effect" '
+        + 'title="Submit to Next Level Manager" data-toggle="modal" data-target="#EmployeeSearchModal" '
+        + 'item-id="' + id + '" item-type="SubmitToNextLevelManager"><i class="material-icons">call_merge</i></button>');
+      $(submitToNextLevelManagerButton).tooltip({container: 'body'});
       return submitToNextLevelManagerButton;
-      }
+    }
 
-      function getAssignToManagerButton(type, id) {
-      var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" ' + 
-        'title="Assign to Another Manager" data-toggle="modal" data-target="#EmployeeSearchModal" ' + 
-        'item-id="' + id + '" item-type="AssignToAnotherManager"><i class="material-icons">trending_flat</i></button>');
+    function getAssignToManagerButton(type, id) {
+      var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" '
+        + 'title="Assign to Another Manager" data-toggle="modal" data-target="#EmployeeSearchModal" '
+        + 'item-id="' + id + '" item-type="AssignToAnotherManager"><i class="material-icons">trending_flat</i></button>');
       $(assignToManagerButton).tooltip({container: 'body'});
       return assignToManagerButton;
-      }
+    }
 
-      function getEnableFormButton(type, id) {
-        var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-Submission"><i class="material-icons">assignment_returned</i></button>');
-        $(enableFormButton).tooltip({container: 'body'});
+    function getEnableFormButton(type, id) {
+      var enableFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Enable Employee Self-Submission"><i class="material-icons">assignment_returned</i></button>');
+      $(enableFormButton).tooltip({container: 'body'});
       $(enableFormButton).click(function() {
         enableSelfSubmission(type, id);
       });
       return enableFormButton;
-      }
+    }
 
-      function getSendReminderButton(type, id) {
-        var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
-        $(reminderButton).tooltip({container: 'body'});
-        $(reminderButton).click(function() {
-          sendReminderToSubmit(id);
-        });
-        return reminderButton;
-      }
+    function getSendReminderButton(type, id) {
+      var reminderButton=$('<button class="btn btn-xs btn-info waves-effect" title="Send a reminder"><i class="material-icons">assignment_late</i></button>');
+      $(reminderButton).tooltip({container: 'body'});
+      $(reminderButton).click(function() {
+        sendReminderToSubmit(id);
+      });
+      return reminderButton;
+    }
 
-      function getPerformReviewButton(type, id) {
+    function getPerformReviewButton(id) {
       var fillReviewButton=$('<button class="btn btn-xs btn-info waves-effect" title="Perform Review"><i class="material-icons">assignment</i></button>');
       $(fillReviewButton).tooltip({container: 'body'});
       $(fillReviewButton).click(function() {
-          location.href=settings.contextPath + '/manager/assessment/' + type + '?aid=' + id;
+        location.href=settings.contextPath + '/manager/assessment?aid=' + id;
       });
       return fillReviewButton;
-      }
+    }
 
-      function getViewFormButton(id) {
+    function getViewFormButton(id) {
       var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
       $(viewFormButton).tooltip({container: 'body'});
-        $(viewFormButton).click(function() {
-          location.href=settings.contextPath + '/manager/assessment/phase?aid=' + id;
-        });
-        return viewFormButton;
-      }
+      $(viewFormButton).click(function() {
+        location.href=settings.contextPath + '/manager/assessment?aid=' + id;
+      });
+      return viewFormButton;
+    }
 
-      function enableSelfSubmission(type, id) {
-        swal({
-        title: "Are you sure?", text: "Do you want to enable self-submission for this employee for this phase?", type: "warning",
-          showCancelButton: true, confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, Enable!", closeOnConfirm: false
+    function getConcludeButton(id) {
+      var concludeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Conclude"><i class="material-icons">assignment_turned_in</i></button>');
+      $(concludeButton).tooltip({container: 'body'});
+      $(concludeButton).click(function() {
+        location.href=settings.contextPath + '/manager/assessment?aid=' + id;
+      });
+      return concludeButton;
+    }
+
+    function enableSelfSubmission(type, id) {
+      swal({
+        title: "Are you sure?",
+        text: "Do you want to enable self-submission for this employee for this phase?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, Enable!",
+        closeOnConfirm: false
       }, function () {
         $.fn.ajaxPut({
           url: settings.contextPath + '/assignment/manager/change/phase-status/enable/' + id
         });
-        });
-      }
+      });
+    }
 
-      function sendReminderToSubmit(id) {
-          swal({
-          title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
-            showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false
-        }, function () {
-          $.fn.ajaxPut({
-            url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
-          });
+    function sendReminderToSubmit(id) {
+      swal({
+        title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
+        showCancelButton: true, confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false
+      }, function () {
+        $.fn.ajaxPut({
+          url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
         });
-      }
+      });
+    }
 
-      function onErrorAssignedEmployees(error) {
+    function onErrorAssignedEmployees(error) {
       showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
-      }
+    }
   };
 });
