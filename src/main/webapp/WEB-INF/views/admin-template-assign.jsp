@@ -47,7 +47,7 @@
     <div class="container-fluid">
       <div class="block-header">
         <h2>Assign Templates to Employees
-          <small>Assign templates to employee(s)</small>
+          <small>Select a cycle, phase, a template and the employees to assign</small>
         </h2>
       </div>
       <%@include file="common/no-cycle.jsp" %>
@@ -55,7 +55,32 @@
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
           <div class="card template_assign_card">
+            <div class="header"><h2>Goal Settings / Assign Templates</h2></div>
             <div class="body">
+              <div class="row clearfix">
+			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+                  <label for="AppraisalCycle_Name">Appraisal Cycle</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+		          <div class="form-group form-float">
+		            <div class="form-line">
+		              <input type="text" id="AppraisalCycle_Name" class="form-control" placeholder="Start entering template name" required autofocus value="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row clearfix">
+			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+                  <label for="AppraisalPhase_Name">Appraisal Phase</label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+		          <div class="form-group form-float">
+		            <div class="form-line">
+		              <input type="text" id="Template_Name" class="form-control" placeholder="Start entering template name" required autofocus value="">
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div class="row clearfix">
 			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                   <label for="Template_Name">Template Name</label>
