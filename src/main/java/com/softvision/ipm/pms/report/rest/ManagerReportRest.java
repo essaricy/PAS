@@ -52,7 +52,6 @@ public class ManagerReportRest {
     @RequestMapping(value="cycle/phases/{assignId}", method=RequestMethod.GET)
     public @ResponseBody List<EmployeePhaseAssignmentDto> getCycleScorePhases(
             @PathVariable(required = true) long assignId) throws ServiceException {
-	    System.out.println("assignId=" + assignId);
         return managerAssignmentService.getSubmittedCyclePhases(assignId, RestUtil.getLoggedInEmployeeId());
     }
 

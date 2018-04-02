@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
 import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
-import com.softvision.ipm.pms.assess.service.CycleAssessmentService;
 import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
@@ -31,20 +29,11 @@ public class AssessmentRest {
 
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
-	@Autowired private CycleAssessmentService cycleAssessmentService;
-
 	@RequestMapping(value="list/phase/byAssignId/{aid}", method=RequestMethod.GET)
 	public PhaseAssessmentDto getPhaseAssessmentByAssignmentId(
 			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
 			throws ServiceException {
 		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
-    }
-
-	@RequestMapping(value="list/cycle/byAssignId/{aid}", method=RequestMethod.GET)
-	public CycleAssessmentDto getCycleAssessmentByAssignmentId(
-			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
-			throws ServiceException {
-		return cycleAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)

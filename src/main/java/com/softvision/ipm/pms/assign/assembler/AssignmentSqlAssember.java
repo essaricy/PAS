@@ -56,7 +56,6 @@ public class AssignmentSqlAssember {
         phaseDto.setId(rs.getInt("appr_phase_id"));
         phaseDto.setName(rs.getString("appr_phase_name"));
         employeePhaseAssignment.setPhase(phaseDto);
-        System.out.println(employeePhaseAssignment);
         return employeePhaseAssignment;
     }
 

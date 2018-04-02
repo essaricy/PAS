@@ -58,7 +58,6 @@ $.fn.ajaxWrapper = function(options) {
   contentType: options.contentType,
   //context: document.body
   }).done(function(result) {
-    console.log(options.url + ': done: ' + JSON.stringify(result));
     if (options.type == 'GET') {
       if (options.onSuccess) {
       options.onSuccess(result);

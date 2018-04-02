@@ -151,31 +151,11 @@ public class ManagerAssignmentService {
                 continue;
             }
             // For each cycle, get cycle assignment for this employee
-            // select * from cycle_assign where submitted_to=2582 and cycle_id=?
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
             cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
             List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository
                     .getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
             cycleAssignment.setEmployeeAssignments(employeeAssignments);
-
-            // Get all the manager ids
-            /*
-             * Set<Integer> managerIds = new HashSet<>(); if (employeeAssignments != null &&
-             * !employeeAssignments.isEmpty()) { for (EmployeeAssignmentDto
-             * employeeAssignmentDto : employeeAssignments) {
-             * managerIds.add(employeeAssignmentDto.getAssignedBy().getEmployeeId()); } }
-             */
-            /*
-             * System.out.println("############# managerIds=" + managerIds); if
-             * (!managerIds.isEmpty()) { List<PhaseAssignmentDto> phaseAssignments = new
-             * ArrayList<>(); cycleAssignment.setPhaseAssignments(phaseAssignments);
-             * List<AppraisalPhase> phases = cycle.getPhases(); for (AppraisalPhase phase :
-             * phases) { PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
-             * phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
-             * phaseAssignment.setEmployeeAssignments(managerAssignmentRepository.
-             * getAssignedByAssignmentsOfPhase(cycleId, phase.getId(), managerIds));
-             * phaseAssignments.add(phaseAssignment); } }
-             */
             cycleAssignments.add(cycleAssignment);
         }
         return cycleAssignments;
@@ -183,19 +163,17 @@ public class ManagerAssignmentService {
 
     public List<EmployeePhaseAssignmentDto> getSubmittedCyclePhases(long assignId, int requestedEmployeeId)
             throws ServiceException {
-        System.out.println("getSubmittedCyclePhases(" + assignId + ", " + requestedEmployeeId + ")");
+        LOGGER.info("getSubmittedCyclePhases(" + assignId + ", " + requestedEmployeeId + ")");
         CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
         if (cycleAssignment == null) {
             throw new ServiceException("Invalid assignment");
         }
-        System.out.println("cycleAssignment=" + cycleAssignment);
         Integer submittedTo = cycleAssignment.getSubmittedTo();
         if (submittedTo == null || submittedTo != requestedEmployeeId) {
             throw new ServiceException("UNAUTHORIZED ACCESS ATTEMPTED");
         }
         List<EmployeePhaseAssignmentDto> phaseAssignmentsInCycle = managerAssignmentRepository
                 .getPhaseAssignmentsInCycle(cycleAssignment.getCycleId(), cycleAssignment.getEmployeeId());
-        System.out.println("phaseAssignmentsInCycle= " + phaseAssignmentsInCycle);
         return phaseAssignmentsInCycle;
     }
 

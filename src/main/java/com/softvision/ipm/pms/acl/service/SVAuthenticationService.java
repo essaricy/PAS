@@ -3,11 +3,13 @@ package com.softvision.ipm.pms.acl.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -38,9 +40,21 @@ public class SVAuthenticationService {
 	@Autowired
 	private RoleDataRepository roleDataRepository;
 
+    @Value("${app.security.ldap.mode}")
+    private String mode;
+
+    private boolean turnOffLdapAUth;
+
+    @PostConstruct
+    private void init() {
+        turnOffLdapAUth = mode != null && mode.trim().equalsIgnoreCase("disable");
+    }
+
 	public User authenticate(String userid, String password) throws AuthenticationException {
 		try {
-			svLdapRepository.authenticate(userid, password);
+		    if (!turnOffLdapAUth) {
+		        svLdapRepository.authenticate(userid, password);
+		    }
 			Employee employee = employeeRepository.findByLoginId(userid);
 			// Employee Details does not exist in the system. add them
 			if (employee == null) {

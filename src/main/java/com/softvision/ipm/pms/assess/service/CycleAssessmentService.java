@@ -10,13 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
-import com.softvision.ipm.pms.assess.model.CycleAssessmentDto;
-import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
@@ -25,10 +21,6 @@ import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.role.service.RoleService;
-import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
-import com.softvision.ipm.pms.template.entity.Template;
-import com.softvision.ipm.pms.template.entity.TemplateHeader;
-import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
 @Service
 public class CycleAssessmentService {
@@ -38,10 +30,6 @@ public class CycleAssessmentService {
 	@Autowired private RoleService roleService;
 
 	@Autowired private AppraisalRepository appraisalRepository;
-
-	@Autowired private TemplateDataRepository templateDataRepository;
-
-	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
@@ -95,30 +83,6 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
 		LOGGER.info("abridge(" + employeeId + ") COMPLETED");
-	}
-
-	public CycleAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		CycleAssessmentDto cycleAssessment = new CycleAssessmentDto();
-		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(assignmentId);
-		
-		// Allow this form only to the employee and to the manager to whom its been assigned
-		int assignedBy = employeeCycleAssignment.getAssignedBy();
-		// TODO: Allow it to employee?
-		//int employeeId = employeeCycleAssignment.getEmployeeId();
-		if (requestedEmployeeId != assignedBy) {
-			LOGGER.warn("UNAUTHORIZED ACCESS ATTEMPT: assignmentId: " + assignmentId + ", requestedEmployeeId:" + requestedEmployeeId);
-			throw new ServiceException("No allowed to view appraisal form");
-		}
-		cycleAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeeCycleAssignment));
-
-		int cycleId = employeeCycleAssignment.getCycleId();
-		cycleAssessment.setCycle(AppraisalAssembler.getCycle(appraisalCycleDataRepository.findById(cycleId)));
-
-		long templateId = employeeCycleAssignment.getTemplateId();
-		Template template = templateDataRepository.findById(templateId);
-		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
-		cycleAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
-		return cycleAssessment;
 	}
 
 	@Transactional

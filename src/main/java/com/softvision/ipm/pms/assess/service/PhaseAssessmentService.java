@@ -193,14 +193,14 @@ public class PhaseAssessmentService {
 		int employeeId = employeePhaseAssignment.getEmployeeId();
 		int phaseId = employeePhaseAssignment.getPhaseId();
         AppraisalPhase nextPhase = appraisalPhaseDataRepository.findNextPhase(phaseId);
-        System.out.println("nextPhase= " + nextPhase);
         // There must be goal set for next phase. Otherwise conclude is not allowed
         if (nextPhase == null) {
+            LOGGER.info("Next phase is not setup. cannot conclude. current phaseId=" + phaseId);
             LOGGER.warn("There is no next phase set up for the phase " + phaseId);
         } else {
             PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(nextPhase.getId(), employeeId);
-            System.out.println("nextAssignment= " + nextAssignment);
             if (nextAssignment == null) {
+                LOGGER.info("Next phase assignment is not setup. cannot conclude. current nextPhaseId=" + nextPhase.getId() + ", employeeId=" + employeeId);
                 throw new ServiceException("Assignment is not set for the next phase. You can only conclude this when assignment is set for the next phase for this employee.");
             }
         }
