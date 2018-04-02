@@ -160,15 +160,16 @@
     });
 
     if (id != 0) {
-      var url = '<%=request.getContextPath()%>/goal/list/' + id;
-      $.get(url, {sid: new Date().getTime()}, function() {})
-      .done(function(result) {
-        if (result) {
-	      $('#Goal_Name').val(result.name);
-	      $(result.params).each(function(index, param) {
-	    	appendRow(table, param);
-	      });
-       	}
+      $.fn.ajaxGet({
+      	url: '<%=request.getContextPath()%>/goal/list/' + id,
+      	onSuccess: function(result) {
+          if (result) {
+        	$('#Goal_Name').val(result.name);
+    	    $(result.params).each(function(index, param) {
+    	      appendRow(table, param);
+    	    });
+          }
+      	}
       });
     }
 

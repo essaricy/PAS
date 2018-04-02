@@ -44,7 +44,7 @@ public class AssignmentRest {
 		}
 		return result;
     }
-	
+
 	@RequestMapping(value = "cycle/employee-status/{cycleId}", method = RequestMethod.GET)
 	public List<EmployeeAssignmentDto> getEmpCycleAppraisalStatus(@PathVariable(required = true) @Min(1) int cycleId) {
 		return assignmentService.getAllEmployeeAssignmentsforCycle(cycleId);

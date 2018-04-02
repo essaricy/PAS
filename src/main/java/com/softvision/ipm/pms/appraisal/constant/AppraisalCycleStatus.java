@@ -2,6 +2,7 @@ package com.softvision.ipm.pms.appraisal.constant;
 
 public enum AppraisalCycleStatus {
 	DRAFT,
+	READY,
 	ACTIVE,
 	COMPLETE;
 

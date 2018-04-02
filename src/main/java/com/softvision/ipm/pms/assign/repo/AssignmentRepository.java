@@ -60,7 +60,27 @@ public class AssignmentRepository extends AbstractRepository {
 			}
 		}
 	}
-	
+
+	@Transactional
+	public void assign(PhaseAssignment phaseAssignment, AppraisalPhase phase, String employeeName)
+			throws ServiceException {
+
+		Date assignedAt = phaseAssignment.getAssignedAt();
+		int assignedBy = phaseAssignment.getAssignedBy();
+		int employeeId = phaseAssignment.getEmployeeId();
+		long templateId = phaseAssignment.getTemplateId();
+		int phaseId = phaseAssignment.getPhaseId();
+
+		int inserted = jdbcTemplate.update(
+				"INSERT INTO phase_assign("
+						+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
+						+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
+						phaseId, templateId, employeeId, assignedBy, assignedAt);
+		if (inserted!=1) {
+			throw new ServiceException("Employee (" + employeeName + ") - Unable to assign appraisal phase ");
+		}
+	}
+
 	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforCycle(int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_MANAGER_ALL_CYCLE_ASSIGNMENTS,

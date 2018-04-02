@@ -1,6 +1,7 @@
 package com.softvision.ipm.pms.data;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
@@ -34,13 +35,29 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 	@Override
 	public void loadData() throws Exception {
 		createAppraisalCycles(2010, 10);
-		activateCycle();
+		//activateCycle();
 	}
 
 	private void activateCycle() throws ServiceException {
 		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
-		AppraisalCycleDto activeCycle = cycles.get(RANDOM.nextInt(cycles.size()));
-		appraisalService.changeStatus(activeCycle.getId(), AppraisalCycleStatus.ACTIVE);
+		System.out.println("##################################### "+ cycles.size());
+		for (AppraisalCycleDto cycle : cycles) {
+			System.out.println("################## "+cycle);
+			int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(cycle.getStartDate()));
+			System.out.println(year);
+			if (year < 2017) {
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.READY);
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.ACTIVE);
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.COMPLETE);
+			} else if (year == 2017) {
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.READY);
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.ACTIVE);
+			} else if (year == 2018) {
+				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.READY);
+			}
+		}
+		//AppraisalCycleDto activeCycle = cycles.get(RANDOM.nextInt(cycles.size()));
+		//appraisalService.changeStatus(activeCycle.getId(), AppraisalCycleStatus.ACTIVE);
 	}
 
 	private void createAppraisalCycles(int startYear, int numberOfYears) throws ServiceException {
@@ -80,7 +97,7 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 				localDate=localDate.plusDays(1);
 			}
 			appraisalCycleDto.setPhases(phases);
-			System.out.println(appraisalCycleDto);
+			//System.out.println(appraisalCycleDto);
 			appraisalService.update(appraisalCycleDto);
 		}
 	}

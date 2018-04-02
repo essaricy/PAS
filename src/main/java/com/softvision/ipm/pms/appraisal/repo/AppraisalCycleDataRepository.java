@@ -21,4 +21,11 @@ public interface AppraisalCycleDataRepository extends CrudRepository<AppraisalCy
 
 	AppraisalCycle findOneByStatus(String status);
 
+	@Query(value="select * from appr_cycle "
+		+ "where start_date >= (select start_date from appr_cycle where status='ACTIVE') "
+		+ "and (status='ACTIVE' or status='READY') "
+		+ "order by appr_cycle.name "
+		+ "LIMIT 2 ", nativeQuery=true)
+	List<AppraisalCycle> findAssignableCycles();
+
 }

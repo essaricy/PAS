@@ -13,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
-import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
-import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
+import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.DateUtil;
@@ -35,21 +37,23 @@ public class AssignmentService {
 
 	@Autowired private AssignmentRepository assignmentRepository;
 
-	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
+
+	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 
 	@Autowired private TemplateDataRepository templateDataRepository;
 
 	@Autowired private EmployeeRepository employeeRepository;
 
-	private String NO_ELIGIBILITY_MESSAGE = "{0} - Not eligible for this appraisal cycle. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
+	private String NO_ELIGIBILITY_MESSAGE = "{0} - Not eligible for this appraisal. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
 
-	private String CANNOT_ASSIGN_TO_SELF = "{0} - Cannot assign an appraisal cycle to self";
+	private String CANNOT_ASSIGN_TO_SELF = "{0} - Cannot assign an appraisal to self";
 
-	private String ALREADY_ASSIGNED = "{0} - An appraisal cycle has already been assigned by {1} on {2}";
+	private String ALREADY_ASSIGNED = "{0} - An appraisal has already been assigned by {1} on {2}";
 
-	private String ASSIGN_SUCCESSFUL = "{0} - appraisal cycle has been assigned successfully";
+	private String ASSIGN_SUCCESSFUL = "{0} - appraisal has been assigned successfully";
 
 	public List<Result> bulkAssign(BulkAssignmentDto bulkAssignmentDto) throws ServiceException {
 		List<Result> results = new ArrayList<>();
@@ -60,6 +64,7 @@ public class AssignmentService {
 		}
 		ValidationUtil.validate(bulkAssignmentDto);
 		int cycleId = bulkAssignmentDto.getCycleId();
+		int phaseId = bulkAssignmentDto.getPhaseId();
 		int assignedBy = bulkAssignmentDto.getAssignedBy();
 		long templateId = bulkAssignmentDto.getTemplateId();
 		List<Integer> employeeIds = bulkAssignmentDto.getEmployeeIds();
@@ -68,9 +73,14 @@ public class AssignmentService {
 		if (cycle == null) {
 			throw new ServiceException("There is no such cycle with the given id");
 		}
+		AppraisalPhase phase = appraisalPhaseDataRepository.findById(phaseId);
+		if (phase == null) {
+			throw new ServiceException("There is no such phase with the given id");
+		}
 		AppraisalCycleStatus appraisalCycleStatus = AppraisalCycleStatus.get(cycle.getStatus());
-		if (appraisalCycleStatus != AppraisalCycleStatus.ACTIVE) {
-			throw new ServiceException("You can assign employees to a cycle when the its ACTIVE");
+		if (appraisalCycleStatus != AppraisalCycleStatus.READY
+				&& appraisalCycleStatus != AppraisalCycleStatus.ACTIVE) {
+			throw new ServiceException("You can assign employees to a cycle when its either READY or ACTIVE");
 		}
 		Template template = templateDataRepository.findById(templateId);
 		if (template == null) {
@@ -98,7 +108,18 @@ public class AssignmentService {
 				if (employeeId == assignedBy) {
 					throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
-				// check if already assigned.
+				PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(phaseId, employeeId);
+				if (phaseAssignment != null) {
+					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
+				}
+				phaseAssignment = new PhaseAssignment();
+				phaseAssignment.setAssignedAt(assignedAt);
+				phaseAssignment.setAssignedBy(bulkAssignmentDto.getAssignedBy());
+				phaseAssignment.setEmployeeId(employeeId);
+				phaseAssignment.setPhaseId(phaseId);
+				phaseAssignment.setTemplateId(templateId);
+				assignmentRepository.assign(phaseAssignment, phase, employeeName);
+				/*// check if already assigned.
 				CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 				if (cycleAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
@@ -109,15 +130,15 @@ public class AssignmentService {
 				cycleAssignment.setCycleId(cycleId);
 				cycleAssignment.setEmployeeId(employeeId);
 				cycleAssignment.setTemplateId(templateId);
-				assignmentRepository.assign(cycleAssignment, cycle, employeeName);
-				LOGGER.info("bulkAssign: Successful for cycleId: " + cycleId + ", employeeId: " + employeeId
+				assignmentRepository.assign(cycleAssignment, cycle, employeeName);*/
+				LOGGER.info("bulkAssign: Successful for phaseId: " + phaseId + ", employeeId: " + employeeId
 						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy());
 				result.setCode(Result.SUCCESS);
 				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
 				result.setCode(Result.FAILURE);
 				result.setMessage(exception.getMessage());
-				LOGGER.info("bulkAssign: Failed for cycleId: " + cycleId + ", employeeId: " + employeeId
+				LOGGER.info("bulkAssign: Failed for phaseId: " + phaseId + ", employeeId: " + employeeId
 						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy()
 						+ ", ERROR=" + exception.getMessage(), exception);
 			} finally {

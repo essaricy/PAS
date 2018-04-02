@@ -23,8 +23,10 @@ public interface AppraisalPhaseDataRepository extends CrudRepository<AppraisalPh
 	@Query(value="select * from appr_phase "
 	        + "inner join appr_cycle "
 	        + "on appr_cycle.id=appr_phase.cycle_id "
-	        + "where appr_phase.start_date = ("
-	        + "select date(end_date + (1 * interval '1 day')) next_day from appr_phase where id=:id)",
+	        /*+ "where appr_phase.start_date = ("
+	        + "select date(end_date + (1 * interval '1 day')) next_day from appr_phase where id=:id)"*/
+	        + "where appr_phase.start_date > (select end_date from appr_phase where id=:id) "
+	        + "and (appr_cycle.status='ACTIVE' or appr_cycle.status='READY') ",
             nativeQuery = true)
     AppraisalPhase findNextPhase(@Param("id") Integer id);
 

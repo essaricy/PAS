@@ -103,6 +103,7 @@ public class AssignmentDataManager implements AbstractDataManager {
 			BulkAssignmentDto bulkAssignmentDto = new BulkAssignmentDto();
 			bulkAssignmentDto.setAssignedBy(managerId);
 			bulkAssignmentDto.setCycleId(activeCycle.getId());
+			bulkAssignmentDto.setPhaseId(activeCycle.getPhases().get(0).getId());
 			bulkAssignmentDto.setTemplateId(randomTemplate.getId());
 
 			List<Integer> employeeIds = new ArrayList<>();
@@ -119,7 +120,7 @@ public class AssignmentDataManager implements AbstractDataManager {
 			}
 			bulkAssignmentDto.setEmployeeIds(employeeIds);
 			System.out.println("bulkAssignmentDto= " + bulkAssignmentDto);
-			assignmentService.bulkAssign(bulkAssignmentDto);
+			//assignmentService.bulkAssignCycle(bulkAssignmentDto);
 		}
 	}
 

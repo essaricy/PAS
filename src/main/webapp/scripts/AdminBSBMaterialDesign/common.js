@@ -5,6 +5,12 @@ var AppraisalCycleStatus = {
     label : "Draft",
     colorClass : "bg-amber"
   },
+  READY : {
+    code : "READY",
+    name : "Ready",
+    label : "Ready",
+    colorClass : "bg-lime"
+  },
   ACTIVE : {
     code : "ACTIVE",
     name : "Active",

@@ -231,24 +231,23 @@
 	});
 
     if (id != 0) {
-      var url = '<%=request.getContextPath()%>/appraisal/list/' + id;
-
-      $.get(url, {sid: new Date().getTime()}, function() {})
-      .done(function(result) {
-        if (result) {
-          $('#Cycle_Name').val(result.name);
-          $('#Cycle_StartDate').val(result.startDate);
-          $('#Cycle_EndDate').val(result.endDate);
-          $('#Cycle_EligibilityDate').val(result.cutoffDate);
-	      $(result.phases).each(function(index, phase) {
-	    	  appendRow(table, phase);
-	      });
-       	}
+      $.fn.ajaxGet({
+    	url: '<%=request.getContextPath()%>/appraisal/list/' + id,
+    	onSuccess: function(result) {
+          if (result) {
+            $('#Cycle_Name').val(result.name);
+            $('#Cycle_StartDate').val(result.startDate);
+            $('#Cycle_EndDate').val(result.endDate);
+            $('#Cycle_EligibilityDate').val(result.cutoffDate);
+      	    $(result.phases).each(function(index, phase) {
+      	      appendRow(table, phase);
+      	    });
+       	  }
+    	}
       });
     }
 
     $('.datepicker').bootstrapMaterialDatePicker({format: 'DD/MM/YYYY', clearButton: true, weekStart: 1, time: false });
-
 	$('#Phase_Add').click(function() {
 	  // Validate the input fields
 	  appendRow(table, {id:0, name: $('#Phase_Name').val(),

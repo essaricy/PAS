@@ -1,5 +1,7 @@
 package com.softvision.ipm.pms.appraisal.repo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -14,6 +16,10 @@ public class AppraisalRepository extends AbstractRepository {
 
 	public AppraisalCycle getActiveCycle() {
 		return appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+	}
+
+	public List<AppraisalCycle> getAssignableCycles() {
+		return appraisalCycleDataRepository.findAssignableCycles();
 	}
 
 }

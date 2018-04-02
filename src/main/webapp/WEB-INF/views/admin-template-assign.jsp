@@ -18,6 +18,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <!-- Bootstrap Select Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css"  />
     <!-- EasyAutocomplete-1.3.5 -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/easy-autocomplete.min.css"/>
     <!-- Bootstrap Tagsinput Css -->
@@ -61,24 +63,16 @@
 			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
                   <label for="AppraisalCycle_Name">Appraisal Cycle</label>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-		          <div class="form-group form-float">
-		            <div class="form-line">
-		              <input type="text" id="AppraisalCycle_Name" class="form-control" placeholder="Start entering template name" required autofocus value="">
-                    </div>
-                  </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+		          <select id="AppraisalCycle_Name" class="form-control show-tick">
+	              </select>
                 </div>
-              </div>
-              <div class="row clearfix">
-			    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 form-control-label">
+			    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 form-control-label">
                   <label for="AppraisalPhase_Name">Appraisal Phase</label>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-		          <div class="form-group form-float">
-		            <div class="form-line">
-		              <input type="text" id="Template_Name" class="form-control" placeholder="Start entering template name" required autofocus value="">
-                    </div>
-                  </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+		          <select id="AppraisalPhase_Name" class="form-control show-tick">
+	              </select>
                 </div>
               </div>
               <div class="row clearfix">
@@ -180,6 +174,7 @@ bulkAssignment.employeeIds=[1136,2388,2006]; */
 
 bulkAssignment.templateId=0;
 bulkAssignment.cycleId=0;
+bulkAssignment.phaseId=0;
 bulkAssignment.employeeIds=[];
 
 $(function () {
@@ -187,8 +182,42 @@ $(function () {
 	contextPath: '<%=request.getContextPath()%>',
 	errorMessage: 'There is no Appraisal Cycle ACTIVE right now! You can assign a template to employees only when there is an appraisal cycle is ACTIVE',
 	onAvailable: function (cycle) {
-	  bulkAssignment.cycleId=cycle.id;
+	  //bulkAssignment.cycleId=cycle.id;
 	}
+  });
+
+  var assignableCycles=[];
+  $.fn.ajaxGet({
+	url : '<%=request.getContextPath()%>/appraisal/get/assignable',
+	onSuccess: function(result) {
+	  assignableCycles=result;
+	  $.each(result, function(index, cycle) {
+		var flag=(cycle.status=="ACTIVE")?'Selected':' ';
+		$('#AppraisalCycle_Name').append('<option value="'+cycle.id+'"'+flag+'>'+cycle.name+'</option>');
+	  });
+	  $("#AppraisalCycle_Name").selectpicker("refresh");
+
+	  $("#AppraisalCycle_Name").change(function() {
+		var selectedCycle=$(this).val();
+		$('#AppraisalPhase_Name option').remove();
+		$(assignableCycles).each(function (index, cycle) {
+		  if (cycle.id==selectedCycle) {
+			$(cycle.phases).each(function(jindex, phase) {
+			  $('#AppraisalPhase_Name').append('<option value="' + phase.id + '">' + phase.name + '</option>');
+			});
+		  }
+		});
+	    $("#AppraisalPhase_Name").selectpicker("refresh");
+		$("#AppraisalPhase_Name").trigger('change');
+	    bulkAssignment.cycleId=selectedCycle;
+	  });
+	  $("#AppraisalCycle_Name").trigger('change');
+	  bulkAssignment.phaseId=$("#AppraisalPhase_Name").val();
+	}
+  });
+
+  $("#AppraisalPhase_Name").change(function() {
+    bulkAssignment.phaseId=$("#AppraisalPhase_Name").val();
   });
 
   $("#Template_Name").easyAutocomplete({
@@ -239,8 +268,8 @@ $(function () {
 		  $(row).append('<td>' + data.Band + '</td>');
 		  var deleteIcon=$('<i class="material-icons col-orange delete_icon" style="cursor: pointer;">delete</i>');
 		  $(deleteIcon).click(function() {
-			  $(row).remove();
-			  bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
+		    $(row).remove();
+			bulkAssignment.employeeIds=$.grep(bulkAssignment.employeeIds, function(value) { return value != itemId;});
 		  });
 		  $(deleteIcon).tooltip({container: 'body'});
 		  var actionCell=$('<td>');
@@ -248,7 +277,6 @@ $(function () {
 		  $(row).append(actionCell);
 		  $(row).append('<td>&nbsp;</td>');
 		  $(tbody).append(row);
-
 		  bulkAssignment.employeeIds.push(itemId);
 		}
 		$("#Search_Employees").val('');
@@ -258,7 +286,9 @@ $(function () {
 
   $('#Assign_Button').click(function() {
 	var button=this;
-	if (bulkAssignment.templateId == 0) {
+	if (bulkAssignment.phaseId == 0) {
+      swal({title: "Missing Information", text: "Please select a phase", type: "warning"});
+	} else if (bulkAssignment.templateId == 0) {
 	  swal({title: "Missing Information", text: "Please select a template", type: "warning"});
     } else if (bulkAssignment.employeeIds.length == 0) {
 	  swal({title: "Missing Information", text: "Please select at least an employee to assign", type: "warning"});
@@ -299,7 +329,8 @@ $(function () {
 
   $('#Reset_Button').click(function() {
 	bulkAssignment.templateId=0;
-	//bulkAssignment.cycleId=0;
+	bulkAssignment.cycleId=0;
+	bulkAssignment.phaseId=0;
 	bulkAssignment.employeeIds=[];
 	
 	$("#Template_Name").val('');

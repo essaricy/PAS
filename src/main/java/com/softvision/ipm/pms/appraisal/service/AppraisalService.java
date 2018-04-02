@@ -53,7 +53,9 @@ public class AppraisalService {
 					throw new ServiceException("Appraisal cycle information not found.");
 				}
 				AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
-				if (existingStatus == AppraisalCycleStatus.ACTIVE) {
+				if (existingStatus == AppraisalCycleStatus.READY) {
+					throw new ServiceException("Cannot update the appraisal cycle as it is READY");
+				} else if (existingStatus == AppraisalCycleStatus.ACTIVE) {
 					throw new ServiceException("Cannot update the appraisal cycle as it is ACTIVE");
 				} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
 					throw new ServiceException("Cannot update the appraisal cycle as it is COMPLETE");
@@ -88,20 +90,32 @@ public class AppraisalService {
 		if (existingStatus == AppraisalCycleStatus.DRAFT) {
 			if (status == AppraisalCycleStatus.DRAFT) {
 				throw new ServiceException("Appraisal Cycle is already a DRAFT");
+			} else if (status == AppraisalCycleStatus.READY) {
+			} else if (status == AppraisalCycleStatus.ACTIVE) {
+				throw new ServiceException("Cannot change an Appraisal Cycle to ACTIVE when its not READY");
+			} else if (status == AppraisalCycleStatus.COMPLETE) {
+				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
+			}
+		} else if (existingStatus == AppraisalCycleStatus.READY) {
+			if (status == AppraisalCycleStatus.DRAFT) {
+				throw new ServiceException("Appraisal Cycle is READY. Cannot change back to DRAFT.");
+			} else if (status == AppraisalCycleStatus.READY) {
+				throw new ServiceException("Appraisal Cycle is already READY");
 			} else if (status == AppraisalCycleStatus.ACTIVE) {
 				// Check if any other cycle is active. do not allow otherwise
 				int count= appraisalCycleDataRepository.countOfActive(id);
 				if(count > 0) {
-					throw new ServiceException("There is already an appraisal cycle ACTIVE. Mark it COMPLETE to activate another appraisal cycle");
+					throw new ServiceException("There is another appraisal cycle ACTIVE already. Mark it COMPLETE to activate another appraisal cycle");
 				}
 				sendActivationEmail=true;
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
-				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE without making it ACTIVE");
+				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
 			}
 		} else if (existingStatus == AppraisalCycleStatus.ACTIVE) {
 			if (status == AppraisalCycleStatus.DRAFT) {
-				// TODO check if the cycle is assigned. If not, allow changing back to DRAFT
-				throw new ServiceException("Appraisal Cycle is already ACTIVE. Cannot change to DRAFT.");
+				throw new ServiceException("Appraisal Cycle is already ACTIVE. Cannot change to DRAFT");
+			} else if (status == AppraisalCycleStatus.READY) {
+				throw new ServiceException("Appraisal Cycle is already ACTIVE. Cannot change to READY");
 			} else if (status == AppraisalCycleStatus.ACTIVE) {
 				throw new ServiceException("Appraisal Cycle is already ACTIVE");
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
@@ -141,6 +155,11 @@ public class AppraisalService {
 
 	public AppraisalCycleDto getActiveCycle() {
 		return AppraisalAssembler.getCycle(appraisalRepository.getActiveCycle());
+	}
+
+	public List<AppraisalCycleDto> getAssignableCycle() {
+		List<AppraisalCycleDto> cycles = AppraisalAssembler.getCycles(appraisalRepository.getAssignableCycles());
+		return cycles;
 	}
 
 }

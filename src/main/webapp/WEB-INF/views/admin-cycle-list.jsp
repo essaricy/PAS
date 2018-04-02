@@ -155,6 +155,11 @@ function renderCycleInformation(item) {
   //var button=$('<button class="btn bg-light-blue waves-effect">' + status.label + '</button>');
   var button=$('<button class="btn bg-light-blue waves-effect">');
   if (status == AppraisalCycleStatus.DRAFT) {
+	$(button).text(AppraisalCycleStatus.READY.label);
+	$(button).click(function() {
+      ready(item.id);
+	});
+  } else if (status == AppraisalCycleStatus.READY) {
 	$(button).text(AppraisalCycleStatus.ACTIVE.label);
 	$(button).click(function() {
       activate(item.id);
@@ -162,13 +167,24 @@ function renderCycleInformation(item) {
   } else if (status == AppraisalCycleStatus.ACTIVE) {
 	$(button).text(AppraisalCycleStatus.COMPLETE.label);
 	$(button).click(function() {
-		complete(item.id);
+	  complete(item.id);
 	});
   }
   $('.appr_cycle_card .header .dropdown').empty();
-  $('.appr_cycle_card .header .dropdown').append(button);
+  if (status != AppraisalCycleStatus.COMPLETE) {
+    $('.appr_cycle_card .header .dropdown').append(button);
+  }
 }
 
+function ready(itemId) {
+  swal({
+	title: "Are you sure?", text: "You cannot edit the cycle after its in READY. Do you want to change this cycle from DRAFT to READY?", type: "warning",
+	showCancelButton: true, confirmButtonColor: "#DD6B55",
+    confirmButtonText: "Yes, Change it!", closeOnConfirm: false
+  }, function () {
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/ready/' + itemId});
+  });
+}
 function activate(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to activate this appraisal cycle?", type: "warning",

@@ -43,6 +43,11 @@ public class AppraisalRest {
 		return appraisalService.getActiveCycle();
     }
 
+	@RequestMapping(value="get/assignable", method=RequestMethod.GET)
+    public @ResponseBody List<AppraisalCycleDto> getAssignableCycle() {
+		return appraisalService.getAssignableCycle();
+    }
+
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull AppraisalCycleDto dto) {
@@ -59,24 +64,26 @@ public class AppraisalRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
+	@RequestMapping(value="ready/{id}", method=RequestMethod.PUT)
+    public Result ready(@PathVariable(required=true) @NotNull Integer id) {
+		return changeStatus(id, AppraisalCycleStatus.READY);
+    }
+
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="activate/{id}", method=RequestMethod.PUT)
     public Result activate(@PathVariable(required=true) @NotNull Integer id) {
-		Result result = new Result();
-		try {
-			appraisalService.changeStatus(id, AppraisalCycleStatus.ACTIVE);
-			result.setCode(Result.SUCCESS);
-		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-		}
-		return result;
+		return changeStatus(id, AppraisalCycleStatus.ACTIVE);
     }
 
 	@RequestMapping(value="complete/{id}", method=RequestMethod.PUT)
     public Result complete(@PathVariable(required=true) @NotNull Integer id) {
+		return changeStatus(id, AppraisalCycleStatus.COMPLETE);
+    }
+
+    public Result changeStatus(Integer id, AppraisalCycleStatus desiredStatus) {
 		Result result = new Result();
 		try {
-			appraisalService.changeStatus(id, AppraisalCycleStatus.COMPLETE);
+			appraisalService.changeStatus(id, desiredStatus);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
