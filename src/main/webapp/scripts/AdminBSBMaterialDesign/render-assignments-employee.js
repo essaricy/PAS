@@ -115,8 +115,6 @@ $(function () {
 
             $(table).append(thead);
             $(thead).append(theadRow);
-            //$(theadRow).append('<th>Employee Id</th>');
-            //$(theadRow).append('<th>Employee Name</th>');
             $(theadRow).append('<th width="30%">Assigned By</th>');
             $(theadRow).append('<th width="20%">Assigned On</th>');
             $(theadRow).append('<th width="30%">Status</th>');
@@ -161,15 +159,15 @@ $(function () {
           || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code
           || status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code
           || status == PhaseAssignmentStatus.CONCLUDED.code) {
-        $(td).append(getViewFormButton('phase', id));
+        $(td).append(getViewFormButton(id));
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code) {
-        $(td).append(getViewFormButton('phase', id));
+        $(td).append(getViewFormButton(id));
           $(td).append('&nbsp;');
           $(td).append(getAgreeReviewButton(id));
         $(td).append('&nbsp;');
         $(td).append(getEscalateReviewButton(id));
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code) {
-        $(td).append(getViewFormButton('phase', id));
+        $(td).append(getViewFormButton(id));
         $(td).append('&nbsp;');
         $(td).append(getAgreeReviewButton(id));
       } else {
@@ -182,16 +180,16 @@ $(function () {
         var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment</i></button>');
         $(fillFormButton).tooltip({container: 'body'});
         $(fillFormButton).click(function() {
-          location.href=settings.contextPath + '/employee/assessment/phase?aid=' + id;
+          location.href=settings.contextPath + '/employee/assessment?aid=' + id;
         });
         return fillFormButton;
       }
 
-      function getViewFormButton(type, id) {
+      function getViewFormButton(id) {
       var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Form"><i class="material-icons">assignment_ind</i></button>');
       $(viewFormButton).tooltip({container: 'body'});
         $(viewFormButton).click(function() {
-          location.href=settings.contextPath + '/employee/assessment/' + type + '?aid=' + id;
+          location.href=settings.contextPath + '/employee/assessment?aid=' + id;
         });
         return viewFormButton;
       }
@@ -229,7 +227,7 @@ $(function () {
 
       function escalateReview(id) {
         swal({
-          title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
+          title: "Are you sure?", text: "Please follow the escalation procedures set by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
         }, function () {

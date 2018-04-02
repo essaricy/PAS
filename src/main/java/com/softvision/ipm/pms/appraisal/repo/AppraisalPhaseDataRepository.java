@@ -19,14 +19,15 @@ public interface AppraisalPhaseDataRepository extends CrudRepository<AppraisalPh
 			+ "and startDate > (select startDate from appr_phase where id = :id)")
 	List<AppraisalPhase> findInActiveNextPhases(@Param("id") Integer id);
 
-	// TODO add condition and ( appr_cycle.status='ACTIVE'), select only active or ready versions 
 	@Query(value="select * from appr_phase "
 	        + "inner join appr_cycle "
 	        + "on appr_cycle.id=appr_phase.cycle_id "
 	        /*+ "where appr_phase.start_date = ("
 	        + "select date(end_date + (1 * interval '1 day')) next_day from appr_phase where id=:id)"*/
 	        + "where appr_phase.start_date > (select end_date from appr_phase where id=:id) "
-	        + "and (appr_cycle.status='ACTIVE' or appr_cycle.status='READY') ",
+	        + "and (appr_cycle.status='ACTIVE' or appr_cycle.status='READY') "
+	        + "order by appr_phase.start_date "
+	        + "LIMIT 1",
             nativeQuery = true)
     AppraisalPhase findNextPhase(@Param("id") Integer id);
 

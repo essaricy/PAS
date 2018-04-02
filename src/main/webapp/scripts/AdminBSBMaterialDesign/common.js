@@ -69,7 +69,7 @@ var PhaseAssignmentStatus = {
   MANAGER_REVIEW_SUBMITTED : {
     code : 250,
     name : "Reviewed",
-    colorClass : "bg-indigo",
+    colorClass : "bg-purple",
     icon : "assignment_ind",
     progressCode : 4,
     description : "Manager review is completed"
@@ -93,7 +93,7 @@ var PhaseAssignmentStatus = {
   CONCLUDED : {
     code : 500,
     name : "Concluded",
-    colorClass : "bg-green",
+    colorClass : "bg-indigo",
     icon : "assignment_turned_in",
     progressCode : 6,
     description : "Assessment is concluded"

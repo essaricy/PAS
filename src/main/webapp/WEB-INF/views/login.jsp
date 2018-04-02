@@ -202,7 +202,7 @@
                 <i class="material-icons">lock</i>
               </span>
               <div class="form-line">
-                <input type="password" class="form-control" name="password" placeholder="Password" required value="gfre">
+                <input type="password" class="form-control" name="password" placeholder="Password" required value="">
               </div>
             </div>
             <div class="row">

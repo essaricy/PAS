@@ -29,6 +29,7 @@ import com.softvision.ipm.pms.template.service.TemplateService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class TemplateTest {
 
 	@Autowired TemplateService templateService;

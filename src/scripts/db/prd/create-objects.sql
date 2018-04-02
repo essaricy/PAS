@@ -1,32 +1,32 @@
 -- #######################################################
 -- ROle Module
 -- #######################################################
-CREATE SEQUENCE emp_role_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1000	CACHE 1;
+CREATE SEQUENCE emp_role_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1000000	CACHE 1;
 
 -- #######################################################
 -- appr Module
 -- #######################################################
-CREATE SEQUENCE appr_cycle_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000	CACHE 1;
-CREATE SEQUENCE appr_phase_id_seq   INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 500000	CACHE 1;
+CREATE SEQUENCE appr_cycle_id_seq		INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000		CACHE 1;
+CREATE SEQUENCE appr_phase_id_seq   	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 500000		CACHE 1;
 
 -- #######################################################
 -- Goals Module
 -- #######################################################
-CREATE SEQUENCE goal_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1000	CACHE 1;
-CREATE SEQUENCE goal_param_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000	CACHE 1;
+CREATE SEQUENCE goal_id_seq				INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000		CACHE 1;
+CREATE SEQUENCE goal_param_id_seq		INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000		CACHE 1;
 
 -- #######################################################
 -- Templates Module
 -- #######################################################
-CREATE SEQUENCE template_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000	CACHE 1;
-CREATE SEQUENCE template_header_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1000000	CACHE 1;
+CREATE SEQUENCE template_id_seq			INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 1000000	CACHE 1;
+CREATE SEQUENCE template_header_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000	CACHE 1;
 CREATE SEQUENCE template_detail_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000000	CACHE 1;
 
 -- #######################################################
 -- Assignment Module
 -- #######################################################
-CREATE SEQUENCE cycle_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000000	CACHE 1;
-CREATE SEQUENCE phase_assign_id_seq	INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
+CREATE SEQUENCE cycle_assign_id_seq		INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 100000000		CACHE 1;
+CREATE SEQUENCE phase_assign_id_seq		INCREMENT 1	START 1	MINVALUE 1	MAXVALUE 10000000000	CACHE 1;
 
 -- #######################################################
 -- Assessment Module
@@ -503,18 +503,18 @@ INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'),
 	(select id from goal where name='Process Awareness & Compliance'),
 	'CMMi level 5 process ');
 
----- ######################### email_template for TEST
-insert into email_template values(1,'KICK_OFF','AppraisalKickoff.ftl','Appraisal Kick off - {0} !!!','http://localhost:9000/','HR-App','srikanth.kumar@softvision.com','');
-insert into email_template values(2,'EMPLOYEE_ENABLE','EmploeeEnable.ftl','[{0},{1}]   [{2}]  Self Appraisal form available!','http://localhost:9000/','','','');
-insert into email_template values(3,'EMPLOYEE_SUBMITED','EmployeeSubmitted.ftl','[{0},{1}]   [{2}] Self Appraisal submitted!!','http://localhost:9000/','','','');
-insert into email_template values(4,'MGR_TO_EMP_REMAINDER','ManagerToEmploeeRemainder.ftl','[{0},{1}]  [{2}] Self Appraisal pending Remainder!!','http://localhost:9000/','','','');
-insert into email_template values(5,'MANAGER_REVIEW','ManagerReviewCompleted.ftl','[{0},{1}]   [{2}] Self Appraisal Reviewed!!','http://localhost:9000/','','','');
-insert into email_template values(6,'MANAGER_FROZEN','ManagerReviewFrozen.ftl','[{0},{1}]   [{2}] Self Appraisal Concluded!!','http://localhost:9000/','','','');
-insert into email_template values(7,'EMP_ACCEPTED','EmploeeAccepted.ftl','[{0},{1}]   [{2}] Self Appraisal Accepted!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
-insert into email_template values(8,'EMP_REJECTED','EmploeeRejected.ftl','[{0},{1}]   [{2}] Self Appraisal Rejected!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
-insert into email_template values(9,'UPDATE_REVIEW','UpdateReviewEmp.ftl','[{0},{1}]   [{2}] Self Appraisal Re visited!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
-insert into email_template values(10,'HR_TO_EMP_REM','HrToEmploeeRemainder.ftl','[{0},{1}]   [{2}] Self Appraisal pending!!','http://localhost:9000/','','','srikanth.kumar@softvision.com');
-insert into email_template values(11,'HR_TO_MGR_REM','HrToManagerRemainder.ftl','[{0},{1}]   [{2}] Self Appraisal Review pending!!','http://localhost:9000/','','','');
-insert into email_template values(12,'CYCLE_CONCLUDE','Appraisalconcluded.ftl','Appraisal {0} has been conclude !!!','','HR-App',' srikanth.kumar@softvision.com','');
-insert into email_template values(13,'CHANGE_MGR','ChangeManager.ftl','[{0},{1}]   [{2}] Assign manager change!!','http://localhost:9000/','HR-App','srikanth.kumar@softvision.com','');
 
+---- ######################### email_template for PRD
+insert into email_template values(1,'KICK_OFF','AppraisalKickoff.ftl','Appraisal Kick off - {0} !!!','http://10.100.1.219:9000/','pms@softvision.com','pms@softvision.com',null);
+insert into email_template values(2,'EMPLOYEE_ENABLE','EmploeeEnable.ftl','[{0},{1}]   [{2}] Self Appraisal Form Available!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(3,'EMPLOYEE_SUBMITED','EmployeeSubmitted.ftl','[{0},{1}] [{2}] Self Appraisal Submitted!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(4,'MGR_TO_EMP_REMAINDER','ManagerToEmploeeRemainder.ftl','[{0},{1}] [{2}] Self Appraisal Pending Remainder!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(5,'MANAGER_REVIEW','ManagerReviewCompleted.ftl','[{0},{1}] [{2}] Self Appraisal Reviewed!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(6,'MANAGER_FROZEN','ManagerReviewFrozen.ftl','[{0},{1}] [{2}] Self Appraisal Concluded!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(7,'EMP_ACCEPTED','EmploeeAccepted.ftl','[{0},{1}]   [{2}] Self Appraisal Accepted!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(8,'EMP_REJECTED','EmploeeRejected.ftl','[{0},{1}]   [{2}] Self Appraisal Rejected!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(9,'UPDATE_REVIEW','UpdateReviewEmp.ftl','[{0},{1}]   [{2}] Self Appraisal Re-visited!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(10,'HR_TO_EMP_REM','HrToEmploeeRemainder.ftl','[{0},{1}] [{2}] Self Appraisal Pending Remainder!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(11,'HR_TO_MGR_REM','HrToManagerRemainder.ftl','[{0},{1}] [{2}] Self Appraisal Review Pending!!','http://10.100.1.219:9000/',null,null,null);
+insert into email_template values(12,'CYCLE_CONCLUDE','Appraisalconcluded.ftl','Appraisal {0} Has Been Conclude!!!','','pms@softvision.com','pms@softvision.com',null);
+insert into email_template values(13,'CHANGE_MGR','ChangeManager.ftl','[{0},{1}]   [{2}] Assign Manager Changed!!','http://10.100.1.219:9000/',null,null,null);

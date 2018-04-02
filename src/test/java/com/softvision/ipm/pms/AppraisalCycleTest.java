@@ -30,6 +30,7 @@ import com.softvision.ipm.pms.common.exception.ServiceException;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class AppraisalCycleTest {
 
 	private static final String CYCLE_NAME = "AppraisalCycle-Test-" + System.currentTimeMillis();

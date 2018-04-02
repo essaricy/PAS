@@ -28,6 +28,7 @@ import com.softvision.ipm.pms.assign.util.AssignmentUtil;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.email.repo.EmailRepository;
+import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
@@ -53,11 +54,15 @@ public class PhaseAssessmentService {
 
 	@Autowired private EmailRepository emailRepository;
 
+	@Autowired private EmployeeRepository employeeRepository;
+
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
-		phaseAssessment.setEmployeeAssignment(AssignmentAssembler.get(employeePhaseAssignment));
+		EmployeeAssignmentDto employeeAssignment = AssignmentAssembler.get(employeePhaseAssignment);
+		employeeAssignment.setAssignedTo(employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId()));
+		phaseAssessment.setEmployeeAssignment(employeeAssignment);
 
 		int phaseId = employeePhaseAssignment.getPhaseId();
 		phaseAssessment.setPhase(AppraisalAssembler.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
@@ -180,28 +185,27 @@ public class PhaseAssessmentService {
 	}
 
 	@Transactional
-	@PreSecureAssignment(permitEmployee=true)
+	@PreSecureAssignment(permitManager=true)
 	public void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		LOGGER.info("conclude(" + assignmentId + ", " + requestedEmployeeId + ")");
-		// Change the status to CONCLUDED
-		PhaseAssignment employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED,
-				"conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
 
+		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		int employeeId = employeePhaseAssignment.getEmployeeId();
 		int phaseId = employeePhaseAssignment.getPhaseId();
-		AppraisalPhase nextPhase = appraisalPhaseDataRepository.findNextPhase(phaseId);
-		System.out.println("nextPhase= " + nextPhase);
-
-		// There must be goal set for next phase. Otherwise conclude is not allowed
-		if (nextPhase == null) {
-		    LOGGER.warn("There is no next phase set up for the phase " + phaseId);
-		} else {
-		    PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(phaseId, employeeId);
-		    System.out.println("nextAssignment= " + nextAssignment);
-		    if (nextAssignment == null) {
-		        throw new ServiceException("Assignment is not set for the next phase. You can only conclude this when assignment is set for the next phase for this employee.");
-		    }
-		}
+        AppraisalPhase nextPhase = appraisalPhaseDataRepository.findNextPhase(phaseId);
+        System.out.println("nextPhase= " + nextPhase);
+        // There must be goal set for next phase. Otherwise conclude is not allowed
+        if (nextPhase == null) {
+            LOGGER.warn("There is no next phase set up for the phase " + phaseId);
+        } else {
+            PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(nextPhase.getId(), employeeId);
+            System.out.println("nextAssignment= " + nextAssignment);
+            if (nextAssignment == null) {
+                throw new ServiceException("Assignment is not set for the next phase. You can only conclude this when assignment is set for the next phase for this employee.");
+            }
+        }
+		// Change the status to CONCLUDED
+		employeePhaseAssignment = update(assignmentId, PhaseAssignmentStatus.CONCLUDED, "conclude", PhaseAssignmentStatus.EMPLOYEE_AGREED);
 		// Update score in employee assignment
 		AssessHeader phaseAssessHeader = phaseAssessmentHeaderDataRepository
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);

@@ -17,7 +17,6 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.email.repo.EmailRepository;
 
 @Service
 public class AppraisalService {
@@ -27,8 +26,6 @@ public class AppraisalService {
 	@Autowired private AppraisalRepository appraisalRepository;
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
-
-	@Autowired private EmailRepository emailRepository;
 
 	public List<AppraisalCycleDto> getCycles() {
 		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
@@ -73,8 +70,6 @@ public class AppraisalService {
 	}
 
 	public void changeStatus(Integer id, AppraisalCycleStatus status) throws ServiceException {
-		boolean sendActivationEmail=false;
-		boolean sendConcludeEmail=false;
 		if (id <= 0) {
 			throw new ServiceException("Invalid id");
 		}
@@ -107,7 +102,6 @@ public class AppraisalService {
 				if(count > 0) {
 					throw new ServiceException("There is another appraisal cycle ACTIVE already. Mark it COMPLETE to activate another appraisal cycle");
 				}
-				sendActivationEmail=true;
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
 				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
 			}
@@ -120,20 +114,12 @@ public class AppraisalService {
 				throw new ServiceException("Appraisal Cycle is already ACTIVE");
 			} else if (status == AppraisalCycleStatus.COMPLETE) {
 				// TODO check if any assigned are not completed. otherwise allow.
-				sendConcludeEmail= true;
 			}
 		} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
 			throw new ServiceException("Cannot change the status of appraisal cycle. Its already COMPLETE.");
 		}
 		appraisalCycle.setStatus(status.toString());
 		appraisalCycleDataRepository.save(appraisalCycle);
-		if (sendActivationEmail) {
-			emailRepository.sendApprasialKickOff(appraisalCycle);
-		}
-		if (sendConcludeEmail) {
-			// Send email to whole group
-			emailRepository.sendApprasialCycleConclude(appraisalCycle);
-		}
 	}
 
 	public void delete(Integer id) throws ServiceException {

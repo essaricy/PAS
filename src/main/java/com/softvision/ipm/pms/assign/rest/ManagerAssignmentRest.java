@@ -80,6 +80,21 @@ public class ManagerAssignmentRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+    @RequestMapping(value="change/phase-status/conclude/{phaseAssignId}", method=RequestMethod.PUT)
+    public Result concludePhaseAppraisal(
+            @PathVariable(required=true) @Min(1) long phaseAssignId) {
+        Result result = new Result();
+        try {
+            phaseAssessmentService.conclude(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+            result.setCode(Result.SUCCESS);
+        } catch (Exception exception) {
+            result.setCode(Result.FAILURE);
+            result.setMessage(exception.getMessage());
+        }
+        return result;
+    }
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="cycle/submit/{cycleAssignId}/{toEmployeeId}", method=RequestMethod.PUT)
 	public Result assignCycleToNextLevelManager(
 			@PathVariable(name="cycleAssignId", required=true) @Min(1) long cycleAssignId,

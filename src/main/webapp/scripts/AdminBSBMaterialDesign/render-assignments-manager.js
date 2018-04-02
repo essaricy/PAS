@@ -161,6 +161,8 @@ $(function () {
           || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
         $(td).append(getPerformReviewButton(id));
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code) {
+        $(td).append(getViewFormButton(id));
+        $(td).append('&nbsp;');
         $(td).append(getConcludeButton(id));
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED.code
           || status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED.code
@@ -228,7 +230,7 @@ $(function () {
       var concludeButton=$('<button class="btn btn-xs btn-info waves-effect" title="Conclude"><i class="material-icons">assignment_turned_in</i></button>');
       $(concludeButton).tooltip({container: 'body'});
       $(concludeButton).click(function() {
-        location.href=settings.contextPath + '/manager/assessment?aid=' + id;
+        concludePhase(id);
       });
       return concludeButton;
     }
@@ -257,6 +259,19 @@ $(function () {
       }, function () {
         $.fn.ajaxPut({
           url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
+        });
+      });
+    }
+
+    function concludePhase(id) {
+      swal({
+        title: "Are you sure?", text: "Please make sure you have set the goals for the next phase for this employee!", type: "warning",
+        showCancelButton: true, confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
+      }, function () {
+        var url=settings.contextPath + '/assignment/manager/change/phase-status/conclude/' + id
+        $.fn.ajaxPut({
+          url: url
         });
       });
     }

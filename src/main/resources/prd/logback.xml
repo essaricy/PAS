@@ -17,25 +17,17 @@
 				%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
 			</Pattern>
 		</encoder>
-		<!-- <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${LOG_PATH}/application.%d{yyyy-MM-dd}.%i.log
-                        </fileNamePattern>
-			<timeBasedFileNamingAndTriggeringPolicy
-				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-				<maxFileSize >10MB</maxFileSize>
-			</timeBasedFileNamingAndTriggeringPolicy>
-		</rollingPolicy> -->
 	</appender>
 
-	<logger name="org.springframework" level="INFO" additivity="false">
+	<logger name="org.springframework" level="ERROR" additivity="false">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="SAVE-TO-FILE" />
 	</logger>
-	<logger name="ch.qos.logback" level="INFO" additivity="false">
+	<logger name="ch.qos.logback" level="ERROR" additivity="false">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="SAVE-TO-FILE" />
 	</logger>
-	<logger name="com.softvision" level="DEBUG" additivity="false">
+	<logger name="com.softvision" level="INFO" additivity="false">
 		<appender-ref ref="CONSOLE" />
 		<appender-ref ref="SAVE-TO-FILE" />
 	</logger>

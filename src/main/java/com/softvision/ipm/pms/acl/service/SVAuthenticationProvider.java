@@ -17,8 +17,8 @@ public class SVAuthenticationProvider implements AuthenticationProvider {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SVAuthenticationProvider.class);
 
-	//@Autowired private SVAuthenticationService authenticationService;
-	@Autowired private TestAuthenticationService authenticationService;
+	@Autowired private SVAuthenticationService authenticationService;
+	//@Autowired private TestAuthenticationService authenticationService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
