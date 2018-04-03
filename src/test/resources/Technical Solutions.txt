@@ -1,0 +1,166 @@
+1. Working with Softvision Onsite coordinator/GEMs to resolve issues upon Escalation.
+2. Acting as point of contact for service issues that need to be or have been escalated (Portfolio level)
+3. Acting as point of contact for service issues that need to be or have been escalated (Portfolio level)
+4. Planning, guidance and support Setup/Enhancing the Portfolio and ensuring that business objectives are met.
+5. Providing related Metrics to stakeholders on defined organization metrics, CTQs (Account Level)
+6. Sharing Portfolio/Account health with all stake holders
+7. Interlocking with members of various project stake holders to discuss common IT strategy and business developments and their inter connections with other businesses within the Portfolio.
+8. Preparing & implementing Succession plans for all key resources at Portfolio Level / Account / Project Level
+9. Ensuring the Business Continuity as per the BCP(Business Continuity Plan)
+10. Providing information to support monthly charging from Portfolio, Managing and tracking finances according to budget.
+11. Project scorecard and metrics, also implementation of Pyramid structure.
+12. Influencing and advising management & other professionals on strategic and tactical decisions.
+13. Achieving Revenue goals set for projects / Account / Portfolio
+14. Identifying, tracking and managing all risks and managing the mitigation plan at Portfolio Level
+15. Facilitating start-up operations at Softvision Offshore by supporting the Account/Project team during new Engagement phase, interlocking with Competency / Infrastructure.
+16. Supporting opportunities/presales by providing input for long-term Account/Project planning/Strategy, engagements and articulate value proposition to the client.
+17. Initiating and Coordinating with the respective Teams (HR & Onsite team) for onsite Travel.
+18. Timely training & evaluation of all resources (within the Account) in client and project specific procedures, including those related to data security and privacy (Including in-house training for the new joinees into the Account)"
+1. Understanding the design & developing the code as per the defined process.
+2. Creating, executing Unit Test cases and documenting results as per project plan.
+3. Resolving production/post production problems coordinating with development/QA team.
+4. Ensuring quality and timely completion and delivery of the deliverables defined in SoW.
+5. Executing the task to completion as per Work Breakdown Structure and schedules in line with the Project Plan
+6. Providing metrics to support Project/SLA on a regular basis (Project Level)
+7. Coordinating & Participating in Bug Validation/Defect review meetings.
+8. Executing project activities. 
+9. Analysis of existing code/functionality and suggesting the improvement in performance.
+10. Translating the client technical requirements for development into IT solutions that fit within the overall Existing technical architecture. 
+11.  Working with Test Lead/Development counterparts to help plan, build, operate and maintain the testing environment. 
+12 Ensuring effective resolution & takes responsibility on the improvement in backlog management.
+13 Conducting Root cause analysis and implementing preventive & corrective actions on the conflict issues/defects/customer complaints etc at the Project Level. 
+14 Fostering team building by sharing Technical knowledge, highlighting problems or critical situations to the Team. 
+15 Producing summary status reports on a weekly/monthly basis, as agreed upon with the Client/respective stakeholders 
+16. Analyzing Test Scenarios / Test Objectives and Creating & Reviewing Manual / Automation Test cases/Test Scripts for testing the assigned Requirements as per the defined guidelines and standards.
+17. Understanding the functional /non functional requirements and creating Manual/Automation test scripts. 
+18. Documenting proof-of-test results and verifying, testing, closing test-outcome issues.
+19. Creating and executing test suites (operational test flows) in order to ensure complete and comprehensive testing coverage. 
+20.  Translating the client technical requirements for development into IT solutions that fit within the overall Existing technical architecture.  Reviewing the work products on SDLC/STLC phases and document.
+21. Ensuring effective resolution of complaints, problems tickets raised & taking responsibility for the decisions taken for the issues and escalation. 
+22  Establishing a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan.
+23 Supporting the (Test) Manager to establish a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan. 
+24 Conducting knowledge sharing sessions to other team members on the assigned Functional requirements and Non Functional requirements. 
+25. Technical/functional architecture.
+26. Providing direction on strategic business issues.
+27. Analyzing the requirement, and design process as per Process lifecycle defined.
+28. Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to SPI/Client standards and methodologies.
+29. Preparing Technical documentation on Application, Architecture, Interfaces, User Manuals etc as per the defined process.
+30. Analysis of existing code/functionality and suggesting the improvement in performance.
+31. Ticket resolution as per the process defined in the project plan
+32. Conducting Root cause analysis and implementing preventive & corrective actions on the conflict issues/defects/customer complaints etc
+33. Ensuring timely claiming, tracking of hours, reporting, billing, billing verification, and Budget tracking
+34. Analysis of new software product releases and the impact of these new releases onto application and come up with the plan to implement these releases.
+35 Fostering team building by sharing Technical knowledge, highlighting problems or critical situations to the Team.
+36 Identifying, documenting and managing requirements and analyzing these requirements from a business perspective.
+37. Providing Technical advice, guidance and direction to client, team and ensuring the implemented solution adheres to the defined Technical/functional architecture.
+38 Establishing a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan
+39 Supporting the (Test) Manager to establish a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan.
+40 Analyzing the requirement, providing input for the Design/Design documentation and escalating the issues.
+41 Conducting knowledge sharing sessions to other team members on the assigned Functional requirements and Non Functional requirements.
+42 Designing & Reviewing of Test Scenarios / Test Objectives.
+43. Analyzing Test Scenarios / Test Objectives and Create & Review Manual / Automation Test cases/Test Scripts for testing the assigned Requirements as per the defined guidelines and standards.
+44 Understanding the functional /non functional requirements and creating Manual/Automation test scripts.
+45 Documenting proof-of-test results and verifying, testing, closing test-outcome issues.
+Reviewing the work products on SDLC/STLC phases and document.
+46  Ensuring effective resolution of complaints, problems tickets raised & taking responsibility for the decisions taken for the issues and escalation.
+47  Ensuring effective resolution & taking responsibility on the improvement in backlog management.
+48. Analyzing Test Scenarios / Test Objectives and Create & Review Manual / Automation Test cases/Test Scripts for testing the assigned Requirements as per the defined guidelines and standards.
+49. Documenting proof-of-test results and verifying, testing, closing test-outcome issues.
+50.  Reviewing the work products on SDLC/STLC phases and document.
+51.  Working with Test Lead/Development counterparts to help plan, build, operate and maintain the testing environment.
+52. Ensuring quality and timely completion and delivery of the deliverables defined in SoW
+53.Fostering team building by sharing Technical knowledge, highlighting problems or critical situations to the Team.
+53 Understanding the design & developing the code.
+54 Creating, executing Unit Test cases and documenting results.
+55 Fostering team building by sharing Technical knowledge, highlighting problems or critical situations to the Team
+56 Resolving production/post production problems coordinating with development/QA team.
+57 Analysis of existing code/functionality and suggesting the improvement in performance.
+58 Reviewing the work products on SDLC/STLC phases and document.
+59 Ensuring effective resolution of complaints, problems tickets raised & taking responsibility for the decisions taken for the issues and escalation.
+60 Ensuring effective resolution & taking responsibility on the improvement in backlog management.
+61 Conducting Root cause analysis and implementing preventive & corrective actions on the conflict issues/defects/customer complaints etc at the Project Level.
+62 Coordinating & Participating in Bug Validation/Defect review meetings.
+63 Executing project activities.
+64. Identifying, tracking and managing all risks and manage the mitigation plan at Project Level
+65. Ensuring quality and timely completion and delivery of the deliverables defined in SoW
+66 Providing direction on strategic technical issues at ORG level.
+67.Executing the task to completion as per Work Breakdown Structure and schedules in line with the Project Plan
+68 Transforming, Implementing, tuning and maintaining the databases used by the application.
+69. Specifying, placing and modifying data (Database) to support the development of applications solutions, and being responsible for the data integrity & security.
+70. Analysis of new software product releases and the impact of these new releases onto application and come up with the plan to implement these releases.
+71. Analysis of new Database product releases and the impact of these new releases onto application and come up with the plan to implement these releases.
+72. Translating the client technical requirements for development into IT solutions that fit into a new technical architecture.
+73. Establishing a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan
+74. Supporting the (Test)Lead to establish a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan.
+75  Identifying & setting up of test environment.
+76 Working with Test Lead/Development counterparts to help plan, build, operate and maintain the testing environment.
+77. Leading/Reviewing Creation/Modification of system level Architectures and supporting control reviews.
+78. Defining and leading creation of pre-concept and concept level system and application integration technical architectures under client direction.
+79. Analysis of complex or new Technical situations and implementing solutions or developing new approaches, procedures or processes in a single Or Multiple project(s).
+80. Providing direction on strategic technical issues at ORG/Project level.
+81. Providing advice to the client/Stakeholder on a range of applications and products, which may be employed in the solution.
+82. Assuring solution viability that meets the client's requirements, preferences and expectation (Appropriateness of the solution in the client context).
+83. Providing the Technical solution within winning bids (Presales), proposals or contract extensions.
+84. Defining and leading creation of detailed technical architecture for major and minor enhancements that impact the existing technical architecture.
+85. Requirement Development as per QMS process / as defined in the project plan
+86.Translating the client technical requirements for development into IT solutions that fit into a new technical architecture.
+87. Analysis of existing code/functionality and suggesting the improvement in performance
+89. Ensuring timely claiming, tracking of hours, reporting, billing, billing verification, and Budget tracking
+90. Analysis of new software product releases and the impact of these new releases onto application and coming up with the plan to implement these releases.
+91. Leading/Reviewing creation of Component level Architectures and supporting control reviews.
+92. Translating the client technical requirements for development into IT solutions that fit within the overall Existing technical architecture.
+93. Providing Technical advice, guidance and direction to client, team and ensuring the implemented solution adheres to the defined Technical/functional architecture.
+94. Preparing Technical documentation on Application, Architecture, Interfaces, User Manuals etc as per the defined process.
+95. Analyzing the requirement, and design process as per Process lifecycle defined
+96.  Analysis of existing code/functionality and suggesting the improvement in performance.
+97.  Analyze complex or new Technical situations and implementing solutions or developing new approaches, procedures or processes in a single Or Multiple project(s).
+98.  Initiating Demos/ Walkthroughs / discussions with the client to ensure that the team is getting clarifications on issues in Customer supplied work products
+99.  Analysis of new software product releases and the impact of these new releases onto application and come up with the plan to implement these releases.
+100. Supporting the sales team in Pursuing new opportunities
+101.  Requirement Development as per QMS process / as defined in the project plan
+102.  Leading/Reviewing Creation/Modification of system level Architectures and supporting control reviews.
+103. Translating the client technical requirements for development into IT solutions that fit into a new technical architecture.
+104.  Defining and leading creation of pre-concept and concept level system and application integration technical architectures under client direction.
+105.  Reviewing the workproducts on SDLC/STLC phases and document.
+106. Ticket resolution as per the process defined in the project plan
+107.  Defining the process, standards, templates, checklists, guidelines for the SDLC/STLC phases in an engagement.
+108. Executing, Monitoring and Controling project activities as per QMS Process.
+109.  Executing Project Closure activities as per QMS Process.
+Transforming, Implementing, tuning and maintaining the databases used by the application.
+100. Specifying, placing and modifying data (Database) to support the development of applications solutions, and for the data integrity & security.
+111.  Resolving production/post production problems coordinating with development/QA team.
+112.  Supporting the (Test)Lead to establish a regular and comprehensive schedule of project meetings, submission of reports, reviews and presentations as part of the project communication plan.
+113. Pursuing new Systems/Application integration opportunities
+114. Planning & coordinating cross-functional, Induction/Project training to meet project/Org expectation.
+115. Working with Softvision Onsite coordinator/GEMs to resolve issues upon Escalation.
+116 Acting as point of contact for service issues that need to be or have been escalated
+117 Planning, guidance and support Setup/Enhance the Portfolio and ensuring that business objectives are met.
+117 Defining the process, standards, templates, checklists, guidelines for the SDLC/STLC phases in an engagement.
+118 Providing related Metrics to stakeholders on defined organization metrics, CTQs (Project Level)
+119 Providing related Metrics to stakeholders on defined organization metrics, CTQs (Account Level)
+120 Fostering team building by sharing knowledge, highlighting problems or critical situations to the Team, being pro active in everything regarding Team working behaviors.
+121 Sharing Portfolio/Account health with all stake holders
+122 Interlocking with members of various project stake holders to discuss common IT strategy and business developments and their inter connections with other businesses within the Portfolio.
+123. Preparing & implementing Succession plans for all key resources at Portfolio Level / Account / Project Level
+124. Analyzing complex or new situations and implementing solutions or developing new approaches, procedures or processes in an Account from Quality/Management perspective.
+125. Being Point of escalation above the Offshore Project Manager.
+126. Resource planning (workload balancing) considering, resource rotation, competency & skill requirements.
+127. Achieving Revenue goals set for projects / Account / Portfolio
+128. Identifying, tracking and managing all risks and managing the mitigation plan at Portfolio Level
+129. Preparing the Quality Management Plan, the Project Management Plan, the project estimate and schedule, and also provide inputs to the Statement of Work
+130. Reviewing and approving the Quality Management Plan, the Project Management Plan, the project estimate and schedule and the Statement of Work.
+131 Defining best practices in the critical evaluation and selection and / or development of the development methods, processes, best practices, tools, software components and hardware requirements of the applications and data.
+1. Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to Softvision/Client standards and methodologies.
+2. Requirement Development as per QMS process / as defined in the project plan
+3. Documenting proof-of-test results and verifying, testing, closing test-outcome issues (Applicable for testing projects).
+4. Ticket resolution as per the process defined in the project plan
+5. Ensuring timely training & evaluation of all resources (within a Project team) in client and project specific procedures, including those related to data security and privacy (Including in-house training for the new joinees into the Project.)
+6. Ensuring that the service levels stated in the SoW and agreed with the client, are maintained, reported and reviewed with GDM on a regular basis.
+7. Providing information to support monthly charging from Portfolio, Manage and tracking finances according to budget.
+8. Initiating project activities as per QMS Process.
+9. Executing, Monitoring and Controling project activities as per QMS Process
+10. Executing Project Closure activities as per QMS Process.
+11. Ensuring timely claiming, tracking of hours, reporting, billing, billing verification, and Budget tracking
+16.  Analysis of the requirement, and design process as per Process lifecycle defined
+17.  Understanding of the design & development of the code as per the defined process.
+18.  Creation, execution of Unit Test cases and documentation of results as per project plan.

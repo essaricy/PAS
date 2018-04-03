@@ -29,7 +29,7 @@ public class TemplateDetail implements Serializable {
 
 	private String apply;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=false)
 	@JoinColumn(name = "param_id", nullable = false, updatable=false, insertable=false)
 	private GoalParam goalParam;
 

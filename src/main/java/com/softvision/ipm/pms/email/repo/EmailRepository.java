@@ -245,11 +245,11 @@ public class EmailRepository {
 		}
 	}
 	
-	private void sendManagerToEmployeeRemainder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
+	private void sendManagerToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.MGR_TO_EMP_REMAINDER);
-			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMAINDER.toString());
+			LOGGER.info("Sending email for "+ EmailConstant.MGR_TO_EMP_REMINDER);
+			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMINDER.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
@@ -266,11 +266,11 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.MGR_TO_EMP_REMAINDER, exception);
+			LOGGER.error("Unable to email for " + EmailConstant.MGR_TO_EMP_REMINDER, exception);
 		}
 	}
 			
-	private void sendHrToEmployeeRemainder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
+	private void sendHrToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee employee, Employee manager) {
 		try {
 			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_EMP_REM);
@@ -297,7 +297,7 @@ public class EmailRepository {
 		}
 	}
 	
-	private void sendHrToManagerRemainderMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
+	private void sendHrToManagerReminderMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee manager) {
 		try {
 			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_MGR_REM);
@@ -473,34 +473,34 @@ public class EmailRepository {
 		sendChangeManagerMail(appraisalCycle, appraisalPhase,fManager,tManager, employee);
 	}
 
-	public void sendManagerToEmployeeRemainder(int phaseId,int managerId, int employeeId) {
-		LOGGER.info("Sending email for sendManagerToEmployeeRemainder(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
+	public void sendManagerToEmployeeReminder(int phaseId,int managerId, int employeeId) {
+		LOGGER.info("Sending email for sendManagerToEmployeeReminder(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
-		sendManagerToEmployeeRemainder(appraisalCycle, appraisalPhase, employee, manager);
+		sendManagerToEmployeeReminder(appraisalCycle, appraisalPhase, employee, manager);
 	}
 	
 	
-	public void sendHrToEmployeeRemainder(int phaseId,int hrId, int employeeId,int managerId) {
-		LOGGER.info("Sending email for sendHrToEmployeeRemainder(" + phaseId + ", " + hrId + ", "+ employeeId + ", "+ managerId + ")");
+	public void sendHrToEmployeeReminder(int phaseId,int hrId, int employeeId,int managerId) {
+		LOGGER.info("Sending email for sendHrToEmployeeReminder(" + phaseId + ", " + hrId + ", "+ employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
 		Employee hr=employeeRepository.findByEmployeeId(hrId);
-		sendHrToEmployeeRemainder(appraisalCycle, appraisalPhase,hr, employee, manager);
+		sendHrToEmployeeReminder(appraisalCycle, appraisalPhase,hr, employee, manager);
 	}
 	
 	
-	public void sendHrToManagerRemainder(int phaseId,int hrId, int managerId) {
-		LOGGER.info("Sending email for sendHrToManagerRemainder(" + phaseId + ", " + hrId + ", "+ managerId + ")");
+	public void sendHrToManagerReminder(int phaseId,int hrId, int managerId) {
+		LOGGER.info("Sending email for sendHrToManagerReminder(" + phaseId + ", " + hrId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
 		Employee hr=employeeRepository.findByEmployeeId(hrId);
-		sendHrToManagerRemainderMail(appraisalCycle, appraisalPhase,hr,manager);
+		sendHrToManagerReminderMail(appraisalCycle, appraisalPhase,hr,manager);
 	}
 
 	public void sendConcludeMail(int phaseId, int managerId, int employeeId) {

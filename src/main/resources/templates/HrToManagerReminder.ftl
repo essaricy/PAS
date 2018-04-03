@@ -49,10 +49,11 @@
       <!-- Set text color and font family ("sans-serif" or "Georgia, serif"). Duplicate all text styles in links, including line-height -->
       <tr>
         <td valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
-          <b>Dear ${empName},</b>
+          <b>Dear ${managerName},</b>
           
-          <P>Your self-appraisal form for <b> ${phase} </b> has been initiated by your manager. </P>
-          <p>Please make sure to fill in the appraisal forms and submit well before time.</p>
+          <P>This is a reminder mail to inform you that employees has submitted his/her self-appraisal form for the <b> ${phase} </B>.</P>
+          <p>Please arrange your time to have a one-on-one session with the employee, review the goals, convey the achievements,come to an agreement on the rating.</p>
+          <p>Please make sure that your review well before time.</p>
         </td>
       </tr>
       
@@ -61,13 +62,13 @@
       <!-- Set button background color at TD, link/text color at A and TD, font family ("sans-serif" or "Georgia, serif") at TD. For verification codes add "letter-spacing: 5px;". Link format: http://domain.com/?utm_source={{Campaign-Source}}&utm_medium=email&utm_content={{Button-Name}}&utm_campaign={{Campaign-Name}} -->
       <tr>
         <td align="center" valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; padding-top: 25px; padding-bottom: 5px;">
-          <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;"><tr><td align="center" valign="middle" style="padding: 12px 24px; margin: 0; border-collapse: collapse; border-spacing: 0; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px;" bgcolor="#E9703E"><a target="_blank" style="text-decoration: none; color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href="${url}">Go to my self appraisal</a></td></tr></table>
+          <table border="0" cellpadding="0" cellspacing="0" align="center" style="max-width: 240px; min-width: 120px; border-collapse: collapse; border-spacing: 0; padding: 0;"><tr><td align="center" valign="middle" style="padding: 12px 24px; margin: 0; border-collapse: collapse; border-spacing: 0; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px;" bgcolor="#E9703E"><a target="_blank" style="text-decoration: none; color: #FFFFFF; font-family: sans-serif; font-size: 17px; font-weight: 400; line-height: 120%;" href="${url}">Go to employee review</a></td></tr></table>
         </td>
       </tr>
-       <tr>
+      <tr>
       	<td  valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 4.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
       	
-      <table border="0" cellpadding="4" cellspacing="0" align="left"		bgcolor="#FFFFFF" width="100%"
+      	<table border="0" cellpadding="4" cellspacing="0" align="left"		bgcolor="#FFFFFF" width="100%"
 								style="border-collapse: collapse; border-spacing: 0; padding: 0; width: inherit; max-width: 560px;">
 								<tr>
 									<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;"><p>
@@ -75,7 +76,7 @@
 								</tr>
 								<tr>
 									<td>
-										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px;" >
+										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px; margin-top: 10px; margin-bottom: 10px;" >
 											<tr>
 												<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;">Thanks,</td>
 											</tr>

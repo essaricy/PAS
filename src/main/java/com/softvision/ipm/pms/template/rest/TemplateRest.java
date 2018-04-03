@@ -71,7 +71,7 @@ public class TemplateRest {
 		return templateService.searchName(searchString);
     }
 
-	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
+	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="delete/{id}", method=RequestMethod.DELETE)
     public @ResponseBody Result delete(@PathVariable(required=true) @NotNull @Min(1) long id) {
 		Result result = new Result();

@@ -2,7 +2,9 @@ package com.softvision.ipm.pms.employee.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +41,10 @@ public class EmployeeService {
 	}
 
 	public List<Employee> search(String searchString) {
-		if (searchString != null && searchString.trim().length() > 2) {
-			return employeeRepository.findAll(EmployeeSpecs.searchInName(searchString));
+		if (searchString != null && StringUtils.isNotBlank(searchString)) {
+		    if (Pattern.matches("\\d+", searchString) || searchString.trim().length() > 2) {
+		        return employeeRepository.findAll(EmployeeSpecs.searchInName(searchString));
+		    }
 		}
 		return null;
 	}

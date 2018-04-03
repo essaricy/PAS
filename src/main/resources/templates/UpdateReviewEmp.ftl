@@ -76,7 +76,7 @@
 								</tr>
 								<tr>
 									<td>
-										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px;" >
+										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px; margin-top: 10px; margin-bottom: 10px;" >
 											<tr>
 												<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;">Thanks,</td>
 											</tr>

@@ -234,6 +234,7 @@ $(function () {
 	  }
 	},
 	list: {
+	  maxNumberOfElements: 10,
 	  onClickEvent: function() {
 		bulkAssignment.templateId=$("#Template_Name").getSelectedItemData().id;
 	  }	
@@ -253,6 +254,7 @@ $(function () {
 	  }
 	},
 	list: {
+	  maxNumberOfElements: 15,
 	  onClickEvent: function() {
 		var data=$("#Search_Employees").getSelectedItemData();
 		var itemId=data.EmployeeId;

@@ -34,7 +34,7 @@ public class TemplateHeader implements Serializable {
 
 	private int weightage;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.DETACH, orphanRemoval=true)
+	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.DETACH, orphanRemoval=false)
 	@JoinColumn(name = "goal_id", nullable = false, updatable=false, insertable=false)
 	private Goal goal;
 

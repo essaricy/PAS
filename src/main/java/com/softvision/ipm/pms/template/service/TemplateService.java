@@ -125,7 +125,8 @@ public class TemplateService {
 			if (id > 0 && isInUse(id)) {
 				throw new ServiceException("Template is already in use. Cannot delete now.");
 			}
-			templateDataRepository.delete(id);
+			Template template = templateDataRepository.findById(id);
+			templateDataRepository.delete(template);
 			LOGGER.info("delete: successful for " + id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);

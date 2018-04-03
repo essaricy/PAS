@@ -1,19 +1,4 @@
 package com.softvision.ipm.pms.common.constants;
-//
-//public class EmailConstant {
-//
-//	public static final String KICK_OFF = "KICK_OFF";
-//
-//	public static final String EMPLOYEE_ENABLE = "EMPLOYEE_ENABLE";
-//	
-//	public static final String EMPLOYEE_SUBMITED = "EMPLOYEE_SUBMITED";
-//	
-//	public static final String MANAGER_REMAINDER = "MANAGER_REMAINDER";
-//	
-//	public static final String MANAGER_FROZEN = "MANAGER_FROZEN";
-//	
-//	public static final String MANAGER_REVIEW = "MANAGER_REVIEW";
-//}
 
 public enum EmailConstant {
 
@@ -33,9 +18,9 @@ EMPLOYEE_SUBMITED {
         return "EMPLOYEE_SUBMITED";
     }
 },
-MGR_TO_EMP_REMAINDER {
+MGR_TO_EMP_REMINDER {
     public String toString() {
-        return "MGR_TO_EMP_REMAINDER";
+        return "MGR_TO_EMP_REMINDER";
     }
 },
 MANAGER_REVIEW {
@@ -44,9 +29,9 @@ MANAGER_REVIEW {
     }
 },
 
-MANAGER_REMAINDER {
+MANAGER_REMINDER {
     public String toString() {
-        return "MANAGER_REMAINDER";
+        return "MANAGER_REMINDER";
     }
 },
 MANAGER_FROZEN {

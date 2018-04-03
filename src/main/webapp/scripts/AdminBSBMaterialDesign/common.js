@@ -78,7 +78,7 @@ var PhaseAssignmentStatus = {
     code : 300,
     name : "Agreed with Review",
     colorClass : "bg-green",
-    icon : "sentiment_very_satisfied",
+    icon : "mood",
     progressCode : 5,
     description : "Employee Agreed to the review"
   },
@@ -86,7 +86,7 @@ var PhaseAssignmentStatus = {
     code : 350,
     name : "Escalated",
     colorClass : "bg-red",
-    icon : "sentiment_very_dissatisfied",
+    icon : "mood_bad",
     progressCode : 5,
     description : "Employee disagreed with the review and escalated"
   },

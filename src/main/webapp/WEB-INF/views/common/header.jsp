@@ -7,7 +7,12 @@
   font-family: 'Material Icons';
   font-style: normal;
   font-weight: 400;
-  src: url(<%=request.getContextPath()%>/fonts/materialicons/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2) format('woff2');
+  src:
+    local('Material Icons'),
+    local('MaterialIcons-Regular'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.woff2) format('woff2'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.woff) format('woff'),
+    url(<%=request.getContextPath()%>/fonts/materialicons/MaterialIcons-Regular.ttf) format('truetype');
 }
 .material-icons {
   font-family: 'Material Icons';
@@ -21,8 +26,17 @@
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;
+
   -webkit-font-feature-settings: 'liga';
   -webkit-font-smoothing: antialiased;
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+  /* Support for IE. */
+  font-feature-settings: 'liga';
 }
 /* cyrillic-ext */
 @font-face {

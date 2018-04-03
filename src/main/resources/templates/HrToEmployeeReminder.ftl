@@ -51,7 +51,7 @@
         <td valign="top" style="border-collapse: collapse; border-spacing: 0; margin: 0; padding: 0; padding-left: 6.25%; padding-right: 6.25%; width: 87.5%; font-size: 17px; font-weight: 400; line-height: 160%; padding-top: 25px; color: #000000; font-family: sans-serif;">
           <b>Dear ${empName},</b>
           
-          <P>This is a remainder mail to inform you that your appraisal form for the <b> ${phase} </B> is ready to be filled. </P>
+          <P>This is a reminder mail to inform you that your appraisal form for the <b> ${phase} </B> is ready to be filled. </P>
           <P>We have noticed that your appraisal form is not yet submitted to your respective manager. </P>
           <p>Please make sure that you complete your self-appraisal forms and submit well before time.</p>
         </td>
@@ -76,7 +76,7 @@
 								</tr>
 								<tr>
 									<td>
-										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px;" >
+										 <table border="0" style="border-collapse: collapse; border-spacing: 0; padding: 0; width: 100%; max-width: 560px; margin-top: 10px; margin-bottom: 10px;" >
 											<tr>
 												<td	style="font-size: 17px; font-weight: 400; color: #000000; font-family: sans-serif;">Thanks,</td>
 											</tr>

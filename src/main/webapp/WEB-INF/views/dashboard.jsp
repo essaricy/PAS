@@ -60,7 +60,7 @@
               <!-- job title / company name -->
               <p class="card-text font-bold col-pink">${designation}</p>
               <h6>${employeeId} | ${band}</h6>
-              <p>Joined On: <fmt:formatDate pattern="MMM dd, yyyy" value="${joinedDate}" /></p>
+              <%-- <p>Joined On: <fmt:formatDate pattern="MMM dd, yyyy" value="${joinedDate}" /></p> --%>
               <p>&nbsp;</p>
             </div>
           </div>
@@ -160,6 +160,8 @@
             var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
             var infoBoxDiv=$('<div class="info-box hover-zoom-effect ' + phaseStatus.colorClass + '">');
             var iconDiv=$('<div class="icon">');
+            //var infoBoxDiv=$('<div class="info-box hover-zoom-effect ">');
+            //var iconDiv=$('<div class="icon ' + phaseStatus.colorClass + '">');
             var icon=$('<i class="material-icons">' + iconName + '</i>');
             var contentDiv=$('<div class="content">');
             var textDiv=$('<div class="text">' + phaseStatus.name + '</div>');

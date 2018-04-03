@@ -1,0 +1,35 @@
+Ability to identify, plan, procure and utilize resources within the scope of the project
+Ability to identify, mitigate and manage risks in the project a)  Planning and Control b)  Resource Management
+Knowledge of PM basics like Initiation, Planning, Monitoring, Negotiation skills, budgeting,Tracking and Closure
+Concepts and application of PM disciplines like estimation, scope, time, cost and risk mgmt
+Application of Softvision PM Process and Client PM Process
+Process compliance in terms of non compliance
+Consitency in Project Management - gaps btw onshore Project Management etc - Frequency of commuinction within the team - internal and external
+No of Delivery Escalations(anything greter than zero)
+Ontime resolutions
+Ontime zero defect deliveries
+Being the Highest point of escalation for a Portfolio
+Goal setting for the Managers
+Periodic feedback on the performance to the Managers
+Planning & Tracking Annual Budget
+Mapping & Reviewing Competency of the SPMs
+Reviewing and approving the Quality Management Plan, the Project Management Plan, the project estimate and schedule and the Statement of Work
+Defining best practices in the critical evaluation and selection and / or development of the development methods, processes, best practices, tools, software components and hardware requirements of the applications and data
+Initiating project activities as per QMS Process
+Defining the process, standards, templates, checklists, guidelines for the SDLC/STLC phases in an engagement
+Involved with Sales team in Pursuing new opportunities
+Creating, Reviewing Master SoW
+Ensuring the Business Continuity as per the BCP(Business Continuity Plan)
+Providing direction on strategic business issues
+Providing metrics to support Project/SLA on a regular basis
+Mapping & Reviewing Competency of the resources in a Team
+Initiating/Reviewing the request for awards
+Resource Planning (workload balancing) considering, resource rotation, competency & skill requirements
+Providing periodic feedback on the performance to the Team Members
+Preparation of Career Development Plan for the Team Members
+Functional advice, guidance and direction provided to client, team and implementation solution which adheres to the defined Technical/functional architecture
+Providing advice & guidance on IT strategy in relation to business strategy to management, client management and other stakeholders where appropriate
+Supporting the sales team in Pursuing new opportunities
+Reviewing the workproducts on SDLC/STLC phases and document
+Ensuring that the service levels stated in the SoW and agreed with the client, are maintained, reported and reviewed with GDM on a regular basis
+Influencing and advising management & other professionals on strategic and tactical decisions

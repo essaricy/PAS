@@ -80,9 +80,6 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
-            </li>
-            <li>
               <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
             </li>
             <li>
@@ -127,6 +124,9 @@
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/goal/list">Goal Settings</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
