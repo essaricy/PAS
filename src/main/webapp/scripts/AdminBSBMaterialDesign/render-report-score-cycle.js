@@ -1,5 +1,5 @@
 $(function () {
-  $.fn.scoreReport1=function( options ) {
+  $.fn.scoreReport=function( options ) {
     var settings=$.extend({
       contextPath: null,
       url: null,

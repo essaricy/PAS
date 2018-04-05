@@ -49,7 +49,7 @@ $.fn.ajaxWrapper = function(options) {
   console.log('ajaxWrapper ' + JSON.stringify(options));
 
   validateSettings();
-  $.preloader.start({ modal: true, src : '/images/loader.png' });
+  //$.preloader.start({ modal: true, src : '/images/loader.png' });
 
   $.ajax({
   type: options.type,
@@ -60,28 +60,28 @@ $.fn.ajaxWrapper = function(options) {
   }).done(function(result) {
     if (options.type == 'GET') {
       if (options.onSuccess) {
-      options.onSuccess(result);
+        options.onSuccess(result);
       }
       if (options.onError) {
         options.onError(result);
       }
     } else if (options.type == 'POST') {
       if (result != null && result.code != 'SUCCESS') {
-      if (options.onFail) {
-        options.onFail(result.message, result.content);
+        if (options.onFail) {
+          options.onFail(result.message, result.content);
+        } else {
+          var text=(result.message)?result.message:"Failed to save data.";
+          swal({ title: "Failed!", text: text, type: "error"});
+        }
       } else {
-        var text=(result.message)?result.message:"Failed to save data.";
-        swal({ title: "Failed!", text: text, type: "error"});
+        if (options.onSuccess) {
+          options.onSuccess(result.message, result.content);
+        } else {
+          var text=(result.message)?result.message:"Data has been saved successfully.";
+          var refresh = (options.refresh)? ((options.refresh == "no") ? false: true) : true;
+          swal({ title: "Updated!", text: text, type: "success"}, function () { if(refresh) { location.reload();} }); 
+        }
       }
-    } else {
-      if (options.onSuccess) {
-        options.onSuccess(result.content);
-      } else {
-        var text=(result.message)?result.message:"Data has been saved successfully.";
-        var refresh = (options.refresh)? ((options.refresh == "no") ? false: true) : true;
-        swal({ title: "Updated!", text: text, type: "success"}, function () { if(refresh) { location.reload();} }); 
-      }
-    }
     } else if (options.type == 'DELETE') {
       if (result != null && result.code != 'SUCCESS') {
         if (options.onFail) {
@@ -92,7 +92,7 @@ $.fn.ajaxWrapper = function(options) {
       }
       } else {
         if (options.onSuccess) {
-          options.onSuccess(result.content);
+          options.onSuccess(result.message, result.content);
         } else {
           var text=(result.message)?result.message:"Data has been deleted successfully.";
           swal({ title: "Deleted!", text: text, type: "success"}, function () { location.reload(); });
@@ -101,14 +101,14 @@ $.fn.ajaxWrapper = function(options) {
     } else if (options.type == 'PUT') {
       if (result != null && result.code != 'SUCCESS') {
         if (options.onFail) {
-        options.onFail(result.message, result.content);
-      } else {
-        var text=(result.message)?result.message:"Failed to save data.";
+          options.onFail(result.message, result.content);
+        } else {
+          var text=(result.message)?result.message:"Failed to save data.";
           swal({ title: "Failed!", text: text, type: "error"});
-      }
+        }
       } else {
         if (options.onSuccess) {
-          options.onSuccess(result.content);
+          options.onSuccess(result.message, result.content);
         } else {
           var text=(result.message)?result.message:"Data has been saved successfully.";
           var refresh = (options.refresh)? ((options.refresh == "no") ? false: true) : true;
@@ -127,11 +127,10 @@ $.fn.ajaxWrapper = function(options) {
       }
     }
   }).always(function() {
-  $.preloader.stop();
-
-  if (options.onComplete) {
-    options.onComplete();
-  }
+    //$.preloader.stop();
+    if (options.onComplete) {
+      options.onComplete();
+    }
   });
 
   function validateSettings() {

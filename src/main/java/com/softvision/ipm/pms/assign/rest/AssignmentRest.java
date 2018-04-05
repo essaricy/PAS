@@ -31,18 +31,32 @@ public class AssignmentRest {
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="save/bulk", method=RequestMethod.POST)
     public Result saveBulk(@RequestBody(required=true) @NotNull @NotEmpty BulkAssignmentDto bulkAssignmentDto) {
-		Result result = new Result();
+		Result saveResult = new Result();
 		try {
 			bulkAssignmentDto.setAssignedBy(RestUtil.getLoggedInEmployeeId());
-			List<Result> assignResult = assignmentService.bulkAssign(bulkAssignmentDto);
-			result.setCode(Result.SUCCESS);
-			result.setContent(assignResult);
+			List<Result> results = assignmentService.bulkAssign(bulkAssignmentDto);
+			saveResult.setCode(Result.SUCCESS);
+			if (results != null && !results.isEmpty()) {
+			    int failedCount=0;
+			    for (Result result : results) {
+			        if (Result.FAILURE.equals(result.getCode())) {
+			            failedCount++;
+			        }
+                }
+			    if (failedCount == 0) {
+			        saveResult.setMessage("All asignments are successfully assigned for the selected employees");
+			    } else if (failedCount == results.size()) {
+			        saveResult.setMessage("All asignments are failed. Look for the individual status for reason");
+			    } else {
+			        saveResult.setMessage("Some of the assignments are failed. Look for the individual status for reason");
+			    }
+			}
+			saveResult.setContent(results);
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-			
+			saveResult.setCode(Result.FAILURE);
+			saveResult.setMessage(exception.getMessage());
 		}
-		return result;
+		return saveResult;
     }
 
 	@RequestMapping(value = "cycle/employee-status/{cycleId}", method = RequestMethod.GET)

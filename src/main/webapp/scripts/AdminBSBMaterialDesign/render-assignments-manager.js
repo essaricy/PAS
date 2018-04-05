@@ -241,9 +241,8 @@ $(function () {
         text: "Do you want to enable self-submission for this employee for this phase?",
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, Enable!",
-        closeOnConfirm: false
+        confirmButtonColor: "#DD6B55", confirmButtonText: "Yes, Enable!",
+        closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         $.fn.ajaxPut({
           url: settings.contextPath + '/assignment/manager/change/phase-status/enable/' + id
@@ -255,7 +254,7 @@ $(function () {
       swal({
         title: "Are you sure?", text: "Do you want to send a reminder to submit the self appraisal?", type: "warning",
         showCancelButton: true, confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false
+        confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         $.fn.ajaxPut({
           url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
@@ -267,7 +266,7 @@ $(function () {
       swal({
         title: "Are you sure?", text: "Please make sure you have set the goals for the next phase for this employee!", type: "warning",
         showCancelButton: true, confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
+        confirmButtonText: "Yes, Conclude!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         var url=settings.contextPath + '/assignment/manager/change/phase-status/conclude/' + id
         $.fn.ajaxPut({

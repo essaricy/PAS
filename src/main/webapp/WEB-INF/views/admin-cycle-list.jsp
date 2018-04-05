@@ -48,7 +48,7 @@
       </div>
       <div class="row clearfix">
         <!-- Linked Items -->
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
           <div class="card appr_cycles_card">
             <div class="header">
               <h2>Cycles</h2>
@@ -61,7 +61,7 @@
             </div>
           </div>
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
           <div class="card appr_cycle_card">
             <div class="header">
               <h2>Cycle Information</h2>
@@ -180,7 +180,7 @@ function ready(itemId) {
   swal({
 	title: "Are you sure?", text: "You cannot edit the cycle after its in READY. Do you want to change this cycle from DRAFT to READY?", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Change it!", closeOnConfirm: false
+    confirmButtonText: "Yes, Change it!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/ready/' + itemId});
   });
@@ -189,7 +189,7 @@ function activate(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to activate this appraisal cycle?", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Activate!", closeOnConfirm: false
+    confirmButtonText: "Yes, Activate!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
   });
@@ -198,7 +198,7 @@ function complete(itemId) {
   swal({
 	title: "Are you sure?", text: "Do you really want to complete this appraisal cycle? Please make sure that al eligible employees have completed thier appraisals.", type: "warning",
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    confirmButtonText: "Yes, Complete!", closeOnConfirm: false
+    confirmButtonText: "Yes, Complete!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
     $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
   });

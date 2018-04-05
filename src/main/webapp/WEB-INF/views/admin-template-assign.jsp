@@ -298,14 +298,17 @@ $(function () {
    	  swal({
 		title: "Are you sure?", text: "Do you want to assign this template to the selected employees?", type: "warning",
 		showCancelButton: true, confirmButtonColor: "#DD6B55",
-	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false
+	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false, showLoaderOnConfirm: true
 	  }, function () {
 	      $(button).attr('disabled', true);
 		  $.fn.ajaxPost({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
-		  onSuccess: function(result) {
+		  onSuccess: function(message, content) {
 			var table=$('#Selected_Employees_Table');
 			var tbody=$(table).find('tbody');
-			$(result).each(function(index, aResult) {
+	      	// Delete delete button
+	      	$('.delete_icon').removeClass('col-orange').css({'cursor':"default"}).attr('onclick','').unbind('click');
+
+			$(content).each(function(index, aResult) {
 			  var employeeId=aResult.content;
 			  var actionStatus=null;
 			  if (aResult.code=='SUCCESS') {
@@ -317,11 +320,12 @@ $(function () {
 			  var cell=$(tbody).find('tr td:contains(' + employeeId + ')');
 			  $(cell).siblings().last().html(actionStatus);
 		    });
+			swal({ title: "Completed!", text: message, type: "success"}, function () { });
 		  },
 		  onFail: function(message, content) {
+		    swal({ title: "Failed!", text: message, type: "error"}, function () { });
 		  },
-    	  onComplete : function () {
-    		swal({ title: "Data has been saved successfully!", text: "", type: "success"}, function () { });
+    	  onComplete : function (result) {
     		$(button).attr('disabled', false);
   	      }
 	    });

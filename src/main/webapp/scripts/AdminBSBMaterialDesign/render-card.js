@@ -213,7 +213,7 @@
             {
               title: "Are you sure?", text: "You will not be able to recover this data!", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, Delete!", closeOnConfirm: false
+            confirmButtonText: "Yes, Delete!", closeOnConfirm: false, showLoaderOnConfirm: true
           }, function () {
               $.fn.ajaxDelete({url:deleteUrl + "/" + itemId});
             }

@@ -8,6 +8,8 @@ import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -27,6 +29,8 @@ import com.softvision.ipm.pms.user.model.User;
 
 @Service
 public class SVAuthenticationService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SVAuthenticationService.class);
 
 	@Autowired
 	private SVLdapRepository svLdapRepository;
@@ -74,16 +78,22 @@ public class SVAuthenticationService {
 			}
 			return getUser(employee, roles);
 		} catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
+            LOGGER.error("AuthenticationNotSupportedException for " + userid + ", ERROR="
+                    + authenticationNotSupportedException.getMessage());
 			throw new AuthenticationServiceException(authenticationNotSupportedException.getMessage(),
 					authenticationNotSupportedException);
 		} catch (NamingException namingException) {
-			if (namingException instanceof AuthenticationNotSupportedException) {
-				throw new AuthenticationServiceException(namingException.getMessage(), namingException);
-			} else if (namingException instanceof CommunicationException) {
-				throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
-			}
+			if (namingException instanceof CommunicationException) {
+			    LOGGER.error("CommunicationException for " + userid + ", ERROR=" + namingException.getMessage());
+                throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
+            } else if (namingException instanceof javax.naming.AuthenticationException) {
+                LOGGER.error("javax.naming.AuthenticationException for " + userid + ", ERROR=" + namingException.getMessage());
+                throw new AuthenticationServiceException("Invalid username or password", namingException);
+            }
+			LOGGER.error("NamingException for " + userid + ", ERROR=" + namingException.getMessage());
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
 		} catch (Exception exception) {
+		    LOGGER.error("Exception for " + userid + ", ERROR=" + exception.getMessage());
 			String message = exception.getMessage();
 			if (message.contains("Connection timed out")) {
 				throw new AuthenticationServiceException("Unable to connect to svProject at this moment", exception);

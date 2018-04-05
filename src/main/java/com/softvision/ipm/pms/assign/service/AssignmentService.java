@@ -25,6 +25,7 @@ import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.DateUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
+import com.softvision.ipm.pms.employee.constant.EmploymentType;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.template.entity.Template;
@@ -47,7 +48,9 @@ public class AssignmentService {
 
 	@Autowired private EmployeeRepository employeeRepository;
 
-	private String NO_ELIGIBILITY_MESSAGE = "{0} - Not eligible for this appraisal. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
+	private String NOT_ELIGIBLE_BY_CUTOFF_DATE = "{0} - Not eligible for this appraisal. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
+
+	private String NOT_ELIGIBLE_BY_EMPLOYEE_TYPE = "{0} - Not eligible for this appraisal. His/Her employement type is {1}";
 
 	private String CANNOT_ASSIGN_TO_SELF = "{0} - Cannot assign an appraisal to self";
 
@@ -98,11 +101,16 @@ public class AssignmentService {
 					throw new ServiceException("Employee does not exist");
 				}
 				String employeeName = employee.getFirstName() + " " + employee.getLastName();
+				EmploymentType employmentType = EmploymentType.get(employee.getEmploymentType());
+				if (employmentType != EmploymentType.REGULAR_EMPLOYEE) {
+                    throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE, employeeName,
+                            (employmentType == null) ? "UNKNOWN" : employmentType.getName()));
+				}
 				Date hiredOn = employee.getHiredOn();
 				Date cutoffDate = cycle.getCutoffDate();
 				// check if employee hired date should be before cutoff date
 				if (hiredOn.after(cutoffDate)) {
-					throw new ServiceException(MessageFormat.format(NO_ELIGIBILITY_MESSAGE, employeeName,
+					throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_CUTOFF_DATE, employeeName,
 							DateUtil.getIndianDateFormat(hiredOn), DateUtil.getIndianDateFormat(cutoffDate)));
 				}
 				if (employeeId == assignedBy) {

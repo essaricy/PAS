@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.template.service;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
+import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -19,6 +21,7 @@ import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
+import com.softvision.ipm.pms.template.constant.TemplateComparator;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
@@ -45,8 +48,13 @@ public class TemplateService {
 	@Autowired private EmployeeRepository employeeRepository;
 
 	public List<TemplateDto> getTemplates() {
-		List<TemplateDto> templateDtoList = TemplateAssembler.getTemplateDtoList(templateDataRepository.findAllByOrderByUpdatedAtDesc());
-		updateTemplateDtoList(templateDtoList);
+	    List<TemplateDto> templateDtoList = null;
+	    List<Template> templates = templateDataRepository.findAll();
+	    if (templates != null && !templates.isEmpty()) {
+	        Collections.sort(templates, TemplateComparator.BY_NAME);
+	        templateDtoList = TemplateAssembler.getTemplateDtoList(templates);
+	        updateTemplateDtoList(templateDtoList);
+	    }
 		return templateDtoList;
 	}
 
@@ -127,7 +135,7 @@ public class TemplateService {
 			}
 			Template template = templateDataRepository.findById(id);
 			templateDataRepository.delete(template);
-			LOGGER.info("delete: successful for " + id);
+			LOGGER.info("delete: Template deleted succcessfully " + template);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -149,7 +157,7 @@ public class TemplateService {
 			if (cycleAssignment != null) {
 				return true;
 			}
-			CycleAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
+			PhaseAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
 			if (phaseAssignement != null) {
 				return true;
 			}

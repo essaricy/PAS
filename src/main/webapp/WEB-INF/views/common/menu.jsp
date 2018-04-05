@@ -80,6 +80,9 @@
           </a>
           <ul class="ml-menu">
             <li>
+              <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
+            </li>
+            <li>
               <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
             </li>
             <li>

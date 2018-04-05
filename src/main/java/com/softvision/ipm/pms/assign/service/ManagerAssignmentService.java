@@ -59,6 +59,9 @@ public class ManagerAssignmentService {
     public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
             throws ServiceException {
         LOGGER.warn("assignToAnotherManager(" + assignmentId + ", " + fromEmployeeId + ", " + toEmployeeId + ")");
+        if (fromEmployeeId == toEmployeeId) {
+            throw new ServiceException("There is no change in the manager. Try assigning to a different manager.");
+        }
         PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
         AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
                 PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
@@ -78,8 +81,8 @@ public class ManagerAssignmentService {
     public void sendRemiderToSubmit(long phaseAssignId, int loggedInEmployeeId) {
         PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
         // email trigger
-        emailRepository.sendEnableMail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getAssignedBy(),
-                employeePhaseAssignment.getEmployeeId());
+        emailRepository.sendManagerToEmployeeReminder(employeePhaseAssignment.getPhaseId(),
+                employeePhaseAssignment.getAssignedBy(), employeePhaseAssignment.getEmployeeId());
     }
 
     public List<ManagerCycleAssignmentDto> getAllCycles(int employeeId) {

@@ -158,7 +158,7 @@
             var count=phasewiseEmployeeStatusCount.count;
 
             var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
-            var infoBoxDiv=$('<div class="info-box hover-zoom-effect ' + phaseStatus.colorClass + '">');
+            var infoBoxDiv=$('<div class="info-box hover-zoom-effect hover-expand-effect ' + phaseStatus.colorClass + '">');
             var iconDiv=$('<div class="icon">');
             //var infoBoxDiv=$('<div class="info-box hover-zoom-effect ">');
             //var iconDiv=$('<div class="icon ' + phaseStatus.colorClass + '">');

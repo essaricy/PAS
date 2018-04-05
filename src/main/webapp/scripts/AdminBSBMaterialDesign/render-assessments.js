@@ -416,7 +416,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
@@ -428,7 +428,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Submit!", closeOnConfirm: false
+          confirmButtonText: "Yes, Submit!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
@@ -436,7 +436,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Agree!", closeOnConfirm: false
+          confirmButtonText: "Yes, Agree!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           url=options.contextPath + '/assessment/phase/agree';
           $.fn.ajaxPost({ url: url, data: currentForm });
@@ -445,7 +445,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
+          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
         url=options.contextPath + '/assessment/phase/disagree';
           $.fn.ajaxPost({ url: url, data: currentForm });
@@ -454,7 +454,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Do you want to update the review?", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Update!", closeOnConfirm: false
+          confirmButtonText: "Yes, Update!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           url=options.contextPath + '/assessment/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
@@ -463,7 +463,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Please make sure you have set the goals for the next phase for this employee!", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Conclude!", closeOnConfirm: false
+          confirmButtonText: "Yes, Conclude!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           url=options.contextPath + '/assessment/phase/conclude';
           $.fn.ajaxPost({ url: url, data: currentForm });

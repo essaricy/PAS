@@ -43,7 +43,7 @@
 25. Technical/functional architecture.
 26. Providing direction on strategic business issues.
 27. Analyzing the requirement, and design process as per Process lifecycle defined.
-28. Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to SPI/Client standards and methodologies.
+28. Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to Softvision/Client standards and methodologies.
 29. Preparing Technical documentation on Application, Architecture, Interfaces, User Manuals etc as per the defined process.
 30. Analysis of existing code/functionality and suggesting the improvement in performance.
 31. Ticket resolution as per the process defined in the project plan

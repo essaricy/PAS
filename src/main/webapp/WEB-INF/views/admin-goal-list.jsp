@@ -64,7 +64,7 @@
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
           <div class="card ca_items_card">
             <div class="header">
-              <h2>Parameters</h2>
+              <h2></h2>
             </div>
             <div class="body">
             </div>
@@ -114,6 +114,7 @@ $('.ca_card').cardManager({
   ],
   onClickCallback: function (item) {
     var params=item.params;
+    $('.ca_items_card .header h2').text('Parameters for: ' + item.name);
     $(params).each(function(index, param) {
       if (param.applicable!='Y') {
         $('.ca_items_card .body ol li[item-id=' + param.id +']').remove();

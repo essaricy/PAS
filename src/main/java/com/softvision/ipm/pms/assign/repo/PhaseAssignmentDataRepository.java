@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 
 public interface PhaseAssignmentDataRepository extends CrudRepository<PhaseAssignment, Long> {
@@ -13,7 +12,7 @@ public interface PhaseAssignmentDataRepository extends CrudRepository<PhaseAssig
 
 	PhaseAssignment findById(Long id);
 
-	CycleAssignment findFirstByTemplateId(Long id);
+	PhaseAssignment findFirstByTemplateId(Long id);
 
 	PhaseAssignment findByPhaseIdAndEmployeeId(Integer phaseId, Integer employeeId);
 

@@ -383,18 +383,18 @@
     $('.sync_result_row').hide();
 
     $('#Sync').click(function() {
-      var button=this;
+      //var button=this;
 	  swal({
     	title: "Are you sure?", text: "Do you want to sync data of all employees from SV Project to this system? This may take few minutes!!", type: "warning",
     	showCancelButton: true, confirmButtonColor: "#DD6B55",
-    	confirmButtonText: "Yes, Proceed!", closeOnConfirm: true
+    	confirmButtonText: "Yes, Proceed!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
-	    $(button).attr('disabled', true);
+	    //$(button).attr('disabled', true);
 	    $('.sync_result_row').hide();
     	$.fn.ajaxPut({
     	  url: '<%=request.getContextPath()%>/employee/sync',
     	  //refresh: "no",
-    	  onSuccess: function (result) {
+    	  onSuccess: function (message, result) {
     		var results_container_error=$('#Sync_Results_Error');
     		var results_container_Success=$('#Sync_Results_Success');
       		$(results_container_error).empty();
@@ -407,11 +407,10 @@
       			$(results_container_error).append('<li class="list-group-item bg-red">' + aResult.message + '<span class="pull-right"><i class="material-icons">error_outline</i></span></li>');
       		  }
       		});
-    		  var text="";
-       	  	  swal({ title: "Sync Completed!", text: text, type: "success"}, function () { }); 
+       	  	swal({ title: "Sync Completed!", text: "", type: "success"}, function () { }); 
     	  },
     	  onComplete : function () {
-    		$(button).attr('disabled', false);
+    		//$(button).attr('disabled', false);
     		$('.sync_result_row').show();
     		$('#Show_Sync_Results_Error').find('.badge').text($('#Sync_Results_Error').find('li').length);
     		$('#Show_Sync_Results_Success').find('.badge').text($('#Sync_Results_Success').find('li').length);

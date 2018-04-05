@@ -66,6 +66,9 @@ INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), 
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Project Management'), 'Reviewing the workproducts on SDLC/STLC phases and document');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Project Management'), 'Ensuring that the service levels stated in the SoW and agreed with the client, are maintained, reported and reviewed with GDM on a regular basis');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Project Management'), 'Influencing and advising management & other professionals on strategic and tactical decisions');
+-- Grades
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Project Management'), 'Consistency in communication');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Project Management'), 'Frequency of communication within the team - internal and external');
 
 -- Leadership
 INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Leadership');
@@ -132,7 +135,7 @@ INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), 
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Technical/functional architecture');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Providing direction on strategic business issues');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Analyzing the requirement, and design process as per Process lifecycle defined');
-INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to SPI/Client standards and methodologies');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Ensuring process adherence, business control compliance, satisfactory performance during reviews/audits and complete compliance to Softvision/Client standards and methodologies');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Preparing Technical documentation on Application, Architecture, Interfaces, User Manuals etc as per the defined process');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Ticket resolution as per the process defined in the project plan');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Conducting Root cause analysis and implementing preventive & corrective actions on the conflict issues/defects/customer complaints etc');
@@ -195,6 +198,11 @@ INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), 
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Analysis of the requirement, and design process as per Process lifecycle defined');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Understanding of the design & development of the code as per the defined process');
 INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Creation, execution of Unit Test cases and documentation of results as per project plan');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Working with customer to resolve issues upon Escalation');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Providing related Metrics to stakeholders on defined organization metrics');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Ensuring quality and timely completion and delivery of the deliverables defined as per the role');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Executing the task to completion as per scheduled time');
+INSERT INTO goal_param(ID, GOAL_ID, NAME) VALUES (nextval('goal_param_id_seq'), (select id from goal where name='Technical Solutions'), 'Initiating and Coordinating with the different Departments');
 
 -- Process Awareness & Compliance
 INSERT INTO goal(id, name) VALUES (nextval('goal_id_seq'), 'Process Awareness & Compliance');

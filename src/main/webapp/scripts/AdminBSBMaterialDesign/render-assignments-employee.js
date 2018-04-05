@@ -216,7 +216,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Agree!", closeOnConfirm: false
+          confirmButtonText: "Yes, Agree!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           var url=settings.contextPath + '/assignment/employee/change/phase-status/agree/' + id
           $.fn.ajaxPut({
@@ -229,7 +229,7 @@ $(function () {
         swal({
           title: "Are you sure?", text: "Please follow the escalation procedures set by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
-          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false
+          confirmButtonText: "Yes, Escalate!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
           var url=settings.contextPath + '/assignment/employee/change/phase-status/escalate/' + id
           $.fn.ajaxPut({

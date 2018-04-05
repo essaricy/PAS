@@ -82,7 +82,7 @@ CREATE TABLE employee_role (
 -- #######################################################
 CREATE TABLE appr_cycle (
 	ID			SMALLINT NOT NULL,
-	NAME		VARCHAR(40) NOT NULL,
+	NAME		VARCHAR(50) NOT NULL,
 	START_DATE	DATE NOT NULL,
 	END_DATE	DATE NOT NULL,
 	CUTOFF_DATE	DATE NOT NULL,
