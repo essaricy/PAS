@@ -69,7 +69,7 @@ public class EmailRepository {
 
 	public void sendApprasialKickOff(AppraisalCycle appraisalCycle) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.KICK_OFF);
+			LOGGER.info("Sending email for {}", EmailConstant.KICK_OFF);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.KICK_OFF.toString());
 			String templateFile = mailTemplate.getFileName();
 			String url = mailTemplate.getButtonUrl();
@@ -85,13 +85,13 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.KICK_OFF, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.KICK_OFF, exception);
 		}
 	}
 
 	public void sendApprasialCycleConclude(AppraisalCycle appraisalCycle) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.CYCLE_CONCLUDE);
+			LOGGER.info("Sending email for {}", EmailConstant.CYCLE_CONCLUDE);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CYCLE_CONCLUDE.toString());
 			String templateFile = mailTemplate.getFileName();
 			String emailFrom = mailTemplate.getFromMail();
@@ -107,14 +107,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.CYCLE_CONCLUDE, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.CYCLE_CONCLUDE, exception);
 		}
 	}
 
 	private void sendApprasialEmployeeSubmitted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.EMPLOYEE_SUBMITED);
+			LOGGER.info("Sending email for {}", EmailConstant.EMPLOYEE_SUBMITED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMPLOYEE_SUBMITED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -134,14 +134,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.EMPLOYEE_SUBMITED, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_SUBMITED, exception);
 		}
 	}
 	
 	private void sendEmployeeAcceptenceMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.EMP_ACCEPTED);
+			LOGGER.info("Sending email for {}", EmailConstant.EMP_ACCEPTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_ACCEPTED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -162,14 +162,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.EMP_ACCEPTED, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_ACCEPTED, exception);
 		}
 	}
 	
 	private void sendEmployeeRejectionMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.EMP_REJECTED);
+			LOGGER.info("Sending email for {}", EmailConstant.EMP_REJECTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_REJECTED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -190,14 +190,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.EMP_REJECTED, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_REJECTED, exception);
 		}
 	}
 	
 	private void sendManagerReviewFrozen(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.MANAGER_FROZEN);
+			LOGGER.info("Sending email for {}", EmailConstant.MANAGER_FROZEN);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_FROZEN.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -216,14 +216,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo,ccEmail, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.MANAGER_FROZEN, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_FROZEN, exception);
 		}
 	}
 	
 	private void sendManagerReviewCompleted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.MANAGER_REVIEW);
+			LOGGER.info("Sending email for {}", EmailConstant.MANAGER_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_REVIEW.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -241,14 +241,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.MANAGER_REVIEW, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_REVIEW, exception);
 		}
 	}
 	
 	private void sendManagerToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.MGR_TO_EMP_REMINDER);
+			LOGGER.info("Sending email for {}", EmailConstant.MGR_TO_EMP_REMINDER);
 			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMINDER.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -266,14 +266,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.MGR_TO_EMP_REMINDER, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MGR_TO_EMP_REMINDER, exception);
 		}
 	}
 			
 	private void sendHrToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_EMP_REM);
+			LOGGER.info("Sending email for {}", EmailConstant.HR_TO_EMP_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_EMP_REM.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -293,14 +293,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.HR_TO_EMP_REM, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_EMP_REM, exception);
 		}
 	}
 	
 	private void sendHrToManagerReminderMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.HR_TO_MGR_REM);
+			LOGGER.info("Sending email for {}", EmailConstant.HR_TO_MGR_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_MGR_REM.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -319,7 +319,7 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),managerName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.HR_TO_MGR_REM, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_MGR_REM, exception);
 		}
 	}
 	
@@ -327,7 +327,7 @@ public class EmailRepository {
 	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee fManager,
 			Employee tManager, Employee employee) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.CHANGE_MGR);
+			LOGGER.info("Sending email for {}", EmailConstant.CHANGE_MGR);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CHANGE_MGR.toString());
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
@@ -351,14 +351,14 @@ public class EmailRepository {
 					new Object[] { appraisalCycle.getName(), appraisalPhase.getName(), empName });
 			sendEmail(emailFrom, emailTo, emailcc, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.CHANGE_MGR, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.CHANGE_MGR, exception);
 		}
 	}
 	
 	private void sendApprasialManagerAssign(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.EMPLOYEE_ENABLE);
+			LOGGER.info("Sending email for {}", EmailConstant.EMPLOYEE_ENABLE);
 			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.EMPLOYEE_ENABLE.toString());
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
@@ -376,14 +376,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.EMPLOYEE_ENABLE, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_ENABLE, exception);
 		}
 	}
 
 	private void sendUdatedReviewMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee employee,
 			Employee manager) {
 		try {
-			LOGGER.info("Sending email for "+ EmailConstant.UPDATE_REVIEW);
+			LOGGER.info("Sending email for {}", EmailConstant.UPDATE_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.UPDATE_REVIEW.toString());
 			String url = mailTemplate.getButtonUrl();
 			String subject = mailTemplate.getSubject();
@@ -403,7 +403,7 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for " + EmailConstant.UPDATE_REVIEW, exception);
+			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.UPDATE_REVIEW, exception);
 		}
 	}
 

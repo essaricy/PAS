@@ -28,7 +28,7 @@ public class SVProjectRepository {
 
 	public Employee getEmployee(String userId) {
 		String email = userId + "@" + domain;
-		LOGGER.info("Looking up for the user " + email + " in SVProject");
+		LOGGER.info("Looking up for the user {} in SVProject", email);
 
 		// To enable tracing of request and response
 		/*RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));

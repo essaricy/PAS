@@ -24,7 +24,7 @@ public class SVAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String principal = authentication.getPrincipal().toString();
 		String credentials = authentication.getCredentials().toString();
-		LOGGER.info("Authenticating user " + principal);
+		LOGGER.info("Authenticating user {}", principal);
 		User user = authenticationService.authenticate(principal, credentials);
 		return new UserToken(user);
 	}

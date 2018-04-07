@@ -11,7 +11,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.softvision.ipm.pms.role.constant.Roles;
-import com.softvision.ipm.pms.role.entity.Role;
 
 public class UserToken implements Authentication {
 
@@ -24,10 +23,10 @@ public class UserToken implements Authentication {
 	public UserToken(@NotNull User user) {
 		this.user = user;
 		authorities = new ArrayList<>();
-		for (Role role : user.getRoles()) {
-			Roles roles = Roles.get(role.getRoleName());
-			authorities.add(new SimpleGrantedAuthority(roles.toString()));
-		}
+		user.getRoles().forEach(o -> {
+		    Roles roles = Roles.get(o.getRoleName());
+		    authorities.add(new SimpleGrantedAuthority(roles.toString()));
+		});
 	}
 
 	@Override

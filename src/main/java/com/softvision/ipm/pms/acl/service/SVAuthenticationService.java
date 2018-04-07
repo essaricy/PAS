@@ -78,22 +78,22 @@ public class SVAuthenticationService {
 			}
 			return getUser(employee, roles);
 		} catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
-            LOGGER.error("AuthenticationNotSupportedException for " + userid + ", ERROR="
-                    + authenticationNotSupportedException.getMessage());
+            LOGGER.error("AuthenticationNotSupportedException for {}, ERROR={}", userid,
+                    authenticationNotSupportedException.getMessage());
 			throw new AuthenticationServiceException(authenticationNotSupportedException.getMessage(),
 					authenticationNotSupportedException);
 		} catch (NamingException namingException) {
 			if (namingException instanceof CommunicationException) {
-			    LOGGER.error("CommunicationException for " + userid + ", ERROR=" + namingException.getMessage());
+			    LOGGER.error("CommunicationException for {}, ERROR={}", userid, namingException.getMessage());
                 throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
             } else if (namingException instanceof javax.naming.AuthenticationException) {
-                LOGGER.error("javax.naming.AuthenticationException for " + userid + ", ERROR=" + namingException.getMessage());
+                LOGGER.error("javax.naming.AuthenticationException for {}, ERROR{}=", userid, namingException.getMessage());
                 throw new AuthenticationServiceException("Invalid username or password", namingException);
             }
-			LOGGER.error("NamingException for " + userid + ", ERROR=" + namingException.getMessage());
+			LOGGER.error("NamingException for {}, ERROR={}", userid, namingException.getMessage());
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
 		} catch (Exception exception) {
-		    LOGGER.error("Exception for " + userid + ", ERROR=" + exception.getMessage());
+		    LOGGER.error("Exception for {}, ERROR={}", userid, exception.getMessage());
 			String message = exception.getMessage();
 			if (message.contains("Connection timed out")) {
 				throw new AuthenticationServiceException("Unable to connect to svProject at this moment", exception);

@@ -51,41 +51,33 @@ public class RoleService {
 	}
 
 	public int assignRole(Integer employeeId, int roleId) {
-		LOGGER.info("assignRole(" + employeeId + ", " + roleId + ")");
+	    LOGGER.info("assignRole: START employeeId={}, roleId={}", employeeId, roleId);
 		List<Role> roles=roleDataRepository.findByEmployeeId(employeeId);
 		for (Role role : roles) {
 			if (role.getId() == roleId) {
 				throw new ValidationException("Manager role is already present, please check");
 			}
 		}
-		int assign = roleRepository.assign(employeeId, roleId);
-		LOGGER.info("assignRole(" + employeeId + ", " + roleId + ") completed. Result=" + assign);
-		return assign;
+		int recordsUpdated = roleRepository.assign(employeeId, roleId);
+		LOGGER.info("assignRole: END employeeId={}, roleId={}, recordsUpdated=", employeeId, roleId, recordsUpdated);
+		return recordsUpdated;
 	}
 
 	public int removeRole(Integer employeeId, int roleId) {
-		LOGGER.info("removeRole(" + employeeId + ", " + roleId + ")");
-		int remove = roleRepository.remove(employeeId, roleId);
-		LOGGER.info("removeRole(" + employeeId + ", " + roleId + ") completed. Result=" + remove);
-		return remove;
+	    LOGGER.info("removeRole: START employeeId={}, roleId={}", employeeId, roleId);
+		int recordsDeleted = roleRepository.remove(employeeId, roleId);
+		LOGGER.info("removeRole: END employeeId={}, roleId={}, recordsDeleted=", employeeId, roleId, recordsDeleted);
+		return recordsDeleted;
 	}
 	
 	public Map<Integer, Integer> changeManagerRole(EmployeeRole[] employeeList, int roleId) {
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		int returnCode;
-		boolean availableflag;
 		for (EmployeeRole employeeRole : employeeList) {
 			if (Boolean.parseBoolean(employeeRole.getManagerFlag())) {
-				availableflag = true;
 				List<Role> roles = roleDataRepository.findByEmployeeId(employeeRole.getId());
-				for (Role role : roles) {
-					if (role.getId() == roleId) {
-						// Manager role is already present
-						availableflag = false;
-						break;
-					}
-				}
-				returnCode = (availableflag) ? returnCode = roleRepository.assign(employeeRole.getId(), roleId) : 0;
+				boolean availableflag = roles.stream().anyMatch(o -> o.getId() == roleId);
+				returnCode = (availableflag) ? roleRepository.assign(employeeRole.getId(), roleId) : 0;
 			} else {
 				returnCode = roleRepository.remove(employeeRole.getId(), roleId);
 			}
@@ -113,12 +105,7 @@ public class RoleService {
 	private boolean isInRole(int employeeId, Roles checkingRole) {
 		List<Role> roles = getRolesbyEmployeeId(employeeId);
 		if (roles != null && !roles.isEmpty()) {
-			for (Role role : roles) {
-				Roles currentRole = Roles.get(role.getRoleName());
-				if (currentRole == checkingRole) {
-					return true;
-				}
-			}
+			return roles.stream().anyMatch(o -> Roles.get(o.getRoleName()) == checkingRole);
 		}
 		return false;
 	}
@@ -134,12 +121,7 @@ public class RoleService {
 	private boolean isInRole(String loginId, Roles checkingRole) {
 		List<Role> roles = getRolesbyLoginId(loginId);
 		if (roles != null && !roles.isEmpty()) {
-			for (Role role : roles) {
-				Roles currentRole = Roles.get(role.getRoleName());
-				if (currentRole == checkingRole) {
-					return true;
-				}
-			}
+		    return roles.stream().anyMatch(o -> Roles.get(o.getRoleName()) == checkingRole);
 		}
 		return false;
 	}

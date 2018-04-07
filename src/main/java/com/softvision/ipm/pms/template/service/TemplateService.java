@@ -71,7 +71,7 @@ public class TemplateService {
 	@Transactional
 	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
 		try {
-			LOGGER.info("update: " + templateDto);
+			LOGGER.info("update: START templateDto={}" + templateDto);
 			if (templateDto == null) {
 				throw new ServiceException("Template information is not provided.");
 			}
@@ -84,25 +84,21 @@ public class TemplateService {
 			List<TemplateHeaderDto> headers = templateDto.getHeaders();
 			int totalWeightage=0;
 
-			//for (TemplateHeaderDto header : headers) {
+
 			for (int index = 0; index < headers.size(); index++) {
 				TemplateHeaderDto header = headers.get(index);
 				int weightage = header.getWeightage();
 				totalWeightage += weightage;
 
-				boolean containsApply=false;
 				List<TemplateDetailDto> details = header.getDetails();
-				for (TemplateDetailDto detail : details) {
-					String apply = detail.getApply();
-					if (apply != null && apply.equalsIgnoreCase("Y")) {
-						containsApply=true;
-						// Weightage should not be zero if any apply='Y'.
-						if (weightage == 0) {
-							throw new ServiceException("There should not be any items applicable if the weightage is zero. Param '" + detail.getParamName() + "' is applied but weightage is zero for '" + header.getGoalName() + "'");
-						}
-						//break;
-					}
-				}
+				boolean containsApply = details.stream().anyMatch(o -> {
+				    String apply = o.getApply();
+				    return apply != null && apply.equalsIgnoreCase("Y");
+				});
+				// Weightage should not be zero if any apply='Y'.
+				if (containsApply && weightage == 0) {
+                    throw new ServiceException("There should not be any items applicable if the weightage is zero. A param is applied but weightage is zero for '" + header.getGoalName() + "'");
+                }
 				// Weightage should be zero if all apply='N'.
 				if (!containsApply && weightage != 0) {
 					throw new ServiceException("Weightage should be zero if there are no aparams applied");
@@ -119,7 +115,7 @@ public class TemplateService {
 			Template template = TemplateAssembler.getTemplate(templateDto);
 			templateRepository.save(template);
 			templateDto=TemplateAssembler.getTemplateDto(template);
-			LOGGER.info("update: completed. " + templateDto);
+			LOGGER.info("update: END templateDto={}" + templateDto);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -129,13 +125,13 @@ public class TemplateService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
-			LOGGER.info("delete: " + id);
+			LOGGER.info("delete: START id={}" + id);
 			if (id > 0 && isInUse(id)) {
 				throw new ServiceException("Template is already in use. Cannot delete now.");
 			}
 			Template template = templateDataRepository.findById(id);
 			templateDataRepository.delete(template);
-			LOGGER.info("delete: Template deleted succcessfully " + template);
+			LOGGER.info("delete: END id={}" + id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -170,9 +166,7 @@ public class TemplateService {
 
 	private void updateTemplateDtoList(List<TemplateDto> templateDtoList) {
 		if (templateDtoList != null && !templateDtoList.isEmpty()) {
-			for (TemplateDto templateDto : templateDtoList) {
-				updateTemplateDto(templateDto);
-			}
+		    templateDtoList.forEach(o -> updateTemplateDto(o));
 		}
 	}
 

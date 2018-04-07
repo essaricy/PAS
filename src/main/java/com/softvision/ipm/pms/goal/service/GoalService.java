@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.goal.assembler.GoalAssembler;
 import com.softvision.ipm.pms.goal.entity.Goal;
+import com.softvision.ipm.pms.goal.mapper.GoalMapper;
 import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.model.GoalParamDto;
 import com.softvision.ipm.pms.goal.repo.GoalDataRepository;
@@ -25,7 +25,7 @@ public class GoalService {
 	private GoalDataRepository goalDataRepository;
 
 	public List<GoalDto> getGoals() {
-		return GoalAssembler.getGoals(goalDataRepository.findAll());
+		return GoalMapper.getGoalList(goalDataRepository.findAll());
 	}
 
 	public List<GoalDto> getActiveGoals() {
@@ -45,18 +45,19 @@ public class GoalService {
 	}
 
 	public GoalDto getGoal(Long id) {
-		return GoalAssembler.getGoal(goalDataRepository.findById(id));
+		return GoalMapper.getGoal(goalDataRepository.findById(id));
 	}
 
 	public GoalDto update(GoalDto goalDto) throws ServiceException {
 		try {
-			LOGGER.info("update: " + goalDto);
+		    LOGGER.info("update: START goalDto={}", goalDto);
 			if (goalDto == null) {
 				throw new ServiceException("No Goal is provided.");
 			}
 			ValidationUtil.validate(goalDto);
-			Goal goal = GoalAssembler.getGoal(goalDto);
-			return GoalAssembler.getGoal(goalDataRepository.save(goal));
+			Goal goal = GoalMapper.getGoal(goalDto);
+			LOGGER.info("update: END goalDto={}", goalDto);
+			return GoalMapper.getGoal(goalDataRepository.save(goal));
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -65,8 +66,9 @@ public class GoalService {
 
 	public void delete(Long id) throws ServiceException {
 		try {
-			LOGGER.info("delete: " + id);
+		    LOGGER.info("delete: START id={}", id);
 			goalDataRepository.delete(id);
+			LOGGER.info("delete: END id={}", id);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);

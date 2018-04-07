@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
@@ -28,16 +28,16 @@ public class AppraisalService {
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
 	public List<AppraisalCycleDto> getCycles() {
-		return AppraisalAssembler.getCycles(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
+		return AppraisalMapper.getCycleList(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
 	}
 
 	public AppraisalCycleDto getCycle(Integer id) {
-		return AppraisalAssembler.getCycle(appraisalCycleDataRepository.findById(id));
+		return AppraisalMapper.getCycle(appraisalCycleDataRepository.findById(id));
 	}
 
 	public AppraisalCycleDto update(AppraisalCycleDto appraisalCycleDto) throws ServiceException {
 		try {
-			LOGGER.info("Updating appraisal cycle: " + appraisalCycleDto);
+			LOGGER.info("Updating appraisal cycle: {} ", appraisalCycleDto);
 			if (appraisalCycleDto == null) {
 				throw new ServiceException("Appraisal Cycle information is not provided.");
 			}
@@ -50,30 +50,26 @@ public class AppraisalService {
 					throw new ServiceException("Appraisal cycle information not found.");
 				}
 				AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
-				if (existingStatus == AppraisalCycleStatus.READY) {
-					throw new ServiceException("Cannot update the appraisal cycle as it is READY");
-				} else if (existingStatus == AppraisalCycleStatus.ACTIVE) {
-					throw new ServiceException("Cannot update the appraisal cycle as it is ACTIVE");
-				} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
-					throw new ServiceException("Cannot update the appraisal cycle as it is COMPLETE");
+				if (existingStatus != AppraisalCycleStatus.DRAFT) {
+				    throw new ServiceException("Updates are allowed only when its in DRAFT status");
 				}
 			}
 			ValidationUtil.validate(appraisalCycleDto);
 			// TODO validate dates overlap
-			AppraisalCycle appraisalCycle = AppraisalAssembler.getCycle(appraisalCycleDto);
+			AppraisalCycle appraisalCycle = AppraisalMapper.getCycle(appraisalCycleDto);
 			AppraisalCycle saved = appraisalCycleDataRepository.save(appraisalCycle);
-			return AppraisalAssembler.getCycle(saved);
+			return AppraisalMapper.getCycle(saved);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
 		}
 	}
 
-	public void changeStatus(Integer id, AppraisalCycleStatus status) throws ServiceException {
+	public void changeStatus(Integer id, AppraisalCycleStatus desiredStatus) throws ServiceException {
 		if (id <= 0) {
 			throw new ServiceException("Invalid id");
 		}
-		if (status == null) {
+		if (desiredStatus == null) {
 			throw new ServiceException("Appraisal Cycle status is not provided. Must be of " + Arrays.toString(AppraisalCycleStatus.values()));
 		}
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findById(id);
@@ -81,44 +77,28 @@ public class AppraisalService {
 			throw new ServiceException("Appraisal Cycle information is not provided.");
 		}
 		AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
-		LOGGER.info("Updating appraisal cycle status from " + existingStatus + " to " + status);
-		if (existingStatus == AppraisalCycleStatus.DRAFT) {
-			if (status == AppraisalCycleStatus.DRAFT) {
-				throw new ServiceException("Appraisal Cycle is already a DRAFT");
-			} else if (status == AppraisalCycleStatus.READY) {
-			} else if (status == AppraisalCycleStatus.ACTIVE) {
-				throw new ServiceException("Cannot change an Appraisal Cycle to ACTIVE when its not READY");
-			} else if (status == AppraisalCycleStatus.COMPLETE) {
-				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
-			}
-		} else if (existingStatus == AppraisalCycleStatus.READY) {
-			if (status == AppraisalCycleStatus.DRAFT) {
-				throw new ServiceException("Appraisal Cycle is READY. Cannot change back to DRAFT.");
-			} else if (status == AppraisalCycleStatus.READY) {
-				throw new ServiceException("Appraisal Cycle is already READY");
-			} else if (status == AppraisalCycleStatus.ACTIVE) {
-				// Check if any other cycle is active. do not allow otherwise
-				int count= appraisalCycleDataRepository.countOfActive(id);
-				if(count > 0) {
-					throw new ServiceException("There is another appraisal cycle ACTIVE already. Mark it COMPLETE to activate another appraisal cycle");
-				}
-			} else if (status == AppraisalCycleStatus.COMPLETE) {
-				throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
-			}
-		} else if (existingStatus == AppraisalCycleStatus.ACTIVE) {
-			if (status == AppraisalCycleStatus.DRAFT) {
-				throw new ServiceException("Appraisal Cycle is already ACTIVE. Cannot change to DRAFT");
-			} else if (status == AppraisalCycleStatus.READY) {
-				throw new ServiceException("Appraisal Cycle is already ACTIVE. Cannot change to READY");
-			} else if (status == AppraisalCycleStatus.ACTIVE) {
-				throw new ServiceException("Appraisal Cycle is already ACTIVE");
-			} else if (status == AppraisalCycleStatus.COMPLETE) {
-				// TODO check if any assigned are not completed. otherwise allow.
-			}
-		} else if (existingStatus == AppraisalCycleStatus.COMPLETE) {
-			throw new ServiceException("Cannot change the status of appraisal cycle. Its already COMPLETE.");
-		}
-		appraisalCycle.setStatus(status.toString());
+		LOGGER.info("Updating appraisal cycle status from {} to {}", existingStatus, desiredStatus);
+
+		if (existingStatus == desiredStatus) {
+		    throw new ServiceException("Appraisal Cycle is already in a " + existingStatus + " status");
+		} else if (existingStatus != AppraisalCycleStatus.DRAFT && desiredStatus == AppraisalCycleStatus.DRAFT) {
+            throw new ServiceException("Appraisal Cycle is " + existingStatus + ". Cannot change it back to DRAFT.");
+        } else if (existingStatus != AppraisalCycleStatus.DRAFT && desiredStatus == AppraisalCycleStatus.READY) {
+            throw new ServiceException("Cannot change an Appraisal Cycle to READY when its not a DRAFT");
+        } else if (existingStatus != AppraisalCycleStatus.READY && desiredStatus == AppraisalCycleStatus.ACTIVE) {
+            throw new ServiceException("Cannot change an Appraisal Cycle to ACTIVE when its not READY");
+        } else if (existingStatus != AppraisalCycleStatus.ACTIVE && desiredStatus == AppraisalCycleStatus.COMPLETE) {
+            throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
+        } else if (existingStatus == AppraisalCycleStatus.READY && desiredStatus == AppraisalCycleStatus.ACTIVE) {
+            // Check if any other cycle is active. do not allow otherwise
+            int count= appraisalCycleDataRepository.countOfActive(id);
+            if(count > 0) {
+                throw new ServiceException("There is another appraisal cycle ACTIVE already. Mark it COMPLETE to activate another appraisal cycle");
+            }
+        } else if (existingStatus == AppraisalCycleStatus.ACTIVE && desiredStatus == AppraisalCycleStatus.COMPLETE) {
+            // TODO check if any assigned are not completed. otherwise allow.
+        }
+		appraisalCycle.setStatus(desiredStatus.toString());
 		appraisalCycleDataRepository.save(appraisalCycle);
 	}
 
@@ -140,11 +120,11 @@ public class AppraisalService {
 	}
 
 	public AppraisalCycleDto getActiveCycle() {
-		return AppraisalAssembler.getCycle(appraisalRepository.getActiveCycle());
+		return AppraisalMapper.getCycle(appraisalRepository.getActiveCycle());
 	}
 
 	public List<AppraisalCycleDto> getAssignableCycle() {
-		List<AppraisalCycleDto> cycles = AppraisalAssembler.getCycles(appraisalRepository.getAssignableCycles());
+		List<AppraisalCycleDto> cycles = AppraisalMapper.getCycleList(appraisalRepository.getAssignableCycles());
 		return cycles;
 	}
 

@@ -37,12 +37,7 @@ public class AssignmentRest {
 			List<Result> results = assignmentService.bulkAssign(bulkAssignmentDto);
 			saveResult.setCode(Result.SUCCESS);
 			if (results != null && !results.isEmpty()) {
-			    int failedCount=0;
-			    for (Result result : results) {
-			        if (Result.FAILURE.equals(result.getCode())) {
-			            failedCount++;
-			        }
-                }
+			    long failedCount = results.stream().filter(o ->Result.FAILURE.equals(o.getCode())).count();
 			    if (failedCount == 0) {
 			        saveResult.setMessage("All asignments are successfully assigned for the selected employees");
 			    } else if (failedCount == results.size()) {

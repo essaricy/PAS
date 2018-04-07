@@ -31,6 +31,7 @@ public class SecureAssignmentAspect {
 
 	@Around("@annotation(preSecureAssignment)")
 	public Object permit(ProceedingJoinPoint joinPoint, PreSecureAssignment preSecureAssignment) throws Throwable {
+	    LOGGER.info("permit: START");
 		long assignmentId=0;
 		int requestedEmployeeId=0;
 		Object[] args = joinPoint.getArgs();
@@ -66,9 +67,10 @@ public class SecureAssignmentAspect {
 			allow=true;
 		}
 		if (!allow) {
-			LOGGER.warn("UNAUTHORIZED ACCESS ATTEMPT: assignmentId: " + assignmentId + ", requestedEmployeeId=" + requestedEmployeeId);
+			LOGGER.warn("permit: UNAUTHORIZED ACCESS ATTEMPT: assignmentId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 			throw new AuthorizationServiceException("UNAUTHORIZED: You are not allowed to access this form");
 		}
+		LOGGER.info("permit: END");
 	    return joinPoint.proceed();
 	}
 

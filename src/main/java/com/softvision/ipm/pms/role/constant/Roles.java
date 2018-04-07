@@ -1,5 +1,7 @@
 package com.softvision.ipm.pms.role.constant;
 
+import java.util.Arrays;
+
 public enum Roles {
 	ADMIN(1, "Admin"), MANAGER(2, "Manager"), EMPLOYEE(3, "Employee");
 
@@ -21,19 +23,11 @@ public enum Roles {
 	}
 
 	public static Roles get(String role) {
-		for (Roles r : Roles.values()) {
-			if (r.getName().equalsIgnoreCase(role))
-				return r;
-		}
-		return null;
+		return Arrays.stream(values()).filter(e -> e.getName().equalsIgnoreCase(role)).findFirst().orElse(null);
 	}
 
 	public static Roles get(int code) {
-		for (Roles r : Roles.values()) {
-			if (r.getCode() == code)
-				return r;
-		}
-		return null;
+		return Arrays.stream(values()).filter(e -> e.getCode() == code).findFirst().orElse(null);
 	}
 
 }

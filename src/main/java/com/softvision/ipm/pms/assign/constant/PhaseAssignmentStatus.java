@@ -1,5 +1,7 @@
 package com.softvision.ipm.pms.assign.constant;
 
+import java.util.Arrays;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
@@ -48,12 +50,7 @@ public enum PhaseAssignmentStatus {
 	}
 
 	public static PhaseAssignmentStatus get(int code) {
-		for (PhaseAssignmentStatus status : values()) {
-			if (status.getCode() == code) {
-				return status;
-			}
-		}
-		return null;
+		return Arrays.stream(values()).filter(e -> e.getCode() == code).findAny().orElse(null);
 	}
 
 	public static PhaseAssignmentStatus getNext(PhaseAssignmentStatus status) {

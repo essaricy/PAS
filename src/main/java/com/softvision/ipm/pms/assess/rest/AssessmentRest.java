@@ -96,7 +96,7 @@ public class AssessmentRest {
 		return result;
     }
 
-	public Result changePhaseStatus(AssessHeaderDto phaseAssessHeader, PhaseAssignmentStatus status) {
+	public Result changePhaseStatus(AssessHeaderDto phaseAssessHeader, PhaseAssignmentStatus nextStatus) {
 		Result result = new Result();
 		try {
 			if (phaseAssessHeader == null) {
@@ -108,20 +108,30 @@ public class AssessmentRest {
 			}
 			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
 			phaseAssessHeader.setAssessDate(new Date());
-			if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
-				phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
-			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
-				phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
-			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
-				phaseAssessmentService.saveReview(assignId, requestedEmployeeId, phaseAssessHeader);
-			} else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
-				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, phaseAssessHeader);
-			} else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED) {
-				phaseAssessmentService.agree(assignId, requestedEmployeeId);
-			} else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
+			switch (nextStatus) {
+            case SELF_APPRAISAL_SAVED:
+                phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
+                break;
+            case MANAGER_REVIEW_PENDING:
+                phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
+                break;
+            case MANAGER_REVIEW_SAVED:
+                phaseAssessmentService.saveReview(assignId, requestedEmployeeId, phaseAssessHeader);
+                break;
+            case MANAGER_REVIEW_SUBMITTED:
+                phaseAssessmentService.submitReview(assignId, requestedEmployeeId, phaseAssessHeader);
+                break;
+            case EMPLOYEE_AGREED:
+                phaseAssessmentService.agree(assignId, requestedEmployeeId);
+                break;
+            case EMPLOYEE_ESCALATED:
                 phaseAssessmentService.escalate(assignId, requestedEmployeeId);
-            } else if (status == PhaseAssignmentStatus.CONCLUDED) {
+                break;
+            case CONCLUDED:
                 phaseAssessmentService.conclude(assignId, requestedEmployeeId);
+                break;
+            default:
+                break;
             }
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {

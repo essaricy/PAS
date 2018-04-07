@@ -73,6 +73,7 @@ public class EmployeeService {
 	}
 
 	public List<Result> syncEmployees() throws Exception {
+	    LOGGER.info("syncEmployees: START");
 		List<Result> resultList = new ArrayList<Result>();
 		List<Employee> employeeList = svProjectRepository.getAllEmployees();
 		for (Employee employee : employeeList) {
@@ -81,14 +82,16 @@ public class EmployeeService {
 				save(employee);
 				result.setCode(Result.SUCCESS);
 				result.setMessage(employee.getFirstName() + " " + employee.getLastName() + " updated");
+				LOGGER.info("syncEmployees: sync completed: {} ", employee.getLoginId());
 			}catch (Exception exception) {
 				String message = employee.getFirstName() + " " + employee.getLastName() + " update failed. Error = "+ exception.getMessage();
-				LOGGER.error(message);
+				LOGGER.error("syncEmployees: sync failed: {} ERROR=", employee.getLoginId(), exception.getMessage());
 				result.setCode(Result.FAILURE);
 				result.setMessage(message);
 			}
 			resultList.add(result);
 		}
+		LOGGER.info("syncEmployees: END");
 		return resultList;
 	}
 

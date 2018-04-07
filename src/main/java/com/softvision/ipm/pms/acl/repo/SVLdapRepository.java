@@ -40,7 +40,7 @@ public class SVLdapRepository {
 		env.put(Context.SECURITY_CREDENTIALS, password.toString());
 
 		DirContext ctx = new InitialDirContext(env);
-		LOGGER.info("Authentication completed for user " + userid);
+		LOGGER.info("Authentication completed for user {}", userid);
 		// do something useful with the context...
 		ctx.close();
 	}

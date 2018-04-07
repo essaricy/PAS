@@ -1,5 +1,7 @@
 package com.softvision.ipm.pms.employee.constant;
 
+import java.util.Arrays;
+
 public enum EmploymentType {
 
     PROBATIONARY("Probationary"),
@@ -23,11 +25,7 @@ public enum EmploymentType {
 
     public static EmploymentType get(String name) {
         if (name != null) {
-            for (EmploymentType employmentType : values()) {
-                if (name.trim().equalsIgnoreCase(employmentType.getName())) {
-                    return employmentType;
-                }
-            }
+            return Arrays.stream(values()).filter(e -> e.getName().equalsIgnoreCase(name.trim())).findFirst().orElse(null);
         }
         return null;
     }

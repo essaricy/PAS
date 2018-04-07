@@ -12,7 +12,7 @@ public class ExceptionUtil {
 	public static String getExceptionMessage(Throwable exception) {
 		String message = exception.getMessage();
 		Throwable cause = exception.getCause();
-		LOGGER.info("Exception Class=" + exception.getClass().getName() + ", message=" + message);
+		LOGGER.info("Exception Class={}, message={}", exception.getClass().getName(), message);
 		if (cause == null) {
 			if (message != null) {
 				if (message.contains("already exists")) {

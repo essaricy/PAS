@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
@@ -34,6 +34,8 @@ import com.softvision.ipm.pms.role.service.RoleService;
 
 @Service
 public class ManagerAssignmentService {
+
+    private static final String ASSIGN_TO_IS_NOT_A_MANAGER = "The employee that you are trying to assign to, is not a manager";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ManagerAssignmentService.class);
 
@@ -58,7 +60,8 @@ public class ManagerAssignmentService {
     @PreSecureAssignment(permitManager = true)
     public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
             throws ServiceException {
-        LOGGER.warn("assignToAnotherManager(" + assignmentId + ", " + fromEmployeeId + ", " + toEmployeeId + ")");
+        LOGGER.info("assignToAnotherManager: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId,
+                toEmployeeId);
         if (fromEmployeeId == toEmployeeId) {
             throw new ServiceException("There is no change in the manager. Try assigning to a different manager.");
         }
@@ -66,9 +69,9 @@ public class ManagerAssignmentService {
         AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
                 PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
         if (!roleService.isManager(toEmployeeId)) {
-            LOGGER.warn("assignToAnotherManager(" + assignmentId + ", " + fromEmployeeId + ", " + toEmployeeId
-                    + "): The employee that you are trying to assign to, is not a manager");
-            throw new ServiceException("The employee that you are trying to assign to, is not a manager");
+            LOGGER.error("assignToAnotherManager: assignmentId={}, from={}, to={}, ERROR=", assignmentId,
+                    fromEmployeeId, toEmployeeId, ASSIGN_TO_IS_NOT_A_MANAGER);
+            throw new ServiceException(ASSIGN_TO_IS_NOT_A_MANAGER);
         }
         employeePhaseAssignment.setAssignedBy(toEmployeeId);
         phaseAssignmentDataRepository.save(employeePhaseAssignment);
@@ -76,13 +79,16 @@ public class ManagerAssignmentService {
         // email trigger
         emailRepository.sendChangeManager(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
                 fromEmployeeId, toEmployeeId);
+        LOGGER.info("assignToAnotherManager: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId, toEmployeeId);
     }
 
     public void sendRemiderToSubmit(long phaseAssignId, int loggedInEmployeeId) {
+        LOGGER.info("sendRemiderToSubmit: START phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
         PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
         // email trigger
         emailRepository.sendManagerToEmployeeReminder(employeePhaseAssignment.getPhaseId(),
                 employeePhaseAssignment.getAssignedBy(), employeePhaseAssignment.getEmployeeId());
+        LOGGER.info("sendRemiderToSubmit: END phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
     }
 
     public List<ManagerCycleAssignmentDto> getAllCycles(int employeeId) {
@@ -95,7 +101,7 @@ public class ManagerAssignmentService {
                 continue;
             }
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
-            cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+            cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
             cycleAssignment.setEmployeeAssignments(
                     managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
             List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
@@ -103,7 +109,7 @@ public class ManagerAssignmentService {
             List<AppraisalPhase> phases = cycle.getPhases();
             for (AppraisalPhase phase : phases) {
                 PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
-                phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
+                phaseAssignment.setPhase(AppraisalMapper.getPhase(phase));
                 phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
                         .getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
                 phaseAssignments.add(phaseAssignment);
@@ -115,6 +121,7 @@ public class ManagerAssignmentService {
 
     @Transactional
     public void submitCycle(long cycleAssignId, int fromEmployeeId, int toEmployeeId) throws ServiceException {
+        LOGGER.info("submitCycle: START cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
         CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
         if (employeeCycleAssignment == null) {
             throw new ServiceException("Assignment does not exist.");
@@ -132,18 +139,17 @@ public class ManagerAssignmentService {
                     "Assignment is in '" + cycleAssignmentStatus.getName() + "' status. Cannot change the manager now");
         }
         if (!roleService.isManager(toEmployeeId)) {
-            throw new ServiceException("The employee that you are trying to assign to, is not a manager");
+            LOGGER.error("assignToAnotherManager: cycleAssignId={}, from={}, to={}, ERROR=", cycleAssignId,
+                    fromEmployeeId, toEmployeeId, ASSIGN_TO_IS_NOT_A_MANAGER);
+            throw new ServiceException(ASSIGN_TO_IS_NOT_A_MANAGER);
         }
         employeeCycleAssignment.setSubmittedTo(toEmployeeId);
         employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
         cycleAssignmentDataRepository.save(employeeCycleAssignment);
+        LOGGER.info("submitCycle: END cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
     }
 
     public List<ManagerCycleAssignmentDto> getSubmittedCycles(int employeeId) {
-        // select * from phase_assign
-        // where phase_id in (select id from appr_phase where cycle_id=78)
-        // and employee_id=3822
-
         List<ManagerCycleAssignmentDto> cycleAssignments = new ArrayList<>();
         List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
         // Get all the cycles, ignore DRAFT cycles
@@ -155,7 +161,7 @@ public class ManagerAssignmentService {
             }
             // For each cycle, get cycle assignment for this employee
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
-            cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+            cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
             List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository
                     .getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
             cycleAssignment.setEmployeeAssignments(employeeAssignments);
@@ -166,7 +172,7 @@ public class ManagerAssignmentService {
 
     public List<EmployeePhaseAssignmentDto> getSubmittedCyclePhases(long assignId, int requestedEmployeeId)
             throws ServiceException {
-        LOGGER.info("getSubmittedCyclePhases(" + assignId + ", " + requestedEmployeeId + ")");
+        LOGGER.info("getSubmittedCyclePhases: START assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
         CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
         if (cycleAssignment == null) {
             throw new ServiceException("Invalid assignment");
@@ -177,6 +183,7 @@ public class ManagerAssignmentService {
         }
         List<EmployeePhaseAssignmentDto> phaseAssignmentsInCycle = managerAssignmentRepository
                 .getPhaseAssignmentsInCycle(cycleAssignment.getCycleId(), cycleAssignment.getEmployeeId());
+        LOGGER.info("getSubmittedCyclePhases: END assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
         return phaseAssignmentsInCycle;
     }
 

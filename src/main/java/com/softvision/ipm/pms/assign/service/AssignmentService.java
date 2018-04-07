@@ -61,7 +61,7 @@ public class AssignmentService {
 	public List<Result> bulkAssign(BulkAssignmentDto bulkAssignmentDto) throws ServiceException {
 		List<Result> results = new ArrayList<>();
 		Date assignedAt = Calendar.getInstance().getTime();
-		LOGGER.info("bulkAssign: " + bulkAssignmentDto);
+		LOGGER.info("bulkAssign: START {}", bulkAssignmentDto);
 		if (bulkAssignmentDto == null) {
 			throw new ServiceException("No Assignments are provided.");
 		}
@@ -127,28 +127,15 @@ public class AssignmentService {
 				phaseAssignment.setPhaseId(phaseId);
 				phaseAssignment.setTemplateId(templateId);
 				assignmentRepository.assign(phaseAssignment, phase, employeeName);
-				/*// check if already assigned.
-				CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
-				if (cycleAssignment != null) {
-					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));
-				}
-				cycleAssignment = new CycleAssignment();
-				cycleAssignment.setAssignedAt(assignedAt);
-				cycleAssignment.setAssignedBy(bulkAssignmentDto.getAssignedBy());
-				cycleAssignment.setCycleId(cycleId);
-				cycleAssignment.setEmployeeId(employeeId);
-				cycleAssignment.setTemplateId(templateId);
-				assignmentRepository.assign(cycleAssignment, cycle, employeeName);*/
-				LOGGER.info("bulkAssign: Successful for phaseId: " + phaseId + ", employeeId: " + employeeId
-						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy());
+				LOGGER.info("bulkAssign: Successful for phaseId={}, employeeId={}, templateId={}, assignedBy={}"
+				        , phaseId, employeeId, templateId, bulkAssignmentDto.getAssignedBy());
 				result.setCode(Result.SUCCESS);
 				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
 				result.setCode(Result.FAILURE);
 				result.setMessage(exception.getMessage());
-				LOGGER.info("bulkAssign: Failed for phaseId: " + phaseId + ", employeeId: " + employeeId
-						+ ", templateId: " + templateId + ", assignedBy: " + bulkAssignmentDto.getAssignedBy()
-						+ ", ERROR=" + exception.getMessage(), exception);
+				LOGGER.info("bulkAssign: Failed for phaseId={}, employeeId={}, templateId={}, assignedBy={}, ERROR={}"
+                        , phaseId, employeeId, templateId, bulkAssignmentDto.getAssignedBy(), exception.getMessage());
 			} finally {
 				results.add(result);
 			}

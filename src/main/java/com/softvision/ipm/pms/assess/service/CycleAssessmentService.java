@@ -37,18 +37,17 @@ public class CycleAssessmentService {
 
 	public void abridgeQuietly(int employeeId) {
 		try {
-			LOGGER.info("abridgeQuietly(" + employeeId + ")");
+			LOGGER.info("abridgeQuietly: START {} ", employeeId);
 			abridge(employeeId);
-			LOGGER.info("abridgeQuietly(" + employeeId + ") COMPLETED");
+			LOGGER.info("abridgeQuietly: END {} ", employeeId);
 		} catch (Exception exception) {
-			String error = "Abridge Failed due to the error=" + exception.getMessage();
-			LOGGER.info("abridgeQuietly: FAILED. Error=" + error);
+			LOGGER.warn("abridgeQuietly: FAILED {} ERROR=", employeeId, "Abridge Failed due to the error=" + exception.getMessage());
 		}
 	}
 
 	@Transactional
 	public void abridge(int employeeId) throws ServiceException {
-		LOGGER.info("abridge(" + employeeId + ")");
+	    LOGGER.info("abridge: START {} ", employeeId);
 		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
@@ -70,7 +69,6 @@ public class CycleAssessmentService {
 		}
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
-			LOGGER.warn("employeeCycleAssignment does not exist. Creating a new one from the last phase assignment");
 			// There is a missing cycle assignment. create one.
 			employeeCycleAssignment = new CycleAssignment();
 			employeeCycleAssignment.setAssignedAt(new Date());
@@ -82,13 +80,13 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		LOGGER.info("abridge(" + employeeId + ") COMPLETED");
+		LOGGER.info("abridge: END {} ", employeeId);
 	}
 
 	@Transactional
 	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		LOGGER.warn("assignCycleToNextLevelManager(" + cycleAssignId + ", " + fromEmployeeId + ", " + toEmployeeId + ")");
+		LOGGER.warn("assignCycleToNextLevelManager: START assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
@@ -109,7 +107,7 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		LOGGER.warn("assignCycleToNextLevelManager(" + cycleAssignId + ", " + fromEmployeeId + ", " + toEmployeeId + ") Completed");
+		LOGGER.warn("assignCycleToNextLevelManager: END assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
 	}
 
 }

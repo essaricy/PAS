@@ -105,43 +105,4 @@ public class AssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
-	/*public boolean assignPhases(List<EmployeePhaseAssignment> phaseAssignments) throws ServiceException {
-		for (EmployeePhaseAssignment phaseAssignment : phaseAssignments) {
-			Date assignedAt = phaseAssignment.getAssignedAt();
-			int assignedBy = phaseAssignment.getAssignedBy();
-			int employeeId = phaseAssignment.getEmployeeId();
-			int phaseId = phaseAssignment.getPhaseId();
-			long templateId = phaseAssignment.getTemplateId();
-
-			EmployeePhaseAssignment employeePhaseAssignment = assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId, templateId, employeeId);
-			if (employeePhaseAssignment != null) {
-				throw new ServiceException("Employee (" + employeeId + ") - An appraisal phase has already been assigned by within cycle");
-			}
-			int inserted = jdbcTemplate.update(
-					"INSERT INTO phase_assign("
-							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-							+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
-							phaseId, templateId, employeeId, assignedBy, assignedAt);
-			if (inserted != 1) {
-				throw new ServiceException("Employee (" + employeeId + ") - Unable to assign appraisal phase ");
-			}
-		}
-		return true;
-	}
-
-	public boolean assignPhases(EmployeePhaseAssignment phaseAssignment) {
-		List<AppraisalPhase> phases = cycle.getPhases();
-		for (AppraisalPhase phase : phases) {
-			cycleAssignment.getTemplateId();
-			assignmentPhaseDataRepository.findByPhaseIdAndTemplateIdAndEmployeeId(phaseId, templateId, employeeId)
-			int inserted = jdbcTemplate.update(
-					"INSERT INTO phase_assign("
-							+ "ID, PHASE_ID, TEMPLATE_ID, EMPLOYEE_ID, ASSIGNED_BY, ASSIGNED_AT) "
-							+ "VALUES(nextval('phase_assign_id_seq'), ?, ?, ?, ?, ?)",
-							cycleAssignment.getCycleId(), cycleAssignment.getEmployeeId(),
-							cycleAssignment.getAssignedBy(), cycleAssignment.getAssignedAt());
-		}
-		return true;
-	}*/
-
 }

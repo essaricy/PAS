@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.appraisal.assembler.AppraisalAssembler;
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.assign.model.EmployeeCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
@@ -32,14 +32,14 @@ public class EmployeeAssignmentService {
 			    continue;
 			}
 			EmployeeCycleAssignmentDto cycleAssignment = new EmployeeCycleAssignmentDto();
-			cycleAssignment.setCycle(AppraisalAssembler.getCycle(cycle));
+			cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
 			cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getEmployeeAssignmentInCycle(employeeId, cycleId));
 			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
 			cycleAssignment.setPhaseAssignments(phaseAssignments);
 			List<AppraisalPhase> phases = cycle.getPhases();
 			for (AppraisalPhase phase : phases) {
 				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
-				phaseAssignment.setPhase(AppraisalAssembler.getPhase(phase));
+				phaseAssignment.setPhase(AppraisalMapper.getPhase(phase));
 				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
 				phaseAssignments.add(phaseAssignment);
 			}
