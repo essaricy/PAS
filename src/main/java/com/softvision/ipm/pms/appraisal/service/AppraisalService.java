@@ -27,12 +27,14 @@ public class AppraisalService {
 
 	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
+	@Autowired private AppraisalMapper appraisalMapper;
+
 	public List<AppraisalCycleDto> getCycles() {
-		return AppraisalMapper.getCycleList(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
+		return appraisalMapper.getCycleList(appraisalCycleDataRepository.findAllByOrderByStartDateDesc());
 	}
 
 	public AppraisalCycleDto getCycle(Integer id) {
-		return AppraisalMapper.getCycle(appraisalCycleDataRepository.findById(id));
+		return appraisalMapper.getCycle(appraisalCycleDataRepository.findById(id));
 	}
 
 	public AppraisalCycleDto update(AppraisalCycleDto appraisalCycleDto) throws ServiceException {
@@ -56,9 +58,9 @@ public class AppraisalService {
 			}
 			ValidationUtil.validate(appraisalCycleDto);
 			// TODO validate dates overlap
-			AppraisalCycle appraisalCycle = AppraisalMapper.getCycle(appraisalCycleDto);
+			AppraisalCycle appraisalCycle = appraisalMapper.getCycle(appraisalCycleDto);
 			AppraisalCycle saved = appraisalCycleDataRepository.save(appraisalCycle);
-			return AppraisalMapper.getCycle(saved);
+			return appraisalMapper.getCycle(saved);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
@@ -120,11 +122,11 @@ public class AppraisalService {
 	}
 
 	public AppraisalCycleDto getActiveCycle() {
-		return AppraisalMapper.getCycle(appraisalRepository.getActiveCycle());
+		return appraisalMapper.getCycle(appraisalRepository.getActiveCycle());
 	}
 
 	public List<AppraisalCycleDto> getAssignableCycle() {
-		List<AppraisalCycleDto> cycles = AppraisalMapper.getCycleList(appraisalRepository.getAssignableCycles());
+		List<AppraisalCycleDto> cycles = appraisalMapper.getCycleList(appraisalRepository.getAssignableCycles());
 		return cycles;
 	}
 

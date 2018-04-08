@@ -22,6 +22,8 @@ public class EmployeeAssignmentService {
 
 	@Autowired private EmployeeAssignmentRepository employeeAssignmentRepository;
 
+	@Autowired private AppraisalMapper appraisalMapper;
+
 	public List<EmployeeCycleAssignmentDto> getAllCycles(int employeeId) {
 		List<EmployeeCycleAssignmentDto> cycleAssignments = new ArrayList<>();
 		List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
@@ -32,14 +34,14 @@ public class EmployeeAssignmentService {
 			    continue;
 			}
 			EmployeeCycleAssignmentDto cycleAssignment = new EmployeeCycleAssignmentDto();
-			cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
+			cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
 			cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getEmployeeAssignmentInCycle(employeeId, cycleId));
 			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
 			cycleAssignment.setPhaseAssignments(phaseAssignments);
 			List<AppraisalPhase> phases = cycle.getPhases();
 			for (AppraisalPhase phase : phases) {
 				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
-				phaseAssignment.setPhase(AppraisalMapper.getPhase(phase));
+				phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
 				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
 				phaseAssignments.add(phaseAssignment);
 			}

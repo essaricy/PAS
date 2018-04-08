@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
@@ -14,16 +18,20 @@ import com.softvision.ipm.pms.goal.mapper.GoalMapper;
 import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.model.GoalParamDto;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class Goal_DtoToModel_MapperTest {
+
+	@Autowired GoalMapper goalMapper;
 
     @Test
     public void test_goalNull() {
-        assertNull(GoalMapper.getGoal((GoalDto) null));
+        assertNull(goalMapper.getGoal((GoalDto) null));
     }
 
     @Test
     public void test_paramNull() {
-        assertNull(GoalMapper.getParam((GoalParamDto) null));
+        assertNull(goalMapper.getParam((GoalParamDto) null));
     }
 
     @Test
@@ -32,7 +40,7 @@ public class Goal_DtoToModel_MapperTest {
         dto.setId(10);
         dto.setName("Some Goal Name");
 
-        Goal goal = GoalMapper.getGoal(dto);
+        Goal goal = goalMapper.getGoal(dto);
         assertGoal(dto, goal);
     }
 
@@ -42,7 +50,7 @@ public class Goal_DtoToModel_MapperTest {
         dto.setId(10);
         dto.setName("Some Goal Param Name");
 
-        GoalParam goalParam = GoalMapper.getParam(dto);
+        GoalParam goalParam = goalMapper.getParam(dto);
         assertPhase(dto, goalParam);
     }
 
@@ -67,7 +75,7 @@ public class Goal_DtoToModel_MapperTest {
             dto.setParams(goalParamDtoList);
         }
 
-        List<Goal> goals = GoalMapper.getGoals(dtoList);
+        List<Goal> goals = goalMapper.getGoals(dtoList);
         assertEquals(dtoList.size(), goals.size());
 
         for (int index = 0; index < dtoList.size(); index++) {
@@ -98,7 +106,7 @@ public class Goal_DtoToModel_MapperTest {
             dtosList1.add(dto);
         }
 
-        List<GoalParam> goalParams = GoalMapper.getParams(dtosList1);
+        List<GoalParam> goalParams = goalMapper.getParams(dtosList1);
         assertEquals(dtosList1.size(), goalParams.size());
 
         for (int index = 0; index < goalParams.size(); index++) {

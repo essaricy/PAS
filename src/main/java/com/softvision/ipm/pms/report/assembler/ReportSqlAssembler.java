@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.report.model.PhasewiseEmployeeStatusCountDto;
 
-public class ReportAssembler {
+public class ReportSqlAssembler {
 
 	public static PhasewiseEmployeeStatusCountDto getEmployeeStatusCount(ResultSet rs) throws SQLException {
 		PhasewiseEmployeeStatusCountDto countDto = new PhasewiseEmployeeStatusCountDto();

@@ -4,46 +4,48 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
-import com.softvision.ipm.pms.common.mapper.CustomModelMapper;
 
+@Component
 public class AppraisalMapper {
 
-    private static ModelMapper mapper = new CustomModelMapper();
+	@Autowired private ModelMapper mapper;
 
-	public static List<AppraisalCycleDto> getCycleList(List<AppraisalCycle> all) {
+	public List<AppraisalCycleDto> getCycleList(List<AppraisalCycle> all) {
 	    return mapper.map(all, new TypeToken<List<AppraisalCycleDto>>() {}.getType());
 	}
 
-	public static AppraisalCycleDto getCycle(AppraisalCycle object) {
+	public AppraisalCycleDto getCycle(AppraisalCycle object) {
 	    return mapper.map(object, AppraisalCycleDto.class);
 	}
 
-	public static List<AppraisalPhaseDto> getPhaseList(List<AppraisalPhase> all) {
+	public List<AppraisalPhaseDto> getPhaseList(List<AppraisalPhase> all) {
 	    return mapper.map(all, new TypeToken<List<AppraisalPhaseDto>>() {}.getType());
 	}
 
-	public static AppraisalPhaseDto getPhase(AppraisalPhase object) {
+	public AppraisalPhaseDto getPhase(AppraisalPhase object) {
 	    return mapper.map(object, AppraisalPhaseDto.class);
 	}
 
-    public static List<AppraisalCycle> getCycles(List<AppraisalCycleDto> all) {
+    public List<AppraisalCycle> getCycles(List<AppraisalCycleDto> all) {
         return mapper.map(all, new TypeToken<List<AppraisalCycle>>() {}.getType());
     }
 
-	public static AppraisalCycle getCycle(AppraisalCycleDto dto) {
+	public AppraisalCycle getCycle(AppraisalCycleDto dto) {
 	    return mapper.map(dto, AppraisalCycle.class);
 	}
 
-	public static List<AppraisalPhase> getPhases(List<AppraisalPhaseDto> phases) {
+	public List<AppraisalPhase> getPhases(List<AppraisalPhaseDto> phases) {
 	    return mapper.map(phases, new TypeToken<List<AppraisalPhase>>() {}.getType());
 	}
 
-	public static AppraisalPhase getPhase(AppraisalPhaseDto dto) {
+	public AppraisalPhase getPhase(AppraisalPhaseDto dto) {
 	    return mapper.map(dto, AppraisalPhase.class);
 	}
 

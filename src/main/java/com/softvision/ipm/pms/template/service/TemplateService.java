@@ -20,9 +20,9 @@ import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.goal.service.GoalService;
-import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.constant.TemplateComparator;
 import com.softvision.ipm.pms.template.entity.Template;
+import com.softvision.ipm.pms.template.mapper.TemplateMapper;
 import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
@@ -47,25 +47,27 @@ public class TemplateService {
 
 	@Autowired private EmployeeRepository employeeRepository;
 
+	@Autowired private TemplateMapper templateMapper;
+
 	public List<TemplateDto> getTemplates() {
 	    List<TemplateDto> templateDtoList = null;
 	    List<Template> templates = templateDataRepository.findAll();
 	    if (templates != null && !templates.isEmpty()) {
 	        Collections.sort(templates, TemplateComparator.BY_NAME);
-	        templateDtoList = TemplateAssembler.getTemplateDtoList(templates);
+	        templateDtoList = templateMapper.getTemplateDtoList(templates);
 	        updateTemplateDtoList(templateDtoList);
 	    }
 		return templateDtoList;
 	}
 
 	public TemplateDto getTemplate(long id) {
-		TemplateDto templateDto = TemplateAssembler.getTemplateDto(templateDataRepository.findById(id));
+		TemplateDto templateDto = templateMapper.getTemplateDto(templateDataRepository.findById(id));
 		updateTemplateDto(templateDto);
 		return templateDto;
 	}
 
 	public TemplateDto getNewTemplate() {
-		return TemplateAssembler.getTemplateDto(goalService.getActiveGoals());
+		return templateMapper.getTemplateDto(goalService.getActiveGoals());
 	}
 
 	@Transactional
@@ -112,9 +114,9 @@ public class TemplateService {
 			if (totalWeightage != 100) {
 				throw new ValidationException("Total Weightage should accumulate to 100%. Its now " + totalWeightage + "%");
 			}
-			Template template = TemplateAssembler.getTemplate(templateDto);
+			Template template = templateMapper.getTemplate(templateDto);
 			templateRepository.save(template);
-			templateDto=TemplateAssembler.getTemplateDto(template);
+			templateDto=templateMapper.getTemplateDto(template);
 			LOGGER.info("update: END templateDto={}" + templateDto);
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
@@ -141,7 +143,7 @@ public class TemplateService {
 	public List<TemplateDto> searchName(String searchString) {
 		List<TemplateDto> templateDtoList = null;
 		if (searchString != null) {
-			templateDtoList = TemplateAssembler.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
+			templateDtoList = templateMapper.getTemplateDtoList(templateDataRepository.findAll(TemplateSpecs.searchInName(searchString)));
 			updateTemplateDtoList(templateDtoList);
 		}
 		return templateDtoList;

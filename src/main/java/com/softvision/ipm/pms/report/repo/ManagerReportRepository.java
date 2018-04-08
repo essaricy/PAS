@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.softvision.ipm.pms.common.repo.AbstractRepository;
-import com.softvision.ipm.pms.report.assembler.ReportAssembler;
+import com.softvision.ipm.pms.report.assembler.ReportSqlAssembler;
 import com.softvision.ipm.pms.report.model.PhasewiseEmployeeStatusCountDto;
 
 @Repository
@@ -20,7 +20,7 @@ public class ManagerReportRepository extends AbstractRepository {
 			    new Object[] {requestedEmplyeeId},
 			    new RowMapper<PhasewiseEmployeeStatusCountDto>() {
 			        public PhasewiseEmployeeStatusCountDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			        	return ReportAssembler.getEmployeeStatusCount(rs);
+			        	return ReportSqlAssembler.getEmployeeStatusCount(rs);
 			        }
 			    });
 		return list;

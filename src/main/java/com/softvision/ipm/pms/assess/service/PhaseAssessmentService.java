@@ -30,9 +30,9 @@ import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.email.repo.EmailRepository;
 import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
-import com.softvision.ipm.pms.template.assembler.TemplateAssembler;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
+import com.softvision.ipm.pms.template.mapper.TemplateMapper;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
 @Service
@@ -56,6 +56,10 @@ public class PhaseAssessmentService {
 
 	@Autowired private EmployeeRepository employeeRepository;
 
+	@Autowired private AppraisalMapper appraisalMapper;
+
+	@Autowired private TemplateMapper templateMapper;
+
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
@@ -65,12 +69,12 @@ public class PhaseAssessmentService {
 		phaseAssessment.setEmployeeAssignment(employeeAssignment);
 
 		int phaseId = employeePhaseAssignment.getPhaseId();
-		phaseAssessment.setPhase(AppraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
+		phaseAssessment.setPhase(appraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
 
 		long templateId = employeePhaseAssignment.getTemplateId();
 		Template template = templateDataRepository.findById(templateId);
 		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
-		phaseAssessment.setTemplateHeaders(TemplateAssembler.getTemplateHeaderDtoList(templateHeaders));
+		phaseAssessment.setTemplateHeaders(templateMapper.getTemplateHeaderDtoList(templateHeaders));
 
 		List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
 				.findByAssignIdOrderByStatusAsc(assignmentId);

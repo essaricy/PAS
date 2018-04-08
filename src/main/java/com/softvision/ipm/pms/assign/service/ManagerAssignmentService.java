@@ -57,6 +57,8 @@ public class ManagerAssignmentService {
     @Autowired
     private EmailRepository emailRepository;
 
+    @Autowired private AppraisalMapper appraisalMapper;
+
     @PreSecureAssignment(permitManager = true)
     public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
             throws ServiceException {
@@ -101,7 +103,7 @@ public class ManagerAssignmentService {
                 continue;
             }
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
-            cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
+            cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
             cycleAssignment.setEmployeeAssignments(
                     managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
             List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
@@ -109,7 +111,7 @@ public class ManagerAssignmentService {
             List<AppraisalPhase> phases = cycle.getPhases();
             for (AppraisalPhase phase : phases) {
                 PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
-                phaseAssignment.setPhase(AppraisalMapper.getPhase(phase));
+                phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
                 phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
                         .getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
                 phaseAssignments.add(phaseAssignment);
@@ -161,7 +163,7 @@ public class ManagerAssignmentService {
             }
             // For each cycle, get cycle assignment for this employee
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
-            cycleAssignment.setCycle(AppraisalMapper.getCycle(cycle));
+            cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
             List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository
                     .getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
             cycleAssignment.setEmployeeAssignments(employeeAssignments);

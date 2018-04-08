@@ -8,6 +8,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
@@ -16,16 +20,20 @@ import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class Appraisal_ModelToDto_MapperTest {
+
+	@Autowired private AppraisalMapper appraisalMapper;
 
     @Test
     public void test_cycleNull() {
-        assertNull(AppraisalMapper.getCycle((AppraisalCycle) null));
+        assertNull(appraisalMapper.getCycle((AppraisalCycle) null));
     }
 
     @Test
     public void test_phaseNull() {
-        assertNull(AppraisalMapper.getPhase((AppraisalPhase) null));
+        assertNull(appraisalMapper.getPhase((AppraisalPhase) null));
     }
 
     @Test
@@ -37,7 +45,7 @@ public class Appraisal_ModelToDto_MapperTest {
         cycle.setEndDate(new Date());
         cycle.setStatus(AppraisalCycleStatus.ACTIVE.toString());
 
-        AppraisalCycleDto dto = AppraisalMapper.getCycle(cycle);
+        AppraisalCycleDto dto = appraisalMapper.getCycle(cycle);
         assertCycle(cycle, dto);
     }
 
@@ -49,7 +57,7 @@ public class Appraisal_ModelToDto_MapperTest {
         phase.setStartDate(new Date());
         phase.setEndDate(new Date());
 
-        AppraisalPhaseDto dto = AppraisalMapper.getPhase(phase);
+        AppraisalPhaseDto dto = appraisalMapper.getPhase(phase);
         assertPhase(phase, dto);
     }
 
@@ -79,7 +87,7 @@ public class Appraisal_ModelToDto_MapperTest {
             cycle.setPhases(phases);
         }
 
-        List<AppraisalCycleDto> cycleDtoList = AppraisalMapper.getCycleList(cycles);
+        List<AppraisalCycleDto> cycleDtoList = appraisalMapper.getCycleList(cycles);
         assertEquals(cycles.size(), cycleDtoList.size());
 
         for (int index = 0; index < cycles.size(); index++) {
@@ -112,7 +120,7 @@ public class Appraisal_ModelToDto_MapperTest {
             phases.add(phase);
         }
 
-        List<AppraisalPhaseDto> phaseDtoList = AppraisalMapper.getPhaseList(phases);
+        List<AppraisalPhaseDto> phaseDtoList = appraisalMapper.getPhaseList(phases);
         assertEquals(phases.size(), phaseDtoList.size());
 
         for (int index = 0; index < phaseDtoList.size(); index++) {

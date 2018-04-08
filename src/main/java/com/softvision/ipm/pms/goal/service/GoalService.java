@@ -24,8 +24,10 @@ public class GoalService {
 	@Autowired
 	private GoalDataRepository goalDataRepository;
 
+	@Autowired GoalMapper goalMapper;
+
 	public List<GoalDto> getGoals() {
-		return GoalMapper.getGoalList(goalDataRepository.findAll());
+		return goalMapper.getGoalList(goalDataRepository.findAll());
 	}
 
 	public List<GoalDto> getActiveGoals() {
@@ -45,7 +47,7 @@ public class GoalService {
 	}
 
 	public GoalDto getGoal(Long id) {
-		return GoalMapper.getGoal(goalDataRepository.findById(id));
+		return goalMapper.getGoal(goalDataRepository.findById(id));
 	}
 
 	public GoalDto update(GoalDto goalDto) throws ServiceException {
@@ -55,9 +57,9 @@ public class GoalService {
 				throw new ServiceException("No Goal is provided.");
 			}
 			ValidationUtil.validate(goalDto);
-			Goal goal = GoalMapper.getGoal(goalDto);
+			Goal goal = goalMapper.getGoal(goalDto);
 			LOGGER.info("update: END goalDto={}", goalDto);
-			return GoalMapper.getGoal(goalDataRepository.save(goal));
+			return goalMapper.getGoal(goalDataRepository.save(goal));
 		} catch (Exception exception) {
 			String message = ExceptionUtil.getExceptionMessage(exception);
 			throw new ServiceException(message, exception);
