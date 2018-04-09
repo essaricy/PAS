@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.assign.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Min;
@@ -28,6 +29,16 @@ public class EmployeeAssignmentRest {
 	@RequestMapping(value="list", method=RequestMethod.GET)
     public List<EmployeeCycleAssignmentDto> getAllCycles() {
 		return employeeAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
+    }
+
+	@RequestMapping(value="active", method=RequestMethod.GET)
+    public List<EmployeeCycleAssignmentDto> getActiveCycle() {
+		List<EmployeeCycleAssignmentDto> cycleAssignmentDtos = new ArrayList<>();
+		EmployeeCycleAssignmentDto activeCycleAssignment = employeeAssignmentService.getActiveCycle(RestUtil.getLoggedInEmployeeId());
+		if (activeCycleAssignment != null) {
+			cycleAssignmentDtos.add(activeCycleAssignment);
+		}
+		return cycleAssignmentDtos;
     }
 
 	@RequestMapping(value="change/phase-status/agree/{phaseAssignId}", method=RequestMethod.PUT)

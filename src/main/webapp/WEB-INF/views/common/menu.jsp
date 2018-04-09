@@ -110,7 +110,7 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/employee/assignment/list">My Appraisals</a>
+              <a href="<%=request.getContextPath()%>/employee/assignment/active">My Appraisals</a>
             </li>
           </ul>
         </li>

@@ -1,29 +1,30 @@
 $(function () {
   $.fn.employeeAssignment=function( options ) {
     var settings=$.extend({
-      contextPath: null,
+    contextPath: null,
     url: null,
   }, options );
 
-    var obj=$(this);
+  var obj=$(this);
 
-    $.fn.ajaxGet({
-      url: settings.url,
-      onSuccess: renderAssignments,
-      onError: onErrorAssignedEmployees
-    });
+  $.fn.ajaxGet({
+    url: settings.url,
+    onSuccess: renderAssignments,
+    onError: onErrorAssignedEmployees,
+    onComplete: renderComplete
+  });
 
-    function renderAssignments(data) {
-      if (data == null || data.length == 0) {
+  function renderAssignments(data) {
+    if (data == null || data.length == 0) {
       showErrorCard('There are no assignments found');
-      } else{
+    } else{
       renderEmployeeAssignments(data);
-      }
     }
+  }
 
-    function renderEmployeeAssignments(data) {
-      //$(data).each(function (index, cycleAssignment) {
-      for (var index = 0; index < data.length; index++) {
+  function renderEmployeeAssignments(data) {
+    //$(data).each(function (index, cycleAssignment) {
+    for (var index = 0; index < data.length; index++) {
       var cycleAssignment = data[index];
       var cycle=cycleAssignment.cycle;
       var cycleStatus=getAppraisalCycleStatus(cycle.status);
@@ -31,39 +32,39 @@ $(function () {
         continue;
       } 
 
-        var cardRow=$('<div class="row clearfix">');
-        var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
-        var card=$('<div class="card">');
-        var cardHeader=$('<div class="header">');
-        $(cardHeader).addClass(cycleStatus.colorClass);
-        //var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
-        var cardTitle=$('<h2>' + cycle.name + '</h2>');
-        var cardBody=$('<div class="body">');
-        var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
-            + '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
-            + '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
-            );
-        var tabContent=$('<div class="tab-content">');
+      var cardRow=$('<div class="row clearfix">');
+      var cardColumn=$('<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
+      var card=$('<div class="card">');
+      var cardHeader=$('<div class="header">');
+      $(cardHeader).addClass(cycleStatus.colorClass);
+      //var cardTitle=$('<h2>' + cycle.name + '</h2><small>This appraisal cycle is <code>' + cycle.status + "</code></small>");
+      var cardTitle=$('<h2>' + cycle.name + '</h2>');
+      var cardBody=$('<div class="body">');
+      var tabsHeadings=$('<ul class="nav nav-tabs tab-col-orange" role="tablist">'
+        + '<li role="presentation" class="active"><a href="#PhasesTab_' + cycle.id +'" data-toggle="tab">Phases</a></li>'
+        + '<li role="presentation"><a href="#CycleTab_' + cycle.id +'" data-toggle="tab">Cycle</a></li>'
+      );
+      var tabContent=$('<div class="tab-content">');
 
-        // Render CYCLE Tab
-        var cycleTabPanel=$('<div role="tabpanel" class="tab-pane fade out" id="CycleTab_' + cycle.id +'">');
-        var employeeAssignment=cycleAssignment.employeeAssignment;
-        if (employeeAssignment==null) {
-          $(cycleTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this cycle.</p>');
-        } else {
-          var table=$('<table class="table table-striped">');
-          var thead=$('<thead>');
-          var theadRow=$('<tr>');
-          $(table).append(thead);
-          $(thead).append(theadRow);
-          //$(theadRow).append('<th>Employee Id</th>');
-         // $(theadRow).append('<th>Employee Name</th>');
-          $(theadRow).append('<th>Assigned By</th>');
-          $(theadRow).append('<th>Assigned On</th>');
-          $(theadRow).append('<th>Status</th>');
-          $(theadRow).append('<th>Action</th>');
+      // Render CYCLE Tab
+      var cycleTabPanel=$('<div role="tabpanel" class="tab-pane fade out" id="CycleTab_' + cycle.id +'">');
+      var employeeAssignment=cycleAssignment.employeeAssignment;
+      if (employeeAssignment==null) {
+        $(cycleTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this cycle.</p>');
+      } else {
+        var table=$('<table class="table table-striped">');
+        var thead=$('<thead>');
+        var theadRow=$('<tr>');
+        $(table).append(thead);
+        $(thead).append(theadRow);
+        //$(theadRow).append('<th>Employee Id</th>');
+        // $(theadRow).append('<th>Employee Name</th>');
+        $(theadRow).append('<th>Assigned By</th>');
+        $(theadRow).append('<th>Assigned On</th>');
+        $(theadRow).append('<th>Status</th>');
+        $(theadRow).append('<th>Action</th>');
 
-          var ea=employeeAssignment;
+        var ea=employeeAssignment;
 
           var tbody=$('<tbody>');
           var assignedTo=ea.assignedTo;
@@ -240,6 +241,12 @@ $(function () {
 
       function onErrorAssignedEmployees(error) {
       showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
+      }
+      
+      function renderComplete() {
+   	    if (settings.onComplete) {
+   	      settings.onComplete();
+	    }
       }
   };
 });
