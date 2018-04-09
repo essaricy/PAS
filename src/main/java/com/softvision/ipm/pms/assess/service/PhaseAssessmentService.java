@@ -12,15 +12,15 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
-import com.softvision.ipm.pms.assess.assembler.AssessmentAssembler;
 import com.softvision.ipm.pms.assess.entity.AssessDetail;
 import com.softvision.ipm.pms.assess.entity.AssessHeader;
+import com.softvision.ipm.pms.assess.mapper.AssessMapper;
 import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.AssessmentHeaderDataRepository;
-import com.softvision.ipm.pms.assign.assembler.AssignmentAssembler;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
+import com.softvision.ipm.pms.assign.mapper.AssignmentMapper;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
@@ -60,11 +60,15 @@ public class PhaseAssessmentService {
 
 	@Autowired private TemplateMapper templateMapper;
 
+	@Autowired private AssignmentMapper assignmentMapper;
+
+	@Autowired private AssessMapper assessMapper;
+
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
-		EmployeeAssignmentDto employeeAssignment = AssignmentAssembler.get(employeePhaseAssignment);
+		EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
 		employeeAssignment.setAssignedTo(employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId()));
 		phaseAssessment.setEmployeeAssignment(employeeAssignment);
 
@@ -91,7 +95,7 @@ public class PhaseAssessmentService {
 		    // remove the top phase header if its requested by the employee
 		    assessHeaders.remove(assessHeaders.size() - 1);
 		}
-		phaseAssessment.setAssessHeaders(AssessmentAssembler.getAssessHeaderDtos(assessHeaders));
+		phaseAssessment.setAssessHeaders(assessMapper.getAssessHeaderList(assessHeaders));
 		return phaseAssessment;
 	}
 
@@ -235,7 +239,7 @@ public class PhaseAssessmentService {
 		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Update the assessment header status
 		phaseAssessHeaderDto.setStatus(saved.getStatus());
-		AssessHeader phaseAssessHeader = AssessmentAssembler.getAssessHeader(phaseAssessHeaderDto);
+		AssessHeader phaseAssessHeader = assessMapper.getHeader(phaseAssessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
 		LOGGER.info("update: END assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
 		return employeePhaseAssignment;
