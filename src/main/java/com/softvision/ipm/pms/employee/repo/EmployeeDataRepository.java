@@ -12,18 +12,23 @@ import org.springframework.stereotype.Repository;
 import com.softvision.ipm.pms.employee.entity.Employee;
 
 @Repository
-public interface EmployeeRepository extends CrudRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
+public interface EmployeeDataRepository extends CrudRepository<Employee, Integer>, JpaSpecificationExecutor<Employee> {
 
-	Employee findByEmployeeId(Integer employeeId);
-
-	Employee findByLoginId(String loginId);
+	@Query("select e from Employee e where active='Y'")
+	List<Employee> findAll();
 
 	List<Employee> findAll(Specification<Employee> spec);
+
+	@Query("select e from Employee e where active='Y' and employee_id=:employeeId")
+	Employee findByEmployeeId(@Param("employeeId") Integer employeeId);
+
+	@Query("select e from Employee e where active='Y' and login_id=:loginId")
+	Employee findByLoginId(@Param("loginId") String loginId);
 
 	@Query("SELECT DISTINCT employmentType FROM Employee ORDER BY employmentType")
 	List<String> findEmployeeTypes();
 	
-	@Query(value = "select e.* from employee e inner join employee_role er on e.EMPLOYEE_ID =er.EMPLOYEE_ID inner join role r on er.role_id=r.id and upper(r.role_name)=upper(:roleName)", nativeQuery = true)
+	@Query(value = "select e.* from employee e inner join employee_role er on e.EMPLOYEE_ID =er.EMPLOYEE_ID inner join role r on er.role_id=r.id and upper(r.role_name)=upper(:roleName) where active='Y' ", nativeQuery = true)
 	List<Employee> findEmployeesByRoleName(@Param("roleName") String roleName);
 
 }

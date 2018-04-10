@@ -159,11 +159,11 @@ $(function () {
     "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,
     "sAjaxDataProp":"",
 	"columns": [
-      { "data": "EmployeeId" },
-      { "data": "FirstName" },
-      { "data": "LastName" },
-      { "data": "Band" },
-      { "data": "Designation" },
+      { "data": "employeeId" },
+      { "data": "firstName" },
+      { "data": "lastName" },
+      { "data": "band" },
+      { "data": "designation" },
     ],
     columnDefs: [
       { 

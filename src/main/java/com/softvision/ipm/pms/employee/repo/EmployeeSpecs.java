@@ -17,11 +17,17 @@ public class EmployeeSpecs {
 		return new Specification<Employee>() {
 			public Predicate toPredicate(Root<Employee> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 		        if (Pattern.matches("\\d+", searchString)) {
-		            return builder.equal(root.get("employeeId"), Integer.valueOf(searchString));
+		            return builder.and(
+		            		builder.equal(builder.upper(root.get("active")), "Y"),
+		            		builder.equal(root.get("employeeId"), Integer.valueOf(searchString)));
 		        }
-		        return builder.or(
-		                builder.like(builder.lower(root.get("firstName")), searchString.toLowerCase() + "%"),
-		                builder.like(builder.lower(root.get("lastName")), searchString.toLowerCase() + "%"));
+		        return builder.and(
+	            		builder.equal(builder.upper(root.get("active")), "Y"),
+	            		builder.or(
+	            				builder.like(builder.lower(root.get("firstName")), searchString.toLowerCase() + "%"),
+	    		                builder.like(builder.lower(root.get("lastName")), searchString.toLowerCase() + "%")
+	    		        )
+	            );
 			}
 		};
 	}

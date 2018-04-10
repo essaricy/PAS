@@ -249,9 +249,9 @@
         "ajax": "<%=request.getContextPath()%>/assignment/cycle/employee-status/" + cycleId,
         "sAjaxDataProp":"",
 		"columns": [
-            { "data": "assignedTo.EmployeeId" },
-            { "data": "assignedTo.FirstName" },
-            { "data": "assignedBy.FirstName" },
+            { "data": "assignedTo.employeeId" },
+            { "data": "assignedTo.firstName" },
+            { "data": "assignedBy.firstName" },
             { "data": "assignedAt" },
             { "data": "status" },
         ],
@@ -266,13 +266,13 @@
             },
             {
                 "render": function(data, type, full) {
-                    return full.assignedTo.FirstName+' '+full.assignedTo.LastName;
+                    return full.assignedTo.fullName;
                 },
                 "targets": [1] 
             },
             {
                 "render": function(data, type, full) {
-                    return full.assignedBy.FirstName+' '+full.assignedBy.LastName;
+                    return full.assignedBy.fullName;
                 },
                 "targets": [2] 
             }
@@ -303,9 +303,9 @@
       "ajax": "<%=request.getContextPath()%>/assignment/phase/employee-status/" + cycleId+"/"+phaseId,
       "sAjaxDataProp":"",
 		"columns": [
-          { "data": "assignedTo.EmployeeId" },
-          { "data": "assignedTo.FirstName" },
-          { "data": "assignedBy.FirstName" },
+          { "data": "assignedTo.employeeId" },
+          { "data": "assignedTo.firstName" },
+          { "data": "assignedBy.firstName" },
           { "data": "assignedAt" },
           { "data": "status" },
       ],
@@ -320,13 +320,13 @@
           },
           {
               "render": function(data, type, full) {
-                  return full.assignedTo.FirstName+' '+full.assignedTo.LastName;
+                  return full.assignedTo.fullName;
               },
               "targets": [1] 
           },
           {
               "render": function(data, type, full) {
-                  return full.assignedBy.FirstName+' '+full.assignedBy.LastName;
+                  return full.assignedBy.fullName;
               },
               "targets": [2] 
           }

@@ -51,17 +51,17 @@ $(function () {
             var assignedTo=ea.assignedTo;
             var assignedBy=ea.assignedBy;
             var phaseStatus=getPhaseAssignmentStatus(ea.status);
-            var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
+            var row=$(tbody).find('tr:has(td:first:contains("' + assignedTo.employeeId + '"))');
             if(row.length == 0) {
               row=$('<tr>');
-              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-              $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+              $(row).append('<td>' + assignedTo.fullName + '</td>');
             }
             if (phaseStatus == PhaseAssignmentStatus.CONCLUDED) {
               var cycleScoreLink=$('<a href="#" data-toggle="modal" data-target="#EmployeePhaseAssignments_Modal" >');
               $(cycleScoreLink).append(ea.score.toFixed(2));
-              $(cycleScoreLink).attr('data-employee-id', assignedTo.EmployeeId);
-              $(cycleScoreLink).attr('data-employee-name', assignedTo.FirstName + ' ' + assignedTo.LastName);
+              $(cycleScoreLink).attr('data-employee-id', assignedTo.employeeId);
+              $(cycleScoreLink).attr('data-employee-name', assignedTo.fullName);
 
               var scoreTd=$('<td>');
               $(scoreTd).append(cycleScoreLink);
@@ -117,8 +117,7 @@ $(function () {
         $(employeePhaseAssignments).each(function (index, employeePhaseAssignment) {
           var row=$('<tr>');
           $(row).append('<td>' + employeePhaseAssignment.phase.name + '</td>');
-          $(row).append('<td>' + employeePhaseAssignment.assignedBy.FirstName + ' '
-              + employeePhaseAssignment.assignedBy.LastName + '</td>');
+          $(row).append('<td>' + employeePhaseAssignment.assignedBy.fullName + '</td>');
           $(row).append('<td>' + getPhaseStatusLabel(employeePhaseAssignment.status) + '</td>');
           $(row).append('<td><b>' + employeePhaseAssignment.score.toFixed(2) + '</b></td>');
           $(tbody).append(row);

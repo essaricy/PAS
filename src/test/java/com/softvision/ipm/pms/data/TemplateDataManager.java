@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.common.exception.ServiceException;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.model.GoalParamDto;
 import com.softvision.ipm.pms.goal.service.GoalService;
@@ -45,7 +45,7 @@ public class TemplateDataManager implements AbstractDataManager {
 			TemplateDto templateDto = new TemplateDto();
 			templateDto.setId(0);
 			templateDto.setName("Template " + (templateIndex+1));
-			Employee updatedBy = new Employee();
+			EmployeeDto updatedBy = new EmployeeDto();
 			updatedBy.setEmployeeId(1136); // TODO Randomize
 			templateDto.setUpdatedBy(updatedBy);
 			templateDto.setUpdatedAt(new Date());

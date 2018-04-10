@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.mail.Session;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration.AccessLevel;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
+import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.assess.entity.AssessDetail;
 import com.softvision.ipm.pms.assess.entity.AssessHeader;
 import com.softvision.ipm.pms.assess.model.AssessDetailDto;
@@ -19,6 +22,8 @@ import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.goal.entity.Goal;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
 import com.softvision.ipm.pms.goal.model.GoalDto;
@@ -29,6 +34,11 @@ import com.softvision.ipm.pms.template.entity.TemplateHeader;
 import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
+import com.softvision.ipm.pms.user.model.User;
+
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 @Configuration
 public class ExternalBeanConfiguration {
@@ -87,7 +97,7 @@ public class ExternalBeanConfiguration {
 		        return super.map(source, destinationType);
 		    }
 		};
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		mapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT);
 
 		// AppraisalCycle mappings
 		/*mapper.typeMap(AppraisalCycle.class, AppraisalCycleDto.class)
@@ -213,7 +223,34 @@ public class ExternalBeanConfiguration {
         .addMapping(src -> src.getScore(), AssessDetail::setScore)
         .addMapping(src -> src.getComments(), AssessDetail::setComments);
 
+		mapper.typeMap(Employee.class, EmployeeDto.class);
+		//.addMapping(src -> src.getFirstName() + " " + src.getLastName(), EmployeeDto::setFullName);
+
+		mapper.typeMap(Employee.class, User.class)
+        .addMapping(src -> src.getBand(), User::setBand)
+        .addMapping(src -> src.getDesignation(), User::setDesignation)
+        .addMapping(src -> src.getEmployeeId(), User::setEmployeeId)
+        .addMapping(src -> src.getFirstName(), User::setFirstName)
+        .addMapping(src -> src.getHiredOn(), User::setJoinedDate)
+        .addMapping(src -> src.getLastName(), User::setLastName)
+        .addMapping(src -> src.getLocation(), User::setLocation)
+        .addMapping(src -> src.getLoginId(), User::setUsername)
+        //.addMapping(src -> get(src.getEmployeeId()), User::setImageUrl)
+        ;
+
 		return mapper;
 	}
 
+	/*private Object get(Integer employeeId) {
+		return "https://opera.softvision.com/Content/Core/img/Profile/" + employeeId + ".jpg";
+	}*/
+
+	@Bean
+	public MapperFacade getOrikaBeanMapper() {
+		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+		mapperFactory.classMap(AppraisalCycle.class, AppraisalCycleDto.class);
+		mapperFactory.classMap(AppraisalCycleDto.class, AppraisalCycle.class);
+		MapperFacade mapper = mapperFactory.getMapperFacade();
+		return mapper;
+	}
 }

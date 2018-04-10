@@ -6,7 +6,7 @@ import java.util.Date;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 
 import lombok.Data;
 
@@ -19,10 +19,10 @@ public class EmployeeAssignmentDto implements Serializable {
 	private long assignmentId;
 
 	@NotNull(message="Assigned to Employee information must be provided")
-	private Employee assignedTo;
+	private EmployeeDto assignedTo;
 
 	@NotNull(message="Assigned by Employee information must be provided")
-	private Employee assignedBy;
+	private EmployeeDto assignedBy;
 
 	private Date assignedAt;
 

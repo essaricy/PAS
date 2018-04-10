@@ -1,7 +1,6 @@
 package com.softvision.ipm.pms.data;
 
 import java.sql.Date;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAdjusters;
@@ -11,7 +10,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
@@ -38,7 +36,7 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 		//activateCycle();
 	}
 
-	private void activateCycle() throws ServiceException {
+	/*private void activateCycle() throws ServiceException {
 		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
 		System.out.println("##################################### "+ cycles.size());
 		for (AppraisalCycleDto cycle : cycles) {
@@ -58,7 +56,7 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 		}
 		//AppraisalCycleDto activeCycle = cycles.get(RANDOM.nextInt(cycles.size()));
 		//appraisalService.changeStatus(activeCycle.getId(), AppraisalCycleStatus.ACTIVE);
-	}
+	}*/
 
 	private void createAppraisalCycles(int startYear, int numberOfYears) throws ServiceException {
 		int[] numberOfPhaseChoice = {1, 2, 3, 4, 6, 12};

@@ -56,11 +56,11 @@ $(function() {
               var assignedTo = ea.assignedTo;
               var assignedBy = ea.assignedBy;
               var phaseStatus = getPhaseAssignmentStatus(ea.status);
-              var row = $(tbody).find('tr:has(td:first:contains("' + assignedTo.EmployeeId + '"))');
+              var row = $(tbody).find('tr:has(td:first:contains("' + assignedTo.employeeId + '"))');
               if (row.length == 0) {
                 row = $('<tr>');
-                $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-                $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+                $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+                $(row).append('<td>' + assignedTo.fullName + '</td>');
               }
               // $(row).append('<td>' + getPhaseStatusLabel(ea.status) +
               // '</td>');

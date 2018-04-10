@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.common.util.CollectionUtil;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.EmployeeRole;
@@ -34,8 +34,11 @@ public class RoleService {
 	@Autowired
 	private EmployeeService employeeService;
 
+	@Autowired
+	private EmployeeMapper employeeMapper;
+
 	public List<Role> getRoles() {
-		return CollectionUtil.toList(roleDataRepository.findAll());
+		return roleDataRepository.findAll();
 	}
 
 	public List<Role> getRole(int roleId) {
@@ -46,8 +49,8 @@ public class RoleService {
 		return roleDataRepository.findByEmployeeId(employeeId);
 	}
 
-	public List<Employee> getEmployeesbyRoleId(int roleId) {
-		return roleDataRepository.findEmployeesByRoleId(roleId);
+	public List<EmployeeDto> getEmployeesbyRoleId(int roleId) {
+		return employeeMapper.getEmployeeDtoList(roleDataRepository.findEmployeesByRoleId(roleId));
 	}
 
 	public int assignRole(Integer employeeId, int roleId) {
@@ -87,7 +90,7 @@ public class RoleService {
 	}
 
 	public List<Role> getRolesbyLoginId(String loginId) {
-		Employee employee = employeeService.getEmployee(loginId);
+		EmployeeDto employee = employeeService.getEmployee(loginId);
 		if (employee != null) {
 			return roleDataRepository.findByEmployeeId(employee.getEmployeeId());
 		}

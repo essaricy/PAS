@@ -15,10 +15,12 @@ import com.softvision.ipm.pms.role.entity.Role;
 @Repository
 public interface RoleDataRepository extends CrudRepository<Role, Integer>, JpaSpecificationExecutor<Role> {
 
-	List<Role> findById(int roleId);
+	List<Role> findAll();
 
 	List<Role> findAll(Specification<Role> spec);
-	
+
+	List<Role> findById(int roleId);
+
 	Role findByRoleName(String name);
 
 	@Query(value = "select r.id,r.role_name from employee_role e inner join role r on e.role_id=r.id  where e.employee_id=:employeeId", nativeQuery = true)

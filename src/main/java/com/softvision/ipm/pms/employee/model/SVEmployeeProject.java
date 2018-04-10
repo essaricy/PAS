@@ -1,11 +1,16 @@
-package com.softvision.ipm.pms.employee.entity;
+package com.softvision.ipm.pms.employee.model;
 
 import java.io.Serializable;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-public class EmployeeProject implements Serializable {
+import lombok.Data;
+
+@Data
+@JacksonXmlRootElement(localName="EmployeeProjects")
+public class SVEmployeeProject implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

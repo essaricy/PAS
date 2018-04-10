@@ -28,7 +28,7 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.common.constants.EmailConstant;
 import com.softvision.ipm.pms.email.entity.MailTemplate;
 import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 
 @Repository
 public class EmailRepository {
@@ -43,7 +43,7 @@ public class EmailRepository {
 	
 	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 	
-	@Autowired private EmployeeRepository employeeRepository;
+	@Autowired private EmployeeDataRepository employeeRepository;
 	
 	@Autowired private MailTemplateDataRepository mailDataRepository;
 	

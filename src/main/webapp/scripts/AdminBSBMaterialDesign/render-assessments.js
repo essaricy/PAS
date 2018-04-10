@@ -61,7 +61,7 @@ $(function () {
     }
 
     function renderTitles() {
-      var employeeName= assignment.assignedTo.FirstName + ' ' + assignment.assignedTo.LastName;
+      var employeeName= assignment.assignedTo.fullName;
 
       $(cardHeader).append('<h2>' + phase.name + ' assessment for ' + employeeName + '</h2>'
         + 'Phase starts on <code>' + phase.startDate + '</code> '

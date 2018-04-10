@@ -13,7 +13,7 @@ import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.service.AssignmentService;
 import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.template.model.TemplateDto;
@@ -81,14 +81,14 @@ public class AssignmentDataManager implements AbstractDataManager {
 		AppraisalCycleDto activeCycle = appraisalService.getActiveCycle();
 		System.out.println("activeCycle1=" + activeCycle);
 		System.out.println(Roles.MANAGER.getCode());
-		List<Employee> managers = employeeService.roleSearch(Roles.MANAGER.getName());
+		List<EmployeeDto> managers = employeeService.roleSearch(Roles.MANAGER.getName());
 		System.out.println("managers= "  + managers);
-		List<Employee> employees = employeeService.getEmployees();
+		List<EmployeeDto> employees = employeeService.getEmployees();
 		System.out.println("employees= "  + employees.size());
 
 		for (int managerIndex = 0; managerIndex < numberOfManagers; managerIndex++) {
 			System.out.println("Assigning for manager " + managerIndex);
-			Employee randomManager = managers.get(RANDOM.nextInt(managers.size()));
+			EmployeeDto randomManager = managers.get(RANDOM.nextInt(managers.size()));
 			int managerId = randomManager.getEmployeeId();
 			if (usedManagers.contains(managerId)) {
 				managerIndex--;
@@ -108,7 +108,7 @@ public class AssignmentDataManager implements AbstractDataManager {
 
 			List<Integer> employeeIds = new ArrayList<>();
 			for (int employeeIndex = 0; employeeIndex < numberOfEmployees; employeeIndex++) {
-				Employee randomEmployee = employees.get(RANDOM.nextInt(employees.size()));
+				EmployeeDto randomEmployee = employees.get(RANDOM.nextInt(employees.size()));
 				int employeeId = randomEmployee.getEmployeeId();
 				if (usedEmployees.contains(employeeId)) {
 					employeeIndex--;

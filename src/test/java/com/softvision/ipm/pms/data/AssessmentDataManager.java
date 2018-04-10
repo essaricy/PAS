@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
-import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.service.AssignmentService;
@@ -28,8 +27,6 @@ public class AssessmentDataManager implements AbstractDataManager {
 	@Autowired CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
 	@Autowired PhaseAssignmentDataRepository phaseAssignmentDataRepository;
-
-	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
 	@Override
 	public void clearData() throws Exception {

@@ -255,14 +255,14 @@
         "ajax": "<%=request.getContextPath()%>/employee/search/" + searchText,
         "sAjaxDataProp":"",
 		"columns": [
-            { "data": "EmployeeId" },
-            { "data": "FirstName" },
-            { "data": "LastName" },
-            { "data": "EmploymentType" },
-            { "data": "Band" },
-            { "data": "Designation" },
-            { "data": "HiredOn" },
-            { "data": "Location" }
+            { "data": "employeeId" },
+            { "data": "firstName" },
+            { "data": "lastName" },
+            { "data": "employmentType" },
+            { "data": "band" },
+            { "data": "designation" },
+            { "data": "hiredOn" },
+            { "data": "location" }
         ],
     });
 	
@@ -275,12 +275,12 @@
         "ajax": "<%=request.getContextPath()%>/employee/role-search/" + searchText,
         "sAjaxDataProp":"",
 		"columns": [
-            { "data": "EmployeeId" },
-            { "data": "FirstName" },
-            { "data": "LastName" },
-            { "data": "Band" },
-            { "data": "Designation" },
-            { "data": "Location" }
+            { "data": "employeeId" },
+            { "data": "firstName" },
+            { "data": "lastName" },
+            { "data": "band" },
+            { "data": "designation" },
+            { "data": "location" }
         ],
     });
 
@@ -312,19 +312,19 @@
     	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
     	},
     	dataType: "json",
-    	getValue: function (item) { return item.FirstName + " " + item.LastName},
+    	getValue: function (item) { return item.fullName},
     	template: {
     	  type: "custom",
     	  method: function(value, item) {
-    		return "<b>" + item.FirstName + " " + item.LastName + "</b> [<code>" + item.EmployeeId + "</code>]</small>";
+    		return "<b>" + item.fullName + "</b> [<code>" + item.employeeId + "</code>]</small>";
     	  }
     	},
     	list: {
     	  maxNumberOfElements: 15,
     	  onClickEvent: function() {
     		var data=$("#Search_Employees").getSelectedItemData();
-    		var itemId=data.EmployeeId;
-    		var itemValue=data.FirstName + " " + data.LastName;
+    		var itemId=data.employeeId;
+    		var itemValue=data.fullName;
     		availableRoles=[];
     		if(!$('#Search_Employees_Table').length){
     			var detailTable=$('<table class="table table-striped" id="Search_Employees_Table">');
@@ -336,7 +336,7 @@
 	    	  	$(detailTable).append(detailThead);
 	     		$('#Employee_Data').append(detailTable);
 	     		$(detailThead).append('<tr><th>id</th><th>Name</th><th>Manager?</th></tr>');
-	     		$(detailTbody).append('<tr id="emp_row_' + data.EmployeeId + '"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.EmployeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
+	     		$(detailTbody).append('<tr id="emp_row_' + data.employeeId + '"><td>' + data.employeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.employeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
 	     		
 	     		detailTfoot.append('<tr><td class="col-md-12" colspan="2"><button type="button" class="btn bg-light-blue waves-effect pull-left" id="clear">clear</button></td><td class="col-md-12"><button type="button" class="btn bg-light-blue waves-effect pull-right" id="save">Save</button></td></tr>')
 	    		$("#Search_Employees").val('');
@@ -355,9 +355,9 @@
 	     			$('#Employee_Data').empty();
 	     		});
     		} else{
-	    		if(!$('#emp_row_'+ data.EmployeeId).length){
+	    		if(!$('#emp_row_'+ data.employeeId).length){
 	    			var detailTbody = $('#Search_Employees_Table > tbody');
-	    			$(detailTbody).append('<tr id="emp_row_' + data.EmployeeId + '"><td>' + data.EmployeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.EmployeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
+	    			$(detailTbody).append('<tr id="emp_row_' + data.employeeId + '"><td>' + data.employeeId + '</td><td>' + itemValue + '</td><td><div class="switch pull-left"><label><input type="checkbox" id="cb_' + data.employeeId + '"><span class="lever switch-col-green"></span></label></div></td></tr>');
 	    		}
 	    		$("#Search_Employees").val('');
     		}

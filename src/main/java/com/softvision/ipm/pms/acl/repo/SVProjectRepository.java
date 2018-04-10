@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.SVEmployee;
 
 @Repository
 public class SVProjectRepository {
@@ -26,7 +26,7 @@ public class SVProjectRepository {
 	@Value("${app.role.svproject.domain}")
 	private String domain;
 
-	public Employee getEmployee(String userId) {
+	public SVEmployee getEmployee(String userId) {
 		String email = userId + "@" + domain;
 		LOGGER.info("Looking up for the user {} in SVProject", email);
 
@@ -38,14 +38,14 @@ public class SVProjectRepository {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey).queryParam("email", email);
-		Employee employee = restTemplate.getForObject(builder.toUriString(), Employee.class, apiKey, email);
-		return employee;
+		SVEmployee svEmployee = restTemplate.getForObject(builder.toUriString(), SVEmployee.class, apiKey, email);
+		return svEmployee;
 	}
 	
-	public List<Employee> getAllEmployees() {
+	public List<SVEmployee> getAllEmployees() {
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey);
-		Employee[] list = restTemplate.getForObject(builder.toUriString(), Employee[].class, apiKey);
+		SVEmployee[] list = restTemplate.getForObject(builder.toUriString(), SVEmployee[].class, apiKey);
 		return Arrays.asList(list);
 	}
 

@@ -21,7 +21,9 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.acl.repo.SVLdapRepository;
 import com.softvision.ipm.pms.acl.repo.SVProjectRepository;
 import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
+import com.softvision.ipm.pms.employee.model.SVEmployee;
+import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.repo.RoleDataRepository;
@@ -39,10 +41,13 @@ public class SVAuthenticationService {
 	private SVProjectRepository svProjectRepository;
 
 	@Autowired
-	private EmployeeRepository employeeRepository;
+	private EmployeeDataRepository employeeRepository;
 
 	@Autowired
 	private RoleDataRepository roleDataRepository;
+
+	@Autowired
+	private EmployeeMapper employeeMapper;
 
     @Value("${app.security.ldap.mode}")
     private String mode;
@@ -63,11 +68,11 @@ public class SVAuthenticationService {
 			// Employee Details does not exist in the system. add them
 			if (employee == null) {
 				// Employee does not exist in the system. Look up SV project.
-				employee = svProjectRepository.getEmployee(userid);
-				if (employee == null) {
+				SVEmployee svEmployee = svProjectRepository.getEmployee(userid);
+				if (svEmployee == null) {
 					throw new DisabledException("Invalid credentials");
 				}
-				employeeRepository.save(employee);
+				employeeRepository.save(employeeMapper.getEmployee(svEmployee));
 			}
 			List<Role> roles = roleDataRepository.findByEmployeeId(employee.getEmployeeId());
 			if (roles == null) {
@@ -76,7 +81,7 @@ public class SVAuthenticationService {
 			if (!contain(roles, Roles.EMPLOYEE)) {
 				roles.add(roleDataRepository.findByRoleName(Roles.EMPLOYEE.getName()));
 			}
-			return getUser(employee, roles);
+			return employeeMapper.getUser(employee, roles);
 		} catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
             LOGGER.error("AuthenticationNotSupportedException for {}, ERROR={}", userid,
                     authenticationNotSupportedException.getMessage());
@@ -109,24 +114,6 @@ public class SVAuthenticationService {
 			}
 		}
 		return false;
-	}
-
-	private User getUser(Employee employee, List<Role> roles) {
-		User user = null;
-		if (employee != null) {
-			user = new User();
-			user.setBand(employee.getBand());
-			user.setDesignation(employee.getDesignation());
-			user.setEmployeeId(employee.getEmployeeId());
-			user.setFirstName(employee.getFirstName());
-			user.setJoinedDate(employee.getHiredOn());
-			user.setLastName(employee.getLastName());
-			user.setLocation(employee.getLocation());
-			user.setUsername(employee.getLoginId());
-			user.setImageUrl("https://opera.softvision.com/Content/Core/img/Profile/" + employee.getEmployeeId() + ".jpg");
-			user.setRoles(roles);
-		}
-		return user;
 	}
 
 }

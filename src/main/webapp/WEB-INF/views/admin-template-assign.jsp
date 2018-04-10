@@ -229,7 +229,7 @@ $(function () {
 	template: {
 	  type: "custom",
 	  method: function(value, template) {
-		var employeeName=template.updatedBy.FirstName + " " + template.updatedBy.LastName;
+		var employeeName=template.updatedBy.fullName;
 		return "<b>" + template.name + "</b><small> - Updated By <code>" + employeeName + "</code> on <code>" + template.updatedAt + "</code></small>";
 	  }
 	},
@@ -246,19 +246,19 @@ $(function () {
 	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
 	},
 	dataType: "json",
-	getValue: function (item) { return item.FirstName + " " + item.LastName},
+	getValue: function (item) { return item.fullName},
 	template: {
 	  type: "custom",
 	  method: function(value, item) {
-		return "<b>" + item.FirstName + " " + item.LastName + "</b> [<code>" + item.EmployeeId + "</code>]</small>";
+		return "<b>" + item.fullName + "</b> [<code>" + item.employeeId + "</code>]</small>";
 	  }
 	},
 	list: {
 	  maxNumberOfElements: 15,
 	  onClickEvent: function() {
 		var data=$("#Search_Employees").getSelectedItemData();
-		var itemId=data.EmployeeId;
-		var itemValue=data.FirstName + " " + data.LastName;
+		var itemId=data.employeeId;
+		var itemValue=data.fullName;
 		var table=$('#Selected_Employees_Table');
 		var tbody=$(table).find('tbody');
 
@@ -266,8 +266,8 @@ $(function () {
 		  var row=$('<tr>');
 		  $(row).append('<td>' + itemId + '</td>');
 		  $(row).append('<td>' + itemValue + '</td>');
-		  $(row).append('<td>' + data.Designation + '</td>');
-		  $(row).append('<td>' + data.Band + '</td>');
+		  $(row).append('<td>' + data.designation + '</td>');
+		  $(row).append('<td>' + data.band + '</td>');
 		  var deleteIcon=$('<i class="material-icons col-orange delete_icon" style="cursor: pointer;">delete</i>');
 		  $(deleteIcon).click(function() {
 		    $(row).remove();

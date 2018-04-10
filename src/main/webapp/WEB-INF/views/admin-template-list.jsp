@@ -130,7 +130,7 @@ function renderTemplateInformation(template) {
   $(headerCard).find('.body').empty();
 
   $(headerCard).find('.header h2').append(template.name);
-  var employeeName=template.updatedBy.FirstName + " " + template.updatedBy.LastName;
+  var employeeName=template.updatedBy.fullName;
   $(headerCard).find('.header h2').append('<small>Updated By <code>' + employeeName + '</code> on ' + template.updatedAt +'</small>');
 
   var table=$('<table class="table table-striped">');

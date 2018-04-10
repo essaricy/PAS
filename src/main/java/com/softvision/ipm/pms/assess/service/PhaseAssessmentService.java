@@ -28,7 +28,9 @@ import com.softvision.ipm.pms.assign.util.AssignmentUtil;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.email.repo.EmailRepository;
-import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
+import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -54,7 +56,7 @@ public class PhaseAssessmentService {
 
 	@Autowired private EmailRepository emailRepository;
 
-	@Autowired private EmployeeRepository employeeRepository;
+	@Autowired private EmployeeDataRepository employeeRepository;
 
 	@Autowired private AppraisalMapper appraisalMapper;
 
@@ -64,12 +66,15 @@ public class PhaseAssessmentService {
 
 	@Autowired private AssessMapper assessMapper;
 
+	@Autowired EmployeeMapper employeeMapper;
+
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
 		EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
-		employeeAssignment.setAssignedTo(employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId()));
+		Employee assignedToEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId());
+		employeeAssignment.setAssignedTo(employeeMapper.getEmployeeDto(assignedToEmployee));
 		phaseAssessment.setEmployeeAssignment(employeeAssignment);
 
 		int phaseId = employeePhaseAssignment.getPhaseId();

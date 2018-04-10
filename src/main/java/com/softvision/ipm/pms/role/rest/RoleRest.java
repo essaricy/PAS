@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.EmployeeRole;
 import com.softvision.ipm.pms.role.entity.Role;
@@ -40,7 +40,7 @@ public class RoleRest {
 	}
 
 	@RequestMapping(value = "emp-byRole/{roleId}", method = RequestMethod.GET)
-	public @ResponseBody List<Employee> getEmployeeByRole(@PathVariable(value = "roleId", required = true) int roleId) {
+	public @ResponseBody List<EmployeeDto> getEmployeeByRole(@PathVariable(value = "roleId", required = true) int roleId) {
 		return roleService.getEmployeesbyRoleId(roleId);
 	}
 	@RequestMapping(value = "byEmployee/{empId}", method = RequestMethod.GET)

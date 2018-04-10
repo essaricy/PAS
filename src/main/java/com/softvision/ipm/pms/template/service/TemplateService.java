@@ -18,7 +18,9 @@ import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
+import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.goal.service.GoalService;
 import com.softvision.ipm.pms.template.constant.TemplateComparator;
 import com.softvision.ipm.pms.template.entity.Template;
@@ -45,9 +47,11 @@ public class TemplateService {
 
 	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
-	@Autowired private EmployeeRepository employeeRepository;
+	@Autowired private EmployeeDataRepository employeeRepository;
 
 	@Autowired private TemplateMapper templateMapper;
+
+	@Autowired private EmployeeMapper employeeMapper;
 
 	public List<TemplateDto> getTemplates() {
 	    List<TemplateDto> templateDtoList = null;
@@ -174,7 +178,8 @@ public class TemplateService {
 
 	private void updateTemplateDto(TemplateDto templateDto) {
 		if (templateDto != null) {
-			templateDto.setUpdatedBy(employeeRepository.findByEmployeeId(templateDto.getUpdatedBy().getEmployeeId()));
+			Employee employee = employeeRepository.findByEmployeeId(templateDto.getUpdatedBy().getEmployeeId());
+			templateDto.setUpdatedBy(employeeMapper.getEmployeeDto(employee));
 		}
 	}
 

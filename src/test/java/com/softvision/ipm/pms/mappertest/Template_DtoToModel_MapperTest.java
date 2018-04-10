@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.entity.TemplateDetail;
 import com.softvision.ipm.pms.template.entity.TemplateHeader;
@@ -50,7 +50,7 @@ public class Template_DtoToModel_MapperTest {
     	templateDto.setId(11L);
     	templateDto.setName("Template Name");
     	templateDto.setUpdatedAt(new Date());
-    	Employee updatedBy = new Employee();
+    	EmployeeDto updatedBy = new EmployeeDto();
     	updatedBy.setEmployeeId(1136);
 		templateDto.setUpdatedBy(updatedBy);
     	
@@ -126,7 +126,7 @@ public class Template_DtoToModel_MapperTest {
         	templateDto.setId(11L);
         	templateDto.setName("Template Name " + templateIndex);
         	templateDto.setUpdatedAt(new Date());
-        	Employee updatedBy = new Employee();
+        	EmployeeDto updatedBy = new EmployeeDto();
         	updatedBy.setEmployeeId(1136);
     		templateDto.setUpdatedBy(updatedBy);
         	

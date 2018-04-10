@@ -17,10 +17,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.softvision.ipm.pms.Application;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
@@ -104,7 +103,7 @@ public class TemplateTest {
 		templateDto.setId(0);
 		templateDto.setName("Test Template - " + System.currentTimeMillis());
 		templateDto.setUpdatedAt(new Date());
-		Employee updatedBy = new Employee();
+		EmployeeDto updatedBy = new EmployeeDto();
 		updatedBy.setEmployeeId(1136);
 		templateDto.setUpdatedBy(updatedBy);
 

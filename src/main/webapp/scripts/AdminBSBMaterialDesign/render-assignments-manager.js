@@ -60,8 +60,8 @@ $(function () {
               var assignedTo=ea.assignedTo;
               var assignedBy=ea.assignedBy;
               var row=$('<tr>');
-              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-              $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+              $(row).append('<td>' + assignedTo.fullName + '</td>');
               $(row).append('<td>' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
@@ -103,8 +103,8 @@ $(function () {
             var assignedTo=ea.assignedTo;
             var assignedBy=ea.assignedBy;
             var row=$('<tr>');
-            $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.EmployeeId + '</td>');
-            $(row).append('<td>' + assignedTo.FirstName + ' ' + assignedTo.LastName + '</td>');
+            $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+            $(row).append('<td>' + assignedTo.fullName + '</td>');
             $(row).append('<td>' + ea.assignedAt + '</td>');
             $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
             $(row).append(getCycleActionCell(ea));

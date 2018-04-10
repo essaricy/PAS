@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatDeserializer;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatSerializer;
 import com.softvision.ipm.pms.common.validator.NotContainNull;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 
 import lombok.Data;
 
@@ -34,7 +34,7 @@ public class TemplateDto implements Serializable {
 	private String name;
 
 	@NotNull(message="Provide a updated by for template")
-	private Employee updatedBy;
+	private EmployeeDto updatedBy;
 
 	@NotNull(message="Provide a updated at for template")
 	@JsonSerialize(using=IndiaDateFormatSerializer.class)

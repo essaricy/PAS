@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.softvision.ipm.pms.common.model.Result;
-import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.service.RoleService;
@@ -36,20 +36,20 @@ public class EmployeeDataManager implements AbstractDataManager {
 	}
 
 	private void clearEmployeeRoles() {
-		List<Employee> managers = employeeService.roleSearch(Roles.MANAGER.getName());
-		for (Employee manager : managers) {
+		List<EmployeeDto> managers = employeeService.roleSearch(Roles.MANAGER.getName());
+		for (EmployeeDto manager : managers) {
 			roleService.removeRole(manager.getEmployeeId(), Roles.MANAGER.getCode());
 		}
-		List<Employee> admins = employeeService.roleSearch(Roles.ADMIN.getName());
-		for (Employee admin : admins) {
+		List<EmployeeDto> admins = employeeService.roleSearch(Roles.ADMIN.getName());
+		for (EmployeeDto admin : admins) {
 			roleService.removeRole(admin.getEmployeeId(), Roles.ADMIN.getCode());
 		}
 	}
 
 	private void clearEmployees() {
-		List<Employee> employees = employeeService.getEmployees();
+		List<EmployeeDto> employees = employeeService.getEmployees();
 		if (employees != null && !employees.isEmpty()) {
-			for (Employee employee : employees) {
+			for (EmployeeDto employee : employees) {
 				employeeService.delete(employee.getEmployeeId());
 			}
 		}
@@ -70,8 +70,8 @@ public class EmployeeDataManager implements AbstractDataManager {
 
 	private void loadEmployeeRoles() {
 		// Change Roles
-		List<Employee> employees = employeeService.getEmployees();
-		for (Employee employee : employees) {
+		List<EmployeeDto> employees = employeeService.getEmployees();
+		for (EmployeeDto employee : employees) {
 			int employeeId = employee.getEmployeeId();
 			String band = employee.getBand();
 			if (isManager(band)) {

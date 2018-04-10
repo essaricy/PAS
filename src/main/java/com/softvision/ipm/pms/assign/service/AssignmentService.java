@@ -27,7 +27,9 @@ import com.softvision.ipm.pms.common.util.DateUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 import com.softvision.ipm.pms.employee.constant.EmploymentType;
 import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.employee.repo.EmployeeRepository;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
+import com.softvision.ipm.pms.employee.model.EmployeeDto;
+import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
@@ -46,7 +48,9 @@ public class AssignmentService {
 
 	@Autowired private TemplateDataRepository templateDataRepository;
 
-	@Autowired private EmployeeRepository employeeRepository;
+	@Autowired private EmployeeDataRepository employeeRepository;
+
+	@Autowired private EmployeeMapper employeeMapper;
 
 	private String NOT_ELIGIBLE_BY_CUTOFF_DATE = "{0} - Not eligible for this appraisal. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
 
@@ -100,7 +104,8 @@ public class AssignmentService {
 				if (employee == null) {
 					throw new ServiceException("Employee does not exist");
 				}
-				String employeeName = employee.getFirstName() + " " + employee.getLastName();
+				EmployeeDto employeeDto = employeeMapper.getEmployeeDto(employee);
+				String employeeName = employeeDto.getFullName();
 				EmploymentType employmentType = EmploymentType.get(employee.getEmploymentType());
 				if (employmentType != EmploymentType.REGULAR_EMPLOYEE) {
                     throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE, employeeName,
