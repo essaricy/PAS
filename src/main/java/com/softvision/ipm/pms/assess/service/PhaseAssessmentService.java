@@ -202,6 +202,7 @@ public class PhaseAssessmentService {
         // There must be goal set for next phase. Otherwise conclude is not allowed
         if (nextPhase == null) {
             LOGGER.error("conclude: There is no next phase set up for the phaseId={}", phaseId);
+            throw new ServiceException("Cannot conclude this assignment as there is no appraisal phase set up for the next period. Please infrorm your admin to set up the next phase/cycle");
         } else {
             PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(nextPhase.getId(), employeeId);
             if (nextAssignment == null) {

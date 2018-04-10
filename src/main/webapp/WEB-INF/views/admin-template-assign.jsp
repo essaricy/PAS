@@ -94,7 +94,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
 		          <div class="form-group form-float">
 		            <div class="form-line">
-		              <input type="text" id="Search_Employees" class="form-control" placeholder="Start entering employee name" value="">
+		              <input type="text" id="Search_Employees" class="form-control" placeholder="Enter employee ID or name" value="">
                     </div>
                   </div>
                 </div>

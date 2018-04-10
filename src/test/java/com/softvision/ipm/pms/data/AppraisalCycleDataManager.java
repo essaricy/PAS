@@ -82,6 +82,11 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 
 			List<AppraisalPhaseDto> phases = new ArrayList<>();
 			int numberOfPhases = numberOfPhaseChoice[RANDOM.nextInt(numberOfPhaseChoice.length)];
+			if (year == 2017) {
+			    numberOfPhases=2;
+			} else if (year == 2018) {
+                numberOfPhases=4;
+            }
 			int monthsPerPhases=12/numberOfPhases;
 
 			localDate=localDate.withYear(year).with(TemporalAdjusters.firstDayOfYear());

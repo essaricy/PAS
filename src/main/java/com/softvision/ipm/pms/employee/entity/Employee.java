@@ -49,6 +49,15 @@ public class Employee implements Serializable {
 	@JsonProperty("LoginId")
 	private String loginId;
 
+	@JsonProperty("Departement")
+	private String department;
+
+    @JsonProperty("Division")
+    private String division;
+
+    @JsonProperty("Org")
+    private String org;
+
 	@Transient
 	@JsonInclude
 	@JsonProperty("Projects")

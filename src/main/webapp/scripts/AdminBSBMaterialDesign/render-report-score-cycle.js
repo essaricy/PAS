@@ -97,7 +97,7 @@ $(function () {
 
     function showPhaseScores(assignmentId) {
       $.fn.ajaxGet({
-        url: '<%=request.getContextPath()%>/manager/report/cycle/phases/' + assignmentId,
+        url: settings.contextPath + '/manager/report/cycle/phases/' + assignmentId,
         onSuccess: showEmployeePhaseScores,
         onError: showEmployeePhaseScoreError
       });

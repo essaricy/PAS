@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssember;
+import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssembler;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
@@ -87,7 +87,7 @@ public class AssignmentRepository extends AbstractRepository {
 			    new Object[] {cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
 			        }
 			    });
 		return list;
@@ -99,7 +99,7 @@ public class AssignmentRepository extends AbstractRepository {
 			    new Object[] {cycleId, phaseId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssember.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
 			        }
 			    });
 		return list;

@@ -8,7 +8,7 @@ import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.employee.entity.Employee;
 
-public class AssignmentSqlAssember {
+public class AssignmentSqlAssembler {
 
 	public static EmployeeAssignmentDto getEmployeeAssignment(ResultSet rs) throws SQLException {
 		EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
