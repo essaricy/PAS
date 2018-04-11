@@ -85,13 +85,13 @@ public class EmployeeService {
 			Employee employee = employeeMapper.getEmployee(svEmployee);
 			String employeeName = employee.getFirstName() + " " + employee.getLastName();
 			try{
-				System.out.println(employee.getEmployeeId());
+				System.out.println("EmployeeId=>" + employee.getEmployeeId());
 				employee.setActive("Y");
 				save(employee);
 				result.setCode(Result.SUCCESS);
 				result.setMessage(employeeName + " - Updated successfully");
 				LOGGER.info("syncEmployees: sync completed: {} ", svEmployee.getLoginId());
-			}catch (Exception exception) {
+			} catch (Exception exception) {
 				String message = employeeName + " - Update failed. Error = "+ exception.getMessage();
 				LOGGER.error("syncEmployees: sync failed: {} ERROR=", svEmployee.getLoginId(), exception.getMessage());
 				result.setCode(Result.FAILURE);
@@ -102,8 +102,22 @@ public class EmployeeService {
 		// Deactivate exited employees
 		List<Employee> existingEmployees = employeeRepository.findAll();
 		List<Employee> deactivatedEmployees=existingEmployees.stream().filter(
-				e -> svEmployees.stream().anyMatch(sv -> sv.getEmployeeId() == e.getEmployeeId())
+		        existingEmployee -> {
+		            boolean active=false;
+		            for (SVEmployee svEmployee : svEmployees) {
+                        if (existingEmployee.getEmployeeId() == svEmployee.getEmployeeId()) {
+                            active=true;
+                            break;
+                        }
+                    }
+		            if (!active) {
+		                System.out.println("Employee " + existingEmployee.getFirstName() + " is deactivated");
+		            }
+		            return !active;
+		        }
 		).collect(Collectors.toList());
+
+		System.out.println(deactivatedEmployees);
 		if (deactivatedEmployees != null && !deactivatedEmployees.isEmpty()) {
 			for (Employee employee : deactivatedEmployees) {
 				Result result= new Result();

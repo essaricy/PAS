@@ -19,10 +19,10 @@ public interface EmployeeDataRepository extends CrudRepository<Employee, Integer
 
 	List<Employee> findAll(Specification<Employee> spec);
 
-	@Query("select e from Employee e where active='Y' and employee_id=:employeeId")
+	//@Query("select e from Employee e where active='Y' and employee_id=:employeeId")
 	Employee findByEmployeeId(@Param("employeeId") Integer employeeId);
 
-	@Query("select e from Employee e where active='Y' and login_id=:loginId")
+	//@Query("select e from Employee e where active='Y' and login_id=:loginId")
 	Employee findByLoginId(@Param("loginId") String loginId);
 
 	@Query("SELECT DISTINCT employmentType FROM Employee ORDER BY employmentType")

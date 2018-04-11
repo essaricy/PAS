@@ -10,7 +10,8 @@ $(function () {
     $.fn.ajaxGet({
       url: settings.url,
       onSuccess: renderAssignments,
-      onError: onErrorAssignedEmployees
+      onError: onErrorAssignedEmployees,
+      onComplete: renderComplete
     });
 
     function renderAssignments(data) {
@@ -278,5 +279,12 @@ $(function () {
     function onErrorAssignedEmployees(error) {
       showErrorCard('Errors occurred while retreiving assignment information. Cause: ' + JSON.stringify(error));
     }
+
+    function renderComplete() {
+      if (settings.onComplete) {
+        settings.onComplete();
+      }
+    }
+
   };
 });

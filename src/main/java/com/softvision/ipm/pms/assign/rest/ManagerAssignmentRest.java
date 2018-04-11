@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.assign.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.Min;
@@ -30,6 +31,16 @@ public class ManagerAssignmentRest {
 	@RequestMapping(value="list", method=RequestMethod.GET)
     public List<ManagerCycleAssignmentDto> getAllCycles() {
 		return managerAssignmentService.getAllCycles(RestUtil.getLoggedInEmployeeId());
+    }
+
+	@RequestMapping(value="active", method=RequestMethod.GET)
+    public List<ManagerCycleAssignmentDto> getActiveCycles() {
+        List<ManagerCycleAssignmentDto> cycleAssignmentDtos = new ArrayList<>();
+        ManagerCycleAssignmentDto activeCycleAssignment = managerAssignmentService.getActiveCycle(RestUtil.getLoggedInEmployeeId());
+        if (activeCycleAssignment != null) {
+            cycleAssignmentDtos.add(activeCycleAssignment);
+        }
+        return cycleAssignmentDtos;
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)

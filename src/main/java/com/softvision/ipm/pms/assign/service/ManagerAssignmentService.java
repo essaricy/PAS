@@ -15,6 +15,7 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
@@ -56,6 +57,8 @@ public class ManagerAssignmentService {
 
     @Autowired
     private EmailRepository emailRepository;
+
+    @Autowired private AppraisalRepository appraisalRepository;
 
     @Autowired private AppraisalMapper appraisalMapper;
 
@@ -119,6 +122,29 @@ public class ManagerAssignmentService {
             cycleAssignments.add(cycleAssignment);
         }
         return cycleAssignments;
+    }
+
+    public ManagerCycleAssignmentDto getActiveCycle(int employeeId) {
+        AppraisalCycle cycle = appraisalRepository.getActiveCycle();
+        if (cycle == null) {
+            return null;
+        }
+        int cycleId = cycle.getId();
+        ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
+        cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
+        cycleAssignment.setEmployeeAssignments(
+                managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
+        List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
+        cycleAssignment.setPhaseAssignments(phaseAssignments);
+        List<AppraisalPhase> phases = cycle.getPhases();
+        for (AppraisalPhase phase : phases) {
+            PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
+            phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
+            phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
+                    .getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+            phaseAssignments.add(phaseAssignment);
+        }
+        return cycleAssignment;
     }
 
     @Transactional

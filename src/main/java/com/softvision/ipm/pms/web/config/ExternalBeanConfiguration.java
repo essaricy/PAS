@@ -13,8 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
-import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
-import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.assess.entity.AssessDetail;
 import com.softvision.ipm.pms.assess.entity.AssessHeader;
 import com.softvision.ipm.pms.assess.model.AssessDetailDto;
@@ -35,10 +33,6 @@ import com.softvision.ipm.pms.template.model.TemplateDetailDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
 import com.softvision.ipm.pms.user.model.User;
-
-import ma.glasnost.orika.MapperFacade;
-import ma.glasnost.orika.MapperFactory;
-import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 @Configuration
 public class ExternalBeanConfiguration {
@@ -245,12 +239,12 @@ public class ExternalBeanConfiguration {
 		return "https://opera.softvision.com/Content/Core/img/Profile/" + employeeId + ".jpg";
 	}*/
 
-	@Bean
+	/*@Bean
 	public MapperFacade getOrikaBeanMapper() {
 		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
 		mapperFactory.classMap(AppraisalCycle.class, AppraisalCycleDto.class);
 		mapperFactory.classMap(AppraisalCycleDto.class, AppraisalCycle.class);
 		MapperFacade mapper = mapperFactory.getMapperFacade();
 		return mapper;
-	}
+	}*/
 }
