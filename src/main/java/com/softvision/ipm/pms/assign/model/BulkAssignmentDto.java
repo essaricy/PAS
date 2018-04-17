@@ -16,16 +16,16 @@ public class BulkAssignmentDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Min(0)
+	@Min(value=0, message="Invalid Template Id")
 	private long templateId;
 
-	@Min(0)
-	private int cycleId;
+    @Min(value=0, message="Invalid Cycle Id")
+    private int cycleId;
 
-	@Min(0)
+	@Min(value=0, message="Invalid Phase Id")
 	private int phaseId;
 
-	@Min(0)
+	@Min(value=1, message="Invalid employee Id for assignedBy")
 	private int assignedBy;
 
 	@NotEmpty(message="At least one employeeId must be provided")
@@ -33,9 +33,9 @@ public class BulkAssignmentDto implements Serializable {
 	private List<Integer> employeeIds;
 
 	@Override
-	public String toString() {
-		return "BulkAssignmentDto [templateId=" + templateId + ", cycleId=" + cycleId + ", phaseId=" + phaseId
-				+ ", assignedBy=" + assignedBy + ", employeeIds=" + employeeIds + "]";
-	}
+    public String toString() {
+        return "BulkAssignmentDto [templateId=" + templateId + ", cycleId=" + cycleId + ", phaseId=" + phaseId
+                + ", assignedBy=" + assignedBy + ", employeeIds=" + employeeIds + "]";
+    }
 
 }

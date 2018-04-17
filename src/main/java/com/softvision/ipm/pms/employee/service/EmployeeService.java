@@ -85,7 +85,6 @@ public class EmployeeService {
 			Employee employee = employeeMapper.getEmployee(svEmployee);
 			String employeeName = employee.getFirstName() + " " + employee.getLastName();
 			try{
-				System.out.println("EmployeeId=>" + employee.getEmployeeId());
 				employee.setActive("Y");
 				save(employee);
 				result.setCode(Result.SUCCESS);
@@ -111,13 +110,12 @@ public class EmployeeService {
                         }
                     }
 		            if (!active) {
-		                System.out.println("Employee " + existingEmployee.getFirstName() + " is deactivated");
+		                LOGGER.info("Employee " + existingEmployee.getFirstName() + " will be deactivated");
 		            }
 		            return !active;
 		        }
 		).collect(Collectors.toList());
 
-		System.out.println(deactivatedEmployees);
 		if (deactivatedEmployees != null && !deactivatedEmployees.isEmpty()) {
 			for (Employee employee : deactivatedEmployees) {
 				Result result= new Result();

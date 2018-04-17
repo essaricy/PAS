@@ -54,11 +54,9 @@ public class TemplateService {
 	@Autowired private EmployeeMapper employeeMapper;
 
 	public List<TemplateDto> getTemplates() {
-	    List<TemplateDto> templateDtoList = null;
-	    List<Template> templates = templateDataRepository.findAll();
-	    if (templates != null && !templates.isEmpty()) {
-	        Collections.sort(templates, TemplateComparator.BY_NAME);
-	        templateDtoList = templateMapper.getTemplateDtoList(templates);
+	    List<TemplateDto> templateDtoList = templateMapper.getTemplateDtoList(templateDataRepository.findAll());
+	    if (templateDtoList != null && !templateDtoList.isEmpty()) {
+	        Collections.sort(templateDtoList, TemplateComparator.BY_NAME);
 	        updateTemplateDtoList(templateDtoList);
 	    }
 		return templateDtoList;

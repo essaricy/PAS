@@ -1,5 +1,6 @@
 package com.softvision.ipm.pms.data;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.softvision.ipm.pms.Application;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)
+@Ignore
 public class DataLoader {
 
 	@Autowired JdbcTemplate jdbcTemplate;

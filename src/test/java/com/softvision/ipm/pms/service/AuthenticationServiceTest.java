@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,6 +24,7 @@ import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.user.model.UserToken;
 
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class AuthenticationServiceTest {
 	
 	@InjectMocks
