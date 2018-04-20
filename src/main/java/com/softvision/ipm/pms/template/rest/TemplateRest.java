@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
+import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
@@ -39,9 +40,15 @@ public class TemplateRest {
 		return templateService.getTemplate(id);
     }
 
-	@RequestMapping(value="list/new", method=RequestMethod.GET)
+	@RequestMapping(value="new", method=RequestMethod.GET)
     public @ResponseBody TemplateDto getNewTemplate() {
 		return templateService.getNewTemplate();
+    }
+
+	@RequestMapping(value="copy/{id}", method=RequestMethod.GET)
+    public @ResponseBody TemplateDto copyTemplate(@PathVariable(required = true) @NotNull long id)
+            throws ServiceException {
+        return templateService.copyTemplate(id);
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)

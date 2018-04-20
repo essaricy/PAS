@@ -44,6 +44,8 @@ public class AssignmentRepositorySql {
 			"phase_assign.status as status, " + 
 			"appr_phase.id as appr_phase_id, " + 
 			"appr_phase.name as appr_phase_name, " + 
+			"template.id as template_id, " +
+			"template.name as template_name, " +
 			"phase_assign.assigned_at as assigned_at, " + 
 			"phase_assign.employee_id as assigned_to_id, " + 
 			"(select first_name from employee where employee_id=phase_assign.employee_id) as assigned_to_first_name, " +
@@ -54,7 +56,9 @@ public class AssignmentRepositorySql {
 			"phase_assign.score as score " +
 			"from phase_assign " + 
 			"inner join appr_phase " + 
-			"on appr_phase.id=phase_assign.phase_id ";
+			"on appr_phase.id=phase_assign.phase_id " +
+			"inner join template " +
+			"on template.id=phase_assign.template_id ";
 
 	public static final String SELECT_PHASE_ASSIGNMENTS_ASSIGNED_BY = SELECT_PHASE_ASSIGNMENTS + 
 			"where phase_assign.assigned_by=? " + 

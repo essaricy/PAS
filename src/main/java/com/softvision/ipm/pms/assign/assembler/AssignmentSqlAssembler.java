@@ -7,32 +7,64 @@ import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
+import com.softvision.ipm.pms.template.model.TemplateDto;
 
 public class AssignmentSqlAssembler {
 
-	public static EmployeeAssignmentDto getEmployeeAssignment(ResultSet rs) throws SQLException {
-		EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
-		employeeAssignment.setAssignmentId(rs.getLong("id"));
+    public static EmployeeAssignmentDto getEmployeeAssignment_Cycle(ResultSet rs) throws SQLException {
+        EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
+        employeeAssignment.setAssignmentId(rs.getLong("id"));
 
-		employeeAssignment.setStatus(rs.getInt("status"));
-		employeeAssignment.setAssignedAt(rs.getDate("assigned_at"));
+        employeeAssignment.setStatus(rs.getInt("status"));
+        employeeAssignment.setAssignedAt(rs.getDate("assigned_at"));
 
-		EmployeeDto assignedBy = new EmployeeDto();
-		assignedBy.setEmployeeId(rs.getInt("assigned_by_id"));
-		assignedBy.setFirstName(rs.getString("assigned_by_first_name"));
-		assignedBy.setLastName(rs.getString("assigned_by_last_name"));
-		assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
-		employeeAssignment.setAssignedBy(assignedBy);
+        EmployeeDto assignedBy = new EmployeeDto();
+        assignedBy.setEmployeeId(rs.getInt("assigned_by_id"));
+        assignedBy.setFirstName(rs.getString("assigned_by_first_name"));
+        assignedBy.setLastName(rs.getString("assigned_by_last_name"));
+        assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
+        employeeAssignment.setAssignedBy(assignedBy);
 
-		EmployeeDto assignedTo = new EmployeeDto();
-		assignedTo.setEmployeeId(rs.getInt("assigned_to_id"));
-		assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
-		assignedTo.setLastName(rs.getString("assigned_to_last_name"));
-		assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
-		employeeAssignment.setAssignedTo(assignedTo);
-		employeeAssignment.setScore(rs.getDouble("score"));
-		return employeeAssignment;
-	}
+        EmployeeDto assignedTo = new EmployeeDto();
+        assignedTo.setEmployeeId(rs.getInt("assigned_to_id"));
+        assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
+        assignedTo.setLastName(rs.getString("assigned_to_last_name"));
+        assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
+        employeeAssignment.setAssignedTo(assignedTo);
+
+        employeeAssignment.setScore(rs.getDouble("score"));
+        return employeeAssignment;
+    }
+
+    public static EmployeeAssignmentDto getEmployeeAssignment_Phase(ResultSet rs) throws SQLException {
+        EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
+        employeeAssignment.setAssignmentId(rs.getLong("id"));
+
+        employeeAssignment.setStatus(rs.getInt("status"));
+        employeeAssignment.setAssignedAt(rs.getDate("assigned_at"));
+
+        EmployeeDto assignedBy = new EmployeeDto();
+        assignedBy.setEmployeeId(rs.getInt("assigned_by_id"));
+        assignedBy.setFirstName(rs.getString("assigned_by_first_name"));
+        assignedBy.setLastName(rs.getString("assigned_by_last_name"));
+        assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
+        employeeAssignment.setAssignedBy(assignedBy);
+
+        EmployeeDto assignedTo = new EmployeeDto();
+        assignedTo.setEmployeeId(rs.getInt("assigned_to_id"));
+        assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
+        assignedTo.setLastName(rs.getString("assigned_to_last_name"));
+        assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
+        employeeAssignment.setAssignedTo(assignedTo);
+
+        TemplateDto template = new TemplateDto();
+        template.setId(rs.getLong("template_id"));
+        template.setName(rs.getString("template_name"));
+        employeeAssignment.setTemplate(template);
+
+        employeeAssignment.setScore(rs.getDouble("score"));
+        return employeeAssignment;
+    }
 
     public static EmployeePhaseAssignmentDto getEmployeePhaseAssignment(ResultSet rs) throws SQLException {
         EmployeePhaseAssignmentDto employeePhaseAssignment = new EmployeePhaseAssignmentDto();
@@ -45,14 +77,14 @@ public class AssignmentSqlAssembler {
         assignedBy.setEmployeeId(rs.getInt("assigned_by_id"));
         assignedBy.setFirstName(rs.getString("assigned_by_first_name"));
         assignedBy.setLastName(rs.getString("assigned_by_last_name"));
-		assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
+        assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
         employeePhaseAssignment.setAssignedBy(assignedBy);
 
         EmployeeDto assignedTo = new EmployeeDto();
         assignedTo.setEmployeeId(rs.getInt("assigned_to_id"));
         assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
         assignedTo.setLastName(rs.getString("assigned_to_last_name"));
-		assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
+        assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
         employeePhaseAssignment.setAssignedTo(assignedTo);
         employeePhaseAssignment.setScore(rs.getDouble("score"));
 

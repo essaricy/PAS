@@ -3,7 +3,11 @@ package com.softvision.ipm.pms.role.constant;
 import java.util.Arrays;
 
 public enum Roles {
-	ADMIN(1, "Admin"), MANAGER(2, "Manager"), EMPLOYEE(3, "Employee");
+
+    ADMIN(1, "Admin"),
+	MANAGER(2, "Manager"),
+	EMPLOYEE(3, "Employee"),
+	SUPPORT(4, "Support");
 
 	private int code;
 

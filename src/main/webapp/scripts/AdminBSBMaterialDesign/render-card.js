@@ -165,15 +165,37 @@
         $(obj).find('.header .header-dropdown .dropdown').append(a);
         $(obj).find('.header .header-dropdown .dropdown').append(actionsMenu);
 
-        if ($.inArray("Add", menuActions) > -1) {
-          createAddMenuAction(actionsMenu, settings.manageUrl)
-        }
-        if ($.inArray("Update", menuActions) > -1 && data.length > 0) {
-          createUpdateMenuAction(actionsMenu, settings.manageUrl, itemsSelector);
-        }
-        if ($.inArray("Delete", menuActions) > -1 && data.length > 0) {
-          createDeleteMenuAction(actionsMenu, settings.deleteUrl, itemsSelector);
-        }
+        $(menuActions).each(function(index, menuAction) {
+          if (menuAction == "Add") {
+            createAddMenuAction(actionsMenu, settings.manageUrl);
+          } else if (menuAction == "Update") {
+            if (data.length > 0) {
+              createUpdateMenuAction(actionsMenu, settings.manageUrl, itemsSelector);
+            }
+          } else if (menuAction == "Delete") {
+            if (data.length > 0) {
+              createDeleteMenuAction(actionsMenu, settings.deleteUrl, itemsSelector);
+            }
+          } else if (data.length > 0) {
+            var callbackFunction = settings['on' + menuAction + 'Callback'];
+            var menuIcon = settings[menuAction + 'Icon'];
+
+            var add_li=$('<li>');
+            var add_link=$('<a><i class="material-icons">' + menuIcon + '</i> ' + menuAction + '</a>');
+            $(add_li).append(add_link);
+            $(actionsMenu).append(add_li);
+
+            if (callbackFunction) {
+              console.log('callbackFunction is set' + callbackFunction);
+              $(add_li).click(function(e) {
+                e.preventDefault();
+                var itemId=getActiveRecordId(itemsSelector);
+                console.log('link clicked ' + itemId);
+                callbackFunction(itemId, data);
+              });
+            }
+          }
+        });
       }
     }
 

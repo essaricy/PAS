@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
 
 import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 
@@ -16,6 +17,8 @@ import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 @EnableGlobalMethodSecurity(/*securedEnabled = true, */prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
+    @Autowired private SessionRegistry sessionRegistry;
+
     @Autowired private SVAuthenticationProvider authenticationProvider;
 
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
@@ -38,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         .and()
             .logout()
 				.logoutSuccessUrl("/");
+
+		http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry);
     }
 
 	@Override

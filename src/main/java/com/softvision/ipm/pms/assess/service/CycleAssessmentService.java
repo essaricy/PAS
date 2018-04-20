@@ -55,7 +55,6 @@ public class CycleAssessmentService {
 		// If all phases are done then update the cycle assignment with score
 		double cycleScore=0;
 		int assignedBy=0;
-		long templateId=0;
 		int numberOfPhases=phases.size();
 		// Check if all the assignments are concluded.
 		for (AppraisalPhase phase : phases) {
@@ -65,7 +64,6 @@ public class CycleAssessmentService {
 			}
 			cycleScore+=employeePhaseAssignment.getScore();
 			assignedBy=employeePhaseAssignment.getAssignedBy();
-			templateId=employeePhaseAssignment.getTemplateId();
 		}
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
 		if (employeeCycleAssignment == null) {
@@ -75,7 +73,6 @@ public class CycleAssessmentService {
 			employeeCycleAssignment.setAssignedBy(assignedBy);
 			employeeCycleAssignment.setCycleId(cycleId);
 			employeeCycleAssignment.setEmployeeId(employeeId);
-			employeeCycleAssignment.setTemplateId(templateId);
 		}
 		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());

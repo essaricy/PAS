@@ -20,7 +20,7 @@ public class EmployeeAssignmentRepository extends AbstractRepository {
 			    new Object[] {employeeId, cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Cycle(rs);
 			        }
 			    });
 		return (list == null || list.isEmpty())? null : list.get(0);
@@ -32,7 +32,7 @@ public class EmployeeAssignmentRepository extends AbstractRepository {
 			    new Object[] {employeeId, cycleId, phaseId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
 			        }
 			    });
 		return list;

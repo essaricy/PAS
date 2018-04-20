@@ -7,10 +7,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
+import com.softvision.ipm.pms.template.model.TemplateDto;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class EmployeeAssignmentDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -30,10 +33,6 @@ public class EmployeeAssignmentDto implements Serializable {
 
 	private double score;
 
-	@Override
-	public String toString() {
-		return "EmployeeAssignmentDto [assignmentId=" + assignmentId + ", assignedTo=" + assignedTo + ", assignedBy="
-				+ assignedBy + ", assignedAt=" + assignedAt + ", status=" + status + "]";
-	}
+	private TemplateDto template;
 
 }

@@ -16,42 +16,42 @@ $(function () {
   $.fn.renderAssessment=function( options ) {
     var settings=$.extend({
       contextPath: null,
-    url: null,
-    role: ROLE_EMPLOYEE,
-  }, options );
+      url: null,
+      role: ROLE_EMPLOYEE,
+    }, options );
 
-  var card=$(this);
-  var cardHeader=$(card).find('.header');
-  var cardBody=$(card).find('.body');
-  var rateYoOptions={ halfStar: true, starWidth: "18px", normalFill: '#CCC', ratedFill: '#4CAF50'};
+    var card=$(this);
+    var cardHeader=$(card).find('.header');
+    var cardBody=$(card).find('.body');
+    var rateYoOptions={ halfStar: true, starWidth: "18px", normalFill: '#CCC', ratedFill: '#4CAF50'};
 
-  $.fn.ajaxGet({
-    url: settings.url,
-    onSuccess: parseResult,
-    onError: onErrorAssessments
-  });
+    $.fn.ajaxGet({
+      url: settings.url,
+      onSuccess: parseResult,
+      onError: onErrorAssessments
+    });
 
-  var assignment=null;
-  var phase=null;
-  var templateHeaders=null;
-  var status=null;
-  var assessHeaders=null;
+    var assignment=null;
+    var phase=null;
+    var templateHeaders=null;
+    var status=null;
+    var assessHeaders=null;
 
-  function parseResult(result) {
-    updateData(result);
-    renderAssessments();
-  }
+    function parseResult(result) {
+      updateData(result);
+      renderAssessments();
+    }
 
-  function updateData(result) {
-    assignment=result.employeeAssignment;
-    phase=result.phase;
-    templateHeaders=result.templateHeaders;
-    status=getPhaseAssignmentStatus(assignment.status);
-    assessHeaders=result.assessHeaders;
-  }
+    function updateData(result) {
+      assignment=result.employeeAssignment;
+      phase=result.phase;
+      templateHeaders=result.templateHeaders;
+      status=getPhaseAssignmentStatus(assignment.status);
+      assessHeaders=result.assessHeaders;
+    }
 
-  function renderAssessments() {
-    renderTitles();
+    function renderAssessments() {
+      renderTitles();
       renderGoalPopup();
       renderTemplateInfo();
 
@@ -124,7 +124,9 @@ $(function () {
         var ol=$('<ol>');
         $(modal).find('.modal-body').append(ol);
         $(templateHeader.details).each(function (index, detail) {
-        $(ol).append('<li>' + detail.paramName + "</li>");
+          if (detail != null && detail.apply=='Y') {
+            $(ol).append('<li>' + detail.paramName + "</li>");
+          }
         });
       });
 

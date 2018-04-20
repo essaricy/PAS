@@ -124,6 +124,7 @@
 
   $(function () {
 	var id="${param.id}";
+	var refId="${param.refId}";
 
 	template.id=id;
 	template.headers=[];
@@ -139,7 +140,17 @@
 	});
 
 	// Load all the goals with parameters
-	var url=(id == 0)?'<%=request.getContextPath()%>/template/list/new':'<%=request.getContextPath()%>/template/list/'+id;
+	var url=null;
+	if (id == 0) {
+	  if (refId == '') {
+	    url='<%=request.getContextPath()%>/template/new';
+	  } else {
+	    url='<%=request.getContextPath()%>/template/copy/' + refId;
+	  }
+	} else {
+	  url='<%=request.getContextPath()%>/template/list/'+id;
+	}
+
 	$.fn.ajaxGet({
 	  url: url,
 	  onSuccess: createTemplateView,

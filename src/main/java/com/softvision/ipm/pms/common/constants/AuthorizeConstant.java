@@ -8,4 +8,6 @@ public class AuthorizeConstant {
 
 	public static final String IS_ADMIN = "hasAuthority('ADMIN')";
 
+	public static final String IS_SUPPORT = "hasAuthority('SUPPORT')";
+
 }

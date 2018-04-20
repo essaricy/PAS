@@ -18,6 +18,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -48,6 +50,25 @@
       </div>
       <%@include file="common/no-cycle.jsp" %>
     </div>
+    <!-- Large Size -->
+    <div class="modal" id="TemplateModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="TemplateModal_Title"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row clearfix">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 goals_container">
+              </div>
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 goal_params_container">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 		<!-- Large Size -->
 		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1"
 			role="dialog">
@@ -63,6 +84,7 @@
 									class="table table-bordered table-striped table-hover dataTable">
 									<thead>
 										<tr>
+											<th>&nbsp;</th>
 											<th>Employee ID</th>
 											<th>First Name</th>
 											<th>Last Name</th>
@@ -116,6 +138,8 @@
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
 
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-Sprite-Preloaders/jquery.preloaders.min.js"></script>
@@ -152,31 +176,28 @@ $(function () {
 
   $('#SearchRoleTable').DataTable({
     responsive: true,
-    paging: false,
-	searching: false,
+    paging: true,
+	searching: true,
 	ordering: true,
 	info: true,
     "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,
     "sAjaxDataProp":"",
 	"columns": [
+	  { "data": "employeeId" },
       { "data": "employeeId" },
       { "data": "firstName" },
       { "data": "lastName" },
       { "data": "band" },
       { "data": "designation" },
     ],
-    columnDefs: [
-      { 
-        targets: 0,
-        searchable: false,
-        orderable: false,
-        render: function(data, type, full, meta) {
-          if(type === 'display'){
-            data = '<input name="SelectedManagerId" type="radio" id="radio_' + data + '" value="' + data + '" class="with-gap radio-col-red"><label for="radio_' + data + '">' + data + '</label>';      
-          }
-          return data;
-        }
-      }
+    "aoColumnDefs": [
+      {
+        "aTargets": [0],
+        "mData": "employeeId",
+        "mRender": function (data, type, full) {
+          return '<input name="SelectedManagerId" type="radio" id="radio_' + data + '" value="' + data + '" class="radio-col-red"><label for="radio_' + data + '"></label>';
+         }
+     }
     ]
   });
 
@@ -193,7 +214,6 @@ $(function () {
       $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/cycle/submit/' + assignmentId + '/' + SelectedManagerId});
     }
   });
-
 });
 
 </script>

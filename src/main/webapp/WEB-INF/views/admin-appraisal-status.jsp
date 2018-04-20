@@ -131,6 +131,7 @@
                              <th>Id</th>
                              <th>Employee</th>
                              <th>Manager</th>
+                             <th>Template</th>
                              <th>Assigned On</th>
                              <th>Status</th>
                            </tr>
@@ -250,8 +251,8 @@
         "sAjaxDataProp":"",
 		"columns": [
             { "data": "assignedTo.employeeId" },
-            { "data": "assignedTo.firstName" },
-            { "data": "assignedBy.firstName" },
+            { "data": "assignedTo.fullName" },
+            { "data": "assignedBy.fullName" },
             { "data": "assignedAt" },
             { "data": "status" },
         ],
@@ -263,18 +264,6 @@
                 render: function(data, type, full, meta){
                    return getPhaseStatusLabel(data);
                 }
-            },
-            {
-                "render": function(data, type, full) {
-                    return full.assignedTo.fullName;
-                },
-                "targets": [1] 
-            },
-            {
-                "render": function(data, type, full) {
-                    return full.assignedBy.fullName;
-                },
-                "targets": [2] 
             }
         ],
         dom: 'Bfrtip',
@@ -304,31 +293,20 @@
       "sAjaxDataProp":"",
 		"columns": [
           { "data": "assignedTo.employeeId" },
-          { "data": "assignedTo.firstName" },
-          { "data": "assignedBy.firstName" },
+          { "data": "assignedTo.fullName" },
+          { "data": "assignedBy.fullName" },
+          { "data": "template.name" },
           { "data": "assignedAt" },
           { "data": "status" },
       ],
       columnDefs: [
           { 
-              targets: 4,
+              targets: 5,
               searchable: true,
               orderable: true,
               render: function(data, type, full, meta){
                  return getPhaseStatusLabel(data);
               }
-          },
-          {
-              "render": function(data, type, full) {
-                  return full.assignedTo.fullName;
-              },
-              "targets": [1] 
-          },
-          {
-              "render": function(data, type, full) {
-                  return full.assignedBy.fullName;
-              },
-              "targets": [2] 
           }
       ],
       dom: 'Bfrtip',

@@ -10,8 +10,10 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 @Entity(name="cycle_assign")
 public class CycleAssignment implements Serializable {
 
@@ -24,8 +26,6 @@ public class CycleAssignment implements Serializable {
 
 	private int cycleId;
 
-	private long templateId;
-
 	private int employeeId;
 
 	private int assignedBy;
@@ -37,12 +37,5 @@ public class CycleAssignment implements Serializable {
 	private double score;
 
 	private Integer submittedTo;
-
-	@Override
-	public String toString() {
-		return "CycleAssignment [id=" + id + ", cycleId=" + cycleId + ", templateId=" + templateId + ", employeeId="
-				+ employeeId + ", assignedBy=" + assignedBy + ", assignedAt=" + assignedAt + ", status=" + status
-				+ ", score=" + score + ", submittedTo=" + submittedTo + "]";
-	}
 
 }

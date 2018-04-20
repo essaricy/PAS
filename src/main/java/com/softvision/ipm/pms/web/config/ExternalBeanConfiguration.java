@@ -8,10 +8,14 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration.AccessLevel;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import com.softvision.ipm.pms.assess.entity.AssessDetail;
 import com.softvision.ipm.pms.assess.entity.AssessHeader;
@@ -69,7 +73,7 @@ public class ExternalBeanConfiguration {
 
 	@Bean
     public LdapTemplate ldapTemplate() {
-        return new LdapTemplate(contextSource());        
+        return new LdapTemplate(contextSource());
     }
 
 	@Bean
@@ -235,16 +239,14 @@ public class ExternalBeanConfiguration {
 		return mapper;
 	}
 
-	/*private Object get(Integer employeeId) {
-		return "https://opera.softvision.com/Content/Core/img/Profile/" + employeeId + ".jpg";
-	}*/
+	@Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
 
-	/*@Bean
-	public MapperFacade getOrikaBeanMapper() {
-		MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-		mapperFactory.classMap(AppraisalCycle.class, AppraisalCycleDto.class);
-		mapperFactory.classMap(AppraisalCycleDto.class, AppraisalCycle.class);
-		MapperFacade mapper = mapperFactory.getMapperFacade();
-		return mapper;
-	}*/
+	@Bean
+	public ServletListenerRegistrationBean<HttpSessionEventPublisher> httpSessionEventPublisher() {
+	    return new ServletListenerRegistrationBean<HttpSessionEventPublisher>(new HttpSessionEventPublisher());
+	}
+
 }

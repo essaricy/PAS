@@ -18,6 +18,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <!-- JQuery DataTable Css -->
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -167,8 +169,8 @@ $(function () {
 
   $('#SearchRoleTable').DataTable({
     responsive: true,
-    paging: false,
-	searching: false,
+    paging: true,
+	searching: true,
 	ordering: true,
 	info: true,
     "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,

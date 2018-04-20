@@ -16,6 +16,7 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
+import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
@@ -196,6 +197,59 @@ public class ManagerAssignmentService {
             cycleAssignments.add(cycleAssignment);
         }
         return cycleAssignments;
+    }
+
+    public List<PhaseAssessmentDto> getAllPhaseAssessments(long assignId, int requestedEmployeeId)
+            throws ServiceException {
+        LOGGER.info("getAllPhaseAssessments: START assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
+        CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
+        if (cycleAssignment == null) {
+            throw new ServiceException("Invalid assignment");
+        }
+        Integer submittedTo = cycleAssignment.getSubmittedTo();
+        if (submittedTo == null || submittedTo != requestedEmployeeId) {
+            throw new ServiceException("UNAUTHORIZED ACCESS ATTEMPTED");
+        }
+
+        // Get all the phases
+        /*select * from phase_assign
+        where employee_id=3822
+        and phase_id in (select id from appr_phase where cycle_id=(select cycle_id from cycle_assign where id=102));*/
+
+        /*PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignId);
+        PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
+        EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
+        Employee assignedToEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId());
+        employeeAssignment.setAssignedTo(employeeMapper.getEmployeeDto(assignedToEmployee));
+        phaseAssessment.setEmployeeAssignment(employeeAssignment);
+
+        int phaseId = employeePhaseAssignment.getPhaseId();
+        phaseAssessment.setPhase(appraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
+
+        long templateId = employeePhaseAssignment.getTemplateId();
+        Template template = templateDataRepository.findById(templateId);
+        List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
+        phaseAssessment.setTemplateHeaders(templateMapper.getTemplateHeaderDtoList(templateHeaders));
+
+        List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
+                .findByAssignIdOrderByStatusAsc(assignmentId);
+
+        int status = employeePhaseAssignment.getStatus();
+        PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
+        if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED
+                && requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
+            // Restrict viewing the form by employee if the state is
+            // remove the top phase header if its requested by the manager
+            assessHeaders.remove(assessHeaders.size() - 1);
+        } else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED
+                && requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
+            // remove the top phase header if its requested by the employee
+            assessHeaders.remove(assessHeaders.size() - 1);
+        }
+        phaseAssessment.setAssessHeaders(assessMapper.getAssessHeaderList(assessHeaders));
+        return phaseAssessment;*/
+        return null;
+    
     }
 
     public List<EmployeePhaseAssignmentDto> getSubmittedCyclePhases(long assignId, int requestedEmployeeId)

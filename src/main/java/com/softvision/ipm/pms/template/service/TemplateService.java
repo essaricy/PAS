@@ -11,9 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
-import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
@@ -45,8 +43,6 @@ public class TemplateService {
 
 	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
-	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
-
 	@Autowired private EmployeeDataRepository employeeRepository;
 
 	@Autowired private TemplateMapper templateMapper;
@@ -71,6 +67,26 @@ public class TemplateService {
 	public TemplateDto getNewTemplate() {
 		return templateMapper.getTemplateDto(goalService.getActiveGoals());
 	}
+
+	public TemplateDto copyTemplate(long id) throws ServiceException {
+	    TemplateDto template = getTemplate(id);
+
+	    if (template == null) {
+	        throw new ServiceException("There is no such template");
+	    }
+	    template.setId(0);
+	    //template.setName(template.getName() + " - Copy");
+	    template.setName(null);
+
+	    List<TemplateHeaderDto> headers = template.getHeaders();
+	    headers.forEach(header -> {
+	        header.setId(0);
+	        header.getDetails().forEach(detail -> {
+	            detail.setId(0);
+	        });
+	    });
+        return template;
+    }
 
 	@Transactional
 	public TemplateDto update(TemplateDto templateDto) throws ServiceException {
@@ -153,10 +169,6 @@ public class TemplateService {
 
 	public boolean isInUse(long templateId) throws ServiceException {
 		try {
-			CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findFirstByTemplateId(templateId);
-			if (cycleAssignment != null) {
-				return true;
-			}
 			PhaseAssignment phaseAssignement = phaseAssignmentDataRepository.findFirstByTemplateId(templateId);
 			if (phaseAssignement != null) {
 				return true;

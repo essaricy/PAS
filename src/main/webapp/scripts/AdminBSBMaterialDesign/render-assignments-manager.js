@@ -63,6 +63,7 @@ $(function () {
               var row=$('<tr>');
               $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
               $(row).append('<td>' + assignedTo.fullName + '</td>');
+              $(row).append(getTemplateCell(ea.template));
               $(row).append('<td>' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
@@ -70,15 +71,16 @@ $(function () {
             });
             $(table).append(thead);
             $(thead).append(theadRow);
-            $(theadRow).append('<th width="15%">Employee Id</th>');
-            $(theadRow).append('<th width="30%">Employee Name</th>');
-            $(theadRow).append('<th width="15%">Assigned On</th>');
-            $(theadRow).append('<th width="25%">Status</th>');
-            $(theadRow).append('<th width="15%">Action</th>');
+            $(theadRow).append('<th width="12%">Employee Id</th>');
+            $(theadRow).append('<th width="20%">Employee Name</th>');
+            $(theadRow).append('<th width="22%">Goal Template</th>');
+            $(theadRow).append('<th width="13%">Assigned On</th>');
+            $(theadRow).append('<th width="20%">Status</th>');
+            $(theadRow).append('<th width="13%">Action</th>');
             $(table).append(tbody);
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append(table);
-          } 
+          }
         });
         // Render Phases Tab - END
 
@@ -173,6 +175,54 @@ $(function () {
         $(td).append('-');
       }
       return td;
+    }
+
+    function getTemplateCell(template) {
+      var td=$('<td>');
+      var templateLink=$('<a href="#" data-toggle="modal" data-target="#TemplateModal">');
+      $(templateLink).append(template.name);
+      $(templateLink).click(function (e) {
+        e.preventDefault();
+        showTemplate(template.id)
+      });
+      $(td).append(templateLink);
+      return td;
+    }
+
+    function showTemplate(templateId) {
+      $.fn.ajaxGet({
+        url: settings.contextPath + '/template/list/' + templateId,
+        onSuccess: function(template) {
+          $('#TemplateModal_Title').text(template.name);
+
+          var goalsContainer=$('.goals_container');
+          $(goalsContainer).empty();
+          var listGroup=$('<ul class="list-group">');
+
+          $(template.headers).each(function(index, header) {
+            var link=$('<a href="#" class="template-header-link list-group-item">');
+            $(link).attr('item-id', header.id);
+            $(link).text(header.goalName);
+            $(link).click(function(e) {
+              e.preventDefault();
+              $(this).addClass('active').siblings().removeClass('active');
+              // Show items in child container
+              var goalParamsContainer=$('.goal_params_container');
+              $(goalParamsContainer).empty();
+              var ol=$("<ol>");
+              $(header.details).each(function (index, detail) {
+                if (detail != null && detail.apply=='Y') {
+                  $(ol).append('<li item-id="' + detail.id + '">' + detail.paramName + '</li>');
+                }
+              });
+              $(goalParamsContainer).append(ol);
+            });
+            $(listGroup).append(link);
+          });
+          $(goalsContainer).append(listGroup);
+          $('.template-header-link')[0].click();
+        }
+      });
     }
 
     function getUpRootButton(id) {

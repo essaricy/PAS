@@ -114,8 +114,11 @@ $('.templates_card').cardManager({
   loadUrl: '<%=request.getContextPath()%>/template/list',
   manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
   deleteUrl: '<%=request.getContextPath()%>/template/delete',
-  menuActions: ["Add", "Update", "Delete"],
+  menuActions: ["Add", "Update", "Delete", "Copy"],
   onClickCallback: renderTemplateInformation,
+
+  CopyIcon: 'content_copy',
+  onCopyCallback: copyTemplate
 });
 
 var headerCard=$('.template_header_card');
@@ -170,5 +173,10 @@ function renderTemplateInformation(template) {
 	}
   });
 }
+
+function copyTemplate(itemId, data) {
+  location.href='<%=request.getContextPath()%>/admin/template/manage?id=0&refId=' + itemId
+}
+
 </script>
 </html>

@@ -67,7 +67,6 @@ public class Assignment_ModelToDto_MapperTest {
         cycleAssignment.setScore(4.2);
         cycleAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.getCode());
         cycleAssignment.setSubmittedTo(2543);
-        cycleAssignment.setTemplateId(56L);
 
         EmployeeAssignmentDto employeeAssignmentDto = assignmentMapper.get(cycleAssignment);
         assertNotNull(employeeAssignmentDto);

@@ -165,13 +165,13 @@ public class AssignmentService {
 	
 	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforCycle(int cycleId) {
 		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllEmployeeAssignmentsforCycle( cycleId);
+		employeeAssignments=assignmentRepository.getAllEmployeeCycleAssignments( cycleId);
 		return employeeAssignments;
 	}
 	
 	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforPhase(int cycleId,int phaseId) {
 		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllEmployeeAssignmentsforPhase( cycleId,phaseId);
+		employeeAssignments=assignmentRepository.getAllEmployeePhaseAssignments( cycleId,phaseId);
 		return employeeAssignments;
 	}
 

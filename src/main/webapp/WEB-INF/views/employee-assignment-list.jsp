@@ -48,6 +48,24 @@
       </div>
       <%@include file="common/no-cycle.jsp" %>
     </div>
+    <!-- Large Size -->
+    <div class="modal" id="TemplateModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="TemplateModal_Title"></h4>
+          </div>
+          <div class="modal-body">
+            <div class="row clearfix">
+              <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12 goals_container">
+              </div>
+              <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 goal_params_container">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </body>
 
@@ -81,6 +99,7 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assignments-employee.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
 $(function () {
   $('.container-fluid').employeeAssignment({

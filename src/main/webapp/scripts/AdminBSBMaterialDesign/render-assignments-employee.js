@@ -104,6 +104,7 @@ $(function () {
 
               var row=$('<tr>');
               $(row).append('<td>' + assignedBy.fullName + '</td>');
+              $(row).append(getTemplateCell(ea.template));
               $(row).append('<td>' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
@@ -112,10 +113,11 @@ $(function () {
 
             $(table).append(thead);
             $(thead).append(theadRow);
-            $(theadRow).append('<th width="30%">Assigned By</th>');
-            $(theadRow).append('<th width="20%">Assigned On</th>');
-            $(theadRow).append('<th width="30%">Status</th>');
-            $(theadRow).append('<th width="20%">Action</th>');
+            $(theadRow).append('<th width="25%">Assigned By</th>');
+            $(theadRow).append('<th width="25%">Goal Template</th>');
+            $(theadRow).append('<th width="15%">Assigned On</th>');
+            $(theadRow).append('<th width="20%">Status</th>');
+            $(theadRow).append('<th width="15%">Action</th>');
             $(table).append(tbody);
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append(table);
@@ -172,6 +174,54 @@ $(function () {
       }
       return td;
       }
+
+    function getTemplateCell(template) {
+      var td=$('<td>');
+      var templateLink=$('<a href="#" data-toggle="modal" data-target="#TemplateModal">');
+      $(templateLink).append(template.name);
+      $(templateLink).click(function (e) {
+        e.preventDefault();
+        showTemplate(template.id)
+      });
+      $(td).append(templateLink);
+      return td;
+    }
+
+    function showTemplate(templateId) {
+      $.fn.ajaxGet({
+        url: settings.contextPath + '/template/list/' + templateId,
+        onSuccess: function(template) {
+          $('#TemplateModal_Title').text(template.name);
+
+          var goalsContainer=$('.goals_container');
+          $(goalsContainer).empty();
+          var listGroup=$('<ul class="list-group">');
+
+          $(template.headers).each(function(index, header) {
+            var link=$('<a href="#" class="template-header-link list-group-item">');
+            $(link).attr('item-id', header.id);
+            $(link).text(header.goalName);
+            $(link).click(function(e) {
+              e.preventDefault();
+              $(this).addClass('active').siblings().removeClass('active');
+              // Show items in child container
+              var goalParamsContainer=$('.goal_params_container');
+              $(goalParamsContainer).empty();
+              var ol=$("<ol>");
+              $(header.details).each(function (index, detail) {
+                if (detail != null && detail.apply=='Y') {
+                  $(ol).append('<li item-id="' + detail.id + '">' + detail.paramName + '</li>');
+                }
+              });
+              $(goalParamsContainer).append(ol);
+            });
+            $(listGroup).append(link);
+          });
+          $(goalsContainer).append(listGroup);
+          $('.template-header-link')[0].click();
+        }
+      });
+    }
 
       function getFillFormButton(id) {
         var fillFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="Complete Self-appraisal"><i class="material-icons">assignment</i></button>');

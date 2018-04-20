@@ -140,6 +140,19 @@
           </ul>
         </li>
         </sec:authorize>
+        <sec:authorize access="hasAuthority('SUPPORT')">
+        <li>
+          <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">build</i>
+            <span>Support</span>
+          </a>
+          <ul class="ml-menu">
+            <li>
+              <a href="<%=request.getContextPath()%>/support/list">Active Users</a>
+            </li>
+          </ul>
+        </li>
+        </sec:authorize>
       </ul>
     </div>
     <!-- #Menu -->
@@ -172,7 +185,7 @@
 		  <ul class="setting-list">
 			<li>
 			  <div class="span8 cell">
-			    <img src="https://opera.softvision.com/Content/Core/img/Profile/1136.jpg">    
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/1136.jpg">
 			    <div class="text">Srikanth Ragi</div>
 			  </div>
       	    </li>
@@ -181,13 +194,13 @@
 		  <ul class="setting-list">
 			<li style="clear: both;">
 			  <div class="span8 cell">
-			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2388.jpg">    
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2388.jpg">
 			    <div class="text">Mallikarjun Gongati</div>
 			  </div>
       	    </li>
       		<li style="clear: both;">
 			  <div class="span8 cell">
-			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2006.jpg">    
+			    <img src="https://opera.softvision.com/Content/Core/img/Profile/2006.jpg">
 			    <div class="text">Rohit Ramesh</div>
 			  </div>
       	    </li>
@@ -198,7 +211,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>1.0</span></li>
+			<li><span>2.1</span></li>
 		  </ul>
 		</div>
       </div>

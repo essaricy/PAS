@@ -21,7 +21,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 			    new Object[] {assignedBy, cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Cycle(rs);
 			        }
 			    });
 		return list;
@@ -33,7 +33,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 			    new Object[] {submittedTo, cycleId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Cycle(rs);
 			        }
 			    });
 		return list;
@@ -45,7 +45,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 			    new Object[] {assignedBy, cycleId, phaseId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
 			        }
 			    });
 		return list;
@@ -57,7 +57,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 			    new Object[] {phaseAssignId, employeeId, phaseId},
 			    new RowMapper<EmployeeAssignmentDto>() {
 			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment(rs);
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
 			        }
 			    });
 		return (employeeAssignments== null || employeeAssignments.isEmpty()) ? null : employeeAssignments.get(0);

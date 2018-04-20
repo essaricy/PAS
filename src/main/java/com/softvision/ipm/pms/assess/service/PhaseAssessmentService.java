@@ -247,13 +247,13 @@ public class PhaseAssessmentService {
 		phaseAssessHeaderDto.setStatus(saved.getStatus());
 		AssessHeader phaseAssessHeader = assessMapper.getHeader(phaseAssessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		LOGGER.info("update: END assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
+		LOGGER.info("update: END assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
 		return employeePhaseAssignment;
 	}
 
 	private PhaseAssignment update(long assignmentId, PhaseAssignmentStatus statusToUpdate, String message,
 			PhaseAssignmentStatus... previousStatusesToCheck) throws ServiceException {
-	    LOGGER.info("update2: START assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
+	    LOGGER.info("update2: START assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		// Change assignment status to statusToUpdate

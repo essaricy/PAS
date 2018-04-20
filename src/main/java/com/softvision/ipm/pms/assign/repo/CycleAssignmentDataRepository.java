@@ -12,11 +12,7 @@ public interface CycleAssignmentDataRepository extends CrudRepository<CycleAssig
 
 	CycleAssignment findById(Long id);
 
-	CycleAssignment findFirstByTemplateId(Long id);
-
 	CycleAssignment findByCycleIdAndEmployeeId(Integer cycleId, Integer employeeId);
-
-	CycleAssignment findByCycleIdAndEmployeeIdAndTemplateId(Integer cycleId, Integer employeeId, Long templateId);
 
 	CycleAssignment findByCycleIdAndEmployeeIdAndStatus(Integer cycleId, Integer employeeId, Integer code);
 
