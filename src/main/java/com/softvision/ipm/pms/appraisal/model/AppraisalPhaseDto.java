@@ -14,8 +14,10 @@ import com.softvision.ipm.pms.common.adapter.IndiaDateFormatDeserializer;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatSerializer;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class AppraisalPhaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -35,11 +37,5 @@ public class AppraisalPhaseDto implements Serializable {
 	@JsonSerialize(using=IndiaDateFormatSerializer.class)
 	@JsonDeserialize(using=IndiaDateFormatDeserializer.class)
 	private Date endDate;
-
-	@Override
-	public String toString() {
-		return "\n\tAppraisalPhaseDto [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ "]";
-	}
 
 }

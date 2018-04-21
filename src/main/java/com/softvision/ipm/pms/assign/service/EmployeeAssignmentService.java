@@ -38,14 +38,14 @@ public class EmployeeAssignmentService {
 			}
 			EmployeeCycleAssignmentDto cycleAssignment = new EmployeeCycleAssignmentDto();
 			cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
-			cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getEmployeeAssignmentInCycle(employeeId, cycleId));
+			cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getAssignmentsByEmployeeIdByCycle(employeeId, cycleId));
 			List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
 			cycleAssignment.setPhaseAssignments(phaseAssignments);
 			List<AppraisalPhase> phases = cycle.getPhases();
 			for (AppraisalPhase phase : phases) {
 				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
 				phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
-				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+				phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getAssignmentsByEmployeeIdByPhase(employeeId, cycleId, phase.getId()));
 				phaseAssignments.add(phaseAssignment);
 			}
 			cycleAssignments.add(cycleAssignment);
@@ -61,14 +61,14 @@ public class EmployeeAssignmentService {
 		int cycleId = cycle.getId();
 		EmployeeCycleAssignmentDto cycleAssignment = new EmployeeCycleAssignmentDto();
 		cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
-		cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getEmployeeAssignmentInCycle(employeeId, cycleId));
+		cycleAssignment.setEmployeeAssignment(employeeAssignmentRepository.getAssignmentsByEmployeeIdByCycle(employeeId, cycleId));
 		List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
 		cycleAssignment.setPhaseAssignments(phaseAssignments);
 		List<AppraisalPhase> phases = cycle.getPhases();
 		for (AppraisalPhase phase : phases) {
 			PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
 			phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
-			phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+			phaseAssignment.setEmployeeAssignments(employeeAssignmentRepository.getAssignmentsByEmployeeIdByPhase(employeeId, cycleId, phase.getId()));
 			phaseAssignments.add(phaseAssignment);
 		}
 		return cycleAssignment;

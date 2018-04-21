@@ -36,36 +36,6 @@ public class AssignmentSqlAssembler {
         return employeeAssignment;
     }
 
-    public static EmployeeAssignmentDto getEmployeeAssignment_Phase(ResultSet rs) throws SQLException {
-        EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
-        employeeAssignment.setAssignmentId(rs.getLong("id"));
-
-        employeeAssignment.setStatus(rs.getInt("status"));
-        employeeAssignment.setAssignedAt(rs.getDate("assigned_at"));
-
-        EmployeeDto assignedBy = new EmployeeDto();
-        assignedBy.setEmployeeId(rs.getInt("assigned_by_id"));
-        assignedBy.setFirstName(rs.getString("assigned_by_first_name"));
-        assignedBy.setLastName(rs.getString("assigned_by_last_name"));
-        assignedBy.setFullName(assignedBy.getFirstName() + " " + assignedBy.getLastName());
-        employeeAssignment.setAssignedBy(assignedBy);
-
-        EmployeeDto assignedTo = new EmployeeDto();
-        assignedTo.setEmployeeId(rs.getInt("assigned_to_id"));
-        assignedTo.setFirstName(rs.getString("assigned_to_first_name"));
-        assignedTo.setLastName(rs.getString("assigned_to_last_name"));
-        assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
-        employeeAssignment.setAssignedTo(assignedTo);
-
-        TemplateDto template = new TemplateDto();
-        template.setId(rs.getLong("template_id"));
-        template.setName(rs.getString("template_name"));
-        employeeAssignment.setTemplate(template);
-
-        employeeAssignment.setScore(rs.getDouble("score"));
-        return employeeAssignment;
-    }
-
     public static EmployeePhaseAssignmentDto getEmployeePhaseAssignment(ResultSet rs) throws SQLException {
         EmployeePhaseAssignmentDto employeePhaseAssignment = new EmployeePhaseAssignmentDto();
         employeePhaseAssignment.setAssignmentId(rs.getLong("id"));
@@ -87,6 +57,11 @@ public class AssignmentSqlAssembler {
         assignedTo.setFullName(assignedTo.getFirstName() + " " + assignedTo.getLastName());
         employeePhaseAssignment.setAssignedTo(assignedTo);
         employeePhaseAssignment.setScore(rs.getDouble("score"));
+
+        TemplateDto template = new TemplateDto();
+        template.setId(rs.getLong("template_id"));
+        template.setName(rs.getString("template_name"));
+        employeePhaseAssignment.setTemplate(template);
 
         AppraisalPhaseDto phaseDto = new AppraisalPhaseDto();
         phaseDto.setId(rs.getInt("appr_phase_id"));

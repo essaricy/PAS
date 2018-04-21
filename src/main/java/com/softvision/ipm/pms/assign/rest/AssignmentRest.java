@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.service.AssignmentService;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
@@ -55,14 +56,14 @@ public class AssignmentRest {
     }
 
 	@RequestMapping(value = "cycle/employee-status/{cycleId}", method = RequestMethod.GET)
-	public List<EmployeeAssignmentDto> getEmpCycleAppraisalStatus(@PathVariable(required = true) @Min(1) int cycleId) {
-		return assignmentService.getAllEmployeeAssignmentsforCycle(cycleId);
+	public List<EmployeeAssignmentDto> getAllAssignments(@PathVariable(required = true) @Min(1) int cycleId) {
+		return assignmentService.getAllAssignments(cycleId);
 	}
 
 	@RequestMapping(value = "phase/employee-status/{cycleId}/{phaseId}", method = RequestMethod.GET)
-	public List<EmployeeAssignmentDto> getEmpCycleAppraisalStatus(@PathVariable(required = true) @Min(1) int cycleId,
+	public List<EmployeePhaseAssignmentDto> getAllAssignments(@PathVariable(required = true) @Min(1) int cycleId,
 			@PathVariable(required = true) @Min(1) int phaseId) {
-		return assignmentService.getAllEmployeeAssignmentsforPhase(cycleId, phaseId);
+		return assignmentService.getAllAssignments(cycleId, phaseId);
 	}
 
 }

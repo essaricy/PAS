@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
+import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assign.model.ManagerCycleAssignmentDto;
 import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
@@ -49,10 +49,11 @@ public class ManagerReportRest {
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
-    @RequestMapping(value="cycle/phases/{assignId}", method=RequestMethod.GET)
-    public @ResponseBody List<EmployeePhaseAssignmentDto> getCycleScorePhases(
-            @PathVariable(required = true) long assignId) throws ServiceException {
-        return managerAssignmentService.getSubmittedCyclePhases(assignId, RestUtil.getLoggedInEmployeeId());
+    @RequestMapping(value="cycle/assessments/{assignId}/{employeeId}", method=RequestMethod.GET)
+    public @ResponseBody List<PhaseAssessmentDto> getAllPhaseAssessments(
+            @PathVariable(value="assignId", required = true) long assignId,
+            @PathVariable(value="employeeId", required = true) int employeeId) throws ServiceException {
+        return managerAssignmentService.getAllPhaseAssessments(assignId, employeeId, RestUtil.getLoggedInEmployeeId());
     }
 
 }

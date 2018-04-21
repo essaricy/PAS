@@ -71,30 +71,13 @@ public class AssignmentRepositorySql {
 			"and appr_phase.cycle_id=? " + 
 			"and appr_phase.id=? ";
 
-	public static final String SELECT_PHASE_ASSIGNMENTS_BY_CYCLE = /*"select appr_phase.name as appr_phase_name, " + 
-	        "appr_phase.start_date as appr_phase_start_date, " + 
-	        "appr_phase.end_date as appr_phase_end_date, " + 
-	        "phase_assign.id as assign_id, " + 
-	        "phase_assign.employee_id as phase_assign_employee_id, " + 
-	        "phase_assign.assigned_by as phase_assign_assigned_by, " + 
-	        "phase_assign.status as phase_assign_status, " + 
-	        "phase_assign.score as phase_assign_score " + 
-	        "from phase_assign " + 
-	        "inner join appr_phase " + 
-	        "on appr_phase.id=phase_assign.phase_id " + 
-	        "inner join appr_cycle " + 
-	        "on appr_cycle.id=appr_phase.cycle_id " + 
-	        "where " + 
-	        "appr_cycle.id=? " + 
-	        "and phase_assign.employee_id=? " + 
-	        "order by appr_phase.start_date asc "*/SELECT_PHASE_ASSIGNMENTS +
-	        "inner join appr_cycle " + 
+    public static final String SELECT_PHASE_ASSIGNMENTS_BY_CYCLE_BY_EMPLOYEE_ID = SELECT_PHASE_ASSIGNMENTS +
+            "inner join appr_cycle " + 
             "on appr_cycle.id=appr_phase.cycle_id " + 
-	        "where " + 
+            "where " + 
             "appr_cycle.id=? " + 
             "and phase_assign.employee_id=? " + 
             "order by appr_phase.start_date asc ";
-	        ; 
 
 	public static final String SELECT_INCOMPLETE_PREVIOUS_PHASE_ASSIGNMENTS = SELECT_PHASE_ASSIGNMENTS + 
 			"where " +
@@ -102,13 +85,11 @@ public class AssignmentRepositorySql {
 			"and employee_id=? " + 
 			"and appr_phase.start_date < (select start_date from appr_phase where id=?)" + 
 			"and status != " + PhaseAssignmentStatus.CONCLUDED.getCode() +
-			//" appr_phase.cycle_id=(select cycle_id from appr_phase where id=phase_assign.phase_id) " +
 			"order by appr_phase.start_date " + 
 			"LIMIT 1 ";
 
 	public static final String SELECT_MANAGER_ALL_PHASE_ASSIGNMENTS = SELECT_PHASE_ASSIGNMENTS + 
 			"where appr_phase.cycle_id=? " + 
 			"and appr_phase.id=? ";
-
 
 }

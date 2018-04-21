@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
-import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.model.PhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.EmployeeAssignmentRepository;
 
@@ -29,10 +29,10 @@ public class EmployeeReportService {
 			for (AppraisalPhaseDto phase : phases) {
 				PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
 				phaseAssignment.setPhase(phase);
-				List<EmployeeAssignmentDto> employeeAssignmentsOfPhase = employeeAssignmentRepository.getEmployeeAssignmentsOfPhase(employeeId, cycleId, phase.getId());
+				List<EmployeePhaseAssignmentDto> employeeAssignmentsOfPhase = employeeAssignmentRepository.getAssignmentsByEmployeeIdByPhase(employeeId, cycleId, phase.getId());
 				if (employeeAssignmentsOfPhase == null || employeeAssignmentsOfPhase.isEmpty()) {
 					employeeAssignmentsOfPhase = new ArrayList<>();
-					EmployeeAssignmentDto employeeAssignment = new EmployeeAssignmentDto();
+					EmployeePhaseAssignmentDto employeeAssignment = new EmployeePhaseAssignmentDto();
 					employeeAssignment.setStatus(-1);
 					employeeAssignmentsOfPhase.add(employeeAssignment);
 				}

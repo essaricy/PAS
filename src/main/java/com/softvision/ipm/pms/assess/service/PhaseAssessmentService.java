@@ -70,39 +70,43 @@ public class PhaseAssessmentService {
 
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
 	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
-		PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
-		EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
-		Employee assignedToEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId());
-		employeeAssignment.setAssignedTo(employeeMapper.getEmployeeDto(assignedToEmployee));
-		phaseAssessment.setEmployeeAssignment(employeeAssignment);
+        PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+        PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
+        EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
 
-		int phaseId = employeePhaseAssignment.getPhaseId();
-		phaseAssessment.setPhase(appraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
+        Employee assignedToEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId());
+        employeeAssignment.setAssignedTo(employeeMapper.getEmployeeDto(assignedToEmployee));
 
-		long templateId = employeePhaseAssignment.getTemplateId();
-		Template template = templateDataRepository.findById(templateId);
-		List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
-		phaseAssessment.setTemplateHeaders(templateMapper.getTemplateHeaderDtoList(templateHeaders));
+        Employee assignedByEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedBy().getEmployeeId());
+        employeeAssignment.setAssignedBy(employeeMapper.getEmployeeDto(assignedByEmployee));
+        phaseAssessment.setEmployeeAssignment(employeeAssignment);
 
-		List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
-				.findByAssignIdOrderByStatusAsc(assignmentId);
+        int phaseId = employeePhaseAssignment.getPhaseId();
+        phaseAssessment.setPhase(appraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
 
-		int status = employeePhaseAssignment.getStatus();
-		PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
-		if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED
-		        && requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
-		    // Restrict viewing the form by employee if the state is
-		    // remove the top phase header if its requested by the manager
-		    assessHeaders.remove(assessHeaders.size() - 1);
-		} else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED
-		        && requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
-		    // remove the top phase header if its requested by the employee
-		    assessHeaders.remove(assessHeaders.size() - 1);
-		}
-		phaseAssessment.setAssessHeaders(assessMapper.getAssessHeaderList(assessHeaders));
-		return phaseAssessment;
-	}
+        long templateId = employeePhaseAssignment.getTemplateId();
+        Template template = templateDataRepository.findById(templateId);
+        List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
+        phaseAssessment.setTemplateHeaders(templateMapper.getTemplateHeaderDtoList(templateHeaders));
+
+        List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
+                .findByAssignIdOrderByStatusAsc(assignmentId);
+
+        int status = employeePhaseAssignment.getStatus();
+        PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
+        if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED
+                && requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
+            // Restrict viewing the form by employee if the state is
+            // remove the top phase header if its requested by the manager
+            assessHeaders.remove(assessHeaders.size() - 1);
+        } else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED
+                && requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
+            // remove the top phase header if its requested by the employee
+            assessHeaders.remove(assessHeaders.size() - 1);
+        }
+        phaseAssessment.setAssessHeaders(assessMapper.getAssessHeaderList(assessHeaders));
+        return phaseAssessment;
+    }
 
 	@PreSecureAssignment(permitManager=true)
 	public void enablePhaseAppraisal(long assignmentId, int fromEmployeeId) throws ServiceException {

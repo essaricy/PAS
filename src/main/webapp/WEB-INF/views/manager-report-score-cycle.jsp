@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -26,6 +27,9 @@
   <style>
   .list-group-item {
   	font-size: 13px;
+  }
+  .selected {
+  	background-color: #607D8B;
   }
   </style>
 </head>
@@ -60,15 +64,20 @@
                   <table id="EmployeePhaseAssignments_Table" class="table table-bordered table-striped table-hover dataTable">
                     <thead>
                       <tr>
+                        <th>&nbsp;</th>
                         <th>Phase</th>
                         <th>Assessed By</th>
                         <th>Status</th>
                         <th>Score</th>
                       </tr>
                     </thead>
-                  <tbody>
-                </tbody>
-              </table>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="assessment_div row clearfix">
+              </div>
             </div>
           </div>
         </div>
@@ -97,6 +106,8 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.js"></script>
+
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/tooltips-popovers.js"></script>
@@ -116,7 +127,6 @@ $(function () {
     contextPath: '<%=request.getContextPath()%>',
     url: '<%=request.getContextPath()%>/manager/report/cycle/score',
   });
-
 });
 
 </script>

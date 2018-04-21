@@ -14,7 +14,7 @@ public class PhaseAssignmentDto implements Serializable {
 
 	private AppraisalPhaseDto phase;
 
-	private List<EmployeeAssignmentDto> employeeAssignments;
+	private List<? extends EmployeeAssignmentDto> employeeAssignments;
 
 	@Override
 	public String toString() {

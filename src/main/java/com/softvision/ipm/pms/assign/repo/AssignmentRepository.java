@@ -14,6 +14,7 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.assign.assembler.AssignmentSqlAssembler;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.repo.AbstractRepository;
 
@@ -40,7 +41,7 @@ public class AssignmentRepository extends AbstractRepository {
 		}
 	}
 
-	public List<EmployeeAssignmentDto> getAllEmployeeCycleAssignments(int cycleId) {
+	public List<EmployeeAssignmentDto> getAllAssignments(int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_MANAGER_ALL_CYCLE_ASSIGNMENTS,
 			    new Object[] {cycleId},
@@ -52,13 +53,13 @@ public class AssignmentRepository extends AbstractRepository {
 		return list;
 	}
 	
-	public List<EmployeeAssignmentDto> getAllEmployeePhaseAssignments(int cycleId, int phaseId) {
-		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+	public List<EmployeePhaseAssignmentDto> getAllAssignments(int cycleId, int phaseId) {
+		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_MANAGER_ALL_PHASE_ASSIGNMENTS,
 			    new Object[] {cycleId, phaseId},
-			    new RowMapper<EmployeeAssignmentDto>() {
-			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
+			    new RowMapper<EmployeePhaseAssignmentDto>() {
+			        public EmployeePhaseAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssembler.getEmployeePhaseAssignment(rs);
 			        }
 			    });
 		return list;

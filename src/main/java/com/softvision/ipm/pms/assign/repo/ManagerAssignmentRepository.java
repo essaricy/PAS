@@ -15,7 +15,7 @@ import com.softvision.ipm.pms.common.repo.AbstractRepository;
 @Repository
 public class ManagerAssignmentRepository extends AbstractRepository {
 
-	public List<EmployeeAssignmentDto> getAssignedByAssignmentsOfCycle(int assignedBy, int cycleId) {
+	public List<EmployeeAssignmentDto> getAssignmentsByAssignedByByCycle(int assignedBy, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_ASSIGNED_BY,
 			    new Object[] {assignedBy, cycleId},
@@ -27,7 +27,7 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
-	public List<EmployeeAssignmentDto> getSubmittedToAssignmentsOfCycle(int submittedTo, int cycleId) {
+	public List<EmployeeAssignmentDto> getAssignmentsBySubmittedToByCycle(int submittedTo, int cycleId) {
 		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_SUBMITTED_TO,
 			    new Object[] {submittedTo, cycleId},
@@ -39,25 +39,25 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
-	public List<EmployeeAssignmentDto> getAssignedByAssignmentsOfPhase(int assignedBy, int cycleId, int phaseId) {
-		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+	public List<EmployeePhaseAssignmentDto> getAssignmentsByAssignedByByPhase(int assignedBy, int cycleId, int phaseId) {
+		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_ASSIGNED_BY,
 			    new Object[] {assignedBy, cycleId, phaseId},
-			    new RowMapper<EmployeeAssignmentDto>() {
-			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
+			    new RowMapper<EmployeePhaseAssignmentDto>() {
+			        public EmployeePhaseAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssembler.getEmployeePhaseAssignment(rs);
 			        }
 			    });
 		return list;
 	}
 
-	public EmployeeAssignmentDto getPreviousIncompletePhaseAssignment(long phaseAssignId, int employeeId, int phaseId) {
-		List<EmployeeAssignmentDto> employeeAssignments = jdbcTemplate.query(
+	public EmployeePhaseAssignmentDto getPreviousIncompletePhaseAssignment(long phaseAssignId, int employeeId, int phaseId) {
+		List<EmployeePhaseAssignmentDto> employeeAssignments = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_INCOMPLETE_PREVIOUS_PHASE_ASSIGNMENTS,
 			    new Object[] {phaseAssignId, employeeId, phaseId},
-			    new RowMapper<EmployeeAssignmentDto>() {
-			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-			            return AssignmentSqlAssembler.getEmployeeAssignment_Phase(rs);
+			    new RowMapper<EmployeePhaseAssignmentDto>() {
+			        public EmployeePhaseAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssembler.getEmployeePhaseAssignment(rs);
 			        }
 			    });
 		return (employeeAssignments== null || employeeAssignments.isEmpty()) ? null : employeeAssignments.get(0);
@@ -73,9 +73,10 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return updated==1;
 	}
 
-	public List<EmployeePhaseAssignmentDto> getPhaseAssignmentsInCycle(int cycleId, int employeeId) {
+	public List<EmployeePhaseAssignmentDto> getPhaseAssignmentsByCycleByEmployeeId(long cycleId, int employeeId) {
+	    System.out.println(AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE_BY_EMPLOYEE_ID);
 		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
-				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE,
+				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE_BY_EMPLOYEE_ID,
 			    new Object[] {cycleId, employeeId},
 			    new RowMapper<EmployeePhaseAssignmentDto>() {
 			        public EmployeePhaseAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {

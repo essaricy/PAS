@@ -17,6 +17,7 @@ import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
+import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
@@ -62,6 +63,8 @@ public class ManagerAssignmentService {
     @Autowired private AppraisalRepository appraisalRepository;
 
     @Autowired private AppraisalMapper appraisalMapper;
+
+    @Autowired private PhaseAssessmentService phaseAssessmentService;
 
     @PreSecureAssignment(permitManager = true)
     public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
@@ -109,7 +112,7 @@ public class ManagerAssignmentService {
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
             cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
             cycleAssignment.setEmployeeAssignments(
-                    managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
+                    managerAssignmentRepository.getAssignmentsByAssignedByByCycle(employeeId, cycleId));
             List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
             cycleAssignment.setPhaseAssignments(phaseAssignments);
             List<AppraisalPhase> phases = cycle.getPhases();
@@ -117,7 +120,7 @@ public class ManagerAssignmentService {
                 PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
                 phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
                 phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
-                        .getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+                        .getAssignmentsByAssignedByByPhase(employeeId, cycleId, phase.getId()));
                 phaseAssignments.add(phaseAssignment);
             }
             cycleAssignments.add(cycleAssignment);
@@ -134,7 +137,7 @@ public class ManagerAssignmentService {
         ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
         cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
         cycleAssignment.setEmployeeAssignments(
-                managerAssignmentRepository.getAssignedByAssignmentsOfCycle(employeeId, cycleId));
+                managerAssignmentRepository.getAssignmentsByAssignedByByCycle(employeeId, cycleId));
         List<PhaseAssignmentDto> phaseAssignments = new ArrayList<>();
         cycleAssignment.setPhaseAssignments(phaseAssignments);
         List<AppraisalPhase> phases = cycle.getPhases();
@@ -142,7 +145,7 @@ public class ManagerAssignmentService {
             PhaseAssignmentDto phaseAssignment = new PhaseAssignmentDto();
             phaseAssignment.setPhase(appraisalMapper.getPhase(phase));
             phaseAssignment.setEmployeeAssignments(managerAssignmentRepository
-                    .getAssignedByAssignmentsOfPhase(employeeId, cycleId, phase.getId()));
+                    .getAssignmentsByAssignedByByPhase(employeeId, cycleId, phase.getId()));
             phaseAssignments.add(phaseAssignment);
         }
         return cycleAssignment;
@@ -192,16 +195,16 @@ public class ManagerAssignmentService {
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
             cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
             List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository
-                    .getSubmittedToAssignmentsOfCycle(employeeId, cycleId);
+                    .getAssignmentsBySubmittedToByCycle(employeeId, cycleId);
             cycleAssignment.setEmployeeAssignments(employeeAssignments);
             cycleAssignments.add(cycleAssignment);
         }
         return cycleAssignments;
     }
 
-    public List<PhaseAssessmentDto> getAllPhaseAssessments(long assignId, int requestedEmployeeId)
+    public List<PhaseAssessmentDto> getAllPhaseAssessments(long assignId, int employeeId, int requestedEmployeeId)
             throws ServiceException {
-        LOGGER.info("getAllPhaseAssessments: START assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
+        LOGGER.info("getAllPhaseAssessments: START assignId={}, employeeId={}, requestedEmployeeId={}", assignId, employeeId, requestedEmployeeId);
         CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
         if (cycleAssignment == null) {
             throw new ServiceException("Invalid assignment");
@@ -211,62 +214,17 @@ public class ManagerAssignmentService {
             throw new ServiceException("UNAUTHORIZED ACCESS ATTEMPTED");
         }
 
+        List<PhaseAssessmentDto> phaseAssessments = new ArrayList<>();
         // Get all the phases
-        /*select * from phase_assign
-        where employee_id=3822
-        and phase_id in (select id from appr_phase where cycle_id=(select cycle_id from cycle_assign where id=102));*/
-
-        /*PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignId);
-        PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
-        EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(employeePhaseAssignment);
-        Employee assignedToEmployee = employeeRepository.findByEmployeeId(employeeAssignment.getAssignedTo().getEmployeeId());
-        employeeAssignment.setAssignedTo(employeeMapper.getEmployeeDto(assignedToEmployee));
-        phaseAssessment.setEmployeeAssignment(employeeAssignment);
-
-        int phaseId = employeePhaseAssignment.getPhaseId();
-        phaseAssessment.setPhase(appraisalMapper.getPhase(appraisalPhaseDataRepository.findById(phaseId)));
-
-        long templateId = employeePhaseAssignment.getTemplateId();
-        Template template = templateDataRepository.findById(templateId);
-        List<TemplateHeader> templateHeaders = template.getTemplateHeaders();
-        phaseAssessment.setTemplateHeaders(templateMapper.getTemplateHeaderDtoList(templateHeaders));
-
-        List<AssessHeader> assessHeaders = phaseAssessmentHeaderDataRepository
-                .findByAssignIdOrderByStatusAsc(assignmentId);
-
-        int status = employeePhaseAssignment.getStatus();
-        PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(status);
-        if (phaseAssignmentStatus == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED
-                && requestedEmployeeId == employeePhaseAssignment.getAssignedBy()) {
-            // Restrict viewing the form by employee if the state is
-            // remove the top phase header if its requested by the manager
-            assessHeaders.remove(assessHeaders.size() - 1);
-        } else if (phaseAssignmentStatus == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED
-                && requestedEmployeeId == employeePhaseAssignment.getEmployeeId()) {
-            // remove the top phase header if its requested by the employee
-            assessHeaders.remove(assessHeaders.size() - 1);
-        }
-        phaseAssessment.setAssessHeaders(assessMapper.getAssessHeaderList(assessHeaders));
-        return phaseAssessment;*/
-        return null;
-    
-    }
-
-    public List<EmployeePhaseAssignmentDto> getSubmittedCyclePhases(long assignId, int requestedEmployeeId)
-            throws ServiceException {
-        LOGGER.info("getSubmittedCyclePhases: START assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
-        CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
-        if (cycleAssignment == null) {
-            throw new ServiceException("Invalid assignment");
-        }
-        Integer submittedTo = cycleAssignment.getSubmittedTo();
-        if (submittedTo == null || submittedTo != requestedEmployeeId) {
-            throw new ServiceException("UNAUTHORIZED ACCESS ATTEMPTED");
-        }
         List<EmployeePhaseAssignmentDto> phaseAssignmentsInCycle = managerAssignmentRepository
-                .getPhaseAssignmentsInCycle(cycleAssignment.getCycleId(), cycleAssignment.getEmployeeId());
-        LOGGER.info("getSubmittedCyclePhases: END assignId={}, requestedEmployeeId={}", assignId, requestedEmployeeId);
-        return phaseAssignmentsInCycle;
+                .getPhaseAssignmentsByCycleByEmployeeId(cycleAssignment.getCycleId(), employeeId);
+        if (phaseAssignmentsInCycle != null && !phaseAssignmentsInCycle.isEmpty()) {
+            for (EmployeePhaseAssignmentDto phaseAssignment : phaseAssignmentsInCycle) {
+                PhaseAssessmentDto phaseAssessment = phaseAssessmentService.getByAssignment(phaseAssignment.getAssignmentId(), employeeId);
+                phaseAssessments.add(phaseAssessment);
+            }
+        }
+        return phaseAssessments;
     }
 
 }

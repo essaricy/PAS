@@ -19,6 +19,7 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -163,15 +164,15 @@ public class AssignmentService {
 		return results;
 	}
 	
-	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforCycle(int cycleId) {
+	public List<EmployeeAssignmentDto> getAllAssignments(int cycleId) {
 		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllEmployeeCycleAssignments( cycleId);
+		employeeAssignments=assignmentRepository.getAllAssignments(cycleId);
 		return employeeAssignments;
 	}
 	
-	public List<EmployeeAssignmentDto> getAllEmployeeAssignmentsforPhase(int cycleId,int phaseId) {
-		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllEmployeePhaseAssignments( cycleId,phaseId);
+	public List<EmployeePhaseAssignmentDto> getAllAssignments(int cycleId,int phaseId) {
+		List<EmployeePhaseAssignmentDto> employeeAssignments = new ArrayList<>();
+		employeeAssignments=assignmentRepository.getAllAssignments(cycleId, phaseId);
 		return employeeAssignments;
 	}
 
