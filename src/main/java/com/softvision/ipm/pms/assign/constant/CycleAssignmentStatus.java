@@ -4,7 +4,12 @@ import java.util.Arrays;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum CycleAssignmentStatus {
 
 	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
@@ -13,36 +18,14 @@ public enum CycleAssignmentStatus {
 
 	CONCLUDED(500, "Concluded", "Assessment is concluded");
 
+	@Getter
 	private int code;
 
+	@Getter
 	private String name;
 
-	private String title;
-
+	@Getter
 	private String description;
-
-	private CycleAssignmentStatus(int code, String title, String desciption) {
-		this.code=code;
-		this.name=this.toString();
-		this.title=title;
-		this.description=desciption;
-	}
-
-	public int getCode() {
-		return code;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
 
 	public static CycleAssignmentStatus get(int code) {
 		return Arrays.stream(values()).filter(e -> e.getCode() == code).findAny().orElse(null);

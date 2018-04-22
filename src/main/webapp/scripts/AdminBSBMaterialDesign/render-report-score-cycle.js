@@ -47,7 +47,7 @@ $(function () {
           var thead=$('<thead>');
           var tbody=$('<tbody>');
           var theadRow=$('<tr>');
-          $(theadRow).append('<th width="35%">Employee ID</th>');
+          $(theadRow).append('<th width="35%">Employee #</th>');
           $(theadRow).append('<th width="50%">Employee Name</th>');
           $(theadRow).append('<th width="15%">Score</th>');
 

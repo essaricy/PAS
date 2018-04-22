@@ -84,31 +84,6 @@
        	  </div>
       	</div>
       </div>
-
-      <!-- Basic Example -->
-      <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <!-- <div class="card">
-            <div class="header">
-              <h2>Employee Report for the current Appraisal Cycle</h2>
-            </div>
-            <div class="body">
-              <table class="table table-striped table-condensed">
-              	<thead>
-              	  <tr>
-              	  	<th>Manager</th>
-              	  	<th>Employee ID</th>
-              	  	<th>Employee Name</th>
-              	  	<th>Phase 1</th>
-              	  	<th>Phase 2</th>
-              	  	<th>Final Score</th>
-              	  </tr>
-              	</thead>
-              </table>
-            </div>
-          </div> -->
-        </div>
-      </div>
     </div>
   </section>
 

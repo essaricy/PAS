@@ -123,10 +123,10 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/admin/cycles/list">Appraisal Cycles</a>
+              <a href="<%=request.getContextPath()%>/admin/cycles/list">Cycle Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/goal/list">Goal Settings</a>
+              <a href="<%=request.getContextPath()%>/admin/goal/list">Goal Management</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>

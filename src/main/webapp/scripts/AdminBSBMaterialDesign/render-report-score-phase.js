@@ -38,7 +38,7 @@ $(function() {
         var thead = $('<thead>');
         var tbody = $('<tbody>');
         var theadRow = $('<tr>');
-        $(theadRow).append('<th width="15%">Employee ID</th>');
+        $(theadRow).append('<th width="15%">Employee #</th>');
         $(theadRow).append('<th width="35%">Employee Name</th>');
         var numberOfColumns = 2;
         var phaseAssignments = cycleAssignment.phaseAssignments;

@@ -123,4 +123,19 @@ public class ManagerAssignmentRest {
 		return result;
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+	@RequestMapping(value="delete/{assignmentId}", method=RequestMethod.DELETE)
+	public Result deleteAssignment(@PathVariable(required=true) @Min(1) long assignmentId) {
+		Result result = new Result();
+		try {
+			managerAssignmentService.deleteAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			
+		}
+		return result;
+    }
+
 }

@@ -57,8 +57,6 @@ $(function () {
         var theadRow=$('<tr>');
         $(table).append(thead);
         $(thead).append(theadRow);
-        //$(theadRow).append('<th>Employee Id</th>');
-        // $(theadRow).append('<th>Employee Name</th>');
         $(theadRow).append('<th>Assigned By</th>');
         $(theadRow).append('<th>Assigned On</th>');
         $(theadRow).append('<th>Status</th>');

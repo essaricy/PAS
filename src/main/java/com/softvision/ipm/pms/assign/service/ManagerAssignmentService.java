@@ -227,4 +227,16 @@ public class ManagerAssignmentService {
         return phaseAssessments;
     }
 
+    @PreSecureAssignment(permitManager = true)
+	public void deleteAssignment(long assignmentId, int fromEmployeeId) throws ServiceException {
+    	LOGGER.info("deleteAssignment: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
+        PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
+        PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(phaseAssignment.getStatus());
+        if (phaseAssignmentStatus != PhaseAssignmentStatus.NOT_INITIATED) {
+        	throw new ServiceException("This assignment is in the status '" + phaseAssignmentStatus.getName() + "'. This cannot be deleted now");
+        }
+        phaseAssignmentDataRepository.delete(assignmentId);
+        LOGGER.info("deleteAssignment: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
+	}
+
 }
