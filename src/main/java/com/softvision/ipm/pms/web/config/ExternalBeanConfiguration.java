@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import javax.mail.Session;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -59,11 +58,6 @@ public class ExternalBeanConfiguration {
 		PROPERTIES.setProperty("mail.smtp.host", emailHost);
 		// Get the default Session object.
 		return Session.getDefaultInstance(PROPERTIES);
-	}
-
-	@Bean
-	public ModelMapper getModelMapper() {
-		return new MyModelMapper();
 	}
 
 	@Bean
