@@ -49,7 +49,6 @@ $.fn.ajaxWrapper = function(options) {
   console.log('ajaxWrapper ' + JSON.stringify(options));
 
   validateSettings();
-  //$.preloader.start({ modal: true, src : '/images/loader.png' });
 
   $.ajax({
   type: options.type,
@@ -127,7 +126,6 @@ $.fn.ajaxWrapper = function(options) {
       }
     }
   }).always(function() {
-    //$.preloader.stop();
     if (options.onComplete) {
       options.onComplete();
     }
