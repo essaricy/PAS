@@ -39,10 +39,4 @@ public class Template implements Serializable {
 	@JoinColumn(name = "template_id", nullable = false)
 	private List<TemplateHeader> templateHeaders;
 
-	@Override
-	public String toString() {
-		return "Template [id=" + id + ", name=" + name + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
-				+ ", templateHeaders=" + templateHeaders + "]";
-	}
-
 }

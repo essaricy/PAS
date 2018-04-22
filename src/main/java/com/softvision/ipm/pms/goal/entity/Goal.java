@@ -34,9 +34,4 @@ public class Goal implements Serializable {
 	@JoinColumn(name = "goal_id", nullable = false)
 	private List<GoalParam> params;
 
-	@Override
-	public String toString() {
-		return "Goal [id=" + id + ", name=" + name + ", params=" + params + "]";
-	}
-
 }

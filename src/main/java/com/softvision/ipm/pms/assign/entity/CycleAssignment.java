@@ -10,10 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
 @Entity(name="cycle_assign")
 public class CycleAssignment implements Serializable {
 

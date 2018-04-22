@@ -44,12 +44,4 @@ public class Employee implements Serializable {
 
     private String active;
 
-	@Override
-	public String toString() {
-		return "Employee [employeeId=" + employeeId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", employmentType=" + employmentType + ", designation=" + designation + ", band=" + band
-				+ ", hiredOn=" + hiredOn + ", location=" + location + ", loginId=" + loginId + ", department="
-				+ department + ", division=" + division + ", org=" + org + ", active=" + active + "]";
-	}
-
 }

@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity(name="assess_detail")
@@ -28,11 +29,5 @@ public class AssessDetail implements Serializable {
 	private String comments;
 
 	private double score;
-
-	@Override
-	public String toString() {
-		return "AssessDetail [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
-				+ ", comments=" + comments + ", score=" + score + "]";
-	}
 
 }

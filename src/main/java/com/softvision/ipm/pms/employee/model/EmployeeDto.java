@@ -45,11 +45,4 @@ public class EmployeeDto implements Serializable {
 	@NotBlank(message="Login Id is required")
 	private String loginId;
 
-	@Override
-	public String toString() {
-		return "EmployeeDto [employeeId=" + employeeId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", fullName=" + fullName + ", employmentType=" + employmentType + ", designation=" + designation
-				+ ", band=" + band + ", hiredOn=" + hiredOn + ", location=" + location + ", loginId=" + loginId + "]";
-	}
-
 }

@@ -14,10 +14,8 @@ import com.softvision.ipm.pms.common.adapter.IndiaDateFormatDeserializer;
 import com.softvision.ipm.pms.common.adapter.IndiaDateFormatSerializer;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
 public class AppraisalPhaseDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

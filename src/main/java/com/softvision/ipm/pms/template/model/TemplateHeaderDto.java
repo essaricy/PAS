@@ -39,10 +39,4 @@ public class TemplateHeaderDto implements Serializable {
 	@Valid
 	private List<TemplateDetailDto> details;
 
-	@Override
-	public String toString() {
-		return "\nTemplateHeaderDto [id=" + id + ", goalId=" + goalId + ", goalName=" + goalName + ", weightage="
-				+ weightage + ", details=" + details + "]";
-	}
-
 }

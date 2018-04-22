@@ -43,10 +43,4 @@ public class TemplateHeader implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<TemplateDetail> templateDetails;
 
-	@Override
-	public String toString() {
-		return "\nTemplateHeader [id=" + id + ", weightage=" + weightage + ", goal=" + goal + ", templateDetails="
-				+ templateDetails + "]";
-	}
-
 }

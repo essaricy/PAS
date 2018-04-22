@@ -15,10 +15,4 @@ public class PhasewiseEmployeeStatusCountDto implements Serializable {
 
 	private int count;
 
-	@Override
-	public String toString() {
-		return "PhasewiseEmployeeStatusCountDto [phaseAssignmentStatus=" + phaseAssignmentStatus + ", count=" + count
-				+ "]";
-	}
-
 }

@@ -24,8 +24,7 @@ import com.softvision.ipm.pms.common.model.Result;
 @RequestMapping(value="appraisal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class AppraisalRest {
 
-	@Autowired
-	private AppraisalService appraisalService;
+	@Autowired private AppraisalService appraisalService;
 
 	@RequestMapping(value="list", method=RequestMethod.GET)
     public @ResponseBody List<AppraisalCycleDto> getCycles() {

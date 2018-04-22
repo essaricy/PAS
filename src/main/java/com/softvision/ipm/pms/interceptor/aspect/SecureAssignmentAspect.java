@@ -7,8 +7,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.service.spi.ServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.stereotype.Component;
@@ -19,11 +17,12 @@ import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Aspect
 @Component
 public class SecureAssignmentAspect {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(SecureAssignmentAspect.class);
 
 	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 
@@ -39,7 +38,7 @@ public class SecureAssignmentAspect {
 		}
 		assignmentId = (Long) args[0];
 		requestedEmployeeId = (Integer) args[1];
-		LOGGER.info("permit: assignmentId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
+		log.info("permit: assignmentId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 
 		boolean permitEmployee = preSecureAssignment.permitEmployee();
 		boolean permitManager = preSecureAssignment.permitManager();
@@ -67,9 +66,9 @@ public class SecureAssignmentAspect {
 		if (permitManager && requestedEmployeeId == assignedBy) {
 			allow=true;
 		}
-		LOGGER.info("permit: assignmentId={}, requestedEmployeeId={}, allow={}", assignmentId, requestedEmployeeId, allow);
+		log.info("permit: assignmentId={}, requestedEmployeeId={}, allow={}", assignmentId, requestedEmployeeId, allow);
 		if (!allow) {
-			LOGGER.warn("permit: UNAUTHORIZED ACCESS ATTEMPT: assignmentId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
+			log.warn("permit: UNAUTHORIZED ACCESS ATTEMPT: assignmentId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 			throw new AuthorizationServiceException("UNAUTHORIZED: You are not allowed to access this form");
 		}
 	    return joinPoint.proceed();

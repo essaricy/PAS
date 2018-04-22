@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,30 +33,25 @@ import com.softvision.ipm.pms.email.repo.EmailRepository;
 import com.softvision.ipm.pms.interceptor.annotations.PreSecureAssignment;
 import com.softvision.ipm.pms.role.service.RoleService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class ManagerAssignmentService {
 
     private static final String ASSIGN_TO_IS_NOT_A_MANAGER = "The employee that you are trying to assign to, is not a manager";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ManagerAssignmentService.class);
+    @Autowired private RoleService roleService;
 
-    @Autowired
-    private RoleService roleService;
+    @Autowired private ManagerAssignmentRepository managerAssignmentRepository;
 
-    @Autowired
-    private ManagerAssignmentRepository managerAssignmentRepository;
+    @Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
 
-    @Autowired
-    private AppraisalCycleDataRepository appraisalCycleDataRepository;
+    @Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
 
-    @Autowired
-    private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
+    @Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
 
-    @Autowired
-    private CycleAssignmentDataRepository cycleAssignmentDataRepository;
-
-    @Autowired
-    private EmailRepository emailRepository;
+    @Autowired private EmailRepository emailRepository;
 
     @Autowired private AppraisalRepository appraisalRepository;
 
@@ -69,7 +62,7 @@ public class ManagerAssignmentService {
     @PreSecureAssignment(permitManager = true)
     public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
             throws ServiceException {
-        LOGGER.info("assignToAnotherManager: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId,
+        log.info("assignToAnotherManager: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId,
                 toEmployeeId);
         if (fromEmployeeId == toEmployeeId) {
             throw new ServiceException("There is no change in the manager. Try assigning to a different manager.");
@@ -78,7 +71,7 @@ public class ManagerAssignmentService {
         AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
                 PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
         if (!roleService.isManager(toEmployeeId)) {
-            LOGGER.error("assignToAnotherManager: assignmentId={}, from={}, to={}, ERROR=", assignmentId,
+            log.error("assignToAnotherManager: assignmentId={}, from={}, to={}, ERROR=", assignmentId,
                     fromEmployeeId, toEmployeeId, ASSIGN_TO_IS_NOT_A_MANAGER);
             throw new ServiceException(ASSIGN_TO_IS_NOT_A_MANAGER);
         }
@@ -88,16 +81,16 @@ public class ManagerAssignmentService {
         // email trigger
         emailRepository.sendChangeManager(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
                 fromEmployeeId, toEmployeeId);
-        LOGGER.info("assignToAnotherManager: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId, toEmployeeId);
+        log.info("assignToAnotherManager: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId, toEmployeeId);
     }
 
     public void sendRemiderToSubmit(long phaseAssignId, int loggedInEmployeeId) {
-        LOGGER.info("sendRemiderToSubmit: START phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
+        log.info("sendRemiderToSubmit: START phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
         PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(phaseAssignId);
         // email trigger
         emailRepository.sendManagerToEmployeeReminder(employeePhaseAssignment.getPhaseId(),
                 employeePhaseAssignment.getAssignedBy(), employeePhaseAssignment.getEmployeeId());
-        LOGGER.info("sendRemiderToSubmit: END phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
+        log.info("sendRemiderToSubmit: END phaseAssignId={}, from={}", phaseAssignId, loggedInEmployeeId);
     }
 
     public List<ManagerCycleAssignmentDto> getAllCycles(int employeeId) {
@@ -153,7 +146,7 @@ public class ManagerAssignmentService {
 
     @Transactional
     public void submitCycle(long cycleAssignId, int fromEmployeeId, int toEmployeeId) throws ServiceException {
-        LOGGER.info("submitCycle: START cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+        log.info("submitCycle: START cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
         CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
         if (employeeCycleAssignment == null) {
             throw new ServiceException("Assignment does not exist.");
@@ -171,14 +164,14 @@ public class ManagerAssignmentService {
                     "Assignment is in '" + cycleAssignmentStatus.getName() + "' status. Cannot change the manager now");
         }
         if (!roleService.isManager(toEmployeeId)) {
-            LOGGER.error("assignToAnotherManager: cycleAssignId={}, from={}, to={}, ERROR=", cycleAssignId,
+            log.error("assignToAnotherManager: cycleAssignId={}, from={}, to={}, ERROR=", cycleAssignId,
                     fromEmployeeId, toEmployeeId, ASSIGN_TO_IS_NOT_A_MANAGER);
             throw new ServiceException(ASSIGN_TO_IS_NOT_A_MANAGER);
         }
         employeeCycleAssignment.setSubmittedTo(toEmployeeId);
         employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
         cycleAssignmentDataRepository.save(employeeCycleAssignment);
-        LOGGER.info("submitCycle: END cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+        log.info("submitCycle: END cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
     }
 
     public List<ManagerCycleAssignmentDto> getSubmittedCycles(int employeeId) {
@@ -204,7 +197,7 @@ public class ManagerAssignmentService {
 
     public List<PhaseAssessmentDto> getAllPhaseAssessments(long assignId, int employeeId, int requestedEmployeeId)
             throws ServiceException {
-        LOGGER.info("getAllPhaseAssessments: START assignId={}, employeeId={}, requestedEmployeeId={}", assignId, employeeId, requestedEmployeeId);
+        log.info("getAllPhaseAssessments: START assignId={}, employeeId={}, requestedEmployeeId={}", assignId, employeeId, requestedEmployeeId);
         CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
         if (cycleAssignment == null) {
             throw new ServiceException("Invalid assignment");
@@ -229,14 +222,14 @@ public class ManagerAssignmentService {
 
     @PreSecureAssignment(permitManager = true)
 	public void deleteAssignment(long assignmentId, int fromEmployeeId) throws ServiceException {
-    	LOGGER.info("deleteAssignment: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
+    	log.info("deleteAssignment: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
         PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
         PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(phaseAssignment.getStatus());
         if (phaseAssignmentStatus != PhaseAssignmentStatus.NOT_INITIATED) {
         	throw new ServiceException("This assignment is in the status '" + phaseAssignmentStatus.getName() + "'. This cannot be deleted now");
         }
         phaseAssignmentDataRepository.delete(assignmentId);
-        LOGGER.info("deleteAssignment: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
+        log.info("deleteAssignment: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
 	}
 
 }

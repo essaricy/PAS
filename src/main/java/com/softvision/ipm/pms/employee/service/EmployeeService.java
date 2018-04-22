@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +19,17 @@ import com.softvision.ipm.pms.employee.model.SVEmployee;
 import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.employee.repo.EmployeeSpecs;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class EmployeeService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
+	@Autowired private EmployeeDataRepository employeeRepository;
 
-	@Autowired
-	private EmployeeDataRepository employeeRepository;
+	@Autowired private SVProjectRepository svProjectRepository;
 
-	@Autowired
-	private SVProjectRepository svProjectRepository;
-
-	@Autowired
-	private EmployeeMapper employeeMapper;
+	@Autowired private EmployeeMapper employeeMapper;
 
 	public List<EmployeeDto> getEmployees() {
 		return employeeMapper.getEmployeeDtoList(employeeRepository.findAll());
@@ -75,7 +71,7 @@ public class EmployeeService {
 	}
 
 	public List<Result> syncEmployees() throws Exception {
-	    LOGGER.info("syncEmployees: START");
+	    log.info("syncEmployees: START");
 		List<Result> resultList = new ArrayList<Result>();
 		List<SVEmployee> svEmployees = svProjectRepository.getAllEmployees();
 
@@ -89,10 +85,10 @@ public class EmployeeService {
 				save(employee);
 				result.setCode(Result.SUCCESS);
 				result.setMessage(employeeName + " - Updated successfully");
-				LOGGER.info("syncEmployees: sync completed: {} ", svEmployee.getLoginId());
+				log.info("syncEmployees: sync completed: {} ", svEmployee.getLoginId());
 			} catch (Exception exception) {
 				String message = employeeName + " - Update failed. Error = "+ exception.getMessage();
-				LOGGER.error("syncEmployees: sync failed: {} ERROR=", svEmployee.getLoginId(), exception.getMessage());
+				log.error("syncEmployees: sync failed: {} ERROR=", svEmployee.getLoginId(), exception.getMessage());
 				result.setCode(Result.FAILURE);
 				result.setMessage(message);
 			}
@@ -110,7 +106,7 @@ public class EmployeeService {
                         }
                     }
 		            if (!active) {
-		                LOGGER.info("Employee " + existingEmployee.getFirstName() + " will be deactivated");
+		                log.info("Employee " + existingEmployee.getFirstName() + " will be deactivated");
 		            }
 		            return !active;
 		        }
@@ -125,17 +121,17 @@ public class EmployeeService {
 					save(employee);
 					result.setCode(Result.SUCCESS);
 					result.setMessage(employeeName + " - Deactivated successfully");
-					LOGGER.info("syncEmployees: sync deactivated: {} ", employee.getLoginId());
+					log.info("syncEmployees: sync deactivated: {} ", employee.getLoginId());
 				}catch (Exception exception) {
 					String message = employeeName + " - Deactivate failed. Error = "+ exception.getMessage();
-					LOGGER.error("syncEmployees: sync deactivate failed: {} ERROR=", employee.getLoginId(), exception.getMessage());
+					log.error("syncEmployees: sync deactivate failed: {} ERROR=", employee.getLoginId(), exception.getMessage());
 					result.setCode(Result.FAILURE);
 					result.setMessage(message);
 				}
 				resultList.add(result);
 			}
 		}
-		LOGGER.info("syncEmployees: END");
+		log.info("syncEmployees: END");
 		return resultList;
 	}
 

@@ -41,10 +41,4 @@ public class AssessHeaderDto implements Serializable {
 	@Valid
 	private List<AssessDetailDto> assessDetails;
 
-	@Override
-	public String toString() {
-		return "AssessHeaderDto [id=" + id + ", assignId=" + assignId + ", status=" + status + ", assessDate="
-				+ assessDate + ", assessedBy=" + assessedBy + ", assessDetails=" + assessDetails + "]";
-	}
-
 }

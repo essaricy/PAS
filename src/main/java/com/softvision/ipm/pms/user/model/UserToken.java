@@ -12,6 +12,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import com.softvision.ipm.pms.role.constant.Roles;
 
+import lombok.ToString;
+
+@ToString
 public class UserToken implements Authentication {
 
 	private static final long serialVersionUID = 1L;
@@ -60,11 +63,6 @@ public class UserToken implements Authentication {
 
 	@Override
 	public void setAuthenticated(boolean arg0) throws IllegalArgumentException {
-	}
-
-	@Override
-	public String toString() {
-		return "UserToken [user=" + user.toString() + ", grantedAuthorities=" + authorities.toString() + "]";
 	}
 
 }

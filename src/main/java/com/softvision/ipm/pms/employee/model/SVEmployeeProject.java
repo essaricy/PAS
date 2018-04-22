@@ -41,12 +41,4 @@ public class SVEmployeeProject implements Serializable {
 	@JsonProperty("Billing")
 	private String billing;
 
-	@Override
-	public String toString() {
-		return "\nEmployeeProject [managerId=" + managerId + ", projectId=" + projectId + ", projectName=" + projectName
-				+ ", projectStartDate=" + projectStartDate + ", projectEndDate=" + projectEndDate + ", allocatedFrom="
-				+ allocatedFrom + ", allocatedTo=" + allocatedTo + ", allocationStatus=" + allocationStatus
-				+ ", billing=" + billing + "]";
-	}
-
 }

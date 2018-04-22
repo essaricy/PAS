@@ -58,12 +58,4 @@ public class SVEmployee implements Serializable {
 	@JacksonXmlProperty(localName="Projects")
 	private List<SVEmployeeProject> employeeProjects;
 
-	@Override
-	public String toString() {
-		return "Employee [employeeId=" + employeeId + ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", employmentType=" + employmentType + ", designation=" + designation + ", band=" + band
-				+ ", hiredOn=" + hiredOn + ", location=" + location + ", loginId=" + loginId + ", employeeProjects="
-				+ employeeProjects + "]";
-	}
-
 }

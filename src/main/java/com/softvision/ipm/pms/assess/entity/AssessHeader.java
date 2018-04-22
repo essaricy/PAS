@@ -43,10 +43,4 @@ public class AssessHeader implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<AssessDetail> assessDetails;
 
-	@Override
-	public String toString() {
-		return "AssessHeader [id=" + id + ", assignId=" + assignId + ", status=" + status + ", assessDate="
-				+ assessDate + ", assessedBy=" + assessedBy + ", assessDetails=" + assessDetails + "]";
-	}
-
 }

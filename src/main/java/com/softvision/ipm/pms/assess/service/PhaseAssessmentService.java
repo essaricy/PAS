@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,10 +35,11 @@ import com.softvision.ipm.pms.template.entity.TemplateHeader;
 import com.softvision.ipm.pms.template.mapper.TemplateMapper;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class PhaseAssessmentService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(PhaseAssessmentService.class);
 
 	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 
@@ -202,7 +201,7 @@ public class PhaseAssessmentService {
 	@Transactional
 	@PreSecureAssignment(permitManager=true)
 	public void conclude(long assignmentId, int requestedEmployeeId) throws ServiceException {
-		LOGGER.info("conclude: START assignId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
+		log.info("conclude: START assignId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		int employeeId = employeePhaseAssignment.getEmployeeId();
@@ -210,12 +209,12 @@ public class PhaseAssessmentService {
         AppraisalPhase nextPhase = appraisalPhaseDataRepository.findNextPhase(phaseId);
         // There must be goal set for next phase. Otherwise conclude is not allowed
         if (nextPhase == null) {
-            LOGGER.error("conclude: There is no next phase set up for the phaseId={}", phaseId);
+            log.error("conclude: There is no next phase set up for the phaseId={}", phaseId);
             throw new ServiceException("Cannot conclude this assignment as there is no appraisal phase set up for the next period. Please infrorm your admin to set up the next phase/cycle");
         } else {
             PhaseAssignment nextAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(nextPhase.getId(), employeeId);
             if (nextAssignment == null) {
-                LOGGER.warn("Next phase assignment is not setup. cannot conclude. nextPhaseId={}, employeeId={}", nextPhase.getId(), employeeId);
+                log.warn("Next phase assignment is not setup. cannot conclude. nextPhaseId={}, employeeId={}", nextPhase.getId(), employeeId);
                 throw new ServiceException("Assignment is not set for the next phase. You can only conclude this when assignment is set for the next phase for this employee.");
             }
         }
@@ -232,14 +231,14 @@ public class PhaseAssessmentService {
 				employeePhaseAssignment.getEmployeeId());
 		// Abridge Cycle Assignment
 		cycleAssessmentService.abridgeQuietly(employeePhaseAssignment.getEmployeeId());
-		LOGGER.info("conclude: END assignId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
+		log.info("conclude: END assignId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 	}
 
 	private PhaseAssignment update(AssessHeaderDto phaseAssessHeaderDto,
 			PhaseAssignmentStatus statusToUpdate, String message, PhaseAssignmentStatus... previousStatusesToCheck)
 			throws ServiceException {
 		long assignmentId = phaseAssessHeaderDto.getAssignId();
-		LOGGER.info("update: START assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
+		log.info("update: START assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		phaseAssessHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
@@ -251,13 +250,13 @@ public class PhaseAssessmentService {
 		phaseAssessHeaderDto.setStatus(saved.getStatus());
 		AssessHeader phaseAssessHeader = assessMapper.getHeader(phaseAssessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		LOGGER.info("update: END assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
+		log.info("update: END assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
 		return employeePhaseAssignment;
 	}
 
 	private PhaseAssignment update(long assignmentId, PhaseAssignmentStatus statusToUpdate, String message,
 			PhaseAssignmentStatus... previousStatusesToCheck) throws ServiceException {
-	    LOGGER.info("update2: START assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
+	    log.info("update2: START assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
 		// Change assignment status to statusToUpdate
@@ -268,7 +267,7 @@ public class PhaseAssessmentService {
 				.findFirstByAssignIdOrderByStatusDesc(assignmentId);
 		phaseAssessHeader.setStatus(saved.getStatus());
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		LOGGER.info("update2: END assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
+		log.info("update2: END assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
 		return employeePhaseAssignment;
 	}
 

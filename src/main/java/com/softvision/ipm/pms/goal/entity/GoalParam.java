@@ -25,9 +25,4 @@ public class GoalParam implements Serializable {
 
 	private String apply;
 
-	@Override
-	public String toString() {
-		return "GoalParam [id=" + id + ", name=" + name + ", apply=" + apply + "]";
-	}
-	
 }

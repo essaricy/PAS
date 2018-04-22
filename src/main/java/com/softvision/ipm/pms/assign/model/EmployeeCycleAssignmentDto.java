@@ -18,10 +18,4 @@ public class EmployeeCycleAssignmentDto implements Serializable {
 
 	List<PhaseAssignmentDto> phaseAssignments;
 
-	@Override
-	public String toString() {
-		return "EmployeeCycleAssignmentDto [cycle=" + cycle + ", employeeAssignment=" + employeeAssignment
-				+ ", phaseAssignments=" + phaseAssignments + "]";
-	}
-
 }

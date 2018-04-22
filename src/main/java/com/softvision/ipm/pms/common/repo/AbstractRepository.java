@@ -2,9 +2,9 @@ package com.softvision.ipm.pms.common.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public abstract class AbstractRepository {
 
 	@Autowired protected JdbcTemplate jdbcTemplate;

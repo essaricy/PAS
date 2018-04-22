@@ -3,8 +3,6 @@ package com.softvision.ipm.pms.appraisal.service;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +16,11 @@ import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.util.ExceptionUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AppraisalService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppraisalService.class);
 
 	@Autowired private AppraisalRepository appraisalRepository;
 
@@ -39,7 +38,7 @@ public class AppraisalService {
 
 	public AppraisalCycleDto update(AppraisalCycleDto appraisalCycleDto) throws ServiceException {
 		try {
-			LOGGER.info("Updating appraisal cycle: {} ", appraisalCycleDto);
+			log.info("Updating appraisal cycle: {} ", appraisalCycleDto);
 			if (appraisalCycleDto == null) {
 				throw new ServiceException("Appraisal Cycle information is not provided.");
 			}
@@ -79,7 +78,7 @@ public class AppraisalService {
 			throw new ServiceException("Appraisal Cycle information is not provided.");
 		}
 		AppraisalCycleStatus existingStatus = AppraisalCycleStatus.get(appraisalCycle.getStatus());
-		LOGGER.info("Updating appraisal cycle status from {} to {}", existingStatus, desiredStatus);
+		log.info("Updating appraisal cycle status from {} to {}", existingStatus, desiredStatus);
 
 		if (existingStatus == desiredStatus) {
 		    throw new ServiceException("Appraisal Cycle is already in a " + existingStatus + " status");

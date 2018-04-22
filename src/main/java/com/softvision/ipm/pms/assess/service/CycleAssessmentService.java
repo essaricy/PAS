@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +20,11 @@ import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.role.service.RoleService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class CycleAssessmentService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CycleAssessmentService.class);
 
 	@Autowired private RoleService roleService;
 
@@ -37,17 +36,17 @@ public class CycleAssessmentService {
 
 	public void abridgeQuietly(int employeeId) {
 		try {
-			LOGGER.info("abridgeQuietly: START {} ", employeeId);
+			log.info("abridgeQuietly: START {} ", employeeId);
 			abridge(employeeId);
-			LOGGER.info("abridgeQuietly: END {} ", employeeId);
+			log.info("abridgeQuietly: END {} ", employeeId);
 		} catch (Exception exception) {
-			LOGGER.warn("abridgeQuietly: FAILED {} ERROR=", employeeId, "Abridge Failed due to the error=" + exception.getMessage());
+			log.warn("abridgeQuietly: FAILED {} ERROR=", employeeId, "Abridge Failed due to the error=" + exception.getMessage());
 		}
 	}
 
 	@Transactional
 	public void abridge(int employeeId) throws ServiceException {
-	    LOGGER.info("abridge: START {} ", employeeId);
+	    log.info("abridge: START {} ", employeeId);
 		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
 		Integer cycleId = activeCycle.getId();
 		List<AppraisalPhase> phases = activeCycle.getPhases();
@@ -77,13 +76,13 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		LOGGER.info("abridge: END {} ", employeeId);
+		log.info("abridge: END {} ", employeeId);
 	}
 
 	@Transactional
 	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
 			throws ServiceException {
-		LOGGER.warn("assignCycleToNextLevelManager: START assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+		log.warn("assignCycleToNextLevelManager: START assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
 		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
 		if (employeeCycleAssignment == null) {
 			throw new ServiceException("Assignment does not exist.");
@@ -104,7 +103,7 @@ public class CycleAssessmentService {
 		employeeCycleAssignment.setAssignedBy(toEmployeeId);
 		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
 		cycleAssignmentDataRepository.save(employeeCycleAssignment);
-		LOGGER.warn("assignCycleToNextLevelManager: END assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+		log.warn("assignCycleToNextLevelManager: END assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
 	}
 
 }

@@ -56,10 +56,4 @@ public class AppraisalCycleDto implements Serializable {
 	@Valid
 	private List<AppraisalPhaseDto> phases;
 
-	@Override
-	public String toString() {
-		return "AppraisalCycleDto [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", cutoffDate=" + cutoffDate + ", status=" + status + ", phases=" + phases + "]";
-	}
-
 }

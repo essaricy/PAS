@@ -3,8 +3,6 @@ package com.softvision.ipm.pms.acl.repo;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
@@ -12,10 +10,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.softvision.ipm.pms.employee.model.SVEmployee;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Repository
 public class SVProjectRepository {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(SVProjectRepository.class);
 
 	@Value("${app.role.svproject.api-key}")
 	private String apiKey;
@@ -28,7 +27,7 @@ public class SVProjectRepository {
 
 	public SVEmployee getEmployee(String userId) {
 		String email = userId + "@" + domain;
-		LOGGER.info("Looking up for the user {} in SVProject", email);
+		log.info("Looking up for the user {} in SVProject", email);
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey).queryParam("email", email);
 		SVEmployee svEmployee = restTemplate.getForObject(builder.toUriString(), SVEmployee.class, apiKey, email);

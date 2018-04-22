@@ -36,11 +36,4 @@ public class PhaseAssignment implements Serializable {
 
 	private double score;
 
-	@Override
-	public String toString() {
-		return "PhaseAssignment [id=" + id + ", phaseId=" + phaseId + ", templateId=" + templateId
-				+ ", employeeId=" + employeeId + ", assignedBy=" + assignedBy + ", assignedAt=" + assignedAt
-				+ ", status=" + status + ", score=" + score + "]";
-	}
-
 }

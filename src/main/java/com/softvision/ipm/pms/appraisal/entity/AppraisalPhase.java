@@ -31,10 +31,4 @@ public class AppraisalPhase implements Serializable {
 	@Column(unique=true)
 	private Date endDate;
 
-	@Override
-	public String toString() {
-		return "AppraisalPhase [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ "]";
-	}
-
 }

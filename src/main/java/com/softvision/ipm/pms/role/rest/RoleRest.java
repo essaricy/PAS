@@ -26,8 +26,7 @@ import com.softvision.ipm.pms.role.service.RoleService;
 @RequestMapping(value = "role", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoleRest {
 
-	@Autowired
-	private RoleService roleService;
+	@Autowired private RoleService roleService;
 
 	@RequestMapping(value = "all", method = RequestMethod.GET)
 	public @ResponseBody List<Role> getRoles() {

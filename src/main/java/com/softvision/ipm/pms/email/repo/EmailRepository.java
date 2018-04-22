@@ -14,8 +14,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -30,10 +28,11 @@ import com.softvision.ipm.pms.email.entity.MailTemplate;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Repository
 public class EmailRepository {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmailRepository.class);
 
 	@Autowired private Session session;
 
@@ -69,7 +68,7 @@ public class EmailRepository {
 
 	public void sendApprasialKickOff(AppraisalCycle appraisalCycle) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.KICK_OFF);
+			log.info("Sending email for {}", EmailConstant.KICK_OFF);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.KICK_OFF.toString());
 			String templateFile = mailTemplate.getFileName();
 			String url = mailTemplate.getButtonUrl();
@@ -85,13 +84,13 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.KICK_OFF, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.KICK_OFF, exception);
 		}
 	}
 
 	public void sendApprasialCycleConclude(AppraisalCycle appraisalCycle) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.CYCLE_CONCLUDE);
+			log.info("Sending email for {}", EmailConstant.CYCLE_CONCLUDE);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CYCLE_CONCLUDE.toString());
 			String templateFile = mailTemplate.getFileName();
 			String emailFrom = mailTemplate.getFromMail();
@@ -107,14 +106,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, appraisalCycle.getName());
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.CYCLE_CONCLUDE, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.CYCLE_CONCLUDE, exception);
 		}
 	}
 
 	private void sendApprasialEmployeeSubmitted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.EMPLOYEE_SUBMITED);
+			log.info("Sending email for {}", EmailConstant.EMPLOYEE_SUBMITED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMPLOYEE_SUBMITED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -134,14 +133,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_SUBMITED, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_SUBMITED, exception);
 		}
 	}
 	
 	private void sendEmployeeAcceptenceMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.EMP_ACCEPTED);
+			log.info("Sending email for {}", EmailConstant.EMP_ACCEPTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_ACCEPTED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -162,14 +161,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_ACCEPTED, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_ACCEPTED, exception);
 		}
 	}
 	
 	private void sendEmployeeRejectionMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.EMP_REJECTED);
+			log.info("Sending email for {}", EmailConstant.EMP_REJECTED);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.EMP_REJECTED.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -190,14 +189,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_REJECTED, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.EMP_REJECTED, exception);
 		}
 	}
 	
 	private void sendManagerReviewFrozen(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.MANAGER_FROZEN);
+			log.info("Sending email for {}", EmailConstant.MANAGER_FROZEN);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_FROZEN.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -216,14 +215,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo,ccEmail, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_FROZEN, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_FROZEN, exception);
 		}
 	}
 	
 	private void sendManagerReviewCompleted(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.MANAGER_REVIEW);
+			log.info("Sending email for {}", EmailConstant.MANAGER_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.MANAGER_REVIEW.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -241,14 +240,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_REVIEW, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.MANAGER_REVIEW, exception);
 		}
 	}
 	
 	private void sendManagerToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.MGR_TO_EMP_REMINDER);
+			log.info("Sending email for {}", EmailConstant.MGR_TO_EMP_REMINDER);
 			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.MGR_TO_EMP_REMINDER.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -266,14 +265,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.MGR_TO_EMP_REMINDER, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.MGR_TO_EMP_REMINDER, exception);
 		}
 	}
 			
 	private void sendHrToEmployeeReminder(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.HR_TO_EMP_REM);
+			log.info("Sending email for {}", EmailConstant.HR_TO_EMP_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_EMP_REM.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -293,14 +292,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_EMP_REM, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_EMP_REM, exception);
 		}
 	}
 	
 	private void sendHrToManagerReminderMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee hr,
 			Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.HR_TO_MGR_REM);
+			log.info("Sending email for {}", EmailConstant.HR_TO_MGR_REM);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.HR_TO_MGR_REM.toString());
 			String url = mailTemplate.getButtonUrl();
 			String templateFile = mailTemplate.getFileName();
@@ -319,7 +318,7 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),managerName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_MGR_REM, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.HR_TO_MGR_REM, exception);
 		}
 	}
 	
@@ -327,7 +326,7 @@ public class EmailRepository {
 	private void sendChangeManagerMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee fManager,
 			Employee tManager, Employee employee) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.CHANGE_MGR);
+			log.info("Sending email for {}", EmailConstant.CHANGE_MGR);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.CHANGE_MGR.toString());
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
@@ -351,14 +350,14 @@ public class EmailRepository {
 					new Object[] { appraisalCycle.getName(), appraisalPhase.getName(), empName });
 			sendEmail(emailFrom, emailTo, emailcc, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.CHANGE_MGR, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.CHANGE_MGR, exception);
 		}
 	}
 	
 	private void sendApprasialManagerAssign(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase,
 			Employee employee, Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.EMPLOYEE_ENABLE);
+			log.info("Sending email for {}", EmailConstant.EMPLOYEE_ENABLE);
 			MailTemplate mailTemplate = mailDataRepository.findByName(EmailConstant.EMPLOYEE_ENABLE.toString());
 			String templateFile = mailTemplate.getFileName();
 			String subject = mailTemplate.getSubject();
@@ -376,14 +375,14 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_ENABLE, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.EMPLOYEE_ENABLE, exception);
 		}
 	}
 
 	private void sendUdatedReviewMail(AppraisalCycle appraisalCycle, AppraisalPhase appraisalPhase, Employee employee,
 			Employee manager) {
 		try {
-			LOGGER.info("Sending email for {}", EmailConstant.UPDATE_REVIEW);
+			log.info("Sending email for {}", EmailConstant.UPDATE_REVIEW);
 			MailTemplate mailTemplate =mailDataRepository.findByName(EmailConstant.UPDATE_REVIEW.toString());
 			String url = mailTemplate.getButtonUrl();
 			String subject = mailTemplate.getSubject();
@@ -403,12 +402,12 @@ public class EmailRepository {
 			subject = MessageFormat.format(subject, new Object[] {appraisalCycle.getName(),appraisalPhase.getName(),empName});
 			sendEmail(emailFrom, emailTo, ccEmail,subject, reportContent);
 		} catch (Exception exception) {
-			LOGGER.error("Unable to email for {}, ERROR={}", EmailConstant.UPDATE_REVIEW, exception);
+			log.error("Unable to email for {}, ERROR={}", EmailConstant.UPDATE_REVIEW, exception);
 		}
 	}
 
 	public void sendEnableMail(int phaseId, int assignedBy, int employeeId) {
-		LOGGER.info("Sending email for sendEnableMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
+		log.info("Sending email for sendEnableMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -417,7 +416,7 @@ public class EmailRepository {
 	}
 	
 	public void sendEmployeeSubmitMail(int phaseId, int employeeId, int managerId) {
-		LOGGER.info("Sending email for sendEmployeeSubmitMail(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
+		log.info("Sending email for sendEmployeeSubmitMail(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -426,7 +425,7 @@ public class EmailRepository {
 	}
 	
 	public void sendReviewCompleted(int phaseId, int managerId, int employeeId) {
-		LOGGER.info("Sending email for sendReviewCompleted(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
+		log.info("Sending email for sendReviewCompleted(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -436,7 +435,7 @@ public class EmailRepository {
 	
 
 	public void sendEmployeeAcceptence(int phaseId, int employeeId,int managerId) {
-		LOGGER.info("Sending email for sendEmployeeAcceptence(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
+		log.info("Sending email for sendEmployeeAcceptence(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -445,7 +444,7 @@ public class EmailRepository {
 	}
 	
 	public void sendEmployeeRejected(int phaseId, int employeeId,int managerId) {
-		LOGGER.info("Sending email for sendEmployeeRejected(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
+		log.info("Sending email for sendEmployeeRejected(" + phaseId + ", " + employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -455,7 +454,7 @@ public class EmailRepository {
 	
 	
 	public void sendUpdatedReviewMail(int phaseId, int assignedBy, int employeeId) {
-		LOGGER.info("Sending email for sendUpdatedReviewMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
+		log.info("Sending email for sendUpdatedReviewMail(" + phaseId + ", " + assignedBy + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -464,7 +463,7 @@ public class EmailRepository {
 	}
 	
 	public void sendChangeManager(int phaseId, int employeeId, int fromManager, int toManager) {
-		LOGGER.info("Sending email for sendChangeManager(" + phaseId + ", " + employeeId + ", "+ fromManager + ", " + toManager + ")");
+		log.info("Sending email for sendChangeManager(" + phaseId + ", " + employeeId + ", "+ fromManager + ", " + toManager + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -474,7 +473,7 @@ public class EmailRepository {
 	}
 
 	public void sendManagerToEmployeeReminder(int phaseId,int managerId, int employeeId) {
-		LOGGER.info("Sending email for sendManagerToEmployeeReminder(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
+		log.info("Sending email for sendManagerToEmployeeReminder(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -484,7 +483,7 @@ public class EmailRepository {
 	
 	
 	public void sendHrToEmployeeReminder(int phaseId,int hrId, int employeeId,int managerId) {
-		LOGGER.info("Sending email for sendHrToEmployeeReminder(" + phaseId + ", " + hrId + ", "+ employeeId + ", "+ managerId + ")");
+		log.info("Sending email for sendHrToEmployeeReminder(" + phaseId + ", " + hrId + ", "+ employeeId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -495,7 +494,7 @@ public class EmailRepository {
 	
 	
 	public void sendHrToManagerReminder(int phaseId,int hrId, int managerId) {
-		LOGGER.info("Sending email for sendHrToManagerReminder(" + phaseId + ", " + hrId + ", "+ managerId + ")");
+		log.info("Sending email for sendHrToManagerReminder(" + phaseId + ", " + hrId + ", "+ managerId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee manager=employeeRepository.findByEmployeeId(managerId);
@@ -504,7 +503,7 @@ public class EmailRepository {
 	}
 
 	public void sendConcludeMail(int phaseId, int managerId, int employeeId) {
-		LOGGER.info("Sending email for sendConcludeMail(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
+		log.info("Sending email for sendConcludeMail(" + phaseId + ", " + managerId + ", "+ employeeId + ")");
 		AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
 		AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
 		Employee employee=employeeRepository.findByEmployeeId(employeeId);
@@ -531,7 +530,7 @@ public class EmailRepository {
 			message.setContent(content, "text/html");
 			// Send message
 			Transport.send(message);
-			LOGGER.info("Email successfully sent to " + toAddresses + " with subject '" + subject + "'");
+			log.info("Email successfully sent to " + toAddresses + " with subject '" + subject + "'");
 		}
 	}
 
@@ -557,7 +556,7 @@ public class EmailRepository {
 			message.setContent(content, "text/html");
 			// Send message
 			Transport.send(message);
-			LOGGER.info("Email successfully sent2 to " + toAddresses + " with subject '" + subject + "'");
+			log.info("Email successfully sent2 to " + toAddresses + " with subject '" + subject + "'");
 		}
 	}
 

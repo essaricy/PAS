@@ -30,10 +30,4 @@ public class MailTemplate implements Serializable {
 	
 	private String subject;
 
-	@Override
-	public String toString() {
-		return "EmailTemplate [id=" + id + ", name=" + name + ", fileName=" + fileName + ", buttonUrl=" + buttonUrl
-				+ ", toMail=" + toMail + ", fromMail=" + fromMail + "subject " + subject +" ccMail"+ ccMail +"]";
-	}
-	
 }

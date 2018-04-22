@@ -34,10 +34,4 @@ public class PhaseAssessmentDto implements Serializable {
 	@Valid
 	private List<AssessHeaderDto> assessHeaders;
 
-	@Override
-	public String toString() {
-		return "PhaseAssessmentDto [phase=" + phase + ", employeeAssignment=" + employeeAssignment
-				+ ", templateHeaders=" + templateHeaders + ", assessHeaders=" + assessHeaders + "]";
-	}
-
 }

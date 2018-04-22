@@ -9,6 +9,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 public class AssessDetailDto implements Serializable {
@@ -32,11 +33,5 @@ public class AssessDetailDto implements Serializable {
 	@Min(value=0, message="Score min value is {value}")
 	@Max(value=5, message="Score max value is {value}")
 	private double score;
-
-	@Override
-	public String toString() {
-		return "AssessDetail [id=" + id + ", templateHeaderId=" + templateHeaderId + ", rating=" + rating
-				+ ", comments=" + comments + ", score=" + score + "]";
-	}
 
 }

@@ -15,6 +15,7 @@ import javax.persistence.SequenceGenerator;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -32,10 +33,5 @@ public class TemplateDetail implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=false)
 	@JoinColumn(name = "param_id", nullable = false, updatable=false, insertable=false)
 	private GoalParam goalParam;
-
-	@Override
-	public String toString() {
-		return "\n\tTemplateDetail [id=" + id + ", apply=" + apply + ", goalParam=" + goalParam + "]";
-	}
 
 }

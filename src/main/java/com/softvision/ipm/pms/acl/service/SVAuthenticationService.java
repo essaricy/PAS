@@ -8,8 +8,6 @@ import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -29,25 +27,21 @@ import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.repo.RoleDataRepository;
 import com.softvision.ipm.pms.user.model.User;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class SVAuthenticationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SVAuthenticationService.class);
+	@Autowired private SVLdapRepository svLdapRepository;
 
-	@Autowired
-	private SVLdapRepository svLdapRepository;
+	@Autowired private SVProjectRepository svProjectRepository;
 
-	@Autowired
-	private SVProjectRepository svProjectRepository;
+	@Autowired private EmployeeDataRepository employeeRepository;
 
-	@Autowired
-	private EmployeeDataRepository employeeRepository;
+	@Autowired private RoleDataRepository roleDataRepository;
 
-	@Autowired
-	private RoleDataRepository roleDataRepository;
-
-	@Autowired
-	private EmployeeMapper employeeMapper;
+	@Autowired private EmployeeMapper employeeMapper;
 
     @Value("${app.security.ldap.mode}")
     private String mode;
@@ -83,22 +77,22 @@ public class SVAuthenticationService {
 			}
 			return employeeMapper.getUser(employee, roles);
 		} catch (AuthenticationNotSupportedException authenticationNotSupportedException) {
-            LOGGER.error("AuthenticationNotSupportedException for {}, ERROR={}", userid,
+            log.error("AuthenticationNotSupportedException for {}, ERROR={}", userid,
                     authenticationNotSupportedException.getMessage());
 			throw new AuthenticationServiceException(authenticationNotSupportedException.getMessage(),
 					authenticationNotSupportedException);
 		} catch (NamingException namingException) {
 			if (namingException instanceof CommunicationException) {
-			    LOGGER.error("CommunicationException for {}, ERROR={}", userid, namingException.getMessage());
+			    log.error("CommunicationException for {}, ERROR={}", userid, namingException.getMessage());
                 throw new AuthenticationServiceException("Unable to connect to Active Directory", namingException);
             } else if (namingException instanceof javax.naming.AuthenticationException) {
-                LOGGER.error("javax.naming.AuthenticationException for {}, ERROR{}=", userid, namingException.getMessage());
+                log.error("javax.naming.AuthenticationException for {}, ERROR{}=", userid, namingException.getMessage());
                 throw new AuthenticationServiceException("Invalid username or password", namingException);
             }
-			LOGGER.error("NamingException for {}, ERROR={}", userid, namingException.getMessage());
+			log.error("NamingException for {}, ERROR={}", userid, namingException.getMessage());
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
 		} catch (Exception exception) {
-		    LOGGER.error("Exception for {}, ERROR={}", userid, exception.getMessage());
+		    log.error("Exception for {}, ERROR={}", userid, exception.getMessage());
 			String message = exception.getMessage();
 			if (message.contains("Connection timed out")) {
 				throw new AuthenticationServiceException("Unable to connect to svProject at this moment", exception);

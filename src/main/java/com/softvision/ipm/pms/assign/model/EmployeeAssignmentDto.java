@@ -10,10 +10,8 @@ import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
-@ToString
 public class EmployeeAssignmentDto implements Serializable {
 
 	private static final long serialVersionUID = 1L;

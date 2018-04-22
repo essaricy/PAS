@@ -1,18 +1,14 @@
 package com.softvision.ipm.pms.common.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
-import com.softvision.ipm.pms.appraisal.service.AppraisalService;
-
+@Slf4j
 public class ExceptionUtil {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AppraisalService.class);
 
 	public static String getExceptionMessage(Throwable exception) {
 		String message = exception.getMessage();
 		Throwable cause = exception.getCause();
-		LOGGER.info("Exception Class={}, message={}", exception.getClass().getName(), message);
+		log.info("Exception Class={}, message={}", exception.getClass().getName(), message);
 		if (cause == null) {
 			if (message != null) {
 				if (message.contains("already exists")) {

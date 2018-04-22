@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +34,11 @@ import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AssignmentService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentService.class);
 
 	@Autowired private AssignmentRepository assignmentRepository;
 
@@ -72,7 +71,7 @@ public class AssignmentService {
 	public List<Result> bulkAssign(BulkAssignmentDto bulkAssignmentDto) throws ServiceException {
 		List<Result> results = new ArrayList<>();
 		Date assignedAt = Calendar.getInstance().getTime();
-		LOGGER.info("bulkAssign: START {}", bulkAssignmentDto);
+		log.info("bulkAssign: START {}", bulkAssignmentDto);
 		if (bulkAssignmentDto == null) {
 			throw new ServiceException("No Assignments are provided");
 		}
@@ -148,14 +147,14 @@ public class AssignmentService {
 				phaseAssignment.setPhaseId(phaseId);
 				phaseAssignment.setTemplateId(templateId);
 				assignmentRepository.assign(phaseAssignment, phase, employeeName);
-				LOGGER.info("bulkAssign: Successful for phaseId={}, employeeId={}, templateId={}, assignedBy={}"
+				log.info("bulkAssign: Successful for phaseId={}, employeeId={}, templateId={}, assignedBy={}"
 				        , phaseId, employeeId, templateId, bulkAssignmentDto.getAssignedBy());
 				result.setCode(Result.SUCCESS);
 				result.setMessage(MessageFormat.format(ASSIGN_SUCCESSFUL , employeeName));
 			} catch (Exception exception) {
 				result.setCode(Result.FAILURE);
 				result.setMessage(exception.getMessage());
-				LOGGER.info("bulkAssign: Failed for phaseId={}, employeeId={}, templateId={}, assignedBy={}, ERROR={}"
+				log.info("bulkAssign: Failed for phaseId={}, employeeId={}, templateId={}, assignedBy={}, ERROR={}"
                         , phaseId, employeeId, templateId, bulkAssignmentDto.getAssignedBy(), exception.getMessage());
 			} finally {
 				results.add(result);

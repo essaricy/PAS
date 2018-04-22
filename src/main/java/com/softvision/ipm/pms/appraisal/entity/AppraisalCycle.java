@@ -45,10 +45,4 @@ public class AppraisalCycle implements Serializable {
 	@JoinColumn(name = "cycle_id", nullable = false)
 	private List<AppraisalPhase> phases;
 
-	@Override
-	public String toString() {
-		return "AppraisalCycle [id=" + id + ", name=" + name + ", startDate=" + startDate + ", endDate=" + endDate
-				+ ", cutoffDate=" + cutoffDate + ", status=" + status + ", phases=" + phases + "]";
-	}
-
 }

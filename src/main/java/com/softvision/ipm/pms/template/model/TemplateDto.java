@@ -46,10 +46,4 @@ public class TemplateDto implements Serializable {
 	@Valid
 	private List<TemplateHeaderDto> headers;
 
-	@Override
-	public String toString() {
-		return "TemplateDto [id=" + id + ", name=" + name + ", updatedBy=" + updatedBy + ", updatedAt=" + updatedAt
-				+ ", headers=" + headers + "]";
-	}
-
 }

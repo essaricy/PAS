@@ -20,8 +20,7 @@ import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 @RequestMapping(value="support", produces=MediaType.APPLICATION_JSON_VALUE)
 public class SupportRest {
 
-    @Autowired
-    private SessionRegistry sessionRegistry;
+    @Autowired private SessionRegistry sessionRegistry;
 
     @PreAuthorize(AuthorizeConstant.IS_SUPPORT)
     @RequestMapping(value="list/active", method=RequestMethod.GET)

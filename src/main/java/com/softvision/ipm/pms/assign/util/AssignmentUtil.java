@@ -3,15 +3,13 @@ package com.softvision.ipm.pms.assign.util;
 import java.text.MessageFormat;
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 
-public class AssignmentUtil {
+import lombok.extern.slf4j.Slf4j;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AssignmentUtil.class);
+@Slf4j
+public class AssignmentUtil {
 
 	private static final String ERROR_MESSAGE = "Cannot change the status from {0} to {1}";
 
@@ -21,7 +19,7 @@ public class AssignmentUtil {
 		boolean found = Arrays.stream(statusesToCheck).anyMatch(o -> o==currentStatus);
 		if (!found) {
 			String message = MessageFormat.format(ERROR_MESSAGE, currentStatus, desiredState);
-			LOGGER.error(message);
+			log.error(message);
 			throw new ServiceException(message);
 		}
 		return PhaseAssignmentStatus.getNext(status);

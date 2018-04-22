@@ -26,10 +26,4 @@ public class CycleAssessmentDto implements Serializable {
 
 	private List<TemplateHeaderDto> templateHeaders;
 
-	@Override
-	public String toString() {
-		return "CycleAssessmentDto [cycle=" + cycle + ", employeeAssignment=" + employeeAssignment
-				+ ", templateHeaders=" + templateHeaders + "]";
-	}
-
 }

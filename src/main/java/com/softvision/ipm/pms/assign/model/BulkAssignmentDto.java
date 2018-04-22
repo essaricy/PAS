@@ -32,10 +32,4 @@ public class BulkAssignmentDto implements Serializable {
 	@NotContainNull(message="Employee Ids list cannot contain null")
 	private List<Integer> employeeIds;
 
-	@Override
-    public String toString() {
-        return "BulkAssignmentDto [templateId=" + templateId + ", cycleId=" + cycleId + ", phaseId=" + phaseId
-                + ", assignedBy=" + assignedBy + ", employeeIds=" + employeeIds + "]";
-    }
-
 }

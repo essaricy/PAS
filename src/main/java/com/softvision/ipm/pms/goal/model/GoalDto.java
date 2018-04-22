@@ -31,9 +31,4 @@ public class GoalDto implements Serializable {
 	@Valid
 	private List<GoalParamDto> params;
 
-	@Override
-	public String toString() {
-		return "GoalDto [id=" + id + ", name=" + name + ", params=" + params + "]";
-	}
-
 }

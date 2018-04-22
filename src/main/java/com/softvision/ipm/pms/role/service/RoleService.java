@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.validation.ValidationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +18,19 @@ import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.repo.RoleDataRepository;
 import com.softvision.ipm.pms.role.repo.RoleRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class RoleService {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
+	@Autowired private RoleDataRepository roleDataRepository;
 
-	@Autowired
-	private RoleDataRepository roleDataRepository;
+	@Autowired private RoleRepository roleRepository;
 
-	@Autowired
-	private RoleRepository roleRepository;
+	@Autowired private EmployeeService employeeService;
 
-	@Autowired
-	private EmployeeService employeeService;
-
-	@Autowired
-	private EmployeeMapper employeeMapper;
+	@Autowired private EmployeeMapper employeeMapper;
 
 	public List<Role> getRoles() {
 		return roleDataRepository.findAll();
@@ -54,7 +49,7 @@ public class RoleService {
 	}
 
 	public int assignRole(Integer employeeId, int roleId) {
-	    LOGGER.info("assignRole: START employeeId={}, roleId={}", employeeId, roleId);
+	    log.info("assignRole: START employeeId={}, roleId={}", employeeId, roleId);
 		List<Role> roles=roleDataRepository.findByEmployeeId(employeeId);
 		for (Role role : roles) {
 			if (role.getId() == roleId) {
@@ -62,14 +57,14 @@ public class RoleService {
 			}
 		}
 		int recordsUpdated = roleRepository.assign(employeeId, roleId);
-		LOGGER.info("assignRole: END employeeId={}, roleId={}, recordsUpdated=", employeeId, roleId, recordsUpdated);
+		log.info("assignRole: END employeeId={}, roleId={}, recordsUpdated=", employeeId, roleId, recordsUpdated);
 		return recordsUpdated;
 	}
 
 	public int removeRole(Integer employeeId, int roleId) {
-	    LOGGER.info("removeRole: START employeeId={}, roleId={}", employeeId, roleId);
+	    log.info("removeRole: START employeeId={}, roleId={}", employeeId, roleId);
 		int recordsDeleted = roleRepository.remove(employeeId, roleId);
-		LOGGER.info("removeRole: END employeeId={}, roleId={}, recordsDeleted=", employeeId, roleId, recordsDeleted);
+		log.info("removeRole: END employeeId={}, roleId={}, recordsDeleted=", employeeId, roleId, recordsDeleted);
 		return recordsDeleted;
 	}
 	
