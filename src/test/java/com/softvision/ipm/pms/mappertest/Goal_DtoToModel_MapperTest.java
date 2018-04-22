@@ -26,7 +26,7 @@ public class Goal_DtoToModel_MapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private GoalMapper goalMapper = new GoalMapper();
+	@InjectMocks private GoalMapper goalMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

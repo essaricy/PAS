@@ -28,7 +28,7 @@ public class Appraisal_DtoToModel_MapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private AppraisalMapper appraisalMapper = new AppraisalMapper();
+	@InjectMocks private AppraisalMapper appraisalMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

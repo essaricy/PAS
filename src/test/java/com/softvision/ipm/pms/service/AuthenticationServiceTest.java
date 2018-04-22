@@ -1,66 +1,91 @@
 package com.softvision.ipm.pms.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.naming.NamingException;
+
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.modelmapper.ModelMapper;
 
 import com.softvision.ipm.pms.acl.repo.SVLdapRepository;
-import com.softvision.ipm.pms.acl.repo.SVProjectRepository;
-import com.softvision.ipm.pms.acl.service.SVAuthenticationProvider;
 import com.softvision.ipm.pms.acl.service.SVAuthenticationService;
 import com.softvision.ipm.pms.employee.entity.Employee;
+import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
 import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
-import com.softvision.ipm.pms.user.model.UserToken;
+import com.softvision.ipm.pms.role.constant.Roles;
+import com.softvision.ipm.pms.role.entity.Role;
+import com.softvision.ipm.pms.role.repo.RoleDataRepository;
+import com.softvision.ipm.pms.user.model.User;
+import com.softvision.ipm.pms.web.config.MyModelMapper;
 
-@RunWith(MockitoJUnitRunner.class)
 @Ignore
+@RunWith(MockitoJUnitRunner.class)
 public class AuthenticationServiceTest {
-	
-	@InjectMocks
-	private SVAuthenticationProvider svAuthenticationProvider;
-	
-	@Mock
-	private SVAuthenticationService svAuthenticationService;
-	
-	@Mock
-	private SVLdapRepository svLdapRepository;
 
-	@Mock
-	private SVProjectRepository svProjectRepository;
+	@Mock private SVLdapRepository svLdapRepository;
 
-	@Mock
-	private EmployeeDataRepository employeeRepository;
+	@Mock private EmployeeDataRepository employeeRepository;
+
+	@Mock private RoleDataRepository roleDataRepository;
+
+	@Spy ModelMapper mapper = new MyModelMapper();
+
+	@InjectMocks private EmployeeMapper employeeMapper;
 	
+	@InjectMocks private SVAuthenticationService svAuthenticationService;
+
+	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Before
+	public void prepare() {
+		((MyModelMapper)mapper).loadMappings();
+	}
+
 	@Test
-	public void validateAuthenticate() {
-		//Mockito.when(sVAuthenticationService.authenticate(anyString(),anyString())).thenReturn(this.mockUserObject());
+	public void validateAuthenticate() throws NamingException {
 		Employee employee = mockEmployeeObject();
-		
-		//Mockito.doNothing(svLdapRepository.authenticate(anyString(),anyString()));
+
+		Mockito.doNothing().when(svLdapRepository).authenticate(anyString(), anyString());
 		Mockito.when(employeeRepository.findByLoginId(anyString())).thenReturn(employee);
 		Mockito.when(employeeRepository.save((Employee)anyObject())).thenReturn(employee);
-		//Authentication userTokenAuthentication = svAuthenticationProvider.authenticate(authentication);
-		//assertNotNull(userTokenAuthentication)
+		Mockito.when(roleDataRepository.findByEmployeeId(anyObject())).thenReturn(mockAdminRoles());
 		
-		Authentication authentication = new UsernamePasswordAuthenticationToken("srikanth.kumar", "testPassword");
+		User user = svAuthenticationService.authenticate("srikanth.kumar", "password");
+		System.out.println(user);
+		/*Authentication authentication = new UsernamePasswordAuthenticationToken("srikanth.kumar", "testPassword");
 		Authentication authenticate = svAuthenticationProvider.authenticate(authentication);
 		assertTrue(authenticate instanceof UserToken);
 		UserToken userToken = (UserToken) authenticate;
-		assertEquals("srikanth.kumar", userToken.getPrincipal());
+		assertEquals("srikanth.kumar", userToken.getPrincipal());*/
 		
 	}
 	
+	private List<Role> mockAdminRoles() {
+		List<Role> roleList = new ArrayList<>();
+		Arrays.stream(Roles.values()).forEach(roleValue -> {
+			Role role = new Role();
+			role.setId(roleValue.getCode());
+			role.setRoleName(roleValue.getName());
+		});
+		return roleList;
+	}
+
 	private Employee mockEmployeeObject() {
 		Employee employee = new Employee();
 		return employee;

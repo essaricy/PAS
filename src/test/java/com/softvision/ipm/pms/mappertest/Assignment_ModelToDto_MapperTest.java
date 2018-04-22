@@ -27,7 +27,7 @@ public class Assignment_ModelToDto_MapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private AssignmentMapper assignmentMapper = new AssignmentMapper();
+	@InjectMocks private AssignmentMapper assignmentMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

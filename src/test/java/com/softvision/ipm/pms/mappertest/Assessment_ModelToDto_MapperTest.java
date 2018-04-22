@@ -29,7 +29,7 @@ public class Assessment_ModelToDto_MapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private AssessMapper assessMapper = new AssessMapper();
+	@InjectMocks private AssessMapper assessMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

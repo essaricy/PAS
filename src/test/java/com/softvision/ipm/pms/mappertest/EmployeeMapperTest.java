@@ -29,7 +29,7 @@ public class EmployeeMapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private EmployeeMapper employeeMapper = new EmployeeMapper();
+	@InjectMocks private EmployeeMapper employeeMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

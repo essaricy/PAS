@@ -32,7 +32,7 @@ public class Template_ModelToDto_MapperTest {
 
 	@Spy ModelMapper mapper = new MyModelMapper();
 
-	@InjectMocks private TemplateMapper templateMapper = new TemplateMapper();
+	@InjectMocks private TemplateMapper templateMapper;
 
 	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
 

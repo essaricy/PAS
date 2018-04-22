@@ -16,14 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class SVAuthenticationProvider implements AuthenticationProvider {
 
-	@Autowired private SVAuthenticationService authenticationService;
+	@Autowired private SVAuthenticationService svAuthenticationService;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String principal = authentication.getPrincipal().toString();
 		String credentials = authentication.getCredentials().toString();
 		log.info("Authenticating user {}", principal);
-		User user = authenticationService.authenticate(principal, credentials);
+		User user = svAuthenticationService.authenticate(principal, credentials);
 		return new UserToken(user);
 	}
 
