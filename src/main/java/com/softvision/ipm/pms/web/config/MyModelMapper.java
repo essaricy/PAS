@@ -14,6 +14,7 @@ import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.goal.entity.Goal;
@@ -32,7 +33,7 @@ import com.softvision.ipm.pms.user.model.User;
 public class MyModelMapper extends ModelMapper {
 
 	@PostConstruct
-	private void loadMappings() {
+	public void loadMappings() {
 		getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(AccessLevel.PRIVATE).setMatchingStrategy(MatchingStrategies.STRICT);
 
 		// AppraisalCycle mappings
@@ -113,13 +114,19 @@ public class MyModelMapper extends ModelMapper {
 		.addMapping(src -> src.getApplicable(), TemplateDetailDto::setApply);
 
 		// Assignment Mappings
+		typeMap(PhaseAssignment.class, EmployeePhaseAssignmentDto.class)
+        .addMapping(src -> src.getId(), EmployeePhaseAssignmentDto::setAssignmentId)
+        .addMapping(src -> src.getEmployeeId(), (dest, value) -> dest.getAssignedTo().setEmployeeId(1))
+        .addMapping(src -> src.getAssignedBy(), (dest, value) -> dest.getAssignedBy().setEmployeeId(1))
+        .addMapping(src -> src.getAssignedAt(), EmployeePhaseAssignmentDto::setAssignedAt)
+        .addMapping(src -> src.getStatus(), EmployeePhaseAssignmentDto::setStatus);
+
 		typeMap(PhaseAssignment.class, EmployeeAssignmentDto.class)
         .addMapping(src -> src.getId(), EmployeeAssignmentDto::setAssignmentId)
         .addMapping(src -> src.getEmployeeId(), (dest, value) -> dest.getAssignedTo().setEmployeeId(1))
         .addMapping(src -> src.getAssignedBy(), (dest, value) -> dest.getAssignedBy().setEmployeeId(1))
         .addMapping(src -> src.getAssignedAt(), EmployeeAssignmentDto::setAssignedAt)
         .addMapping(src -> src.getStatus(), EmployeeAssignmentDto::setStatus);
-        //.addMapping(src -> src.getScore(), EmployeeAssignmentDto::setScore)
 
 		typeMap(CycleAssignment.class, EmployeeAssignmentDto.class)
         .addMapping(src -> src.getId(), EmployeeAssignmentDto::setAssignmentId)

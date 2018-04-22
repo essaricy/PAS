@@ -7,25 +7,36 @@ import static org.junit.Assert.assertNull;
 import java.text.MessageFormat;
 import java.util.Date;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.modelmapper.ModelMapper;
 
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.model.SVEmployee;
 import com.softvision.ipm.pms.user.model.User;
+import com.softvision.ipm.pms.web.config.MyModelMapper;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
 public class EmployeeMapperTest {
 
 	private static final String IMAGE_URL = "https://opera.softvision.com/Content/Core/img/Profile/{0}.jpg";
 
-	@Autowired private EmployeeMapper employeeMapper;
+	@Spy ModelMapper mapper = new MyModelMapper();
+
+	@InjectMocks private EmployeeMapper employeeMapper = new EmployeeMapper();
+
+	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Before
+	public void prepare() {
+		((MyModelMapper)mapper).loadMappings();
+	}
 
     @Test
     public void test_EmployeeNull() {

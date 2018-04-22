@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.modelmapper.ModelMapper;
 
 import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
@@ -19,12 +22,20 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
+import com.softvision.ipm.pms.web.config.MyModelMapper;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
 public class Appraisal_ModelToDto_MapperTest {
 
-	@Autowired private AppraisalMapper appraisalMapper;
+	@Spy ModelMapper mapper = new MyModelMapper();
+
+	@InjectMocks private AppraisalMapper appraisalMapper = new AppraisalMapper();
+
+	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Before
+	public void prepare() {
+		((MyModelMapper)mapper).loadMappings();
+	}
 
     @Test
     public void test_cycleNull() {

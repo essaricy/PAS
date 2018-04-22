@@ -6,25 +6,37 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Date;
 
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+import org.modelmapper.ModelMapper;
 
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.mapper.AssignmentMapper;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
+import com.softvision.ipm.pms.web.config.MyModelMapper;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
 public class Assignment_ModelToDto_MapperTest {
 
-	@Autowired AssignmentMapper assignmentMapper;
+	@Spy ModelMapper mapper = new MyModelMapper();
 
-    @Test
+	@InjectMocks private AssignmentMapper assignmentMapper = new AssignmentMapper();
+
+	@Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+
+	@Before
+	public void prepare() {
+		((MyModelMapper)mapper).loadMappings();
+	}
+
+	@Test
     public void test_phaseNull() {
         assertNull(assignmentMapper.get((PhaseAssignment) null));
     }
@@ -46,7 +58,7 @@ public class Assignment_ModelToDto_MapperTest {
         phaseAssignment.setStatus(PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.getCode());
         phaseAssignment.setTemplateId(56L);
 
-        EmployeeAssignmentDto employeeAssignmentDto = assignmentMapper.get(phaseAssignment);
+        EmployeePhaseAssignmentDto employeeAssignmentDto = assignmentMapper.get(phaseAssignment);
         assertNotNull(employeeAssignmentDto);
         assertEquals(phaseAssignment.getAssignedAt(), employeeAssignmentDto.getAssignedAt());
         assertEquals(phaseAssignment.getAssignedBy(), employeeAssignmentDto.getAssignedBy().getEmployeeId());

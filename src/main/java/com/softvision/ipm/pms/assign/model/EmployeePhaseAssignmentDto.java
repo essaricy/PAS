@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
+@ToString(callSuper=true)
 public class EmployeePhaseAssignmentDto extends EmployeeAssignmentDto {
 
     private static final long serialVersionUID = 1L;

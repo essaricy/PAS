@@ -9,7 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 @Entity(name="assess_detail")

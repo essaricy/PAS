@@ -12,8 +12,10 @@ import com.softvision.ipm.pms.common.validator.NotContainNull;
 import com.softvision.ipm.pms.role.entity.Role;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString(exclude="password")
 public class User {
 
 	@NotNull

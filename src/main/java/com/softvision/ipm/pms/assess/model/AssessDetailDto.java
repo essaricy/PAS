@@ -9,7 +9,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 public class AssessDetailDto implements Serializable {

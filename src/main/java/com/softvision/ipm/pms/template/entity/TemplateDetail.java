@@ -15,7 +15,6 @@ import javax.persistence.SequenceGenerator;
 import com.softvision.ipm.pms.goal.entity.GoalParam;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 @Entity
