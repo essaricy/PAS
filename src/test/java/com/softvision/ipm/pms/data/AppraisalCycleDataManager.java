@@ -38,11 +38,8 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 
 	/*private void activateCycle() throws ServiceException {
 		List<AppraisalCycleDto> cycles = appraisalService.getCycles();
-		System.out.println("##################################### "+ cycles.size());
 		for (AppraisalCycleDto cycle : cycles) {
-			System.out.println("################## "+cycle);
 			int year = Integer.parseInt(new SimpleDateFormat("yyyy").format(cycle.getStartDate()));
-			System.out.println(year);
 			if (year < 2017) {
 				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.READY);
 				appraisalService.changeStatus(cycle.getId(), AppraisalCycleStatus.ACTIVE);
@@ -100,7 +97,6 @@ public class AppraisalCycleDataManager implements AbstractDataManager {
 				localDate=localDate.plusDays(1);
 			}
 			appraisalCycleDto.setPhases(phases);
-			//System.out.println(appraisalCycleDto);
 			appraisalService.update(appraisalCycleDto);
 		}
 	}

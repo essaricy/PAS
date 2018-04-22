@@ -29,13 +29,6 @@ public class SVProjectRepository {
 	public SVEmployee getEmployee(String userId) {
 		String email = userId + "@" + domain;
 		LOGGER.info("Looking up for the user {} in SVProject", email);
-
-		// To enable tracing of request and response
-		/*RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
-			List<ClientHttpRequestInterceptor> interceptors = new ArrayList<ClientHttpRequestInterceptor>();
-			interceptors.add(new LoggingRequestInterceptor());
-			restTemplate.setInterceptors(interceptors);*/
-		
 		RestTemplate restTemplate = new RestTemplate();
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url).queryParam("key", apiKey).queryParam("email", email);
 		SVEmployee svEmployee = restTemplate.getForObject(builder.toUriString(), SVEmployee.class, apiKey, email);

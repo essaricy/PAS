@@ -75,7 +75,6 @@ public class TemplateService {
 	        throw new ServiceException("There is no such template");
 	    }
 	    template.setId(0);
-	    //template.setName(template.getName() + " - Copy");
 	    template.setName(null);
 
 	    List<TemplateHeaderDto> headers = template.getHeaders();

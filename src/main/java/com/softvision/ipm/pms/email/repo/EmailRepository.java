@@ -528,7 +528,6 @@ public class EmailRepository {
 			// Set Subject: header field
 			message.setSubject(subject);
 			// Now set the actual message
-			// message.setText(content);
 			message.setContent(content, "text/html");
 			// Send message
 			Transport.send(message);
@@ -555,7 +554,6 @@ public class EmailRepository {
 			// Set Subject: header field
 			message.setSubject(subject);
 			// Now set the actual message
-			// message.setText(content);
 			message.setContent(content, "text/html");
 			// Send message
 			Transport.send(message);

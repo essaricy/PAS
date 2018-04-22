@@ -79,15 +79,10 @@ public class AssignmentDataManager implements AbstractDataManager {
 		List<Integer> usedManagers = new ArrayList<>();
 		List<Integer> usedEmployees = new ArrayList<>();
 		AppraisalCycleDto activeCycle = appraisalService.getActiveCycle();
-		System.out.println("activeCycle1=" + activeCycle);
-		System.out.println(Roles.MANAGER.getCode());
 		List<EmployeeDto> managers = employeeService.roleSearch(Roles.MANAGER.getName());
-		System.out.println("managers= "  + managers);
 		List<EmployeeDto> employees = employeeService.getEmployees();
-		System.out.println("employees= "  + employees.size());
 
 		for (int managerIndex = 0; managerIndex < numberOfManagers; managerIndex++) {
-			System.out.println("Assigning for manager " + managerIndex);
 			EmployeeDto randomManager = managers.get(RANDOM.nextInt(managers.size()));
 			int managerId = randomManager.getEmployeeId();
 			if (usedManagers.contains(managerId)) {
@@ -95,10 +90,8 @@ public class AssignmentDataManager implements AbstractDataManager {
 				continue;
 			}
 			usedManagers.add(managerId);
-			System.out.println("Selected Manager: " + managerId);
 
 			TemplateDto randomTemplate = templates.get(RANDOM.nextInt(templates.size()));
-			System.out.println("Random Template: " + randomTemplate.getName());
 
 			BulkAssignmentDto bulkAssignmentDto = new BulkAssignmentDto();
 			bulkAssignmentDto.setAssignedBy(managerId);
@@ -116,10 +109,8 @@ public class AssignmentDataManager implements AbstractDataManager {
 				}
 				usedEmployees.add(employeeId);
 				employeeIds.add(employeeId);
-				System.out.println("Will assign employee: " + employeeId);
 			}
 			bulkAssignmentDto.setEmployeeIds(employeeIds);
-			System.out.println("bulkAssignmentDto= " + bulkAssignmentDto);
 			//assignmentService.bulkAssignCycle(bulkAssignmentDto);
 		}
 	}

@@ -74,7 +74,6 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 	}
 
 	public List<EmployeePhaseAssignmentDto> getPhaseAssignmentsByCycleByEmployeeId(long cycleId, int employeeId) {
-	    System.out.println(AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE_BY_EMPLOYEE_ID);
 		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_BY_CYCLE_BY_EMPLOYEE_ID,
 			    new Object[] {cycleId, employeeId},
