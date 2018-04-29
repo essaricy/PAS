@@ -25,11 +25,8 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
   </head>
   <style>
-  .self-score, .manager-score {
+  .self-score, .manager-score, .assess-heading {
   	font-weight: bold;
-  }
-  table > tfoot > tr > th {
-    font-size: 20px;
   }
   textarea {
    resize: none;
@@ -61,7 +58,7 @@
           <div class="card assessment_card">
             <div class="header">
             </div>
-            <div class="body" style="overflow-x: scroll;">
+            <div class="body">
             </div>
           </div>
         </div>
@@ -103,7 +100,7 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments2.js"></script>
 <script>
 $(function () {
   var assignmentId='${param.aid}';

@@ -27,7 +27,7 @@
   </head>
   <style>
   .list-group-item {
-  	font-size: 13px;
+    font-size: 13px;
   }
   </style>
 </head>
@@ -69,46 +69,45 @@
       </div>
     </div>
 
-		<!-- Large Size -->
-		<div class="modal fade" id="EmployeeSearchModal" tabindex="-1"
-			role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h4 class="modal-title" id="EmployeeSearchModalLabel"></h4>
-					</div>
-					<div class="modal-body">
-						<div class="row clearfix">
-							<div class="table-responsive">
-								<table id="SearchRoleTable"
-									class="table table-bordered table-striped table-hover dataTable">
-									<thead>
-										<tr>
-											<th>&nbsp;</th>
-											<th>Employee ID</th>
-											<th>First Name</th>
-											<th>Last Name</th>
-											<th>Band</th>
-											<th>Designation</th>
-										</tr>
-									</thead>
-									<tbody>
-									</tbody>
-								</table>
-							</div>
+	<!-- Large Size -->
+	<div class="modal fade" id="EmployeeSearchModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="EmployeeSearchModalLabel"></h4>
+				</div>
+				<div class="modal-body">
+					<div class="row clearfix">
+						<div class="table-responsive">
+							<table id="SearchRoleTable"
+								class="table table-bordered table-striped table-hover dataTable">
+								<thead>
+									<tr>
+										<th>&nbsp;</th>
+										<th>Employee ID</th>
+										<th>First Name</th>
+										<th>Last Name</th>
+										<th>Band</th>
+										<th>Designation</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
 						</div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" id="AssignToAnotherManager"
-							class="btn btn-primary waves-effect">Assign</button>
-						<button type="button" id="SubmitToNextLevelManager"
-							class="btn btn-primary waves-effect">Assign</button>
-						<button type="button" class="btn btn-primary waves-effect"
-							data-dismiss="modal">Close</button>
-					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" id="AssignToAnotherManager"
+						class="btn btn-primary waves-effect">Assign</button>
+					<button type="button" id="SubmitToNextLevelManager"
+						class="btn btn-primary waves-effect">Assign</button>
+					<button type="button" class="btn btn-primary waves-effect"
+						data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
+	</div>
 	</section>
 </body>
 

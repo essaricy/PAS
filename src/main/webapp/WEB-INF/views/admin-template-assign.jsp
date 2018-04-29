@@ -228,8 +228,9 @@ $(function () {
 	template: {
 	  type: "custom",
 	  method: function(value, template) {
-		var employeeName=template.updatedBy.fullName;
-		return "<b>" + template.name + "</b><small> - Updated By <code>" + employeeName + "</code> on <code>" + template.updatedAt + "</code></small>";
+		//var employeeName=template.updatedBy.fullName;
+		//return "<b>" + template.name + "</b><small> - Updated By <code>" + employeeName + "</code> on <code>" + template.updatedAt + "</code></small>";
+	    return "<b>" + template.name + "</b>";
 	  }
 	},
 	list: {
@@ -334,10 +335,10 @@ $(function () {
 
   $('#Reset_Button').click(function() {
 	bulkAssignment.templateId=0;
-	bulkAssignment.cycleId=0;
-	bulkAssignment.phaseId=0;
+	//bulkAssignment.cycleId=0;
+	//bulkAssignment.phaseId=0;
 	bulkAssignment.employeeIds=[];
-	
+
 	$("#Template_Name").val('');
 	$("#Search_Employees").val('');
 	var table=$('#Selected_Employees_Table');

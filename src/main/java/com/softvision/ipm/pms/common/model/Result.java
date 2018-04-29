@@ -2,9 +2,13 @@ package com.softvision.ipm.pms.common.model;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Result implements Serializable {
 
 	private static final long serialVersionUID = 1L;

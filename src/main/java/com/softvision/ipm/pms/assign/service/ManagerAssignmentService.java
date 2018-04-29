@@ -222,7 +222,7 @@ public class ManagerAssignmentService {
 
     @PreSecureAssignment(permitManager = true)
 	public void deleteAssignment(long assignmentId, int fromEmployeeId) throws ServiceException {
-    	log.info("deleteAssignment: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId);
+    	log.info("deleteAssignment: START assignmentId={}, from={}", assignmentId, fromEmployeeId);
         PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
         PhaseAssignmentStatus phaseAssignmentStatus = PhaseAssignmentStatus.get(phaseAssignment.getStatus());
         if (phaseAssignmentStatus != PhaseAssignmentStatus.NOT_INITIATED) {

@@ -50,7 +50,7 @@
 
       <!-- Basic Example -->
       <div class="row clearfix">
-      	<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
+      	<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
 		  <div class="card">
 		    <!-- user profile image -->
             <img class="card-img-top" src="${imageUrl}" alt="${userName} Profile Picture" style="width:100%">
@@ -65,7 +65,7 @@
             </div>
           </div>
       	</div>
-      	<div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+      	<div class="col-lg-9 col-md-6 col-sm-6 col-xs-12">
       	  <div class="card">
       	    <div class="header"><h2>Current Appraisal Status</h2>
       	    </div>
@@ -131,7 +131,7 @@
             var iconName=phaseStatus.icon;
             var count=phasewiseEmployeeStatusCount.count;
 
-            var colDiv=$('<div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">');
+            var colDiv=$('<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">');
             var infoBoxDiv=$('<div class="info-box hover-zoom-effect hover-expand-effect ' + phaseStatus.colorClass + '">');
             var iconDiv=$('<div class="icon">');
             //var infoBoxDiv=$('<div class="info-box hover-zoom-effect ">');

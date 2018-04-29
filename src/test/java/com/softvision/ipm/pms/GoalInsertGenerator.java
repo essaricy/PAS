@@ -11,9 +11,9 @@ public class GoalInsertGenerator {
 
     public static void main(String[] args) throws Exception {
         //generate("Project Management");
-        //generate("Technical Solutions");
+        generate("Technical Solutions");
         //generate("Process Awareness & Compliance");
-        generate("Corporate Initiatives");
+        //generate("Corporate Initiatives");
     }
 
     private static void generate(String fileName) throws IOException {

@@ -17,3 +17,5 @@
 18. Suggesting Process improvements (Portfolio/Account level)
 19. Process of Planning & Coordinating cross-functional, Induction/Project training to meet project/Org expectation.
 20. Timely claiming, tracking of hours in respective tool.
+
+Adherence to SOC process

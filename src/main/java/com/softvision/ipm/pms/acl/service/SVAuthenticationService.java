@@ -8,6 +8,7 @@ import javax.naming.AuthenticationNotSupportedException;
 import javax.naming.CommunicationException;
 import javax.naming.NamingException;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -91,7 +92,11 @@ public class SVAuthenticationService {
             }
 			log.error("NamingException for {}, ERROR={}", userid, namingException.getMessage());
 			throw new BadCredentialsException("Error: " + namingException.getMessage(), namingException);
-		} catch (Exception exception) {
+		} catch (ConstraintViolationException constraintViolationException) {
+            log.error("ConstraintViolationException for {}, ERROR={}", userid,
+                    constraintViolationException.getMessage());
+            throw new AuthenticationServiceException("Something went wrong", constraintViolationException);
+        } catch (Exception exception) {
 		    log.error("Exception for {}, ERROR={}", userid, exception.getMessage());
 			String message = exception.getMessage();
 			if (message.contains("Connection timed out")) {

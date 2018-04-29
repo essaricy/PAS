@@ -163,16 +163,4 @@ public class AssignmentService {
 		return results;
 	}
 	
-	public List<EmployeeAssignmentDto> getAllAssignments(int cycleId) {
-		List<EmployeeAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllAssignments(cycleId);
-		return employeeAssignments;
-	}
-	
-	public List<EmployeePhaseAssignmentDto> getAllAssignments(int cycleId,int phaseId) {
-		List<EmployeePhaseAssignmentDto> employeeAssignments = new ArrayList<>();
-		employeeAssignments=assignmentRepository.getAllAssignments(cycleId, phaseId);
-		return employeeAssignments;
-	}
-
 }

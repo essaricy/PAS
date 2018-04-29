@@ -164,3 +164,77 @@ Transforming, Implementing, tuning and maintaining the databases used by the app
 16.  Analysis of the requirement, and design process as per Process lifecycle defined
 17.  Understanding of the design & development of the code as per the defined process.
 18.  Creation, execution of Unit Test cases and documentation of results as per project plan.
+
+###########################
+Possess excellent Typing and MS office skills.
+Learn to use the application for reconciliation.
+Process Cheques/Invoices.
+Validate the customer payment Vs client data.
+Should have good MS office skills
+Should have good data analytical and reconciliation skills 
+Should be able write simple SQL queries to analyze data
+Should be able to understand all claim categories 
+Examine client payment history, buyers’ files and other documents (correspondence, shipping and payment histories, spreadsheets) related to the A/P function to identify recoverable overpayments and/or under deductions for contract period agreed upon
+Produce high quality and well documented claims
+May perform correspondence with the discretion of the Senior Auditor/Audit lead
+Learn the assigned work based on the instructions provided for the project aligned.
+Meet the quality standards of the project assigned.
+ Process the work within the TAT.
+Mentor, help and clarify the doubts of the PCFS.
+ Ability to work on multiple processes
+Mentoring New Joinees.
+Carry out adhoc requests from the Team Leaders
+Be an interface between subordinates and leads.
+Quality Check
+Maintain the TAT as per client’s requirement
+Take up Process initiatives assigned by the leads
+Ability to work on complex payments/transactions
+Documenting any new sceanrios found while auditing
+Learning new auditing skills 
+Ensuring quality and timely completion and delivery of the deliverables
+Conducting Root cause analysis and implementing preventive & corrective actions on the cancelled and voided claims
+Process documents preparation and review
+100 % Quality check before delivery
+Maintain the TAT as per client’s requirement
+Capacity of work with multiple process and Domains.
+Share knowledge within the team on a priority .
+Intermediate Excel skills
+May perform correspondence with the discretion of the Audit lead/Audit manager
+Understand all claim concepts and make the team understand the process.
+To work towards building tools in order to stabilize the process and provide suggestions to enhance the existing tools like statement tool/dupes report tool etc…
+Should meet 100% of the target set by the client
+Task allocation and monitoring
+Process documents preparation and review
+Capacity of handling multiple processes and domains.
+Capable of understanding the depth of the problem and giving solutions.
+Monthly update of process documents.
+Tracking daily activities for the team & self.
+Client Interaction and MOM documentation to meet goals as a backup of Team Lead
+Ability to perform pre-process and post-process activities
+Mentoring new joinees and juniors
+Fostering team building by sharing Technical knowledge, highlighting problems or critical situations to the Team 
+Providing direction on strategic business issues 
+Preparing Technical documentation on claim types, User Manuals etc as per the defined process
+Work closely with Data/IT team representatives to understand data and analytic requirements associated with an assigned project
+ Contribute to the success of the organization by helping others accomplish job results; learning new skills needed by the team; finding new ways to help the team and deliver value
+Take ownership to  manage Stakeholder expectations - work closely with onsite & the GDM to meet goals
+Review of previous day pending work and publishing inventory report
+ Responsible for continuous process, quality, performance improvement and cross training in the team
+Able to attend and carry out client meetings both at offshore and onsite
+Share knowledge within the team on a priority and mentor juniors as required
+Review RCA and make the CAPA ( corrective and preventive Action Plan)
+Process updates needs to be in place and mandate the team to follow up on updates.
+Review Innovative Idea submission and put your comment (also explain how it would be effective for the organization) and share it to PM for implement and complete the task
+Review the process docs & WIS and update the same if required.
+Keep track on production report weekly/Monthly/Quarterly basis.
+Train the Sr. Analyst as backup to handle the situation in your absence.
+Get the process improvement Idea from the team and have group discussion with team on process improvements, discussion and share the shortlisted idea with PM.
+Conduct daily standup meetings
+Conduct monthly performance review meeting of the team
+Monitoring of 100% of the target achieved by the team as per our requirement
+Cost saving attrition control
+Capacity of handling multiple projects and various domains.
+Real time appreciation to the teammates for good work and completion of work beyond targets
+Keep track on production report Quarterly/Half-yearly/ annually basis.
+Get the process improvement Idea from the team and have group discussion then come to the conclusion
+Plan and execute cross training between teams

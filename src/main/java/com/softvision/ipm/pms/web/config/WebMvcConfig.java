@@ -31,11 +31,19 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
         registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
-        registry.addViewController("/admin/appraisal/status").setViewName("admin-appraisal-status");
+
+        registry.addViewController("/admin/reports").setViewName("admin-reports");
+        registry.addViewController("/admin/report/appraisal/status/cycle").setViewName("admin-report-appraisal-status-cycle");
+        registry.addViewController("/admin/report/appraisal/status/phase/assigned").setViewName("admin-report-appraisal-status-phase-assigned");
+        registry.addViewController("/admin/report/appraisal/status/phase/unassigned").setViewName("admin-report-appraisal-status-phase-unassigned");
+        registry.addViewController("/admin/report/appraisal/overview").setViewName("admin-report-appraisal-overview");
+
+        //registry.addViewController("/admin/appraisal/overview").setViewName("admin-appraisal-overview");
 
         registry.addViewController("/manager/assignment/active").setViewName("manager-assignment-active");
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
         registry.addViewController("/manager/assessment").setViewName("manager-assessment");
+        registry.addViewController("/manager/reports").setViewName("manager-reports");
         registry.addViewController("/manager/report/score/cycle").setViewName("manager-report-score-cycle");
         registry.addViewController("/manager/report/score/phase").setViewName("manager-report-score-phase");
 

@@ -53,7 +53,7 @@ $(function () {
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append('<p class="font-bold col-pink">No Employees were assigned to you for this phase.</p>');
           } else {
-            var table=$('<table class="table table-striped">');
+            var table=$('<table class="table table-striped" style="table-layout: fixed;">');
             var thead=$('<thead>');
             var theadRow=$('<tr>');
             var tbody=$('<tbody>');
@@ -61,22 +61,22 @@ $(function () {
               var assignedTo=ea.assignedTo;
               var assignedBy=ea.assignedBy;
               var row=$('<tr>');
-              $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+              $(row).append('<td class="hidden-xs" item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
               $(row).append('<td>' + assignedTo.fullName + '</td>');
               $(row).append(getTemplateCell(ea.template));
-              $(row).append('<td>' + ea.assignedAt + '</td>');
+              $(row).append('<td class="hidden-xs">' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
               $(tbody).append(row);
             });
             $(table).append(thead);
             $(thead).append(theadRow);
-            $(theadRow).append('<th width="12%">Employee #</th>');
-            $(theadRow).append('<th width="20%">Employee Name</th>');
-            $(theadRow).append('<th width="20%">Goal Template</th>');
-            $(theadRow).append('<th width="13%">Assigned On</th>');
-            $(theadRow).append('<th width="20%">Status</th>');
-            $(theadRow).append('<th width="15%">Action</th>');
+            $(theadRow).append('<th class="hidden-xs">Employee #</th>');
+            $(theadRow).append('<th>Employee Name</th>');
+            $(theadRow).append('<th class="hidden-xs">Goal Template</th>');
+            $(theadRow).append('<th class="hidden-xs">Assigned On</th>');
+            $(theadRow).append('<th>Status</th>');
+            $(theadRow).append('<th>Action</th>');
             $(table).append(tbody);
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append(table);
@@ -90,14 +90,14 @@ $(function () {
         if (employeeAssignments.length==0) {
           $(cycleTabPanel).append('<p class="font-bold col-pink">No Employees have been assigned to you for this cycle.</p>');
         } else {
-          var table=$('<table class="table table-striped">');
+          var table=$('<table class="table table-striped" style="table-layout: fixed;">');
           var thead=$('<thead>');
           var theadRow=$('<tr>');
           $(table).append(thead);
           $(thead).append(theadRow);
-          $(theadRow).append('<th>Employee #</th>');
+          $(theadRow).append('<th class="hidden-xs">Employee #</th>');
           $(theadRow).append('<th>Employee Name</th>');
-          $(theadRow).append('<th>Assigned On</th>');
+          $(theadRow).append('<th class="hidden-xs">Assigned On</th>');
           $(theadRow).append('<th>Status</th>');
           $(theadRow).append('<th>Action</th>');
           var tbody=$('<tbody>');
@@ -105,9 +105,9 @@ $(function () {
             var assignedTo=ea.assignedTo;
             var assignedBy=ea.assignedBy;
             var row=$('<tr>');
-            $(row).append('<td item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
+            $(row).append('<td class="hidden-xs" item-id="' + ea.assignmentId + '">' + assignedTo.employeeId + '</td>');
             $(row).append('<td>' + assignedTo.fullName + '</td>');
-            $(row).append('<td>' + ea.assignedAt + '</td>');
+            $(row).append('<td class="hidden-xs">' + ea.assignedAt + '</td>');
             $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
             $(row).append(getCycleActionCell(ea));
             $(tbody).append(row);
@@ -179,7 +179,7 @@ $(function () {
     }
 
     function getTemplateCell(template) {
-      var td=$('<td>');
+      var td=$('<td class="hidden-xs">');
       var templateLink=$('<a href="#" data-toggle="modal" data-target="#TemplateModal">');
       $(templateLink).append(template.name);
       $(templateLink).click(function (e) {

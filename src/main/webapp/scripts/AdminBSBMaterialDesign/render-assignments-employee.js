@@ -52,13 +52,13 @@ $(function () {
       if (employeeAssignment==null) {
         $(cycleTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this cycle.</p>');
       } else {
-        var table=$('<table class="table table-striped">');
+        var table=$('<table class="table table-striped" style="table-layout: fixed;">');
         var thead=$('<thead>');
         var theadRow=$('<tr>');
         $(table).append(thead);
         $(thead).append(theadRow);
-        $(theadRow).append('<th>Assigned By</th>');
-        $(theadRow).append('<th>Assigned On</th>');
+        $(theadRow).append('<th class="hidden-xs">Assigned By</th>');
+        $(theadRow).append('<th class="hidden-xs">Assigned On</th>');
         $(theadRow).append('<th>Status</th>');
         $(theadRow).append('<th>Action</th>');
 
@@ -69,8 +69,8 @@ $(function () {
           var assignedBy=ea.assignedBy;
           
           var row=$('<tr>');
-          $(row).append('<td>' + assignedBy.fullName + '</td>');
-          $(row).append('<td>' + ea.assignedAt + '</td>');
+          $(row).append('<td class="hidden-xs">' + assignedBy.fullName + '</td>');
+          $(row).append('<td class="hidden-xs">' + ea.assignedAt + '</td>');
           $(row).append('<td>' + getCycleStatusLabel(ea.status) + '</td>');
           $(row).append(getCycleActionCell(ea));
           $(tbody).append(row);
@@ -91,7 +91,7 @@ $(function () {
           $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append('<p class="font-bold col-pink">Nothing was assigned to you for this phase.</p>');
           } else {
-            var table=$('<table class="table table-striped">');
+            var table=$('<table class="table table-striped" style="table-layout: fixed;">');
             var thead=$('<thead>');
             var tbody=$('<tbody>');
             var theadRow=$('<tr>');
@@ -101,9 +101,9 @@ $(function () {
               var assignedBy=ea.assignedBy;
 
               var row=$('<tr>');
-              $(row).append('<td>' + assignedBy.fullName + '</td>');
+              $(row).append('<td class="hidden-xs">' + assignedBy.fullName + '</td>');
               $(row).append(getTemplateCell(ea.template));
-              $(row).append('<td>' + ea.assignedAt + '</td>');
+              $(row).append('<td class="hidden-xs">' + ea.assignedAt + '</td>');
               $(row).append('<td>' + getPhaseStatusLabel(ea.status) + '</td>');
               $(row).append(getPhaseActionCell(ea));
               $(tbody).append(row);
@@ -111,11 +111,11 @@ $(function () {
 
             $(table).append(thead);
             $(thead).append(theadRow);
-            $(theadRow).append('<th width="25%">Assigned By</th>');
-            $(theadRow).append('<th width="25%">Goal Template</th>');
-            $(theadRow).append('<th width="15%">Assigned On</th>');
-            $(theadRow).append('<th width="20%">Status</th>');
-            $(theadRow).append('<th width="15%">Action</th>');
+            $(theadRow).append('<th class="hidden-xs">Assigned By</th>');
+            $(theadRow).append('<th>Goal Template</th>');
+            $(theadRow).append('<th class="hidden-xs">Assigned On</th>');
+            $(theadRow).append('<th>Status</th>');
+            $(theadRow).append('<th>Action</th>');
             $(table).append(tbody);
             $(phaseTabPanel).append(phaseTitle);
             $(phaseTabPanel).append(table);

@@ -49,91 +49,47 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Appraisal Status Report
-          <small>Get the appraisal status for employees on basis of Cycle or Phase </small>
+        <h2>Appraisal Status Report (Phase-wise - Unassigned) 
+          <small>This report lists all the employees for whom template has not been assigned.</small>
         </h2>
       </div>
       <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <div class="card">
-            <div class="body">
-              <!-- Nav tabs -->
-              <ul class="nav nav-tabs tab-nav-right tab-col-orange" role="tablist">
-                <li role="presentation" class="active"><a href="#cycle" data-toggle="tab">Cycle Wise</a></li>
-                <li role="presentation"><a href="#phase" data-toggle="tab">Phase wise</a></li>
-              </ul>
-               <!-- Tab panes -->
-               <div class="tab-content">
-                 <div role="tabpanel" class="tab-pane fade in active" id="cycle">
-                   <div class="body">
-	                   <div class="row clearfix">
-	                     <div class="col-sm-2">&nbsp;</div>
-	                     <div class="col-sm-6">
-							 <select id="cyclesSelectId" class="form-control show-tick">
-	                        	<option value="-1"> Please select </option>
-	                         </select> 
-	                      </div>
-	                     <div class="col-sm-2">
-	                       <button type="button" id="Search" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
-	                         <i class="material-icons">search</i>
-	                       </button>
-	                     </div>
-	                     <div class="col-sm-2">&nbsp;</div>
-	                   </div>
-                   </div>
-                   <div class="row clearfix">
-                     <div class="table-responsive">
-                       <table id="SearchTable" class="table table-bordered table-striped table-hover dataTable">
-                         <thead>
-                           <tr>
-                             <th>Id</th>
-                             <th>Employee</th>
-                             <th>Manager</th>
-                             <th>Assigned On</th>
-                             <th>Status</th>
-                           </tr>
-                         </thead>
-                         <tbody>
-                         </tbody>
-                       </table>
-                     </div>
-                   </div>
-                 </div>
-                 <div role="tabpanel" class="tab-pane fade" id="phase">
-                   <div class="body">
+					<div class="body">
 	                   <div class="row clearfix">
 	                     <div class="col-sm-2">Cycle Id</div>
 	                     <div class="col-sm-2">
-							<select id="cyclesPhaseSelectId" class="form-control show-tick">
+							<select id="cyclesPhaseSelecUnassignedtId" class="form-control show-tick">
 	                        	<option value="-1"> &nbsp;</option>
 	                        </select> 
 	                     </div>
 	                     <div class="col-sm-2">&nbsp;</div>
 	                     <div class="col-sm-2">Phase Id</div>
 	                     <div class="col-sm-2">
-	                     	<select id="phaseSelectId" class="form-control show-tick">
+	                     	<select id="phaseSelectUnassignedId" class="form-control show-tick">
 	                        	<option value="-1"> &nbsp;</option>
 	                        </select> 
 	                     </div>
 	                     <div class="col-sm-2">
-	                       <button type="button" id="SearchPhase" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
+	                       <button type="button" id="SearchPhaseUnassigned" class="btn bg-orange btn-circle waves-effect waves-circle waves-float">
 	                         <i class="material-icons">search</i>
 	                       </button>
 	                     </div>
 	                     <div class="col-sm-2">&nbsp;</div>
 	                   </div>
-                   </div>
                    <div class="row clearfix">
                      <div class="table-responsive">
-                       <table id="SearchPhaseTable" class="table table-bordered table-striped table-hover dataTable">
+                       <table id="SearchPhaseTableUnassigned" class="table table-bordered table-striped table-hover dataTable">
                          <thead>
                            <tr>
-                             <th>Id</th>
-                             <th>Employee</th>
-                             <th>Manager</th>
-                             <th>Template</th>
-                             <th>Assigned On</th>
-                             <th>Status</th>
+                             <th>#</th>
+                             <th>First Name</th>
+                             <th>Last Name</th>
+                             <th>Employment Type</th>
+                             <th>Band</th>
+                             <th>Designation</th>
+                             <th>Location</th>
                            </tr>
                          </thead>
                          <tbody>
@@ -141,9 +97,7 @@
                        </table>
                      </div>
                    </div>
-                 </div>
-               </div>
-            </div>
+                                      </div>
           </div>
         </div>
       </div>
@@ -199,114 +153,53 @@
   <script>
   $(function () {
 	 var url = '<%=request.getContextPath()%>/appraisal/list/';
-	 $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
-        $($.fn.dataTable.tables( true ) ).css('width', '100%');
-        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
-        $('.easy-autocomplete').css('width', '100%');
-     }); 
      $.get(url, {sid: new Date().getTime()}, function() {}).done(function(result) {
 		$.each(result,function(index, value) {
-			var flag=(value.status=="ACTIVE")?'Selected':' ';
-			$('#cyclesSelectId').append('<option value="'+value.id+'"'+flag+'>'+value.name+'</option>');
-			$("#cyclesSelectId").selectpicker("refresh");
-			
-			$('#cyclesPhaseSelectId').append('<option value="'+value.id+'">'+value.name+'</option>');
-			$("#cyclesPhaseSelectId").selectpicker("refresh");
-			
+			$('#cyclesPhaseSelecUnassignedtId').append('<option value="'+value.id+'">'+value.name+'</option>');
+			$("#cyclesPhaseSelecUnassignedtId").selectpicker("refresh");
 		});
      });
      
-     $("#cyclesPhaseSelectId").change(function() {
+     $("#cyclesPhaseSelecUnassignedtId").change(function() {
          //alert( $('option:selected', this).val() );
          var id = $('option:selected', this).val();
          if (id != 0) {
-        	 $('#phaseSelectId').html('');
-        	 $('#phaseSelectId').append('<option value="-1">&nbsp;</option>');
+        	 $('#phaseSelectUnassignedId').html('');
+        	 $('#phaseSelectUnassignedId').append('<option value="-1">&nbsp;</option>');
 	         var url_phase = '<%=request.getContextPath()%>/appraisal/list/' + id;
 	         $.get(url_phase, {sid: new Date().getTime()}, function() {})
 	         .done(function(result) {
 	           if (result) {
 		   	      $(result.phases).each(function(index, phase) {
-		   	    	$('#phaseSelectId').append('<option value="'+phase.id+'">'+phase.name+'</option>');
-		   	     	$("#phaseSelectId").selectpicker("refresh");
+		   	    	$('#phaseSelectUnassignedId').append('<option value="'+phase.id+'">'+phase.name+'</option>');
+		   	     	$("#phaseSelectUnassignedId").selectpicker("refresh");
 					
 		   	      });
 	          	}
 	         });
-	         $("#phaseSelectId").selectpicker("refresh");
+	         $("#phaseSelectUnassignedId").selectpicker("refresh");
          }
      });
      
      
 	var cycleId='0';
 	var phaseId='0';
-	$('#SearchTable').DataTable({
-        responsive: true,
-        paging: true,
-		searching: true,
-		ordering: true,
-		info: true,
-        "ajax": "<%=request.getContextPath()%>/assignment/cycle/employee-status/" + cycleId,
-        "sAjaxDataProp":"",
-		"columns": [
-            { "data": "assignedTo.employeeId" },
-            { "data": "assignedTo.fullName" },
-            { "data": "assignedBy.fullName" },
-            { "data": "assignedAt" },
-            { "data": "status" },
-        ],
-        columnDefs: [
-            { 
-                targets: 4,
-                searchable: true,
-                orderable: true,
-                render: function(data, type, full, meta){
-                   return getPhaseStatusLabel(data);
-                }
-            }
-        ],
-        dom: 'Bfrtip',
-        buttons: [
-            'excel', 'print'
-        ]
-    });
-
-    $('#Search').click(function() {
-      var searchBy=$('#cyclesSelectId');
-      cycleId=$.trim(searchBy.val());
-      if (cycleId ==-1) {
-        	$(cycleId).focus();
-      } else {
-    	var table = $('#SearchTable').DataTable();
-    	table.ajax.url("<%=request.getContextPath()%>/assignment/cycle/employee-status/" + cycleId).load();
-      }
-    });
-  
-	$('#SearchPhaseTable').DataTable({
+  $('#SearchPhaseTableUnassigned').DataTable({
       responsive: true,
       paging: true,
-		searching: true,
-		ordering: true,
-		info: true,
-      "ajax": "<%=request.getContextPath()%>/assignment/phase/employee-status/" + cycleId+"/"+phaseId,
+	  searching: true,
+	  ordering: true,
+	  info: true,
+      "ajax": "<%=request.getContextPath()%>/assignment/admin/phase/unassigned/" + cycleId+"/"+phaseId,
       "sAjaxDataProp":"",
-		"columns": [
-          { "data": "assignedTo.employeeId" },
-          { "data": "assignedTo.fullName" },
-          { "data": "assignedBy.fullName" },
-          { "data": "template.name" },
-          { "data": "assignedAt" },
-          { "data": "status" },
-      ],
-      columnDefs: [
-          { 
-              targets: 5,
-              searchable: true,
-              orderable: true,
-              render: function(data, type, full, meta){
-                 return getPhaseStatusLabel(data);
-              }
-          }
+      "columns": [
+          { "data": "employeeId" },
+          { "data": "firstName" },
+          { "data": "lastName" },
+          { "data": "employmentType" },
+          { "data": "band" },
+          { "data": "designation" },
+          { "data": "location" },
       ],
       dom: 'Bfrtip',
       buttons: [
@@ -314,17 +207,17 @@
       ]
   });
 
-  $('#SearchPhase').click(function() {
-    var cyclesPhaseSelectId=$('#cyclesPhaseSelectId');
-    var phaseSelectId=$('#phaseSelectId');
+  $('#SearchPhaseUnassigned').click(function() {
+    var cyclesPhaseSelectId=$('#cyclesPhaseSelecUnassignedtId');
+    var phaseSelectId=$('#phaseSelectUnassignedId');
     cycleId=$.trim(cyclesPhaseSelectId.val());
     phaseId=$.trim(phaseSelectId.val());
     if (cycleId ==-1) {
       	$(cyclesPhaseSelectId).focus();
     } else {
-	  	var table = $('#SearchPhaseTable').DataTable();
+	  	var table = $('#SearchPhaseTableUnassigned').DataTable();
 	  	if(phaseId>0){
-	  		table.ajax.url("<%=request.getContextPath()%>/assignment/phase/employee-status/" + cycleId+"/"+phaseId).load();
+	  		table.ajax.url("<%=request.getContextPath()%>/assignment/admin/phase/unassigned/" + cycleId+"/"+phaseId).load();
 	  	}else{
 	  		$(phaseSelectId).focus();	  	  	
 	  	}

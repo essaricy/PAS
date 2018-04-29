@@ -16,18 +16,12 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
     <!-- Animation Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
-    <!-- JQuery DataTable Css -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
   </head>
   <style>
-  /* .progress-bar {
-    -webkit-transition: width 2.5s ease;
-    transition: width 2.5s ease;
-  } */
   .progress-bar {
     text-transform: uppercase;
   }
@@ -44,34 +38,12 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>DASHBOARD</h2>
+        <h2>Overview</h2>
       </div>
 
-      <!-- Basic Examples -->
-      <div class="row clearfix">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="card">
-            <div class="header">
-              <h2>Active Sessions</h2>
-            </div>
-            <div class="body">
-              <div class="table-responsive">
-                <table id="ActiveUsersTable" class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                  <thead>
-                    <tr>
-                      <th>User Name</th>
-                      <!-- <th class="hidden-xs hidden-sm hidden-md">Session ID</th> -->
-                      <th>Idle Time (Min)</th>
-                      <th>Idle Time</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+ 	  <div class="row clearfix PhasewiseEmployeeStatusCount_Div">
+	  </div>
+	  
     </div>
   </section>
 
@@ -85,10 +57,6 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
   <!-- Waves Effect Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
-  <!-- Jquery DataTable Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
-  <!-- Moment Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
   <!-- Validation Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
   <!-- Custom Js -->
@@ -109,41 +77,71 @@
   </sec:authorize>
 
   <script type="text/javascript">
-  var SESSION_TIMEOUT_VALUE= 2 * 60;
-
   $(function () {
-    $('#ActiveUsersTable').DataTable({
-      responsive: true,
-      paging: false,
-      searching: true,
-      ordering: true,
-      info: true,
-      "ajax": "<%=request.getContextPath()%>/support/list/active",
-      "sAjaxDataProp":"",
-      "columns": [
-          { "data": "principal" },
-          //{ "data": "sessionId" },
-          {
-            "data": "lastRequest",
-            render: function (data, type, row) {
-              //return moment(data).fromNow();
-              var duration = moment.duration(moment().diff(data));
-              return duration.asMinutes().toFixed(0);
-            }
-          },
-          {
-            "data": "lastRequest",
-            render: function (data, type, row) {
-              //return moment(data).fromNow();
-              var duration = moment.duration(moment().diff(data)).asMinutes().toFixed(0);
-              var percentage=(duration/SESSION_TIMEOUT_VALUE)*100;
-              return '<div class="progress" style="height: 10px;">' + 
-                  '<div class="progress-bar bg-orange" role="progressbar" aria-valuenow="' + percentage + '" aria-valuemin="0" aria-valuemax="100" style="width: ' + percentage + '%">' +
-                  '</div>';
-            }
-          }
-      ],
-    });
+	var isAdmin=${isAdmin};
+	var isManager=${isManager};
+
+    var getPhasewiseStatusCount=function() {
+   	  $.fn.ajaxGet({
+        url: '<%=request.getContextPath()%>/assignment/admin/phase/status/count',
+        onSuccess: function(phasewiseEmployeeStatusCounts) {
+      	  $(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
+      	   var phasewiseEmployeeStatusCountRow = $('<div class="row clearfix PhasewiseEmployeeStatusCount_Row">');
+      		  
+      		console.log('Phase Name -' + phasewiseEmployeeStatusCount.appraisalPhase.name);
+      		console.log('Phase Id -' + phasewiseEmployeeStatusCount.appraisalPhase.id);
+      		console.log('employeeAssignmentCounts -' + phasewiseEmployeeStatusCount.employeeAssignmentCounts);
+      		var maindiv=$('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">');
+      		var card=$('<div class="card">');
+      		var header=$('<div class="header">');
+      		$(header).append('<h2>'+phasewiseEmployeeStatusCount.appraisalPhase.name+'</h2>');
+      		$(card).append(header);
+      		$(maindiv).append(card);
+      		$(phasewiseEmployeeStatusCountRow).append(maindiv);
+      		var phaseId=phasewiseEmployeeStatusCount.appraisalPhase.id;
+      		var employeeAssignmentCounts = phasewiseEmployeeStatusCount.employeeAssignmentCounts;
+      		
+      		var tableDiv= $('<div class="body table-responsive">');
+      		var dataTable = $('<table class="table table-condensed">')
+      		var tableHeader=$('<thead>');
+      		var tablebody=$('<tbody>');
+
+      		var tablerow=$('<tr>');
+      		$(tablerow).append('<th>#</th>');
+      		$(tablerow).append('<th>Status</th>');
+      		$(tablerow).append('<th>Count</th>'); 
+      		
+      		$(tableHeader).append(tablerow);
+      		$(dataTable).append(tableHeader);
+      		$(dataTable).append(tablebody);
+      		$(tableDiv).append(dataTable);
+      		$(card).append(tableDiv);
+      		
+      		$(employeeAssignmentCounts).each(function(index, employeeAssignmentCount) {
+      			console.log('employeeAssignmentCount.employeeAssignmentStatus -' + employeeAssignmentCount.employeeAssignmentStatus.code);
+
+      			var tableBodyRow=$('<tr>');
+				var sequence=index+1;
+				$(tableBodyRow).append('<td>'+sequence+'</td>');
+	      		$(tableBodyRow).append('<td>'+getEmployeeStatusLabel(employeeAssignmentCount.employeeAssignmentStatus.code)+'</td>');
+	      		$(tableBodyRow).append('<td>'+employeeAssignmentCount.count+'</td>');
+	      		$(tablebody).append(tableBodyRow);
+	            
+      		});
+      		$('.PhasewiseEmployeeStatusCount_Div').append(phasewiseEmployeeStatusCountRow);
+      	  });
+        }
+      });
+    }
+
+    if (isAdmin) {
+    	getPhasewiseStatusCount();
+    }
+    
+   	//getCurrentAppraisalStatus();
+    <%-- $.fn.ajaxGet({
+  	  url: '<%=request.getContextPath()%>/dummy/delay/SUCCESS/5'
+    }); --%>
   });
   </script>
 </body>

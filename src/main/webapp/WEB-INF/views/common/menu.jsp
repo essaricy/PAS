@@ -41,24 +41,10 @@
     <div class="user-info">
       <div class="image">
         <img src="${imageUrl}" width="48" height="48" alt="${userName}" />
-        <%-- <c:if test="${empty imageUrl}">
-          <img src="<%=request.getContextPath()%>/images/user.png" width="48" height="48" alt="${userName}" />
-        </c:if>
-        <c:if test="${not empty imageUrl}">
-          <img src="${imageUrl}" width="48" height="48" alt="${userName}" />
-        </c:if> --%>
       </div>
       <div class="info-container">
         <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">${userName}</div>
         <div class="email">${designation}</div>
-        <%-- <div class="btn-group user-helper-dropdown">
-          <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
-          <ul class="dropdown-menu pull-right">
-            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
-            <li role="seperator" class="divider"></li>
-            <li><a href="<%=request.getContextPath()%>/logout"><i class="material-icons">input</i>Sign Out</a></li>
-          </ul>
-        </div> --%>
       </div>
     </div>
     <!-- #User Info -->
@@ -89,15 +75,7 @@
               <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
             </li>
             <li>
-              <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block">Reports</a>
-			  <ul class="ml-menu" style="display: none;">
-                <li>
-                  <a href="<%=request.getContextPath()%>/manager/report/score/phase" class=" waves-effect waves-block">Phasewise Score Report</a>
-                </li>
-                <li>
-                  <a href="<%=request.getContextPath()%>/manager/report/score/cycle" class=" waves-effect waves-block">Cyclewise Score Report</a>
-                </li>
-              </ul>
+              <a href="<%=request.getContextPath()%>/manager/reports">Reports</a>
             </li>
           </ul>
         </li>
@@ -135,7 +113,7 @@
               <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/appraisal/status">Appraisal Status Report</a>
+              <a href="<%=request.getContextPath()%>/admin/reports">Reports</a>
             </li>
           </ul>
         </li>
@@ -211,7 +189,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>2.1</span></li>
+			<li><span>2.4</span></li>
 		  </ul>
 		</div>
       </div>

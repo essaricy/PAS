@@ -201,3 +201,38 @@ function showErrorCard(errorMessage) {
   $('#NoCycleAvailable').siblings().hide();
   $('#NoCycleAvailable').show();
 }
+
+var EmployeeAssignmentStatus = {
+	NOT_ASSIGNGED : {
+		code : -1,
+		name : "Not Assigned",
+		colorClass : "bg-blue-grey",
+		icon : "assignment",
+		progressCode : 1,
+		description : "Template has not been assigned"
+	},
+	NOT_INITIATED : PhaseAssignmentStatus.NOT_INITIATED,
+	SELF_APPRAISAL_PENDING : PhaseAssignmentStatus.SELF_APPRAISAL_PENDING,
+	SELF_APPRAISAL_SAVED : PhaseAssignmentStatus.SELF_APPRAISAL_SAVED,
+	MANAGER_REVIEW_PENDING : PhaseAssignmentStatus.MANAGER_REVIEW_PENDING,
+	MANAGER_REVIEW_SAVED : PhaseAssignmentStatus.MANAGER_REVIEW_SAVED,
+	MANAGER_REVIEW_SUBMITTED : PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED,
+	EMPLOYEE_AGREED : PhaseAssignmentStatus.EMPLOYEE_AGREED,
+	EMPLOYEE_ESCALATED : PhaseAssignmentStatus.EMPLOYEE_ESCALATED,
+	CONCLUDED : PhaseAssignmentStatus.CONCLUDED,
+};
+
+function getEmployeeAssignmentStatus(code) {
+	for ( var key in EmployeeAssignmentStatus) {
+		var data = EmployeeAssignmentStatus[key];
+		if (code == data.code) {
+			return data;
+		}
+	}
+	return null;
+}
+
+function getEmployeeStatusLabel(code) {
+	  var status = getEmployeeAssignmentStatus(code);
+	  return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
+}

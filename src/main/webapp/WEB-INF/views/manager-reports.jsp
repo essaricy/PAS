@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.css"/>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.css"/>
     <!-- Custom Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
@@ -26,6 +27,9 @@
   <style>
   .list-group-item {
   	font-size: 13px;
+  }
+  .selected {
+  	background-color: #607D8B;
   }
   </style>
 </head>
@@ -42,38 +46,36 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Goal Templates
-          <small>Create or update the assessment templates that fits to your project or employee groups</small>
+        <h2>Manager Reports
+          <!-- <small>View status of the current employees those are assigned to you, change manager, enable forms, view assessment or conclude</small> -->
         </h2>
       </div>
-      <div class="row clearfix">
-        <!-- Linked Items -->
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <div class="card templates_card">
-            <div class="header">
-              <h2>Templates</h2>
-              <ul class="header-dropdown m-r--5">
-                <li class="dropdown">
-                </li>
-              </ul>
-            </div>
+	  <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="card">
             <div class="body">
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-          <div class="card template_header_card">
-            <div class="header">
-              <h2>Goals</h2>
-            </div>
-            <div class="body">
-            </div>
-          </div>
-          <div class="card template_detail_card">
-            <div class="header">
-              <h2>Goal Parameters</h2>
-            </div>
-            <div class="body">
+              <div class="media">
+                <div class="media-left">
+                  <a href="<%=request.getContextPath()%>/manager/report/score/cycle"><i class="material-icons md-48">photo</i></a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <a href="<%=request.getContextPath()%>/manager/report/score/cycle">Cycle-wise Score Report</a>
+                  </h4>
+                  This report contains all the employees scores for all cycles. This report shows only those employees who have been submitted to you as a second level manager.
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-left">
+                  <a href="<%=request.getContextPath()%>/manager/report/score/phase"><i class="material-icons md-48">photo_library</i></a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <a href="<%=request.getContextPath()%>/manager/report/score/phase">Phase-wise Score Report</a>
+                  </h4>
+                  This report contains all the employees scores for all phases in a cycle. This report shows only those employees who have been submitted to you as a first level manager.
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -81,6 +83,8 @@
     </div>
   </section>
 </body>
+
+<!-- Jquery Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap Core Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
@@ -100,82 +104,23 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.js"></script>
+
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/tooltips-popovers.js"></script>
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
+
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-report-score-cycle.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
-$('.templates_card').cardManager({
-  type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/template/list',
-  manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
-  deleteUrl: '<%=request.getContextPath()%>/template/delete',
-  menuActions: ["Add", "Update", "Delete", "Copy"],
-  onClickCallback: renderTemplateInformation,
-
-  CopyIcon: 'content_copy',
-  onCopyCallback: copyTemplate
+$(function () {
 });
-
-var headerCard=$('.template_header_card');
-var detailCard=$('.template_detail_card');
-$(headerCard).hide();
-$(detailCard).hide();
-
-function renderTemplateInformation(template) {
-  $(detailCard).hide();
-  $(headerCard).show();
-  $(headerCard).find('.header h2').empty();
-  $(headerCard).find('.body').empty();
-
-  $(headerCard).find('.header h2').append(template.name);
-  //var employeeName=template.updatedBy.fullName;
-  //$(headerCard).find('.header h2').append('<small>Updated By <code>' + employeeName + '</code> on ' + template.updatedAt +'</small>');
-
-  var table=$('<table class="table table-striped">');
-  $(table).append('<thead><tr><th>Goal</th><th>Weightage</th></tr></thead>');
-  var tbody=$('<tbody>');
-  $(table).append(tbody);
-  $(headerCard).find('.body').append(table);
-
-  $(template.headers).each(function (index, header) {
-	if (header.weightage != 0) {
-	  var row=$('<tr>');
-	  var goalNameTd=$('<td>');
-	  var goalNameLink=$('<a href="#">');
-	  $(goalNameLink).append(header.goalName);
-	  $(goalNameTd).append(goalNameLink);
-	  $(row).append(goalNameTd);
-	  $(row).append('<td><b>' + header.weightage + '%</b></td>');
-      $(tbody).append(row);
-      $(goalNameLink).click(function() {
-    	  $(detailCard).show();
-    	  $(detailCard).find('.header h2').empty();
-    	  $(detailCard).find('.body').empty();
-
-    	  $(detailCard).find('.header h2').append(header.goalName);
-    	  var detailTable=$('<table class="table table-striped">');
-    	  var detailTbody=$('<tbody>');
-    	  $(detailTable).append(detailTbody);
-    	  $(detailCard).find('.body').append(detailTable);
-    	  $(header.details).each(function (index, detail) {
-    		  if (detail.apply=='Y') {
-    		    $(detailTbody).append('<tr><td>' + detail.paramName + '</td><td><div class="switch pull-right"><label><input type="checkbox" disabled checked><span class="lever switch-col-green"></span></label></div></td></tr>');
-    		  } else {
-    		    $(detailTbody).append('<tr><td>' + detail.paramName + '</td><td><div class="switch pull-right"><label><input type="checkbox" disabled><span class="lever switch-col-green"></span></label></div></td></tr>');
-    		  }
-    	  });
-      });
-	}
-  });
-}
-
-function copyTemplate(itemId, data) {
-  location.href='<%=request.getContextPath()%>/admin/template/manage?id=0&refId=' + itemId
-}
 
 </script>
 </html>

@@ -234,23 +234,24 @@ public class PhaseAssessmentService {
 		log.info("conclude: END assignId={}, requestedEmployeeId={}", assignmentId, requestedEmployeeId);
 	}
 
-	private PhaseAssignment update(AssessHeaderDto phaseAssessHeaderDto,
+	private PhaseAssignment update(AssessHeaderDto assessHeaderDto,
 			PhaseAssignmentStatus statusToUpdate, String message, PhaseAssignmentStatus... previousStatusesToCheck)
 			throws ServiceException {
-		long assignmentId = phaseAssessHeaderDto.getAssignId();
-		log.info("update: START assignId={}, message={},statusToUpdate{}", assignmentId, message, statusToUpdate);
+		long assignmentId = assessHeaderDto.getAssignId();
+        log.info("update: START assignId={}, message={}, statusToUpdate={}, assessHeaderDto={}", assignmentId, message,
+                statusToUpdate, assessHeaderDto);
 		PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
 		AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), message, previousStatusesToCheck);
-		phaseAssessHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
-		ValidationUtil.validate(phaseAssessHeaderDto);
+		assessHeaderDto.setAssessedBy(employeePhaseAssignment.getAssignedBy());
+		ValidationUtil.validate(assessHeaderDto);
 		// Change assignment status to statusToUpdate
 		employeePhaseAssignment.setStatus(statusToUpdate.getCode());
 		PhaseAssignment saved = phaseAssignmentDataRepository.save(employeePhaseAssignment);
 		// Update the assessment header status
-		phaseAssessHeaderDto.setStatus(saved.getStatus());
-		AssessHeader phaseAssessHeader = assessMapper.getHeader(phaseAssessHeaderDto);
+		assessHeaderDto.setStatus(saved.getStatus());
+		AssessHeader phaseAssessHeader = assessMapper.getHeader(assessHeaderDto);
 		phaseAssessmentHeaderDataRepository.save(phaseAssessHeader);
-		log.info("update: END assignId={}, message={},statusToUpdate={}", assignmentId, message, statusToUpdate);
+		log.info("update: END assignId={}, message={}, statusToUpdate={}", assignmentId, message, statusToUpdate);
 		return employeePhaseAssignment;
 	}
 

@@ -69,18 +69,21 @@ public class RoleService {
 	}
 	
 	public Map<Integer, Integer> changeManagerRole(EmployeeRole[] employeeList, int roleId) {
+	    log.info("changeManagerRole START");
 		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 		int returnCode;
 		for (EmployeeRole employeeRole : employeeList) {
+		    log.info("changeManagerRole for " + employeeRole);
 			if (Boolean.parseBoolean(employeeRole.getManagerFlag())) {
 				List<Role> roles = roleDataRepository.findByEmployeeId(employeeRole.getId());
-				boolean availableflag = roles.stream().anyMatch(o -> o.getId() == roleId);
-				returnCode = (availableflag) ? roleRepository.assign(employeeRole.getId(), roleId) : 0;
+				boolean roleExists = roles.stream().anyMatch(o -> o.getId() == roleId);
+				returnCode = (!roleExists) ? roleRepository.assign(employeeRole.getId(), roleId) : 0;
 			} else {
 				returnCode = roleRepository.remove(employeeRole.getId(), roleId);
 			}
 			map.put(employeeRole.getId(), returnCode);
 		}
+		log.info("changeManagerRole END");
 		return map;
 	}
 

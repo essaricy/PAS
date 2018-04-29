@@ -23,7 +23,7 @@ public class SVAuthenticationProvider implements AuthenticationProvider {
 		String principal = authentication.getPrincipal().toString();
 		String credentials = authentication.getCredentials().toString();
 		log.info("Authenticating user {}", principal);
-		User user = svAuthenticationService.authenticate(principal, credentials);
+		User user = svAuthenticationService.authenticate(principal.toLowerCase(), credentials);
 		return new UserToken(user);
 	}
 
