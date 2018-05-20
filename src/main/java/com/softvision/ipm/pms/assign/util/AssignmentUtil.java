@@ -14,9 +14,9 @@ public class AssignmentUtil {
 	private static final String ERROR_MESSAGE = "Cannot change the status from {0} to {1}";
 
 	public static PhaseAssignmentStatus validateStatus(int status, String desiredState,
-			PhaseAssignmentStatus... statusesToCheck) throws ServiceException {
+			PhaseAssignmentStatus... statusesToAllow) throws ServiceException {
 		PhaseAssignmentStatus currentStatus = PhaseAssignmentStatus.get(status);
-		boolean found = Arrays.stream(statusesToCheck).anyMatch(o -> o==currentStatus);
+		boolean found = Arrays.stream(statusesToAllow).anyMatch(o -> o==currentStatus);
 		if (!found) {
 			String message = MessageFormat.format(ERROR_MESSAGE, currentStatus, desiredState);
 			log.error(message);

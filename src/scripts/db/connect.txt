@@ -1,7 +1,0 @@
-Database: SV_PMS
-Port: 5432
-User Name: SV_PMS_APP
-Password: G5P5Pem2436J9Nm3
-
-
---- psql.exe --dbname=sv_pms --host=localhost --port=5432 --username=sv_pms_app

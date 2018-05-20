@@ -190,12 +190,20 @@
 		"columns": [
           { "data": "assignedTo.employeeId" },
           { "data": "assignedTo.fullName" },
-          { "data": "assignedBy.fullName" },
+          { "data": "assignedBy" },
           { "data": "template.name" },
           { "data": "assignedAt" },
           { "data": "status" },
       ],
       columnDefs: [
+    	  { 
+              targets: 2,
+              searchable: true,
+              orderable: true,
+              render: function(data, type, full, meta){
+                 return data.employeeId + '-'+data.fullName;
+              }
+          },
           { 
               targets: 5,
               searchable: true,

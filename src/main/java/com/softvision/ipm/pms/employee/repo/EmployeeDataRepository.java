@@ -21,7 +21,7 @@ public interface EmployeeDataRepository extends CrudRepository<Employee, Integer
 
 	Employee findByEmployeeId(@Param("employeeId") Integer employeeId);
 
-	Employee findByLoginId(@Param("loginId") String loginId);
+	Employee findByLoginIdIgnoreCase(@Param("loginId") String loginId);
 
 	@Query("SELECT DISTINCT employmentType FROM Employee ORDER BY employmentType")
 	List<String> findEmployeeTypes();

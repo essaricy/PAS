@@ -46,7 +46,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Manager Reports
+        <h2>Admin Reports
           <!-- <small>View status of the current employees those are assigned to you, change manager, enable forms, view assessment or conclude</small> -->
         </h2>
       </div>

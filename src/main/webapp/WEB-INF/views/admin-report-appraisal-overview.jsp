@@ -40,10 +40,8 @@
       <div class="block-header">
         <h2>Overview</h2>
       </div>
-
  	  <div class="row clearfix PhasewiseEmployeeStatusCount_Div">
 	  </div>
-	  
     </div>
   </section>
 
@@ -91,6 +89,7 @@
       		console.log('Phase Name -' + phasewiseEmployeeStatusCount.appraisalPhase.name);
       		console.log('Phase Id -' + phasewiseEmployeeStatusCount.appraisalPhase.id);
       		console.log('employeeAssignmentCounts -' + phasewiseEmployeeStatusCount.employeeAssignmentCounts);
+
       		var maindiv=$('<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">');
       		var card=$('<div class="card">');
       		var header=$('<div class="header">');
@@ -118,12 +117,11 @@
       		$(card).append(tableDiv);
       		
       		$(employeeAssignmentCounts).each(function(index, employeeAssignmentCount) {
-      			console.log('employeeAssignmentCount.employeeAssignmentStatus -' + employeeAssignmentCount.employeeAssignmentStatus.code);
-
+      			console.log('employeeAssignmentCount.phaseAssignmentReportStatus -' + employeeAssignmentCount.phaseAssignmentReportStatus.code);
       			var tableBodyRow=$('<tr>');
 				var sequence=index+1;
 				$(tableBodyRow).append('<td>'+sequence+'</td>');
-	      		$(tableBodyRow).append('<td>'+getEmployeeStatusLabel(employeeAssignmentCount.employeeAssignmentStatus.code)+'</td>');
+	      		$(tableBodyRow).append('<td>'+getPhaseAssignmentReportStatusLabel(employeeAssignmentCount.phaseAssignmentReportStatus.code)+'</td>');
 	      		$(tableBodyRow).append('<td>'+employeeAssignmentCount.count+'</td>');
 	      		$(tablebody).append(tableBodyRow);
 	            
@@ -137,11 +135,6 @@
     if (isAdmin) {
     	getPhasewiseStatusCount();
     }
-    
-   	//getCurrentAppraisalStatus();
-    <%-- $.fn.ajaxGet({
-  	  url: '<%=request.getContextPath()%>/dummy/delay/SUCCESS/5'
-    }); --%>
   });
   </script>
 </body>

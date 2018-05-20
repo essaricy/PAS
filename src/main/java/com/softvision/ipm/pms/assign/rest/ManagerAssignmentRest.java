@@ -50,7 +50,7 @@ public class ManagerAssignmentRest {
 			@PathVariable(required=true) @Min(1) int toEmployeeId) {
 		Result result = new Result();
 		try {
-			managerAssignmentService.assignToAnotherManager(phaseAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
+			managerAssignmentService.changeManager(phaseAssignId, RestUtil.getLoggedInEmployeeId(), toEmployeeId);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -103,6 +103,21 @@ public class ManagerAssignmentRest {
             result.setMessage(exception.getMessage());
         }
         return result;
+    }
+
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
+	@RequestMapping(value="change/phase-status/revert/{phaseAssignId}", method=RequestMethod.PUT)
+	public Result revertToSelfSubmission(@PathVariable(required=true) @Min(1) long phaseAssignId) {
+		Result result = new Result();
+		try {
+			phaseAssessmentService.revertToSelfSubmission(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			result.setCode(Result.SUCCESS);
+		} catch (Exception exception) {
+			result.setCode(Result.FAILURE);
+			result.setMessage(exception.getMessage());
+			
+		}
+		return result;
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)

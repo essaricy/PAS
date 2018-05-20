@@ -150,7 +150,8 @@ $(function () {
       var td=$('<td>');
 
       if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
-          || status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
+          || status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code
+          || status == PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED.code) {
         $(td).append(getFillFormButton(id));
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
           || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code

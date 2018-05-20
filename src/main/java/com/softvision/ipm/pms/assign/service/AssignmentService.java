@@ -16,8 +16,6 @@ import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
-import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
-import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.common.exception.ServiceException;
@@ -125,7 +123,7 @@ public class AssignmentService {
 		            throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE, employeeName,
                             (employmentType == null) ? "UNKNOWN" : employmentType.getName()));
 		        }
-		        if (employmentType == EmploymentType.PROJECT_EMPLOYEE && employeeOrg != EmployeeOrg.IT) {
+		        if (employmentType == EmploymentType.PROJECT_EMPLOYEE && (employeeOrg != EmployeeOrg.IT && employeeOrg != EmployeeOrg.BPO)) {
 		            throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE_ORG, employeeName,
                             (employmentType == null) ? "UNKNOWN" : employmentType.getName(), employeeOrg));
 		        }

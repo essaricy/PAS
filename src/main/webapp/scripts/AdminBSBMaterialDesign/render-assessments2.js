@@ -382,7 +382,7 @@ $(function () {
 	  $(commentsTd).append('<br/>');
 
       if (enable) {
-        var comments=$('<textarea class="' + cClass + '" rows="5" maxlength="2000" style="width:100%;">' + (value==null?"":value) + '</textarea>');
+        var comments=$('<textarea class="' + cClass + '" rows="5" style="width:100%;">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
           // Update modal
           assessDetail.comments=this.value;

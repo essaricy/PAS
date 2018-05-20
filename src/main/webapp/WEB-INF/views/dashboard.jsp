@@ -29,6 +29,9 @@
   .progress-bar {
     text-transform: uppercase;
   }
+  .info-box {
+    cursor: pointer;
+  }
   </style>
 </head>
 
@@ -140,6 +143,9 @@
             var contentDiv=$('<div class="content">');
             var textDiv=$('<div class="text">' + phaseStatus.name + '</div>');
             var countDiv=$('<div class="number">' + count + '</div>');
+            $(infoBoxDiv).click(function () {
+              location.href='<%=request.getContextPath()%>/manager/assignment/list';
+            });
 
             $(phasewiseEmployeeStatusCountRow).append(colDiv);
             $(colDiv).append(infoBoxDiv);
@@ -170,7 +176,7 @@
             var percentage=100;
             var progressClass="bg-grey";
             var progressAnimationClass="";
-            var progressText="Not assigned";
+            var progressText="Not assigned yet";
             if (phaseStatus != null && phaseStatus != PhaseAssignmentStatus.NOT_INITIATED) {
               percentage=(phaseStatus.code/PhaseAssignmentStatus.CONCLUDED.code)*100;
               progressClass=phaseStatus.colorClass;
@@ -181,18 +187,18 @@
               }
             }
             var progressTd=$('<td>');
-            var progressDiv=$('<div class="progress" title="' + progressText + '">');
+            var progressDiv=$('<div class="progress">');
             var progressBarDiv=$('<div class="progress-bar ' + progressClass + " " + progressAnimationClass + '" role="progressbar" '
             		+ 'aria-valuenow="' + percentage + '" aria-valuemin="0" '
             		+ 'aria-valuemax="100">');
             $(progressDiv).tooltip({container: 'body'});
-            $(progressBarDiv).append(progressText);
             $(progressBarDiv).animate({width: percentage + "%"}, 1000);
 
             $(row).append(phaseNameTd);
             $(tbody).append(row);
             $(progressDiv).append(progressBarDiv);
             $(progressTd).append(progressDiv);
+            $(progressTd).append('<small>' + progressText + '</small>');
             $(row).append(progressTd);            
         	});
           }

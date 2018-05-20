@@ -18,6 +18,8 @@ public enum PhaseAssignmentStatus {
 
 	SELF_APPRAISAL_SAVED(100, "Self-Appraisal in Progess", "Self-Appraisal is saved but not submitted"),
 
+	SELF_APPRAISAL_REVERTED(125, "Self-Appraisal is reverted", "Self-Appraisal is completed but reverted by the manager"),
+
 	MANAGER_REVIEW_PENDING(150, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
 	MANAGER_REVIEW_SAVED(200, "Review in Progress", "Manager review is saved but not concluded"),

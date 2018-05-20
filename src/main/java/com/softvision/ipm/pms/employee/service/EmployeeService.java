@@ -40,7 +40,7 @@ public class EmployeeService {
 	}
 
 	public EmployeeDto getEmployee(String loginId) {
-		return employeeMapper.getEmployeeDto(employeeRepository.findByLoginId(loginId));
+		return employeeMapper.getEmployeeDto(employeeRepository.findByLoginIdIgnoreCase(loginId));
 	}
 
 	public List<EmployeeDto> search(String searchString) {

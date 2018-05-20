@@ -59,7 +59,7 @@ public class SVAuthenticationService {
 		    if (!turnOffLdapAUth) {
 		        svLdapRepository.authenticate(userid, password);
 		    }
-			Employee employee = employeeRepository.findByLoginId(userid);
+			Employee employee = employeeRepository.findByLoginIdIgnoreCase(userid);
 			// Employee Details does not exist in the system. add them
 			if (employee == null) {
 				// Employee does not exist in the system. Look up SV project.
@@ -67,7 +67,12 @@ public class SVAuthenticationService {
 				if (svEmployee == null) {
 					throw new DisabledException("Invalid credentials");
 				}
-				employeeRepository.save(employeeMapper.getEmployee(svEmployee));
+				employee = employeeMapper.getEmployee(svEmployee);
+				employee.setLoginId(employee.getLoginId().toLowerCase());
+				employee.setFirstName(employee.getFirstName().trim());
+				employee.setLastName(employee.getLastName().trim());
+				employee.setActive("Y");
+				employeeRepository.save(employee);
 			}
 			List<Role> roles = roleDataRepository.findByEmployeeId(employee.getEmployeeId());
 			if (roles == null) {

@@ -60,7 +60,7 @@ public class ManagerAssignmentService {
     @Autowired private PhaseAssessmentService phaseAssessmentService;
 
     @PreSecureAssignment(permitManager = true)
-    public void assignToAnotherManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
+    public void changeManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
             throws ServiceException {
         log.info("assignToAnotherManager: START assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId,
                 toEmployeeId);
@@ -69,7 +69,9 @@ public class ManagerAssignmentService {
         }
         PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findById(assignmentId);
         AssignmentUtil.validateStatus(employeePhaseAssignment.getStatus(), "change manager",
-                PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
+                PhaseAssignmentStatus.NOT_INITIATED, PhaseAssignmentStatus.SELF_APPRAISAL_PENDING,
+                PhaseAssignmentStatus.SELF_APPRAISAL_SAVED, PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
+
         if (!roleService.isManager(toEmployeeId)) {
             log.error("assignToAnotherManager: assignmentId={}, from={}, to={}, ERROR=", assignmentId,
                     fromEmployeeId, toEmployeeId, ASSIGN_TO_IS_NOT_A_MANAGER);
@@ -79,7 +81,7 @@ public class ManagerAssignmentService {
         phaseAssignmentDataRepository.save(employeePhaseAssignment);
 
         // email trigger
-        emailRepository.sendChangeManager(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
+        emailRepository.sendChangeManagerEmail(employeePhaseAssignment.getPhaseId(), employeePhaseAssignment.getEmployeeId(),
                 fromEmployeeId, toEmployeeId);
         log.info("assignToAnotherManager: END assignmentId={}, from={}, to={}", assignmentId, fromEmployeeId, toEmployeeId);
     }

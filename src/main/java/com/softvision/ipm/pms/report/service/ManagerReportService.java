@@ -19,11 +19,21 @@ public class ManagerReportService {
 		List<PhasewiseEmployeeStatusCountDto> finalCounts = new ArrayList<PhasewiseEmployeeStatusCountDto>();
 		List<PhasewiseEmployeeStatusCountDto> phasewiseEmployeeStatusCounts = managerReportRepository.getPhasewiseEmployeeStatusCounts(requestedEmplyeeId);
 
+		PhasewiseEmployeeStatusCountDto notInitiatedCounts = new PhasewiseEmployeeStatusCountDto();
+		notInitiatedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.NOT_INITIATED);
+		notInitiatedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.NOT_INITIATED));
+		finalCounts.add(notInitiatedCounts);
+
 		PhasewiseEmployeeStatusCountDto employeeSubmissionPendingCounts = new PhasewiseEmployeeStatusCountDto();
 		employeeSubmissionPendingCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.SELF_APPRAISAL_PENDING);
 		employeeSubmissionPendingCounts.setCount(get(phasewiseEmployeeStatusCounts,
 				PhaseAssignmentStatus.SELF_APPRAISAL_PENDING, PhaseAssignmentStatus.SELF_APPRAISAL_SAVED));
 		finalCounts.add(employeeSubmissionPendingCounts);
+
+		PhasewiseEmployeeStatusCountDto revertedCounts = new PhasewiseEmployeeStatusCountDto();
+		revertedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED);
+		revertedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED));
+		finalCounts.add(revertedCounts);
 
 		PhasewiseEmployeeStatusCountDto managerReviewPendingCounts = new PhasewiseEmployeeStatusCountDto();
 		managerReviewPendingCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.MANAGER_REVIEW_PENDING);
@@ -31,15 +41,30 @@ public class ManagerReportService {
 				PhaseAssignmentStatus.MANAGER_REVIEW_PENDING, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED));
 		finalCounts.add(managerReviewPendingCounts);
 
+		/*PhasewiseEmployeeStatusCountDto managerReviewSavedCounts = new PhasewiseEmployeeStatusCountDto();
+		managerReviewSavedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SAVED);
+		managerReviewSavedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.MANAGER_REVIEW_SAVED));
+		finalCounts.add(managerReviewSavedCounts);*/
+
 		PhasewiseEmployeeStatusCountDto employeeAckPendingCounts = new PhasewiseEmployeeStatusCountDto();
 		employeeAckPendingCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED);
 		employeeAckPendingCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED));
 		finalCounts.add(employeeAckPendingCounts);
 
+		PhasewiseEmployeeStatusCountDto agreedCounts = new PhasewiseEmployeeStatusCountDto();
+		agreedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.EMPLOYEE_AGREED);
+		agreedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.EMPLOYEE_AGREED));
+		finalCounts.add(agreedCounts);
+
 		PhasewiseEmployeeStatusCountDto escalatedCounts = new PhasewiseEmployeeStatusCountDto();
 		escalatedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.EMPLOYEE_ESCALATED);
 		escalatedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.EMPLOYEE_ESCALATED));
 		finalCounts.add(escalatedCounts);
+
+		PhasewiseEmployeeStatusCountDto concludedCounts = new PhasewiseEmployeeStatusCountDto();
+		concludedCounts.setPhaseAssignmentStatus(PhaseAssignmentStatus.CONCLUDED);
+		concludedCounts.setCount(get(phasewiseEmployeeStatusCounts, PhaseAssignmentStatus.CONCLUDED));
+		finalCounts.add(concludedCounts);
 		return finalCounts;
 	}
 

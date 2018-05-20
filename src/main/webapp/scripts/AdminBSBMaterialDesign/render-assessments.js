@@ -322,7 +322,7 @@ $(function () {
 
       var commentsTd=$('<td style="min-width: 100px; max-width: 350px;">');
       if (enable) {
-        var comments=$('<textarea class="' + cClass + '" rows="6" cols="30" maxlength="2000">' + (value==null?"":value) + '</textarea>');
+        var comments=$('<textarea class="' + cClass + '" rows="6" cols="30">' + (value==null?"":value) + '</textarea>');
         $(comments).bind('input propertychange', function() {
           // Update modal
           data[property]=this.value;

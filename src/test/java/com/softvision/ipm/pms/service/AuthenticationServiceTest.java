@@ -62,7 +62,7 @@ public class AuthenticationServiceTest {
 		Employee employee = mockEmployeeObject();
 
 		Mockito.doNothing().when(svLdapRepository).authenticate(anyString(), anyString());
-		Mockito.when(employeeRepository.findByLoginId(anyString())).thenReturn(employee);
+		Mockito.when(employeeRepository.findByLoginIdIgnoreCase(anyString())).thenReturn(employee);
 		Mockito.when(employeeRepository.save((Employee)anyObject())).thenReturn(employee);
 		Mockito.when(roleDataRepository.findByEmployeeId(anyObject())).thenReturn(mockAdminRoles());
 		

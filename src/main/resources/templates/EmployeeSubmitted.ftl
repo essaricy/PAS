@@ -5,7 +5,7 @@
     <meta name="format-detection" content="telephone=no"/>
 
     <!-- MESSAGE SUBJECT -->
-    <title>Email Address Verification</title>
+    <title>PMS</title>
   </head>
   <!-- BODY -->
   <!-- Set message background color (twice) and text color (twice) -->
@@ -52,7 +52,7 @@
           <b>Dear ${managerName},</b>
           
           <P> <b>${empName}</b> has submitted his/her self-appraisal form for ${phase}.</P>
-          <p>Kindly schedule a one on one session with YYY for review of his/her  self-appraisal.</p>
+          <p>Kindly schedule a one on one session with ${empName} for review of his/her self-appraisal.</p>
         </td>
       </tr>
       

@@ -89,6 +89,7 @@
 <!-- Validation Plugin Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-rateyo/jquery.rateyo.min.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/ckeditor/ckeditor.js"></script>
 
 <!-- Custom Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
@@ -101,7 +102,7 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
-<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments2.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments3.js"></script>
 <script>
 $(function () {
   var assignmentId='${param.aid}';

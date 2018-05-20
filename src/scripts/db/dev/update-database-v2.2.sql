@@ -1,1 +1,0 @@
-ALTER TABLE cycle_assign DROP COLUMN template_id;

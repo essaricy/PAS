@@ -153,16 +153,24 @@ $(function () {
       var td=$('<td>');
 
       if (status == PhaseAssignmentStatus.NOT_INITIATED.code) {
-        $(td).append(getAssignToManagerButton(id));
+        $(td).append(getChangeManagerButton(id));
         $(td).append('&nbsp;');
         $(td).append(getEnableFormButton(id));
         $(td).append('&nbsp;');
         $(td).append(getDeleteAssignmentButton(id));
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING.code
-          || status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code) {
+          || status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED.code
+          || status == PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED.code) {
+    	$(td).append(getChangeManagerButton(id));
+        $(td).append('&nbsp;');
         $(td).append(getSendReminderButton(id));
-      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code
-          || status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING.code) {
+   	    $(td).append(getRevertToSelfSubmissionButton(id));
+    	$(td).append('&nbsp;');
+    	$(td).append(getChangeManagerButton(id));
+        $(td).append('&nbsp;');
+        $(td).append(getPerformReviewButton(id));
+      } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED.code) {
         $(td).append(getPerformReviewButton(id));
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED.code) {
         $(td).append(getViewFormButton(id));
@@ -234,7 +242,7 @@ $(function () {
       return submitToNextLevelManagerButton;
     }
 
-    function getAssignToManagerButton(id) {
+    function getChangeManagerButton(id) {
       var assignToManagerButton=$('<button class="btn btn-xs btn-info waves-effect" '
         + 'title="Assign to Another Manager" data-toggle="modal" data-target="#EmployeeSearchModal" '
         + 'item-id="' + id + '" item-type="AssignToAnotherManager"><i class="material-icons">trending_flat</i></button>');
@@ -267,6 +275,15 @@ $(function () {
         sendReminderToSubmit(id);
       });
       return reminderButton;
+    }
+
+    function getRevertToSelfSubmissionButton(id) {
+        var button=$('<button class="btn btn-xs btn-info waves-effect" title="Revert"><i class="material-icons">undo</i></button>');
+        $(button).tooltip({container: 'body'});
+        $(button).click(function() {
+          revertToSelfSubmission(id);
+        });
+        return button;
     }
 
     function getPerformReviewButton(id) {
@@ -319,6 +336,17 @@ $(function () {
       }, function () {
         $.fn.ajaxPut({
           url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
+        });
+      });
+    }
+
+    function revertToSelfSubmission(id) {
+      swal({title: "Are you sure?", text: "This allows the employee to modify his/her appraisal form which includes ratings and comments. Do you want to revert this appraisal form?", type: "warning",
+        showCancelButton: true, confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Yes, Revert!", closeOnConfirm: false, showLoaderOnConfirm: true
+      }, function () {
+        $.fn.ajaxPut({
+          url: settings.contextPath + '/assignment/manager/change/phase-status/revert/' + id
         });
       });
     }

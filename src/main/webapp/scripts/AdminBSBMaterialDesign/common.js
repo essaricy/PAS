@@ -30,7 +30,7 @@ var PhaseAssignmentStatus = {
     code : 0,
     name : "Not Initiated",
     colorClass : "bg-grey",
-    icon : "assignment",
+    icon : "content_paste",
     progressCode : 1,
     description : "Appraisal form has not been initiated"
   },
@@ -40,7 +40,7 @@ var PhaseAssignmentStatus = {
     colorClass : "bg-amber",
     icon : "assignment_late",
     progressCode : 2,
-    description : "Initiated and self-appraisal is pending"
+    description : "Initiated and self appraisal is pending"
   },
   SELF_APPRAISAL_SAVED : {
     code : 100,
@@ -48,28 +48,36 @@ var PhaseAssignmentStatus = {
     colorClass : "bg-lime",
     icon : "assignment_late",
     progressCode : 2,
-    description : "self-Appraisal is in progress"
+    description : "Self appraisal is in progress"
+  },
+  SELF_APPRAISAL_REVERTED : {
+    code : 125,
+    name : "Self-Appraisal Reverted",
+    colorClass : "bg-orange",
+    icon : "assignment_return",
+    progressCode : 2,
+    description : "Self appraisal was submitted but it has been reverted by the manager"
   },
   MANAGER_REVIEW_PENDING : {
     code : 150,
     name : "Review Pending",
-    colorClass : "bg-orange",
-    icon : "assignment_late",
+    colorClass : "bg-pink",
+    icon : "rate_review",
     progressCode : 3,
-    description : "Self-Appraisal is submitted and manager review is pending"
+    description : "Self appraisal is submitted and awaiting manager review"
   },
   MANAGER_REVIEW_SAVED : {
     code : 200,
     name : "Review in Progress",
     colorClass : "bg-light-green",
-    icon : "assignment_late",
+    icon : "rate_review",
     progressCode : 3,
     description : "Manager review is in progress"
   },
   MANAGER_REVIEW_SUBMITTED : {
     code : 250,
     name : "Reviewed",
-    colorClass : "bg-purple",
+    colorClass : "bg-indigo",
     icon : "assignment_ind",
     progressCode : 4,
     description : "Manager review is completed"
@@ -80,7 +88,7 @@ var PhaseAssignmentStatus = {
     colorClass : "bg-green",
     icon : "mood",
     progressCode : 5,
-    description : "Employee Agreed to the review"
+    description : "Employee agreed to the manager's review"
   },
   EMPLOYEE_ESCALATED : {
     code : 350,
@@ -88,12 +96,12 @@ var PhaseAssignmentStatus = {
     colorClass : "bg-red",
     icon : "mood_bad",
     progressCode : 5,
-    description : "Employee disagreed with the review and escalated"
+    description : "Employee disagreed to the manager's review and escalated"
   },
   CONCLUDED : {
     code : 500,
     name : "Concluded",
-    colorClass : "bg-indigo",
+    colorClass : "bg-purple",
     icon : "assignment_turned_in",
     progressCode : 6,
     description : "Assessment is concluded"
@@ -202,7 +210,7 @@ function showErrorCard(errorMessage) {
   $('#NoCycleAvailable').show();
 }
 
-var EmployeeAssignmentStatus = {
+var PhaseAssignmentReportStatus = {
 	NOT_ASSIGNGED : {
 		code : -1,
 		name : "Not Assigned",
@@ -214,6 +222,7 @@ var EmployeeAssignmentStatus = {
 	NOT_INITIATED : PhaseAssignmentStatus.NOT_INITIATED,
 	SELF_APPRAISAL_PENDING : PhaseAssignmentStatus.SELF_APPRAISAL_PENDING,
 	SELF_APPRAISAL_SAVED : PhaseAssignmentStatus.SELF_APPRAISAL_SAVED,
+	SELF_APPRAISAL_REVERTED: PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED,
 	MANAGER_REVIEW_PENDING : PhaseAssignmentStatus.MANAGER_REVIEW_PENDING,
 	MANAGER_REVIEW_SAVED : PhaseAssignmentStatus.MANAGER_REVIEW_SAVED,
 	MANAGER_REVIEW_SUBMITTED : PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED,
@@ -222,9 +231,9 @@ var EmployeeAssignmentStatus = {
 	CONCLUDED : PhaseAssignmentStatus.CONCLUDED,
 };
 
-function getEmployeeAssignmentStatus(code) {
-	for ( var key in EmployeeAssignmentStatus) {
-		var data = EmployeeAssignmentStatus[key];
+function getPhaseAssignmentReportStatus(code) {
+	for ( var key in PhaseAssignmentReportStatus) {
+		var data = PhaseAssignmentReportStatus[key];
 		if (code == data.code) {
 			return data;
 		}
@@ -232,7 +241,7 @@ function getEmployeeAssignmentStatus(code) {
 	return null;
 }
 
-function getEmployeeStatusLabel(code) {
-	  var status = getEmployeeAssignmentStatus(code);
+function getPhaseAssignmentReportStatusLabel(code) {
+	  var status = getPhaseAssignmentReportStatus(code);
 	  return (status == null) ? '' : '<span class="label ' + status.colorClass + '">' + status.name + '</span>';
 }

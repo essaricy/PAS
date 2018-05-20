@@ -10,5 +10,6 @@ import lombok.Data;
 public class PhaseAssignmentCountDto {
 
 	private AppraisalPhase appraisalPhase;
+
 	private List<EmployeeAssignmentCount> employeeAssignmentCounts;
 }

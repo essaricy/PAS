@@ -189,7 +189,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>2.4</span></li>
+			<li><span>2.8</span></li>
 		  </ul>
 		</div>
       </div>

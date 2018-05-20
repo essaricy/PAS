@@ -26,7 +26,7 @@ public class AssessDetailDto implements Serializable {
 	private double rating;
 
 	@NotBlank(message="Comments are mandatory")
-	@Size(min=1, max=2000, message="Comments must be between {min} and {max} characters")
+	@Size(min=1, message="Comments must be minimum {min} character(s)")
 	private String comments;
 
 	@Min(value=0, message="Score min value is {value}")

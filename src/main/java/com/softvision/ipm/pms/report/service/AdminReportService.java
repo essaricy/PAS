@@ -19,7 +19,7 @@ import com.softvision.ipm.pms.employee.constant.EmployeeOrg;
 import com.softvision.ipm.pms.employee.constant.EmploymentType;
 import com.softvision.ipm.pms.employee.entity.Employee;
 import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
-import com.softvision.ipm.pms.report.Constant.EmployeeAssignmentStatus;
+import com.softvision.ipm.pms.report.Constant.PhaseAssignmentReportStatus;
 import com.softvision.ipm.pms.report.model.EmployeeAssignmentCount;
 import com.softvision.ipm.pms.report.model.PhaseAssignmentCountDto;
 
@@ -63,7 +63,7 @@ public class AdminReportService {
 
 			List<EmployeeAssignmentCount> employeeStatusCounts = new ArrayList<>();
 
-			setFinalCount(EmployeeAssignmentStatus.NOT_ASSIGNGED, eligibleEmployees.size() - allAssignments.size(),
+			setFinalCount(PhaseAssignmentReportStatus.NOT_ASSIGNGED, eligibleEmployees.size() - allAssignments.size(),
 					employeeStatusCounts);
 			
 			seEmployeeStatusCounts(allAssignments,employeeStatusCounts);
@@ -91,7 +91,8 @@ public class AdminReportService {
 					&& employmentType != EmploymentType.PROJECT_EMPLOYEE) {
 				continue;
 			}
-			if (employmentType == EmploymentType.PROJECT_EMPLOYEE && employeeOrg != EmployeeOrg.IT) {
+			if (employmentType == EmploymentType.PROJECT_EMPLOYEE && (employeeOrg != EmployeeOrg.IT 
+					&& employeeOrg != EmployeeOrg.BPO)) {
 				continue;
 			}
 			hiredOn = employee.getHiredOn();
@@ -124,7 +125,8 @@ public class AdminReportService {
 			List<EmployeeAssignmentCount> finalCounts) {
 
 		int notIntiatedCount = 0;
-		int selfAppraisalPendingPendingCount = 0;
+		int selfAppraisalPendingCount = 0;
+		int selfAppraisalRevertedCount = 0;
 		int managerReviewPendingCount = 0;
 		int managerReviewSubmittedCount = 0;
 		int agreedCount = 0;
@@ -133,32 +135,35 @@ public class AdminReportService {
 
 		for (EmployeePhaseAssignmentDto employeePhaseAssignmentDto : allAssignments) {
 			int statusCode = employeePhaseAssignmentDto.getStatus();
-			if (get(statusCode, EmployeeAssignmentStatus.NOT_INITIATED)) {
+			if (get(statusCode, PhaseAssignmentReportStatus.NOT_INITIATED)) {
 				notIntiatedCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.SELF_APPRAISAL_PENDING,
-					EmployeeAssignmentStatus.SELF_APPRAISAL_SAVED)) {
-				selfAppraisalPendingPendingCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.MANAGER_REVIEW_PENDING,
-					EmployeeAssignmentStatus.MANAGER_REVIEW_SAVED)) {
+			} else if (get(statusCode, PhaseAssignmentReportStatus.SELF_APPRAISAL_PENDING,
+					PhaseAssignmentReportStatus.SELF_APPRAISAL_SAVED)) {
+				selfAppraisalPendingCount++;
+			} else if (get(statusCode, PhaseAssignmentReportStatus.SELF_APPRAISAL_REVERTED)) {
+				selfAppraisalRevertedCount++;
+			} else if (get(statusCode, PhaseAssignmentReportStatus.MANAGER_REVIEW_PENDING,
+					PhaseAssignmentReportStatus.MANAGER_REVIEW_SAVED)) {
 				managerReviewPendingCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.MANAGER_REVIEW_SUBMITTED)) {
+			} else if (get(statusCode, PhaseAssignmentReportStatus.MANAGER_REVIEW_SUBMITTED)) {
 				managerReviewSubmittedCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.EMPLOYEE_AGREED)) {
+			} else if (get(statusCode, PhaseAssignmentReportStatus.EMPLOYEE_AGREED)) {
 				agreedCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.EMPLOYEE_ESCALATED)) {
+			} else if (get(statusCode, PhaseAssignmentReportStatus.EMPLOYEE_ESCALATED)) {
 				escalatedCount++;
-			} else if (get(statusCode, EmployeeAssignmentStatus.CONCLUDED)) {
+			} else if (get(statusCode, PhaseAssignmentReportStatus.CONCLUDED)) {
 				concludedCount++;
 			}
 		}
 
-		setFinalCount(EmployeeAssignmentStatus.NOT_INITIATED, notIntiatedCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.SELF_APPRAISAL_PENDING, selfAppraisalPendingPendingCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.MANAGER_REVIEW_PENDING, managerReviewPendingCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.MANAGER_REVIEW_SUBMITTED, managerReviewSubmittedCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.EMPLOYEE_AGREED, agreedCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.EMPLOYEE_ESCALATED, escalatedCount, finalCounts);
-		setFinalCount(EmployeeAssignmentStatus.CONCLUDED, concludedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.NOT_INITIATED, notIntiatedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.SELF_APPRAISAL_PENDING, selfAppraisalPendingCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.SELF_APPRAISAL_REVERTED, selfAppraisalRevertedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.MANAGER_REVIEW_PENDING, managerReviewPendingCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.MANAGER_REVIEW_SUBMITTED, managerReviewSubmittedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.EMPLOYEE_AGREED, agreedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.EMPLOYEE_ESCALATED, escalatedCount, finalCounts);
+		setFinalCount(PhaseAssignmentReportStatus.CONCLUDED, concludedCount, finalCounts);
 
 		return finalCounts;
 	}
@@ -182,8 +187,8 @@ public class AdminReportService {
 		return unassignedEmployees;
 	}
 
-	private boolean get(int statusCode, EmployeeAssignmentStatus... list) {
-		for (EmployeeAssignmentStatus eAssignmentStatus : list) {
+	private boolean get(int statusCode, PhaseAssignmentReportStatus... list) {
+		for (PhaseAssignmentReportStatus eAssignmentStatus : list) {
 			if (statusCode == eAssignmentStatus.getCode()) {
 				return true;
 			}
@@ -191,10 +196,10 @@ public class AdminReportService {
 		return false;
 	}
 	
-	private void setFinalCount(final EmployeeAssignmentStatus status, final int count,
+	private void setFinalCount(final PhaseAssignmentReportStatus status, final int count,
 			List<EmployeeAssignmentCount> finalCounts) {
 		final EmployeeAssignmentCount countDto = new EmployeeAssignmentCount();
-		countDto.setEmployeeAssignmentStatus(status);
+		countDto.setPhaseAssignmentReportStatus(status);
 		countDto.setCount(count);
 		finalCounts.add(countDto);
 	}
