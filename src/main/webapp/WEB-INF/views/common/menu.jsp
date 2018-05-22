@@ -110,7 +110,7 @@
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
+              <a href="<%=request.getContextPath()%>/admin/employee/mgmt">Employee Management</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/reports">Reports</a>
@@ -189,7 +189,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>2.8</span></li>
+			<li><span>3.0</span></li>
 		  </ul>
 		</div>
       </div>

@@ -27,18 +27,21 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/cycles/manage").setViewName("admin-cycle-manage");
         registry.addViewController("/admin/goal/list").setViewName("admin-goal-list");
         registry.addViewController("/admin/goal/manage").setViewName("admin-goal-manage");
-        registry.addViewController("/admin/employee/manage").setViewName("admin-employee-manage");
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
         registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
+
+        registry.addViewController("/admin/employee/mgmt").setViewName("admin-employee-mgmt");
+        registry.addViewController("/admin/employee/directory").setViewName("admin-employee-directory");
+        registry.addViewController("/admin/employee/sync").setViewName("admin-employee-sync");
+        registry.addViewController("/admin/employee/roles/list").setViewName("admin-employee-roles-list");
+        registry.addViewController("/admin/employee/roles/manage").setViewName("admin-employee-roles-manage");
 
         registry.addViewController("/admin/reports").setViewName("admin-reports");
         registry.addViewController("/admin/report/appraisal/status/cycle").setViewName("admin-report-appraisal-status-cycle");
         registry.addViewController("/admin/report/appraisal/status/phase/assigned").setViewName("admin-report-appraisal-status-phase-assigned");
         registry.addViewController("/admin/report/appraisal/status/phase/unassigned").setViewName("admin-report-appraisal-status-phase-unassigned");
         registry.addViewController("/admin/report/appraisal/overview").setViewName("admin-report-appraisal-overview");
-
-        //registry.addViewController("/admin/appraisal/overview").setViewName("admin-appraisal-overview");
 
         registry.addViewController("/manager/assignment/active").setViewName("manager-assignment-active");
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
