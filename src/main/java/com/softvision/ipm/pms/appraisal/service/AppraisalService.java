@@ -92,7 +92,7 @@ public class AppraisalService {
             throw new ServiceException("Cannot change an Appraisal Cycle to COMPLETE when its not ACTIVE");
         } else if (existingStatus == AppraisalCycleStatus.READY && desiredStatus == AppraisalCycleStatus.ACTIVE) {
             // Check if any other cycle is active. do not allow otherwise
-            int count= appraisalCycleDataRepository.countOfActive(id);
+            int count= appraisalCycleDataRepository.countOfOtherActiveCycles(id);
             if(count > 0) {
                 throw new ServiceException("There is another appraisal cycle ACTIVE already. Mark it COMPLETE to activate another appraisal cycle");
             }
