@@ -1,7 +1,5 @@
 package com.softvision.ipm.pms.assess.rest;
 
-import java.util.Date;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +32,7 @@ public class AssessmentRest {
 	private static final String REVERT_TO_SELF_SUBMISSION = "REVERT_TO_SELF_SUBMISSION";
 	private static final String SAVE_MANAGER_REVIEW = "SAVE_MANAGER_REVIEW";
 	private static final String SUBMIT_MANAGER_REVIEW = "SUBMIT_MANAGER_REVIEW";
+	private static final String UPDATE_MANAGER_REVIEW = "UPDATE_MANAGER_REVIEW";
 	private static final String CONCLUDE = "CONCLUDE";
 
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
@@ -42,7 +41,7 @@ public class AssessmentRest {
 	public PhaseAssessmentDto getPhaseAssessmentByAssignmentId(
 			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
 			throws ServiceException {
-		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId());
+		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId(), null);
     }
 
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
@@ -91,55 +90,40 @@ public class AssessmentRest {
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/update-review", method=RequestMethod.POST)
 	public Result updateReview(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
-		Result result = new Result();
-		try {
-			if (phaseAssessHeader == null) {
-				throw new ServiceException("Assessment information is missing");
-			}
-			long assignId = phaseAssessHeader.getAssignId();
-			if (assignId == 0) {
-				throw new ServiceException("Invalid assignment");
-			}
-			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
-			phaseAssessHeader.setAssessDate(new Date());
-			phaseAssessmentService.updateReview(assignId, requestedEmployeeId, phaseAssessHeader);
-			result.setCode(Result.SUCCESS);
-		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
-		}
-		return result;
+		return changePhaseStatus(phaseAssessHeader, UPDATE_MANAGER_REVIEW);
     }
 
-	public Result changePhaseStatus(AssessHeaderDto phaseAssessHeader, String actionToPerform) {
+	public Result changePhaseStatus(AssessHeaderDto assessHeader, String actionToPerform) {
 		Result result = new Result();
 		try {
-			if (phaseAssessHeader == null) {
+			if (assessHeader == null) {
 				throw new ServiceException("Assessment information is missing");
 			}
-			long assignId = phaseAssessHeader.getAssignId();
+			long assignId = assessHeader.getAssignId();
 			if (assignId == 0) {
 				throw new ServiceException("Invalid assignment");
 			}
 			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
-			phaseAssessHeader.setAssessDate(new Date());
+			//assessHeader.setAssessDate(new Date());
 
 			if (actionToPerform.equals(SAVE_SELF_APPRAISAL)) {
-				phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
+				phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, assessHeader, null);
 			} else if (actionToPerform.equals(SUBMIT_SELF_APPRAISAL)) {
-				phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, phaseAssessHeader);
+				phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, assessHeader, null);
 			} else if (actionToPerform.equals(REVERT_TO_SELF_SUBMISSION)) {
-				phaseAssessmentService.revertToSelfSubmission(assignId, requestedEmployeeId);
+				phaseAssessmentService.revertToSelfSubmission(assignId, requestedEmployeeId, null);
 			} else if (actionToPerform.equals(SAVE_MANAGER_REVIEW)) {
-				phaseAssessmentService.saveReview(assignId, requestedEmployeeId, phaseAssessHeader);
+				phaseAssessmentService.saveReview(assignId, requestedEmployeeId, assessHeader, null);
 			} else if (actionToPerform.equals(SUBMIT_MANAGER_REVIEW)) {
-				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, phaseAssessHeader);
+				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, assessHeader, null);
 			} else if (actionToPerform.equals(AGREE_WITH_REVIEW)) {
-				phaseAssessmentService.agree(assignId, requestedEmployeeId);
+				phaseAssessmentService.agree(assignId, requestedEmployeeId, null);
 			} else if (actionToPerform.equals(DISAGREE_WITH_REVIEW)) {
-				phaseAssessmentService.escalate(assignId, requestedEmployeeId);
+				phaseAssessmentService.disagree(assignId, requestedEmployeeId, null);
+			} else if (actionToPerform.equals(UPDATE_MANAGER_REVIEW)) {
+				phaseAssessmentService.updateReview(assignId, requestedEmployeeId, assessHeader, null);
 			} else if (actionToPerform.equals(CONCLUDE)) {
-				phaseAssessmentService.conclude(assignId, requestedEmployeeId);
+				phaseAssessmentService.conclude(assignId, requestedEmployeeId, null);
 			} else {
 				throw new Exception("Invalid action to perform: " + actionToPerform);
 			}

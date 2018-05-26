@@ -4,6 +4,7 @@
 	<groupId>com.softvision.ipm</groupId>
 	<artifactId>pms</artifactId>
 	<packaging>war</packaging>
+	<version>3.0</version>
 
 	<name>pms Maven Webapp</name>
 	<url>http://maven.apache.org</url>
@@ -234,5 +235,4 @@
     		</properties>
   		</profile>
 	</profiles>
-	<version>3.0</version>
 </project>

@@ -30,6 +30,9 @@ public class AssessHeaderDto implements Serializable {
 	@Min(0)
 	private int status;
 
+	@Min(0)
+	private int stage;
+
 	@NotNull(message="Assessment date cannot be empty")
 	private Date assessDate;
 

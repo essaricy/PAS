@@ -79,7 +79,10 @@
 		        </div>
 		      </div>
               <div class="row clearfix">
-                <button type="button" class="btn bg-light-blue waves-effect pull-right m-r-20" id="UpdateRoles">Update</button>
+                <button id="UpdateRoles" class="btn btn-primary waves-effect pull-right m-r-20">
+                  <i class="material-icons">mode_edit</i>
+                  <span>Update</span>
+                </button>
               </div>		        
             </div>
           </div>
@@ -137,58 +140,47 @@
           var itemValue=data.fullName;
           availableRoles=[];
 
-          var row=$('<tr>');
-          $(row).append('<td>' + data.employeeId + '</td>');
-          $(row).append('<td>' + data.fullName + '</td>');
-
-/*
-			<div class="switch">
-          		<label>
-          			<input type="checkbox" checked="">
-          				<span class="lever switch-col-green"></span>
-          			</label>
-             </div>
-             
-             <div class="switch pull-left">
-             	<label>
-             		<input type="checkbox" checked="checked">
-             	</label>
-             </div>
-             
-             
-*/
-             
-          var switchCol=$('<td>');
-          var switchDiv=$('<div class="switch pull-left">');
-          var label=$('<label>');
-          //var checkbox=$('<input type="checkbox">');
-          var checkbox='<input type="checkbox"><span class="lever switch-col-green"></span></input>';
-          //var leverSpan=$('<span class="lever switch-col-green">');
-
-          $(row).append(switchCol);
-          $(switchCol).append(switchDiv);
-          $(switchDiv).append(label);
-          $(label).append(checkbox);
-          //$(checkbox).append(leverSpan);
-          $('#Search_Employees_Table > tbody').append(row);
-
-          
-          $.fn.ajaxGet({
-            url: '<%=request.getContextPath()%>/role/byEmployee/' + itemId,
-            onSuccess: function(result) {
-              $(result).each(function(index, role) {
-                availableRoles.push(role.RoleName);
-              });
-
-              if (availableRoles.indexOf('Manager') > -1) {
-            	$(switchDiv).find('input[type=checkbox]').attr('checked', 'true');
+          var exists=false;
+          var rows=$('#Search_Employees_Table > tbody > tr');
+          for (var rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+        	  var employeeId= $(rows[rowIndex]).find("td:first").text();
+              if (employeeId == itemId) {
+            	  exists=true;
+            	  break;
               }
-            },
-            onError: function(message, content) {
-            }
-          });
+		  }
+          if (!exists) {
+            var row=$('<tr>');
+            $(row).append('<td>' + data.employeeId + '</td>');
+            $(row).append('<td>' + data.fullName + '</td>');
+
+            var switchCol=$('<td>');
+            var switchDiv=$('<div class="switch pull-left">');
+            var label=$('<label>');
+            var checkbox='<input type="checkbox"><span class="lever switch-col-green"></span></input>';
+
+            $(row).append(switchCol);
+            $(switchCol).append(switchDiv);
+            $(switchDiv).append(label);
+            $(label).append(checkbox);
+            $('#Search_Employees_Table > tbody').append(row);
+
+            $.fn.ajaxGet({
+              url: '<%=request.getContextPath()%>/role/byEmployee/' + itemId,
+              onSuccess: function(result) {
+                $(result).each(function(index, role) {
+                  availableRoles.push(role.RoleName);
+                });
+
+                if (availableRoles.indexOf('Manager') > -1) {
+                  $(switchDiv).find('input[type=checkbox]').attr('checked', 'true');
+                }
+              },
+              onError: function(message, content) { }
+            });
+            $('#UpdateRoles').show();
+          }
           $("#Search_Employees").val('');
-          $('#UpdateRoles').show();
         }
       }
     });

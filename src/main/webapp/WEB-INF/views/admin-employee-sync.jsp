@@ -58,7 +58,10 @@
               <div class="row clearfix">
                 <div class="col-lg-4 col-md-4 col-sm-3 col-xs-2">&nbsp;</div>
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-8">
-               	  <button type="button" id="Sync" class="btn btn-block btn-lg btn-primary waves-effect">Start SYNC</button>
+               	  <button type="button" id="Sync" class="btn btn-lg btn-primary waves-effect">
+               	    <i class="material-icons">sync</i>
+               	    <span>Start SYNC</span>
+               	  </button>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-3 col-xs-2">&nbsp;</div>
               </div>

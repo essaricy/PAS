@@ -151,27 +151,31 @@ function renderCycleInformation(item) {
   $('.appr_cycle_card .body').append(table);
 
   var status=getAppraisalCycleStatus(item.status);
-  //var button=$('<button class="btn bg-light-blue waves-effect">' + status.label + '</button>');
-  var button=$('<button class="btn bg-light-blue waves-effect">');
+  var nextStatus=null;
+
   if (status == AppraisalCycleStatus.DRAFT) {
-	$(button).text(AppraisalCycleStatus.READY.label);
-	$(button).click(function() {
-      ready(item.id);
-	});
+	nextStatus=AppraisalCycleStatus.READY;
   } else if (status == AppraisalCycleStatus.READY) {
-	$(button).text(AppraisalCycleStatus.ACTIVE.label);
-	$(button).click(function() {
-      activate(item.id);
-	});
+    nextStatus=AppraisalCycleStatus.ACTIVE;
   } else if (status == AppraisalCycleStatus.ACTIVE) {
-	$(button).text(AppraisalCycleStatus.COMPLETE.label);
-	$(button).click(function() {
-	  complete(item.id);
-	});
+	nextStatus=AppraisalCycleStatus.COMPLETE;
   }
+
   $('.appr_cycle_card .header .dropdown').empty();
-  if (status != AppraisalCycleStatus.COMPLETE) {
-    $('.appr_cycle_card .header .dropdown').append(button);
+  if (nextStatus != null) {
+    var button=$('<button class="btn btn-block btn-primary waves-effect">');
+    $(button).append('<i class="material-icons">' + nextStatus.icon + '</i>');
+	$(button).append('<span>' + nextStatus.label + '</span>');
+	$('.appr_cycle_card .header .dropdown').append(button);
+	$(button).click(function() {
+	  if (nextStatus == AppraisalCycleStatus.READY) {
+		ready(item.id);
+	  } else if (status == AppraisalCycleStatus.ACTIVE) {
+		activate(item.id);
+	  } else if (status == AppraisalCycleStatus.COMPLETE) {
+		complete(item.id);
+	  }
+	});
   }
 }
 

@@ -78,7 +78,10 @@
                     </div>
                   </div>
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                    <button type="button" id="GoalParam_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                    <button type="button" id="GoalParam_Add" class="btn btn-primary waves-effect">
+                      <i class="material-icons">add</i>
+                      <span>Add</span>
+                    </button>
                   </div>
 
                   <table id="GoalParam_Table" class="table table-striped">

@@ -8,10 +8,8 @@ import com.softvision.ipm.pms.assess.entity.AssessHeader;
 
 public interface AssessmentHeaderDataRepository extends CrudRepository<AssessHeader, Long>{
 
-	List<AssessHeader> findByAssignIdOrderByStatusAsc(long assignmentId);
+	AssessHeader findFirstByAssignIdAndStage(long assignmentId, int stage);
 
-	AssessHeader findFirstByAssignIdOrderByStatusDesc(long assignmentId);
-
-	AssessHeader findFirstByAssignIdAndStatus(long assignmentId, int status);
+	List<AssessHeader> findByAssignIdOrderByStageAsc(long assignmentId);
 
 }

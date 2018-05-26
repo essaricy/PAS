@@ -139,7 +139,10 @@
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
-                    <button type="button" id="Phase_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                    <button type="button" id="Phase_Add" class="btn btn-primary waves-effect">
+                      <i class="material-icons">add</i>
+                      <span>Add</span>
+                    </button>
                   </div>
                   <table id="Phase_Table" class="table table-striped">
                     <thead>

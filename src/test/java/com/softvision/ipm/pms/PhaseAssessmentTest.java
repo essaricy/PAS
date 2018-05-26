@@ -25,7 +25,7 @@ public class PhaseAssessmentTest {
 	public void test1_getAll() {
 		PhaseAssessmentDto phaseAssessment;
 		try {
-			phaseAssessment = phaseAssessmentService.getByAssignment(112, 4570);
+			phaseAssessment = phaseAssessmentService.getByAssignment(112, 4570, null);
 			System.out.println("phaseAssessment= " + phaseAssessment);
 		} catch (Exception e) {
 			e.printStackTrace();

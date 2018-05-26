@@ -215,7 +215,7 @@ public class ManagerAssignmentService {
                 .getPhaseAssignmentsByCycleByEmployeeId(cycleAssignment.getCycleId(), employeeId);
         if (phaseAssignmentsInCycle != null && !phaseAssignmentsInCycle.isEmpty()) {
             for (EmployeePhaseAssignmentDto phaseAssignment : phaseAssignmentsInCycle) {
-                PhaseAssessmentDto phaseAssessment = phaseAssessmentService.getByAssignment(phaseAssignment.getAssignmentId(), employeeId);
+                PhaseAssessmentDto phaseAssessment = phaseAssessmentService.getByAssignment(phaseAssignment.getAssignmentId(), employeeId, null);
                 phaseAssessments.add(phaseAssessment);
             }
         }

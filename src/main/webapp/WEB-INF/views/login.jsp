@@ -219,7 +219,10 @@
                 &nbsp;
               </div>
               <div class="col-xs-4 align-right">
-                <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+                <button class="btn bg-pink waves-effect" type="submit">
+                  <i class="material-icons">subdirectory_arrow_right</i>
+                  <span>SIGN IN</span>
+                </button>
               </div>
             </div>
           </form>

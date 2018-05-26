@@ -289,8 +289,8 @@ public class EmailRepository {
 			String templateFile = emailTemplate.getFileName();
 			String subject = emailTemplate.getSubject();
 			String url = emailTemplate.getButtonUrl();
-			String emailFrom = manager.getLoginId() + domain;
-			String emailTo = employee.getLoginId() + domain;
+			String emailFrom = employee.getLoginId() + domain;
+			String emailTo = manager.getLoginId() + domain;
 
 			String managerName = manager.getFirstName();
 			String empName = employee.getFirstName();

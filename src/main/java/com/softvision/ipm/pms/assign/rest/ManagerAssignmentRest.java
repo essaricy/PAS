@@ -81,7 +81,7 @@ public class ManagerAssignmentRest {
 			@PathVariable(required=true) @Min(1) long phaseAssignId) {
 		Result result = new Result();
 		try {
-			phaseAssessmentService.enablePhaseAppraisal(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			phaseAssessmentService.enablePhaseAppraisal(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -96,7 +96,7 @@ public class ManagerAssignmentRest {
             @PathVariable(required=true) @Min(1) long phaseAssignId) {
         Result result = new Result();
         try {
-            phaseAssessmentService.conclude(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+            phaseAssessmentService.conclude(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
             result.setCode(Result.SUCCESS);
         } catch (Exception exception) {
             result.setCode(Result.FAILURE);
@@ -110,7 +110,7 @@ public class ManagerAssignmentRest {
 	public Result revertToSelfSubmission(@PathVariable(required=true) @Min(1) long phaseAssignId) {
 		Result result = new Result();
 		try {
-			phaseAssessmentService.revertToSelfSubmission(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			phaseAssessmentService.revertToSelfSubmission(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

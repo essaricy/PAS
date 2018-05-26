@@ -1,17 +1,19 @@
 $(function () {
   var ROLE_EMPLOYEE='Employee';
   var ROLE_MANAGER='Manager';
-  var ACTION_SAVE='Save';
-  var ACTION_SUBMIT='Submit';
 
-  var ACTION_REVERT='Revert';
-  var ACTION_SAVE_REVIEW='Save Review';
-  var ACTION_SUBMIT_REVIEW='Submit Review';
-  var ACTION_UPDATE_REVIEW='Update Review';
+  var AssessmentAction = {
+	  EMPLOYEE_SAVE:		{ label: 'Save', 		icon: 'done'},
+	  EMPLOYEE_SUBMIT:		{ label: 'Submit', 		icon: 'done_all'},
+	  EMPLOYEE_AGREE:		{ label: 'Agree', 		icon: 'mood'},
+	  EMPLOYEE_DISAGREE:	{ label: 'Disagree', 	icon: 'mood_bad'},
 
-  var ACTION_AGREE='Agree';
-  var ACTION_DISAGREE='Disagree';
-  var ACTION_CONCLUDE='Conclude';
+	  MANAGER_REVERT:		{ label: 'Revert', 		icon: 'undo'},
+	  MANAGER_SAVE: 		{ label: 'Save', 		icon: 'done'},
+	  MANAGER_SUBMIT:		{ label: 'Submit', 		icon: 'done_all'},
+	  MANAGER_UPDATE:		{ label: 'Update', 		icon: 'update'},
+	  MANAGER_CONCLUDE:		{ label: 'Conclude', 	icon: 'lock'},
+  };
 
   var RATING_TYPES=[
   	{rName: 'Employee Rating: ', rClass: 'employee-rating', sName: 'Employee Score: ', sClass: 'employee-score', cName: 'Employee Comments: ', cClass: 'employee-comments'},
@@ -160,24 +162,24 @@ $(function () {
       if (status == PhaseAssignmentStatus.SELF_APPRAISAL_PENDING) {
         if (role == ROLE_EMPLOYEE) {
           var assessHeader=getBlankAssessHeader();
-          assessHeaders[assessHeaders.length]=assessHeader;
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_SAVE);
-          assignment.render.buttons.push(ACTION_SUBMIT);
+          assessHeaders[0]=assessHeader;
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SAVE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SUBMIT);
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         if (role == ROLE_EMPLOYEE) {
           var assessHeader=assessHeaders[0];
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_SAVE);
-          assignment.render.buttons.push(ACTION_SUBMIT);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SAVE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SUBMIT);
         }
       } else if (status == PhaseAssignmentStatus.SELF_APPRAISAL_REVERTED) {
         if (role == ROLE_EMPLOYEE) {
           var assessHeader=assessHeaders[0];
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_SAVE);
-          assignment.render.buttons.push(ACTION_SUBMIT);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SAVE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_SUBMIT);
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_PENDING) {
         var assessHeader=assessHeaders[0];
@@ -186,9 +188,9 @@ $(function () {
           assessHeader=getBlankAssessHeader();
           assessHeaders[assessHeaders.length]=assessHeader;
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_REVERT);
-          assignment.render.buttons.push(ACTION_SAVE_REVIEW);
-          assignment.render.buttons.push(ACTION_SUBMIT_REVIEW);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_REVERT);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_SAVE);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_SUBMIT);
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SAVED) {
         var assessHeader=assessHeaders[0];
@@ -196,8 +198,8 @@ $(function () {
         if (role == ROLE_MANAGER) {
           assessHeader=assessHeaders[assessHeaders.length-1];
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_SAVE_REVIEW);
-          assignment.render.buttons.push(ACTION_SUBMIT_REVIEW);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_SAVE);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_SUBMIT);
         }
       } else if (status == PhaseAssignmentStatus.MANAGER_REVIEW_SUBMITTED) {
         var assessHeader=assessHeaders[0];
@@ -205,8 +207,8 @@ $(function () {
         var assessHeader=assessHeaders[assessHeaders.length-1];
         assessHeader.editable=false;
         if (role == ROLE_EMPLOYEE) {
-          assignment.render.buttons.push(ACTION_AGREE);
-          assignment.render.buttons.push(ACTION_DISAGREE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_AGREE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_DISAGREE);
         } else if (role == ROLE_MANAGER) {
         }
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_AGREED) {
@@ -215,7 +217,7 @@ $(function () {
         assessHeader=assessHeaders[assessHeaders.length-1];
         assessHeader.editable=false;
         if (role == ROLE_MANAGER) {
-          assignment.render.buttons.push(ACTION_CONCLUDE);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_CONCLUDE);
         }
       } else if (status == PhaseAssignmentStatus.EMPLOYEE_ESCALATED) {
         var assessHeader=assessHeaders[0];
@@ -223,11 +225,11 @@ $(function () {
         if (role == ROLE_EMPLOYEE) {
           assessHeader=assessHeaders[assessHeaders.length-1];
           assessHeader.editable=false;
-          assignment.render.buttons.push(ACTION_AGREE);
+          assignment.render.buttons.push(AssessmentAction.EMPLOYEE_AGREE);
         } else if (role == ROLE_MANAGER) {
           assessHeader=assessHeaders[assessHeaders.length-1];
           assessHeader.editable=true;
-          assignment.render.buttons.push(ACTION_UPDATE_REVIEW);
+          assignment.render.buttons.push(AssessmentAction.MANAGER_UPDATE);
         }
       } else if (status == PhaseAssignmentStatus.CONCLUDED) {
         var assessHeader=assessHeaders[0];
@@ -345,11 +347,16 @@ $(function () {
       var render=assignment.render;
       var buttonsRow=$('<div class="row clearfix">');
       var buttonsDiv=$('<div class="action-buttons pull-right">');
-      $(render.buttons).each(function(index, buttonName) {
-        var button=$('<button type="button" class="btn btn-primary waves-effect">' + buttonName + '</button>');
+      $(render.buttons).each(function(index, buttonAction) {
+    	var buttonName=buttonAction.label;
+    	var buttonIcon=buttonAction.icon;
+
+    	var button=$('<button type="button" class="btn btn-primary waves-effect">');
+    	$(button).append('<i class="material-icons">' + buttonIcon + '</i>');
+    	$(button).append('<span>' + buttonName + '</span>');
         $(buttonsDiv).append(button);
         $(button).click(function() {
-          sendAssessmentForm(buttonName);
+          sendAssessmentForm(buttonAction);
         });
       });
       $(buttonsRow).append(buttonsDiv);
@@ -450,7 +457,7 @@ $(function () {
       return assessHeader;
     }
 
-    function sendAssessmentForm(buttonName) {
+    function sendAssessmentForm(buttonAction) {
       var url=null;
       var currentForm=assessHeaders[assessHeaders.length-1];
       $(currentForm.assessDetails).each(function (index, assessDetail) {
@@ -458,10 +465,10 @@ $(function () {
     	assessDetail.comments=CKEDITOR.instances[id].getData();
       });
 
-      if(buttonName==ACTION_SAVE) {
+      if(buttonAction==AssessmentAction.EMPLOYEE_SAVE) {
         url=options.contextPath + '/assessment/phase/save';
         $.fn.ajaxPost({ url: url, data: currentForm });
-      } else if(buttonName==ACTION_SUBMIT) {
+      } else if(buttonAction==AssessmentAction.EMPLOYEE_SUBMIT) {
         url=options.contextPath + '/assessment/phase/submit';
         swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
@@ -470,7 +477,7 @@ $(function () {
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if(buttonName==ACTION_REVERT) {
+      } else if(buttonAction==AssessmentAction.MANAGER_REVERT) {
         url=options.contextPath + '/assessment/phase/revert';
         swal({
           title: "Are you sure?", text: "This allows the employee to modify his/her appraisal form which includes ratings and comments. Do you want to revert this appraisal form?", type: "warning",
@@ -479,10 +486,10 @@ $(function () {
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if(buttonName==ACTION_SAVE_REVIEW) {
+      } else if(buttonAction==AssessmentAction.MANAGER_SAVE) {
           url=options.contextPath + '/assessment/phase/save-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
-      } else if(buttonName==ACTION_SUBMIT_REVIEW) {
+      } else if(buttonAction==AssessmentAction.MANAGER_SUBMIT) {
         url=options.contextPath + '/assessment/phase/submit-review';
         swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
@@ -491,7 +498,7 @@ $(function () {
         }, function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if(buttonName==ACTION_AGREE) {
+      } else if(buttonAction==AssessmentAction.EMPLOYEE_AGREE) {
         swal({
           title: "Are you sure?", text: "Do you agree with your manager review? This will conclude the assignment and cannot be reverted!!!", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -500,7 +507,7 @@ $(function () {
           url=options.contextPath + '/assessment/phase/agree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if(buttonName==ACTION_DISAGREE) {
+      } else if(buttonAction==AssessmentAction.EMPLOYEE_DISAGREE) {
         swal({
           title: "Are you sure?", text: "Please follow the escalation procedures sent by the HR. You may come back here and AGREE once the escalation has been resolved.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -509,7 +516,7 @@ $(function () {
           url=options.contextPath + '/assessment/phase/disagree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if(buttonName==ACTION_UPDATE_REVIEW) {
+      } else if(buttonAction==AssessmentAction.MANAGER_UPDATE) {
         swal({
           title: "Are you sure?", text: "Do you want to update the review?", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -518,7 +525,7 @@ $(function () {
           url=options.contextPath + '/assessment/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
-      } else if (buttonName==ACTION_CONCLUDE) {
+      } else if (buttonAction==AssessmentAction.MANAGER_CONCLUDE) {
         swal({
           title: "Are you sure?", text: "Please make sure you have set the goals for the next phase for this employee!", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",

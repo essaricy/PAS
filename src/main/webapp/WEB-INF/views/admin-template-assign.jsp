@@ -118,8 +118,14 @@
               <div class="row clearfix">
 			    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 			    <div class="text-right">
-		          <button id="Reset_Button" class="btn btn-primary">Reset</button>
-		          <button id="Assign_Button" class="btn btn-primary">Assign</button>
+		          <button id="Reset_Button" class="btn btn-primary">
+		            <i class="material-icons">arrow_back</i>
+                    <span>Reset</span>
+		          </button>
+		          <button id="Assign_Button" class="btn btn-primary">
+		            <i class="material-icons">assignment_ind</i>
+                    <span>Assign</span>
+		          </button>
 		          </div>
                 </div>
               </div>
