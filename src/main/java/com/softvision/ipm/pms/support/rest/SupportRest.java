@@ -28,7 +28,7 @@ public class SupportRest {
     @Autowired private SessionRegistry sessionRegistry;
 
     @PreAuthorize(AuthorizeConstant.IS_SUPPORT)
-    @RequestMapping(value="list/active", method=RequestMethod.GET)
+    @RequestMapping(value="sessions/active", method=RequestMethod.GET)
     public @ResponseBody List<SessionInformation> listLoggedInUsers() {
         List<SessionInformation> sessions = new ArrayList<>();
 

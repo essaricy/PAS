@@ -44,7 +44,7 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>DASHBOARD</h2>
+        <h2>Active Sessions</h2>
       </div>
 
       <!-- Basic Examples -->
@@ -79,8 +79,6 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap Core Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
-  <!-- Select Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
   <!-- Slimscroll Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
   <!-- Waves Effect Plugin Js -->
@@ -89,24 +87,12 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
   <!-- Moment Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
-  <!-- Validation Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
   <!-- Custom Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
   <!-- Demo Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
-
-  <c:set var="isAdmin" value="false" />
-  <c:set var="isManager" value="false" />
-  
-  <sec:authorize access="hasAuthority('ADMIN')">
-    <c:set var="isAdmin" value="true" />
-  </sec:authorize>
-  <sec:authorize access="hasAuthority('MANAGER')">
-    <c:set var="isManager" value="true" />
-  </sec:authorize>
 
   <script type="text/javascript">
   var SESSION_TIMEOUT_VALUE= 2 * 60;
@@ -118,7 +104,7 @@
       searching: true,
       ordering: true,
       info: true,
-      "ajax": "<%=request.getContextPath()%>/api/support/list/active",
+      "ajax": "<%=request.getContextPath()%>/api/support/sessions/active",
       "sAjaxDataProp":"",
       "columns": [
           { "data": "principal" },

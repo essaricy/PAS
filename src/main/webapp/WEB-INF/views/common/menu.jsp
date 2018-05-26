@@ -126,7 +126,10 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/support/list">Active Users</a>
+              <a href="<%=request.getContextPath()%>/support/sessions/active">Active Sessions</a>
+            </li>
+            <li>
+              <a href="<%=request.getContextPath()%>/support/cache/objects">Cached Objects</a>
             </li>
           </ul>
         </li>
