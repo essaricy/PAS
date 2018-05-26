@@ -30,7 +30,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/goal/manage").setViewName("admin-goal-manage");
         registry.addViewController("/admin/template/list").setViewName("admin-template-list");
         registry.addViewController("/admin/template/manage").setViewName("admin-template-manage");
-        registry.addViewController("/admin/template/assign").setViewName("admin-template-assign");
 
         registry.addViewController("/admin/employee/mgmt").setViewName("admin-employee-mgmt");
         registry.addViewController("/admin/employee/directory").setViewName("admin-employee-directory");
@@ -44,6 +43,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/admin/report/appraisal/status/phase/unassigned").setViewName("admin-report-appraisal-status-phase-unassigned");
         registry.addViewController("/admin/report/appraisal/overview").setViewName("admin-report-appraisal-overview");
 
+        registry.addViewController("/manager/template/assign").setViewName("manager-template-assign");
         registry.addViewController("/manager/assignment/active").setViewName("manager-assignment-active");
         registry.addViewController("/manager/assignment/list").setViewName("manager-assignment-list");
         registry.addViewController("/manager/assessment").setViewName("manager-assessment");

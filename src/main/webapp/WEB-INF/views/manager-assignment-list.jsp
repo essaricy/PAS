@@ -142,7 +142,7 @@ $(function () {
 
   $('.container-fluid').managerAssignment({
 	contextPath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/assignment/manager/list',
+  	url: '<%=request.getContextPath()%>/api/assignment/manager/list',
   });
 
   var assignmentId=0;
@@ -169,7 +169,7 @@ $(function () {
 	searching: true,
 	ordering: true,
 	info: true,
-    "ajax": "<%=request.getContextPath()%>/employee/role-search/" + MANAGER_ROLE_ID,
+    "ajax": "<%=request.getContextPath()%>/api/employee/role-search/" + MANAGER_ROLE_ID,
     "sAjaxDataProp":"",
 	"columns": [
 	  { "data": "employeeId" },
@@ -193,14 +193,14 @@ $(function () {
   $('#AssignToAnotherManager').click(function() {
     var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
     if (SelectedManagerId) {
-      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/change/phase-assign/' + assignmentId + '/' + SelectedManagerId});
+      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/api/assignment/manager/change/phase-assign/' + assignmentId + '/' + SelectedManagerId});
     }
   });
 
   $('#SubmitToNextLevelManager').click(function() {
 	var SelectedManagerId = $('input[name=SelectedManagerId]:checked').val();
     if (SelectedManagerId) {
-      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/assignment/manager/cycle/submit/' + assignmentId + '/' + SelectedManagerId});
+      $.fn.ajaxPut({url: '<%=request.getContextPath()%>/api/assignment/manager/cycle/submit/' + assignmentId + '/' + SelectedManagerId});
     }
   });
 });

@@ -97,7 +97,7 @@ $(function () {
   $('.assessment_card').renderAssessment({
 	role: 'Manager',
     contextPath: '<%=request.getContextPath()%>',
-    url: '<%=request.getContextPath()%>/assessment/list/phase/byAssignId/' + assignmentId,
+    url: '<%=request.getContextPath()%>/api/assessment/list/phase/byAssignId/' + assignmentId,
   });
 });
 </script>

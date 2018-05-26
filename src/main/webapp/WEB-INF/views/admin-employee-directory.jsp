@@ -108,7 +108,7 @@
 	  searching: true,
       ordering: true,
 	  info: true,
-      "ajax": '<%=request.getContextPath()%>/employee/search/all',
+      "ajax": '<%=request.getContextPath()%>/api/employee/search/all',
       "sAjaxDataProp":"",
 	  "columns": [
         { "data": "employeeId" },

@@ -116,9 +116,9 @@ $(function () {
 });
 $('.appr_cycles_card').cardManager({
   type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/appraisal/list',
+  loadUrl: '<%=request.getContextPath()%>/api/appraisal/list',
   manageUrl: '<%=request.getContextPath()%>/admin/cycles/manage',
-  deleteUrl: '<%=request.getContextPath()%>/appraisal/delete',
+  deleteUrl: '<%=request.getContextPath()%>/api/appraisal/delete',
   onClickCallback: renderCycleInformation,
   menuActions: ["Add", "Update", "Delete"],
   renderConfigs: [
@@ -185,7 +185,7 @@ function ready(itemId) {
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
     confirmButtonText: "Yes, Change it!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
-    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/ready/' + itemId});
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/api/appraisal/ready/' + itemId});
   });
 }
 function activate(itemId) {
@@ -194,7 +194,7 @@ function activate(itemId) {
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
     confirmButtonText: "Yes, Activate!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
-    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/activate/' + itemId});
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/api/appraisal/activate/' + itemId});
   });
 }
 function complete(itemId) {
@@ -203,7 +203,7 @@ function complete(itemId) {
 	showCancelButton: true, confirmButtonColor: "#DD6B55",
     confirmButtonText: "Yes, Complete!", closeOnConfirm: false, showLoaderOnConfirm: true
   }, function () {
-    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/appraisal/complete/' + itemId});
+    $.fn.ajaxPut({url: '<%=request.getContextPath()%>/api/appraisal/complete/' + itemId});
   });
 }
 

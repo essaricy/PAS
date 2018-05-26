@@ -17,7 +17,7 @@ import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
 
 @RestController
-@RequestMapping(value="employee", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/employee", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeRest {
 
 	@Autowired private EmployeeService employeeService;

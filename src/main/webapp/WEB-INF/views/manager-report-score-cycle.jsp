@@ -124,7 +124,7 @@
 $(function () {
   $('.container-fluid').scoreReport({
     contextPath: '<%=request.getContextPath()%>',
-    url: '<%=request.getContextPath()%>/manager/report/cycle/score',
+    url: '<%=request.getContextPath()%>/api/manager/report/cycle/score',
   });
 });
 

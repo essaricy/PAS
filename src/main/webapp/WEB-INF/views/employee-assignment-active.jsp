@@ -93,7 +93,7 @@
 $(function () {
   $('.container-fluid').employeeAssignment({
 	contextPath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/assignment/employee/active',
+  	url: '<%=request.getContextPath()%>/api/assignment/employee/active',
   	onComplete: onComplete
   });
 

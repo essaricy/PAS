@@ -49,7 +49,7 @@
       <div class="row clearfix">
         <!-- Linked Items -->
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-          <div class="card ca_card">
+          <div class="card goal_card">
             <div class="header">
               <h2>Goals</h2>
               <ul class="header-dropdown m-r--5">
@@ -62,7 +62,7 @@
           </div>
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-          <div class="card ca_items_card">
+          <div class="card goal_params_card">
             <div class="header">
               <h2></h2>
             </div>
@@ -102,22 +102,22 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
 <script>
-$('.ca_card').cardManager({
+$('.goal_card').cardManager({
   type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/goal/list',
+  loadUrl: '<%=request.getContextPath()%>/api/goal/list',
   manageUrl: '<%=request.getContextPath()%>/admin/goal/manage',
-  deleteUrl: '<%=request.getContextPath()%>/admin/goal/manage',
+  //deleteUrl: '<%=request.getContextPath()%>/admin/goal/manage',
 
   menuActions: ["Add", "Update"],
   renderConfigs: [
-    { type: 'list', fromNode: 'params', toContainer: '.ca_items_card .body' }
+    { type: 'list', fromNode: 'params', toContainer: '.goal_params_card .body' }
   ],
   onClickCallback: function (item) {
     var params=item.params;
-    $('.ca_items_card .header h2').text('Parameters for: ' + item.name);
+    $('.goal_params_card .header h2').text('Parameters for: ' + item.name);
     $(params).each(function(index, param) {
       if (param.applicable!='Y') {
-        $('.ca_items_card .body ol li[item-id=' + param.id +']').remove();
+        $('.goal_params_card .body ol li[item-id=' + param.id +']').remove();
       }
     });
   }

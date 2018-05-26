@@ -21,7 +21,7 @@ import com.softvision.ipm.pms.common.util.RestUtil;
 
 
 @RestController
-@RequestMapping(value="assessment", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/assessment", produces=MediaType.APPLICATION_JSON_VALUE)
 public class AssessmentRest {
 
 	private static final String SAVE_SELF_APPRAISAL = "SAVE_SELF_APPRAISAL";

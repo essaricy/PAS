@@ -21,7 +21,7 @@ import com.softvision.ipm.pms.report.model.PhaseAssignmentCountDto;
 import com.softvision.ipm.pms.report.service.AdminReportService;
 
 @RestController
-@RequestMapping(value = "assignment/admin", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/admin/report", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdminReportRest {
 
 	@Autowired

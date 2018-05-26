@@ -134,7 +134,7 @@
     	$('.weightage').each(function(index, weightage) {
     		template.headers[index].weightage=$(this).val();
     	});
-    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/template/save', data: template});
+    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/api/template/save', data: template});
       },
 	});
 
@@ -142,12 +142,12 @@
 	var url=null;
 	if (id == 0) {
 	  if (refId == '') {
-	    url='<%=request.getContextPath()%>/template/new';
+	    url='<%=request.getContextPath()%>/api/template/new';
 	  } else {
-	    url='<%=request.getContextPath()%>/template/copy/' + refId;
+	    url='<%=request.getContextPath()%>/api/template/copy/' + refId;
 	  }
 	} else {
-	  url='<%=request.getContextPath()%>/template/list/'+id;
+	  url='<%=request.getContextPath()%>/api/template/list/'+id;
 	}
 
 	$.fn.ajaxGet({

@@ -110,9 +110,9 @@
 <script>
 $('.templates_card').cardManager({
   type: 'list-with-links',
-  loadUrl: '<%=request.getContextPath()%>/template/list',
+  loadUrl: '<%=request.getContextPath()%>/api/template/list',
   manageUrl: '<%=request.getContextPath()%>/admin/template/manage',
-  deleteUrl: '<%=request.getContextPath()%>/template/delete',
+  deleteUrl: '<%=request.getContextPath()%>/api/template/delete',
   menuActions: ["Add", "Update", "Delete", "Copy"],
   onClickCallback: renderTemplateInformation,
 

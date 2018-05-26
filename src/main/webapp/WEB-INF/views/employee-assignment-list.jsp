@@ -94,7 +94,7 @@
 $(function () {
   $('.container-fluid').employeeAssignment({
 	contextPath: '<%=request.getContextPath()%>',
-  	url: '<%=request.getContextPath()%>/assignment/employee/list',
+  	url: '<%=request.getContextPath()%>/api/assignment/employee/list',
   });
 });
 

@@ -184,7 +184,7 @@ $(function () {
 
   var assignableCycles=[];
   $.fn.ajaxGet({
-	url : '<%=request.getContextPath()%>/appraisal/get/assignable',
+	url : '<%=request.getContextPath()%>/api/appraisal/get/assignable',
 	onSuccess: function(result) {
 	  assignableCycles=result;
 	  $.each(result, function(index, cycle) {
@@ -218,7 +218,7 @@ $(function () {
 
   $("#Template_Name").easyAutocomplete({
     url: function(phrase) {
-	  return "<%=request.getContextPath()%>/template/search/byName/" + phrase;
+	  return "<%=request.getContextPath()%>/api/template/search/byName/" + phrase;
 	},
 	dataType: "json",
 	getValue: "name",
@@ -240,7 +240,7 @@ $(function () {
 
   $("#Search_Employees").easyAutocomplete({
 	url: function(phrase) {
-	  return "<%=request.getContextPath()%>/employee/search/" + phrase;
+	  return "<%=request.getContextPath()%>/api/employee/search/" + phrase;
 	},
 	dataType: "json",
 	getValue: function (item) { return item.fullName},
@@ -298,7 +298,7 @@ $(function () {
 	    confirmButtonText: "Yes, Assign!", closeOnConfirm: false, showLoaderOnConfirm: true
 	  }, function () {
 	      $(button).attr('disabled', true);
-		  $.fn.ajaxPost({url:'<%=request.getContextPath()%>/assignment/save/bulk', data: bulkAssignment,
+		  $.fn.ajaxPost({url:'<%=request.getContextPath()%>/api/assignment/manager/save/bulk', data: bulkAssignment,
 		  onSuccess: function(message, content) {
 			var table=$('#Selected_Employees_Table');
 			var tbody=$(table).find('tbody');

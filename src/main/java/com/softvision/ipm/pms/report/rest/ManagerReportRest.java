@@ -21,7 +21,7 @@ import com.softvision.ipm.pms.report.model.PhasewiseEmployeeStatusCountDto;
 import com.softvision.ipm.pms.report.service.ManagerReportService;
 
 @RestController
-@RequestMapping(value="manager/report", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/manager/report", produces=MediaType.APPLICATION_JSON_VALUE)
 public class ManagerReportRest {
 
 	@Autowired private ManagerReportService managerReportService;

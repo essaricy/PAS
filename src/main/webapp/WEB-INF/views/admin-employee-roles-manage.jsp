@@ -122,7 +122,7 @@
 
     $("#Search_Employees").easyAutocomplete({
       url: function(phrase) {
-        return "<%=request.getContextPath()%>/employee/search/" + phrase;
+        return "<%=request.getContextPath()%>/api/employee/search/" + phrase;
       },
       dataType: "json",
       getValue: function (item) { return item.fullName},
@@ -166,7 +166,7 @@
             $('#Search_Employees_Table > tbody').append(row);
 
             $.fn.ajaxGet({
-              url: '<%=request.getContextPath()%>/role/byEmployee/' + itemId,
+              url: '<%=request.getContextPath()%>/api/role/byEmployee/' + itemId,
               onSuccess: function(result) {
                 $(result).each(function(index, role) {
                   availableRoles.push(role.RoleName);
@@ -193,7 +193,7 @@
         employeeList.push({id:employeeId,managerFlag:isManager}); 
       });
 
-      var apiUrl='<%=request.getContextPath()%>/role/changeManagerRole';
+      var apiUrl='<%=request.getContextPath()%>/api/role/changeManagerRole';
       $.fn.ajaxPost({url:apiUrl, data: employeeList,refresh:'no'});
     });
   });

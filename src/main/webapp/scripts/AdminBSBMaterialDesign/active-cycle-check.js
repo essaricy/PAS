@@ -1,6 +1,6 @@
 $.fn.activeCycleCheck=function(options) {
   $.fn.ajaxGet({
-  url: options.contextPath + '/appraisal/get/active',
+  url: options.contextPath + '/api/appraisal/get/active',
   onSuccess: onSuccess,
   onError: onError,
   });

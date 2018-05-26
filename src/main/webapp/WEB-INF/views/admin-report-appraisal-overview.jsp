@@ -81,7 +81,7 @@
 
     var getPhasewiseStatusCount=function() {
    	  $.fn.ajaxGet({
-        url: '<%=request.getContextPath()%>/assignment/admin/phase/status/count',
+        url: '<%=request.getContextPath()%>/api/admin/report/phase/status/count',
         onSuccess: function(phasewiseEmployeeStatusCounts) {
       	  $(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
       	   var phasewiseEmployeeStatusCountRow = $('<div class="row clearfix PhasewiseEmployeeStatusCount_Row">');

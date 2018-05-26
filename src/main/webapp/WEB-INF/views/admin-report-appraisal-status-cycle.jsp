@@ -12,8 +12,6 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
-    <!-- Bootstrap Material Datetime Picker Css -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" />
     <!-- Animation Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
@@ -24,11 +22,6 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/style.css">
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
-     <!-- Bootstrap Select Css -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css"  />
-    <!-- EasyAutocomplete-1.3.5 -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/easy-autocomplete.min.css"/>
-    
   </head>
   <style>
   .list-group-item {
@@ -99,38 +92,25 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery/jquery.min.js"></script>
   <!-- Bootstrap Core Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/js/bootstrap.js"></script>
-  <!-- Select Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
   <!-- Slimscroll Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <!-- Jquery Validation Plugin Css -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
-  <!-- JQuery Steps Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-steps/jquery.steps.js"></script>
   <!-- Sweet Alert Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
   <!-- Waves Effect Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
   <!-- Jquery DataTable Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
-  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script> --%>
   <!-- Autosize Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/autosize/autosize.js"></script>
   <!-- Moment Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
-  <!-- Bootstrap Material Datetime Picker Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
   <!-- Custom Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
   <!-- Demo Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
   
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
-  <!-- EasyAutocomplete-1.3.5 -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
@@ -139,11 +119,10 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/pdfmake.min.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/vfs_fonts.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/buttons.html5.min.js"></script>
-  
 
   <script>
   $(function () {
-    var url = '<%=request.getContextPath()%>/appraisal/list/';
+    var url = '<%=request.getContextPath()%>/api/appraisal/list/';
     $.get(url, {sid: new Date().getTime()}, function() {}).done(function(result) {
 	  $.each(result,function(index, value) {
 		var flag=(value.status=="ACTIVE")?'Selected':' ';
@@ -159,7 +138,7 @@
 	  searching: true,
 	  ordering: true,
 	  info: true,
-      "ajax": "<%=request.getContextPath()%>/assignment/admin/cycle/" + cycleId,
+      "ajax": "<%=request.getContextPath()%>/api/admin/report/cycle/" + cycleId,
       "sAjaxDataProp":"",
 	  "columns": [
         { "data": "assignedTo.employeeId" },
@@ -191,7 +170,7 @@
         $(cycleId).focus();
       } else {
     	var table = $('#SearchTable').DataTable();
-    	table.ajax.url("<%=request.getContextPath()%>/assignment/admin/cycle/" + cycleId).load();
+    	table.ajax.url("<%=request.getContextPath()%>/api/admin/report/cycle/" + cycleId).load();
       }
     });
   });

@@ -156,13 +156,13 @@
           params[params.length]=param;
    		});
      	goal.params=params;
-      	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/goal/update', data: goal});
+      	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/api/goal/update', data: goal});
       }
     });
 
     if (id != 0) {
       $.fn.ajaxGet({
-      	url: '<%=request.getContextPath()%>/goal/list/' + id,
+      	url: '<%=request.getContextPath()%>/api/goal/list/' + id,
       	onSuccess: function(result) {
           if (result) {
         	$('#Goal_Name').val(result.name);

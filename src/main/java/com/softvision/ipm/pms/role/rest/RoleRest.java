@@ -23,7 +23,7 @@ import com.softvision.ipm.pms.role.entity.Role;
 import com.softvision.ipm.pms.role.service.RoleService;
 
 @RestController
-@RequestMapping(value = "role", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/role", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RoleRest {
 
 	@Autowired private RoleService roleService;

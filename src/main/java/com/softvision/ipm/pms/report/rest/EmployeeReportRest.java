@@ -14,7 +14,7 @@ import com.softvision.ipm.pms.common.util.RestUtil;
 import com.softvision.ipm.pms.report.service.EmployeeReportService;
 
 @RestController
-@RequestMapping(value="report/employee", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/employee/report", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeReportRest {
 
 	@Autowired private EmployeeReportService employeeReportService;

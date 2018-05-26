@@ -120,7 +120,7 @@
       }, function () {
 	    $('.sync_result_row').hide();
     	$.fn.ajaxPut({
-    	  url: '<%=request.getContextPath()%>/employee/sync',
+    	  url: '<%=request.getContextPath()%>/api/employee/sync',
     	  //refresh: "no",
     	  onSuccess: function (message, result) {
     		var results_container_error=$('#Sync_Results_Error');

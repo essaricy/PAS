@@ -118,7 +118,7 @@
       searching: true,
       ordering: true,
       info: true,
-      "ajax": "<%=request.getContextPath()%>/support/list/active",
+      "ajax": "<%=request.getContextPath()%>/api/support/list/active",
       "sAjaxDataProp":"",
       "columns": [
           { "data": "principal" },

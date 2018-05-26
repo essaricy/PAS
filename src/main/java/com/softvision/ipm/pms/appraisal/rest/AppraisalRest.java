@@ -21,7 +21,7 @@ import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
 
 @RestController
-@RequestMapping(value="appraisal", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/appraisal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class AppraisalRest {
 
 	@Autowired private AppraisalService appraisalService;

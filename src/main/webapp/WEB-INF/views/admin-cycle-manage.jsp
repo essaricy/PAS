@@ -225,13 +225,13 @@
 			phases[phases.length]=phase;
 		});
     	apprCycle.phases=phases;
-    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/appraisal/update', data: apprCycle});
+    	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/api/appraisal/update', data: apprCycle});
       },
 	});
 
     if (id != 0) {
       $.fn.ajaxGet({
-    	url: '<%=request.getContextPath()%>/appraisal/list/' + id,
+    	url: '<%=request.getContextPath()%>/api/appraisal/list/' + id,
     	onSuccess: function(result) {
           if (result) {
             $('#Cycle_Name').val(result.name);

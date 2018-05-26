@@ -123,7 +123,7 @@
 	  searching: false,
 	  ordering: true,
 	  info: true,
-      "ajax": "<%=request.getContextPath()%>/employee/role-search/" + searchText,
+      "ajax": "<%=request.getContextPath()%>/api/employee/role-search/" + searchText,
       "sAjaxDataProp":"",
 	  "columns": [
         { "data": "employeeId" },
@@ -141,7 +141,7 @@
       	$(searchText).focus();
       } else {
       	var table = $('#SearchRoleTable').DataTable();
-      	table.ajax.url("<%=request.getContextPath()%>/employee/role-search/" + searchText).load();
+      	table.ajax.url("<%=request.getContextPath()%>/api/employee/role-search/" + searchText).load();
       }
     });
   });

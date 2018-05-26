@@ -1,6 +1,7 @@
 $(function () {
   var ROLE_EMPLOYEE='Employee';
   var ROLE_MANAGER='Manager';
+  var ASI_BASE='/api/assessment'
 
   var AssessmentAction = {
 	  EMPLOYEE_SAVE:		{ label: 'Save', 		icon: 'done'},
@@ -466,10 +467,10 @@ $(function () {
       });
 
       if(buttonAction==AssessmentAction.EMPLOYEE_SAVE) {
-        url=options.contextPath + '/assessment/phase/save';
+        url=options.contextPath + ASI_BASE + '/phase/save';
         $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonAction==AssessmentAction.EMPLOYEE_SUBMIT) {
-        url=options.contextPath + '/assessment/phase/submit';
+        url=options.contextPath + ASI_BASE + '/phase/submit';
         swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -478,7 +479,7 @@ $(function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_REVERT) {
-        url=options.contextPath + '/assessment/phase/revert';
+        url=options.contextPath + ASI_BASE + '/phase/revert';
         swal({
           title: "Are you sure?", text: "This allows the employee to modify his/her appraisal form which includes ratings and comments. Do you want to revert this appraisal form?", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -487,10 +488,10 @@ $(function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_SAVE) {
-          url=options.contextPath + '/assessment/phase/save-review';
+          url=options.contextPath + ASI_BASE + '/phase/save-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonAction==AssessmentAction.MANAGER_SUBMIT) {
-        url=options.contextPath + '/assessment/phase/submit-review';
+        url=options.contextPath + ASI_BASE + '/phase/submit-review';
         swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -504,7 +505,7 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Agree!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + '/assessment/phase/agree';
+          url=options.contextPath + ASI_BASE + '/phase/agree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.EMPLOYEE_DISAGREE) {
@@ -513,7 +514,7 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Escalate!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + '/assessment/phase/disagree';
+          url=options.contextPath + ASI_BASE + '/phase/disagree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_UPDATE) {
@@ -522,7 +523,7 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Update!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + '/assessment/phase/update-review';
+          url=options.contextPath + ASI_BASE + '/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if (buttonAction==AssessmentAction.MANAGER_CONCLUDE) {
@@ -531,7 +532,7 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Conclude!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + '/assessment/phase/conclude';
+          url=options.contextPath + ASI_BASE + '/phase/conclude';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       }

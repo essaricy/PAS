@@ -25,7 +25,7 @@ import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.service.TemplateService;
 
 @RestController
-@RequestMapping(value="template", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/template", produces=MediaType.APPLICATION_JSON_VALUE)
 public class TemplateRest {
 
 	@Autowired private TemplateService templateService;

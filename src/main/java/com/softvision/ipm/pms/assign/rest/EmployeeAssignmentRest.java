@@ -19,7 +19,7 @@ import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 
 @RestController
-@RequestMapping(value="assignment/employee", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/assignment/employee", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeAssignmentRest {
 
 	@Autowired private EmployeeAssignmentService employeeAssignmentService;

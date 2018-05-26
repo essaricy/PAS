@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 
 @RestController
-@RequestMapping(value="support", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/support", produces=MediaType.APPLICATION_JSON_VALUE)
 public class SupportRest {
 
     @Value("${server.session.timeout}")

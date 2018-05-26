@@ -20,7 +20,7 @@ import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.service.GoalService;
 
 @RestController
-@RequestMapping(value="goal", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/goal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class GoalRest {
 
 	@Autowired private GoalService goalService;
