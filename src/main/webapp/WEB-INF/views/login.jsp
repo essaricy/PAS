@@ -181,6 +181,7 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
 }
   </style>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
   </head>
   <body class="login-page">
     <div class="login-box">
@@ -214,6 +215,12 @@
                 <input type="password" class="form-control" name="password" placeholder="Password" required value="">
               </div>
             </div>
+            <!-- <div class="input-group">
+              <span class="input-group-addon">&nbsp;</span>
+              <div class="">
+                <div class="g-recaptcha" data-sitekey="6Lfrs1sUAAAAAKz_iWuRAK9IWKqGCiX6WnbbucU_"></div>
+              </div>
+            </div> -->
             <div class="row">
               <div class="col-xs-8 p-t-5">
                 &nbsp;

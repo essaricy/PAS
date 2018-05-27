@@ -26,9 +26,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private SVAuthenticationProvider authenticationProvider;
 
+	//@Autowired private GoogleReCAPTCHAFilter reCAPTCHAFilter;
+
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
 		log.info("auth::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"); 
+		//http.addFilterBefore(reCAPTCHAFilter, BasicAuthenticationFilter.class);
+
 		http.csrf().and().authenticationProvider(authenticationProvider);
 		http.csrf().disable()
             .formLogin()

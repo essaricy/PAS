@@ -53,10 +53,16 @@
       <%@include file="common/no-cycle.jsp" %>
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
-          <div class="card phases_card">
+          <div class="card employee_phase_assessment_card">
             <div class="header"><h2>Phase-wise Score Report of {employeeName} for the Cycle {cycle}</h2></div>
-            <div class="body">1
+            <div class="body">
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
+          <div class="card employee_assessment_card">
           </div>
         </div>
       </div>
@@ -97,27 +103,95 @@
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-report-score-cycle.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments3.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
+
 <script>
 $(function () {
   var aid='${param.aid}';
   var eid='${param.eid}';
 
-  console.log('/api/manager/report/cycle/assessments/' + aid + '/' + eid);
+  $('.employee_assessment_card').hide();
 
-  $.fn.ajaxGet({
-    url: '<%=request.getContextPath()%>/api/manager/report/cycle/assessments/' + aid + '/' + eid,
-    onSuccess: renderAllPhaseAssessments,
-    onError: showEmployeePhaseScoreError
+  $.fn.employeePhaseAssessmentsReport=function( options ) {
+	var settings=$.extend({
+	    contextPath: null,
+	    url: null,
+	}, options );
+
+    var obj=$(this);
+    // Get employee information
+    // Get Appraisal Cycle information
+	$.fn.ajaxGet({
+		url: settings.contextPath + settings.url,
+		onSuccess: renderAllPhaseAssessments,
+		onError: showEmployeePhaseScoreError
+  	});
+
+	function renderAllPhaseAssessments(phaseAssessments) {
+	  if (phaseAssessments == null || phaseAssessments.length == 0) {
+          $(cardBody).append('<p class="font-bold col-pink">There were no phase assignments found for this employee for this appraisal cycle</p>');
+      } else {
+          var table=$('<table class="table table-bordered table-striped table-hover dataTable">');
+          $(obj).find('.body').append(table);
+
+          var thead=$('<thead>');
+          var theadRow=$('<tr>');
+          $(theadRow).append('<th width="15%">Phase</th>');
+          //$(theadRow).append('<th width="50%">Goal</th>');
+          $(theadRow).append('<th width="50%">Assessed By</th>');
+          $(theadRow).append('<th width="15%">Score</th>');
+          $(table).append(theadRow);
+          
+          var tbody=$('<tbody>');
+          $(table).append(tbody);
+          $(phaseAssessments).each(function (index, phaseAssessment) {
+        	//console.log(JSON.stringify(phaseAssessment));
+
+        	var phase=phaseAssessment.phase;
+        	var ea=phaseAssessment.employeeAssignment;
+        	var assignedBy=ea.assignedBy;
+
+        	var row=$('<tr>');
+        	var linkTd=$('<td width="15%">');
+        	var link=$('<a href="#">');
+        	$(linkTd).click(function() {
+        	  //showPhaseAssessment(phaseAssessment);
+        	});
+
+        	$(row).append(linkTd);
+        	$(linkTd).append(link);
+        	$(link).append(phase.name);
+
+            //$(row).append('<td width="15%">' + phase.name + '</td>');
+            //$(row).append('<td width="50%">' + phase.name + '</td>');
+            $(row).append('<td width="50%">' + assignedBy.fullName + '</td>');
+            $(row).append('<td width="15%">' + ea.score + '</td>');
+            $(table).append(row);
+          });
+  	  }
+	}
+
+	function showPhaseAssessment(phaseAssessment) {
+	  $('.employee_assessment_card').show();
+	  console.log('phaseAssessment.employeeAssignment.assignmentId=' + phaseAssessment.employeeAssignment.assignmentId);
+	  $('.employee_assessment_card').renderAssessment({
+		role: 'Manager',
+	    contextPath: '<%=request.getContextPath()%>',
+	    //useData: phaseAssessment
+	    url: '<%=request.getContextPath()%>/api/assessment/list/phase/byAssignId/' + phaseAssessment.employeeAssignment.assignmentId,
+	  });
+	}
+
+	function showEmployeePhaseScoreError(error) {
+		console.log('error=' + error);
+  	}
+  }
+
+  $('.employee_phase_assessment_card').employeePhaseAssessmentsReport({
+    contextPath: '<%=request.getContextPath()%>',
+    url: '/api/manager/report/cycle/assessments/' + aid + '/' + eid
   });
-  
-  function renderAllPhaseAssessments(phaseAssessments) {
-	  console.log('phaseAssessments=' + phaseAssessments);
-  }
-
-  function showEmployeePhaseScoreError(error) {
-	  console.log('error=' + error);
-  }
 
 });
 </script>
