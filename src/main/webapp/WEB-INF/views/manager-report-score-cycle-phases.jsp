@@ -46,11 +46,20 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Cycle-wise report of Employees
-          <small>View report of employees for the appraisal cycles, click to see phase-wise break up of each employee</small>
+        <h2>Employee Score Report
+          <small>View scores of the employee in a cycle.</small>
         </h2>
       </div>
       <%@include file="common/no-cycle.jsp" %>
+      <div class="row clearfix">
+        <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
+          <div class="card phases_card">
+            <div class="header"><h2>Phase-wise Score Report of {employeeName} for the Cycle {cycle}</h2></div>
+            <div class="body">1
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </body>
@@ -91,11 +100,25 @@
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
 $(function () {
-  $('.container-fluid').scoreReport({
-    contextPath: '<%=request.getContextPath()%>',
-    url: '<%=request.getContextPath()%>/api/manager/report/cycle/score',
-  });
-});
+  var aid='${param.aid}';
+  var eid='${param.eid}';
 
+  console.log('/api/manager/report/cycle/assessments/' + aid + '/' + eid);
+
+  $.fn.ajaxGet({
+    url: '<%=request.getContextPath()%>/api/manager/report/cycle/assessments/' + aid + '/' + eid,
+    onSuccess: renderAllPhaseAssessments,
+    onError: showEmployeePhaseScoreError
+  });
+  
+  function renderAllPhaseAssessments(phaseAssessments) {
+	  console.log('phaseAssessments=' + phaseAssessments);
+  }
+
+  function showEmployeePhaseScoreError(error) {
+	  console.log('error=' + error);
+  }
+
+});
 </script>
 </html>

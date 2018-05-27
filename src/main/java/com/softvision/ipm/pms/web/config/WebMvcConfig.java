@@ -21,7 +21,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/dashboard").setViewName("dashboard");
         registry.addViewController("/blank").setViewName("blank");
-        registry.addViewController("/403").setViewName("403");
+        registry.addViewController("/403").setViewName("error/403");
+        registry.addViewController("/404").setViewName("error/404");
 
         // Views with ADMIN privileges
         registry.addViewController("/admin/cycles/list").setViewName("admin-cycle-list");
@@ -49,6 +50,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/manager/assessment").setViewName("manager-assessment");
         registry.addViewController("/manager/reports").setViewName("manager-reports");
         registry.addViewController("/manager/report/score/cycle").setViewName("manager-report-score-cycle");
+        registry.addViewController("/manager/report/score/cycle/phases").setViewName("manager-report-score-cycle-phases");
         registry.addViewController("/manager/report/score/phase").setViewName("manager-report-score-phase");
 
         registry.addViewController("/employee/assignment/active").setViewName("employee-assignment-active");
