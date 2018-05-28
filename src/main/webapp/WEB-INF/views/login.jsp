@@ -187,7 +187,9 @@
     <div class="login-box">
       <div class="logo">
        	<img src="<%=request.getContextPath()%>/images/logo.png"  style="float: left;" width="82px" />
-       	<a href="javascript:void(0);"><b>SOFTVISION</b></a>
+       	<a href="javascript:void(0);" class="m-b-10">
+       	  <img src="<%=request.getContextPath()%>/images/softvision-logo-white-150.svg" alt="Logo" style="width: 70%;">
+       	</a>
         <small>PMS - Performance Management System</small>
       </div>
       <div class="card">

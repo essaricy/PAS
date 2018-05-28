@@ -65,9 +65,9 @@
             <span>Goal Setting</span>
           </a>
           <ul class="ml-menu">
-            <%-- <li>
+            <li>
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
-            </li> --%>
+            </li>
             <li>
               <a href="<%=request.getContextPath()%>/manager/template/assign">Template Assignment</a>
             </li>

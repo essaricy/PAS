@@ -47,6 +47,7 @@ public class EmployeeAssignmentRest {
 		Result result = new Result();
 		try {
 			phaseAssessmentService.agree(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
+			result.setMessage("Your appraisal form has been marked as AGREED and has been sent to your manager for conclusion");
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -61,6 +62,7 @@ public class EmployeeAssignmentRest {
 		Result result = new Result();
 		try {
 			phaseAssessmentService.disagree(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
+			result.setMessage("Your appraisal form has been marked as DISAGREED");
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

@@ -39,6 +39,19 @@ public class ManagerAssignmentRepository extends AbstractRepository {
 		return list;
 	}
 
+	public List<EmployeeAssignmentDto> getAssignmentsBySubmittedToByCycleByEmployee(int cycleId, int employeeId,
+			int submittedTo) {
+		List<EmployeeAssignmentDto> list = jdbcTemplate.query(
+				AssignmentRepositorySql.SELECT_CYCLE_ASSIGNMENTS_SUBMITTED_TO,
+			    new Object[] {submittedTo, cycleId},
+			    new RowMapper<EmployeeAssignmentDto>() {
+			        public EmployeeAssignmentDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+			            return AssignmentSqlAssembler.getEmployeeAssignment_Cycle(rs);
+			        }
+			    });
+		return list;
+	}
+
 	public List<EmployeePhaseAssignmentDto> getAssignmentsByAssignedByByPhase(int assignedBy, int cycleId, int phaseId) {
 		List<EmployeePhaseAssignmentDto> list = jdbcTemplate.query(
 				AssignmentRepositorySql.SELECT_PHASE_ASSIGNMENTS_ASSIGNED_BY,

@@ -21,9 +21,11 @@ import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
 import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
 import com.softvision.ipm.pms.assess.repo.AssessmentHeaderDataRepository;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.ipm.pms.assign.entity.CycleAssignment;
 import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.mapper.AssignmentMapper;
 import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.repo.ManagerAssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
 import com.softvision.ipm.pms.assign.util.AssignmentUtil;
@@ -62,6 +64,8 @@ public class PhaseAssessmentService {
 
 	@Autowired private EmployeeDataRepository employeeRepository;
 
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
+
 	@Autowired private AppraisalMapper appraisalMapper;
 
 	@Autowired private TemplateMapper templateMapper;
@@ -73,9 +77,31 @@ public class PhaseAssessmentService {
 	@Autowired EmployeeMapper employeeMapper;
 
 	@PreSecureAssignment(permitEmployee=true, permitManager=true)
-	public PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId,
+	public PhaseAssessmentDto getByAssignmentForEmployeeAndManager(long assignmentId, int requestedEmployeeId,
 			@InjectAssignment PhaseAssignment phaseAssignment) throws ServiceException {
-		log.info("phaseAssignment=" + phaseAssignment);
+		return getByAssignment(assignmentId, requestedEmployeeId, phaseAssignment);
+    }
+
+	public PhaseAssessmentDto getByAssignmentForSubmittedToManager(int cycleId, int employeeId, long assignId,
+			int requestedEmployeeId) throws ServiceException {
+		log.info("getByAssignmentForSubmittedToManager: START cycleId={}, employeeId={}, assignId={}, requestedEmployeeId={}",
+				cycleId, employeeId, assignId, requestedEmployeeId);
+
+		CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
+		if (cycleAssignment == null) {
+			throw new ServiceException("Invalid cycle assignment");
+		}
+		// Check if the right Manager is calling
+		Integer submittedTo = cycleAssignment.getSubmittedTo();
+		if (submittedTo == null || submittedTo != requestedEmployeeId) {
+            throw new ServiceException("getByAssignmentForSubmittedToManager: UNAUTHORIZED ACCESS ATTEMPTED");
+        }
+		PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findById(assignId);
+		return getByAssignment(assignId, requestedEmployeeId, phaseAssignment);
+    }
+
+	private PhaseAssessmentDto getByAssignment(long assignmentId, int requestedEmployeeId,
+			@InjectAssignment PhaseAssignment phaseAssignment) throws ServiceException {
         PhaseAssessmentDto phaseAssessment = new PhaseAssessmentDto();
         EmployeeAssignmentDto employeeAssignment = assignmentMapper.get(phaseAssignment);
 

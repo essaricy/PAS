@@ -37,18 +37,21 @@ public class AssessmentRest {
 
 	@Autowired private PhaseAssessmentService phaseAssessmentService;
 
+	@PreAuthorize(AuthorizeConstant.IS_EMPLOYEE_OR_MANAGER)
 	@RequestMapping(value="list/phase/byAssignId/{aid}", method=RequestMethod.GET)
 	public PhaseAssessmentDto getPhaseAssessmentByAssignmentId(
 			@PathVariable(name = "aid", required = true) @NotNull long assignmentId)
 			throws ServiceException {
-		return phaseAssessmentService.getByAssignment(assignmentId, RestUtil.getLoggedInEmployeeId(), null);
+		return phaseAssessmentService.getByAssignmentForEmployeeAndManager(assignmentId, RestUtil.getLoggedInEmployeeId(), null);
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_EMPLOYEE)
 	@RequestMapping(value="phase/save", method=RequestMethod.POST)
 	public Result save(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, SAVE_SELF_APPRAISAL);
     }
 
+	@PreAuthorize(AuthorizeConstant.IS_EMPLOYEE)
 	@RequestMapping(value="phase/submit", method=RequestMethod.POST)
 	public Result submit(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, SUBMIT_SELF_APPRAISAL);
@@ -72,16 +75,19 @@ public class AssessmentRest {
 		return changePhaseStatus(phaseAssessHeader, SUBMIT_MANAGER_REVIEW);
 	}
 
+	@PreAuthorize(AuthorizeConstant.IS_EMPLOYEE)
 	@RequestMapping(value="phase/agree", method=RequestMethod.POST)
 	public Result agree(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, AGREE_WITH_REVIEW);
 	}
 
+	@PreAuthorize(AuthorizeConstant.IS_EMPLOYEE)
 	@RequestMapping(value="phase/disagree", method=RequestMethod.POST)
 	public Result disgree(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
 		return changePhaseStatus(phaseAssessHeader, DISAGREE_WITH_REVIEW);
 	}
 
+	@PreAuthorize(AuthorizeConstant.IS_MANAGER)
 	@RequestMapping(value="phase/conclude", method=RequestMethod.POST)
     public Result conclude(@RequestBody(required = true) @NotNull AssessHeaderDto phaseAssessHeader) {
         return changePhaseStatus(phaseAssessHeader, CONCLUDE);
@@ -104,26 +110,33 @@ public class AssessmentRest {
 				throw new ServiceException("Invalid assignment");
 			}
 			int requestedEmployeeId = RestUtil.getLoggedInEmployeeId();
-			//assessHeader.setAssessDate(new Date());
-
 			if (actionToPerform.equals(SAVE_SELF_APPRAISAL)) {
 				phaseAssessmentService.saveSelfAppraisal(assignId, requestedEmployeeId, assessHeader, null);
+				result.setMessage("Your appraisal form has been saved successfully");
 			} else if (actionToPerform.equals(SUBMIT_SELF_APPRAISAL)) {
 				phaseAssessmentService.submitSelfAppraisal(assignId, requestedEmployeeId, assessHeader, null);
+				result.setMessage("Your appraisal form has been submitted successfully");
 			} else if (actionToPerform.equals(REVERT_TO_SELF_SUBMISSION)) {
 				phaseAssessmentService.revertToSelfSubmission(assignId, requestedEmployeeId, null);
+				result.setMessage("This appraisal form has been reverted back to employee successfully");
 			} else if (actionToPerform.equals(SAVE_MANAGER_REVIEW)) {
 				phaseAssessmentService.saveReview(assignId, requestedEmployeeId, assessHeader, null);
+				result.setMessage("Your review has been saved successfully");
 			} else if (actionToPerform.equals(SUBMIT_MANAGER_REVIEW)) {
 				phaseAssessmentService.submitReview(assignId, requestedEmployeeId, assessHeader, null);
+				result.setMessage("Your review has been submitted successfully");
 			} else if (actionToPerform.equals(AGREE_WITH_REVIEW)) {
 				phaseAssessmentService.agree(assignId, requestedEmployeeId, null);
+				result.setMessage("Your appraisal form has been marked as AGREED and has been sent to your manager for conclusion");
 			} else if (actionToPerform.equals(DISAGREE_WITH_REVIEW)) {
 				phaseAssessmentService.disagree(assignId, requestedEmployeeId, null);
+				result.setMessage("Your appraisal form has been marked as DISAGREED");
 			} else if (actionToPerform.equals(UPDATE_MANAGER_REVIEW)) {
 				phaseAssessmentService.updateReview(assignId, requestedEmployeeId, assessHeader, null);
+				result.setMessage("Your review has been updated successfully");
 			} else if (actionToPerform.equals(CONCLUDE)) {
 				phaseAssessmentService.conclude(assignId, requestedEmployeeId, null);
+				result.setMessage("This appraisal form has been CONCLUDED successfully");
 			} else {
 				throw new Exception("Invalid action to perform: " + actionToPerform);
 			}

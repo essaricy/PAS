@@ -54,15 +54,16 @@
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
           <div class="card employee_phase_assessment_card">
-            <div class="header"><h2>Phase-wise Score Report of {employeeName} for the Cycle {cycle}</h2></div>
-            <div class="body">
-            </div>
+            <div class="header"></div>
+            <div class="body"></div>
           </div>
         </div>
       </div>
       <div class="row clearfix">
         <div class="col-lg-12 col-md-50 col-sm-12 col-xs-12">
           <div class="card employee_assessment_card">
+            <div class="header"></div>
+            <div class="body"></div>
           </div>
         </div>
       </div>
@@ -98,6 +99,7 @@
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/ckeditor/ckeditor.js"></script>
 
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
@@ -108,7 +110,7 @@
 
 <script>
 $(function () {
-  var aid='${param.aid}';
+  var cid='${param.cid}';
   var eid='${param.eid}';
 
   $('.employee_assessment_card').hide();
@@ -120,6 +122,9 @@ $(function () {
 	}, options );
 
     var obj=$(this);
+    var cardHeader=$(obj).find('.header');
+    var cardBody=$(obj).find('.body');
+
     // Get employee information
     // Get Appraisal Cycle information
 	$.fn.ajaxGet({
@@ -128,43 +133,53 @@ $(function () {
 		onError: showEmployeePhaseScoreError
   	});
 
-	function renderAllPhaseAssessments(phaseAssessments) {
-	  if (phaseAssessments == null || phaseAssessments.length == 0) {
+	function renderAllPhaseAssessments(cycleAssignment) {
+      var cycle=cycleAssignment.cycle;
+      var phases=cycle.phases;
+      var cycleStatus=getAppraisalCycleStatus(cycle.status);
+      var employeeAssignments=cycleAssignment.employeeAssignments;
+      
+
+	  if (employeeAssignments == null || employeeAssignments.length == 0) {
           $(cardBody).append('<p class="font-bold col-pink">There were no phase assignments found for this employee for this appraisal cycle</p>');
       } else {
+    	  var assignedToEmployeeName = employeeAssignments[0].assignedTo.fullName;
+    	  $(cardHeader).append('<h2>Phase-wise Score Report</h2>');
+    	  $(cardHeader).append('<small>For the appraisal cycle <code>' + cycle.name + '</code>');
+    	  $(cardHeader).append(', for the employee <code>' + assignedToEmployeeName + '</code></small>');
+
           var table=$('<table class="table table-bordered table-striped table-hover dataTable">');
           $(obj).find('.body').append(table);
 
           var thead=$('<thead>');
           var theadRow=$('<tr>');
           $(theadRow).append('<th width="15%">Phase</th>');
-          //$(theadRow).append('<th width="50%">Goal</th>');
+          $(theadRow).append('<th width="50%">Goal</th>');
           $(theadRow).append('<th width="50%">Assessed By</th>');
           $(theadRow).append('<th width="15%">Score</th>');
           $(table).append(theadRow);
           
           var tbody=$('<tbody>');
           $(table).append(tbody);
-          $(phaseAssessments).each(function (index, phaseAssessment) {
-        	//console.log(JSON.stringify(phaseAssessment));
+          $(employeeAssignments).each(function (index, ea) {
 
-        	var phase=phaseAssessment.phase;
-        	var ea=phaseAssessment.employeeAssignment;
+        	var phase=phases[index];
         	var assignedBy=ea.assignedBy;
+        	var template=ea.template;
 
         	var row=$('<tr>');
         	var linkTd=$('<td width="15%">');
         	var link=$('<a href="#">');
-        	$(linkTd).click(function() {
-        	  //showPhaseAssessment(phaseAssessment);
+        	$(linkTd).click(function(e) {
+        	  e.preventDefault();
+        	  showPhaseAssessment(cid, eid, ea.assignmentId);
         	});
 
         	$(row).append(linkTd);
         	$(linkTd).append(link);
         	$(link).append(phase.name);
 
-            //$(row).append('<td width="15%">' + phase.name + '</td>');
-            //$(row).append('<td width="50%">' + phase.name + '</td>');
+            $(row).append('<td width="50%">' + template.name + '</td>');
             $(row).append('<td width="50%">' + assignedBy.fullName + '</td>');
             $(row).append('<td width="15%">' + ea.score + '</td>');
             $(table).append(row);
@@ -172,14 +187,16 @@ $(function () {
   	  }
 	}
 
-	function showPhaseAssessment(phaseAssessment) {
+	function showPhaseAssessment(cid, eid, assignId) {
+	  $('.employee_assessment_card .header').empty();
+	  $('.employee_assessment_card .body').empty();
+
 	  $('.employee_assessment_card').show();
-	  console.log('phaseAssessment.employeeAssignment.assignmentId=' + phaseAssessment.employeeAssignment.assignmentId);
+	  console.log('cid=' + cid + ',eid=' + eid + ',assignId=' + assignId);
 	  $('.employee_assessment_card').renderAssessment({
 		role: 'Manager',
 	    contextPath: '<%=request.getContextPath()%>',
-	    //useData: phaseAssessment
-	    url: '<%=request.getContextPath()%>/api/assessment/list/phase/byAssignId/' + phaseAssessment.employeeAssignment.assignmentId,
+	    url: '<%=request.getContextPath()%>/api/manager/report/cycle/score/' + cid + '/' + eid + '/' + assignId 
 	  });
 	}
 
@@ -190,7 +207,7 @@ $(function () {
 
   $('.employee_phase_assessment_card').employeePhaseAssessmentsReport({
     contextPath: '<%=request.getContextPath()%>',
-    url: '/api/manager/report/cycle/assessments/' + aid + '/' + eid
+    url: '<%=request.getContextPath()%>/api/manager/report/cycle/score/' + cid + '/' + eid
   });
 
 });

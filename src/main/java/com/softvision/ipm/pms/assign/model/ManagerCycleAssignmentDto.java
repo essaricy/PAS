@@ -14,7 +14,7 @@ public class ManagerCycleAssignmentDto implements Serializable {
 
 	private AppraisalCycleDto cycle;
 
-	List<EmployeeAssignmentDto> employeeAssignments;
+	List<? extends EmployeeAssignmentDto> employeeAssignments;
 
 	List<PhaseAssignmentDto> phaseAssignments;
 

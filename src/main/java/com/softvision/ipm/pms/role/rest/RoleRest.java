@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.ResultUtil;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.role.constant.Roles;
 import com.softvision.ipm.pms.role.entity.EmployeeRole;
@@ -70,29 +71,23 @@ public class RoleRest {
 	@RequestMapping(value = "assign/{employeeId}/{roleId}", method = RequestMethod.PUT)
 	public Result assign(@PathVariable(required = true) @NotNull Integer employeeId,
 			@PathVariable(required = true) @NotNull int roleId) {
-		Result result = new Result();
 		try {
 			roleService.assignRole(employeeId, roleId);
-			result.setCode(Result.SUCCESS);
+			return ResultUtil.getSuccess("Roles have been assigned successfully");
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
 	}
 	
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value = "changeManagerRole", method = RequestMethod.POST)
 	public Result changeManagerRole(@RequestBody(required = true) @NotNull EmployeeRole[] employeeList) {
-		Result result = new Result();
 		try {
 			roleService.changeManagerRole(employeeList, Roles.MANAGER.getCode());
-			result.setCode(Result.SUCCESS);
+			return ResultUtil.getSuccess("Roles have been assigned successfully");
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
 	}
 
 }

@@ -68,7 +68,7 @@ $(function () {
               var viewFormButton=$('<button class="btn btn-xs btn-info waves-effect" title="View Appraisal Forms"><i class="material-icons">assignment_ind</i></button>');
               $(viewFormButton).tooltip({container: 'body'});
               $(viewFormButton).click(function() {
-                location.href=settings.contextPath + '/manager/report/score/cycle/phases?aid=' + ea.assignmentId + '&eid=' + assignedTo.employeeId;
+                location.href=settings.contextPath + '/manager/report/score/cycle/phases?cid=' + cycle.id + '&eid=' + assignedTo.employeeId;
               });
               var actionTd=$('<td>');
               $(actionTd).append(viewFormButton);

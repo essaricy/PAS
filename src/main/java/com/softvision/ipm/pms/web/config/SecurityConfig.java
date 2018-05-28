@@ -46,9 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.logoutSuccessUrl("/")
 	    .and().authorizeRequests()
 			.antMatchers("/", "/login").permitAll()
+			.antMatchers("/admin/template/**").access(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
 			.antMatchers("/admin/**").access(AuthorizeConstant.IS_ADMIN)
+			.antMatchers("/manager/**").access(AuthorizeConstant.IS_MANAGER)
+			.antMatchers("/employee/**").access(AuthorizeConstant.IS_EMPLOYEE)
+			.antMatchers("/support/**").access(AuthorizeConstant.IS_SUPPORT)
 			.anyRequest().fullyAuthenticated()
-		.and().exceptionHandling().accessDeniedPage("/403");
+		.and()
+			.exceptionHandling().accessDeniedPage("/403");
 
 		http.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry);
     }

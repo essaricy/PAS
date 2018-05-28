@@ -31,8 +31,9 @@ public class AssignmentRepositorySql {
 		 	"order by cycle_assign.employee_id asc ";
 
 	public static final String SELECT_CYCLE_ASSIGNMENTS_SUBMITTED_TO = SELECT_CYCLE_ASSIGNMENTS +
-			"where cycle_assign.submitted_to=? " + 
-		 	"and appr_cycle.id=? " +
+			"where "+ 
+		 	"appr_cycle.id=? " +
+		 	"and cycle_assign.submitted_to=? " + 
 		 	"order by cycle_assign.employee_id asc "; 
 
 	public static final String SELECT_MANAGER_ALL_CYCLE_ASSIGNMENTS = SELECT_CYCLE_ASSIGNMENTS + 
