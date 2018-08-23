@@ -12,10 +12,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.softvision.ipm.pms.Application;
-import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
-import com.softvision.ipm.pms.appraisal.service.AppraisalService;
+import com.softvision.digital.pms.Application;
+import com.softvision.digital.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.digital.pms.appraisal.repo.AppraisalPhaseDataRepository;
+import com.softvision.digital.pms.appraisal.service.AppraisalService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)

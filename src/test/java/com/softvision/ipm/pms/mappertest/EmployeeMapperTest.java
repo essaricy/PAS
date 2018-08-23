@@ -16,12 +16,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
-import com.softvision.ipm.pms.employee.model.SVEmployee;
-import com.softvision.ipm.pms.user.model.User;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.employee.entity.Employee;
+import com.softvision.digital.pms.employee.mapper.EmployeeMapper;
+import com.softvision.digital.pms.employee.model.EmployeeDto;
+import com.softvision.digital.pms.employee.model.SVEmployee;
+import com.softvision.digital.pms.user.model.User;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class EmployeeMapperTest {
 

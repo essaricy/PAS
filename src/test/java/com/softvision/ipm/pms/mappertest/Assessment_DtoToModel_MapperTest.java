@@ -17,13 +17,13 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.assess.entity.AssessDetail;
-import com.softvision.ipm.pms.assess.entity.AssessHeader;
-import com.softvision.ipm.pms.assess.mapper.AssessMapper;
-import com.softvision.ipm.pms.assess.model.AssessDetailDto;
-import com.softvision.ipm.pms.assess.model.AssessHeaderDto;
-import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.assess.entity.AssessDetail;
+import com.softvision.digital.pms.assess.entity.AssessHeader;
+import com.softvision.digital.pms.assess.mapper.AssessMapper;
+import com.softvision.digital.pms.assess.model.AssessDetailDto;
+import com.softvision.digital.pms.assess.model.AssessHeaderDto;
+import com.softvision.digital.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class Assessment_DtoToModel_MapperTest {
 

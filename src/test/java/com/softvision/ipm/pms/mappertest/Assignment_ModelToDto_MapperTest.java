@@ -15,13 +15,13 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
-import com.softvision.ipm.pms.assign.entity.CycleAssignment;
-import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
-import com.softvision.ipm.pms.assign.mapper.AssignmentMapper;
-import com.softvision.ipm.pms.assign.model.EmployeeAssignmentDto;
-import com.softvision.ipm.pms.assign.model.EmployeePhaseAssignmentDto;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.digital.pms.assign.entity.CycleAssignment;
+import com.softvision.digital.pms.assign.entity.PhaseAssignment;
+import com.softvision.digital.pms.assign.mapper.AssignmentMapper;
+import com.softvision.digital.pms.assign.model.EmployeeAssignmentDto;
+import com.softvision.digital.pms.assign.model.EmployeePhaseAssignmentDto;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class Assignment_ModelToDto_MapperTest {
 

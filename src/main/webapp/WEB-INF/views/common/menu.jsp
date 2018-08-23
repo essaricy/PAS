@@ -128,9 +128,9 @@
             <li>
               <a href="<%=request.getContextPath()%>/support/sessions/active">Active Sessions</a>
             </li>
-            <li>
+            <%-- <li>
               <a href="<%=request.getContextPath()%>/support/cache/objects">Cached Objects</a>
-            </li>
+            </li> --%>
           </ul>
         </li>
         </sec:authorize>
@@ -192,7 +192,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>3.0</span></li>
+			<li><span>2.13</span></li>
 		  </ul>
 		</div>
       </div>

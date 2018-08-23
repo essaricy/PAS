@@ -7,15 +7,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.softvision.ipm.pms.common.exception.ServiceException;
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
-import com.softvision.ipm.pms.goal.model.GoalDto;
-import com.softvision.ipm.pms.goal.model.GoalParamDto;
-import com.softvision.ipm.pms.goal.service.GoalService;
-import com.softvision.ipm.pms.template.model.TemplateDetailDto;
-import com.softvision.ipm.pms.template.model.TemplateDto;
-import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
-import com.softvision.ipm.pms.template.service.TemplateService;
+import com.softvision.digital.pms.common.exception.ServiceException;
+import com.softvision.digital.pms.employee.model.EmployeeDto;
+import com.softvision.digital.pms.goal.model.GoalDto;
+import com.softvision.digital.pms.goal.model.GoalParamDto;
+import com.softvision.digital.pms.goal.service.GoalService;
+import com.softvision.digital.pms.template.model.TemplateDetailDto;
+import com.softvision.digital.pms.template.model.TemplateDto;
+import com.softvision.digital.pms.template.model.TemplateHeaderDto;
+import com.softvision.digital.pms.template.service.TemplateService;
 
 @Component
 public class TemplateDataManager implements AbstractDataManager {
@@ -97,6 +97,7 @@ public class TemplateDataManager implements AbstractDataManager {
 				headers.add(header);
 			}
 			templateDto.setHeaders(headers);
+			templateDto.setId(0);
 			System.out.println(templateDto);
 			templateService.update(templateDto);
 		}

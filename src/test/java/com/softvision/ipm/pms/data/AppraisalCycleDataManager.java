@@ -10,10 +10,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
-import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
-import com.softvision.ipm.pms.appraisal.service.AppraisalService;
-import com.softvision.ipm.pms.common.exception.ServiceException;
+import com.softvision.digital.pms.appraisal.model.AppraisalCycleDto;
+import com.softvision.digital.pms.appraisal.model.AppraisalPhaseDto;
+import com.softvision.digital.pms.appraisal.service.AppraisalService;
+import com.softvision.digital.pms.common.exception.ServiceException;
 
 @Component
 public class AppraisalCycleDataManager implements AbstractDataManager {

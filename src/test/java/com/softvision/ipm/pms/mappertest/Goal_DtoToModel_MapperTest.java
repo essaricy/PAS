@@ -15,12 +15,12 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.goal.entity.Goal;
-import com.softvision.ipm.pms.goal.entity.GoalParam;
-import com.softvision.ipm.pms.goal.mapper.GoalMapper;
-import com.softvision.ipm.pms.goal.model.GoalDto;
-import com.softvision.ipm.pms.goal.model.GoalParamDto;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.goal.entity.Goal;
+import com.softvision.digital.pms.goal.entity.GoalParam;
+import com.softvision.digital.pms.goal.mapper.GoalMapper;
+import com.softvision.digital.pms.goal.model.GoalDto;
+import com.softvision.digital.pms.goal.model.GoalParamDto;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class Goal_DtoToModel_MapperTest {
 

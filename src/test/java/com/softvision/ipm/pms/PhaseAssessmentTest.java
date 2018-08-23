@@ -10,8 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
-import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
+import com.softvision.digital.pms.Application;
+import com.softvision.digital.pms.assess.model.PhaseAssessmentDto;
+import com.softvision.digital.pms.assess.service.PhaseAssessmentService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class, webEnvironment=WebEnvironment.DEFINED_PORT)

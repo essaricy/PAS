@@ -56,7 +56,7 @@
             <div class="body">
               <div class="media">
                 <div class="media-left">
-                  <a href="<%=request.getContextPath()%>/admin/report/appraisal/overview"><i class="material-icons md-48">apps</i></a>
+                  <a href="<%=request.getContextPath()%>/admin/report/appraisal/overview"><i class="material-icons md-48">view_list</i></a>
                 </div>
                 <div class="media-body">
                   <h4 class="media-heading">
@@ -96,6 +96,17 @@
                     <a href="<%=request.getContextPath()%>/admin/report/appraisal/status/phase/unassigned">Appraisal Status Report (Phase-wise - Unassigned)</a>
                   </h4>
                   This report lists all the employees for whom template has not been assigned.
+                </div>
+              </div>
+              <div class="media">
+                <div class="media-left">
+                  <a href="<%=request.getContextPath()%>/admin/report/appraisal/score"><i class="material-icons md-48">apps</i></a>
+                </div>
+                <div class="media-body">
+                  <h4 class="media-heading">
+                    <a href="<%=request.getContextPath()%>/admin/report/appraisal/score/phase">All-Inclusive Report</a>
+                  </h4>
+                  This report lists scores of all employees in an appraisal phase. We can view the ratings and comments of both employees and managers.
                 </div>
               </div>
             </div>
@@ -143,6 +154,5 @@
 <script>
 $(function () {
 });
-
 </script>
 </html>

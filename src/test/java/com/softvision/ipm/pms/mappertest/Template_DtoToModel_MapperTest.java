@@ -17,15 +17,15 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
-import com.softvision.ipm.pms.template.entity.Template;
-import com.softvision.ipm.pms.template.entity.TemplateDetail;
-import com.softvision.ipm.pms.template.entity.TemplateHeader;
-import com.softvision.ipm.pms.template.mapper.TemplateMapper;
-import com.softvision.ipm.pms.template.model.TemplateDetailDto;
-import com.softvision.ipm.pms.template.model.TemplateDto;
-import com.softvision.ipm.pms.template.model.TemplateHeaderDto;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.employee.model.EmployeeDto;
+import com.softvision.digital.pms.template.entity.Template;
+import com.softvision.digital.pms.template.entity.TemplateDetail;
+import com.softvision.digital.pms.template.entity.TemplateHeader;
+import com.softvision.digital.pms.template.mapper.TemplateMapper;
+import com.softvision.digital.pms.template.model.TemplateDetailDto;
+import com.softvision.digital.pms.template.model.TemplateDto;
+import com.softvision.digital.pms.template.model.TemplateHeaderDto;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class Template_DtoToModel_MapperTest {
 

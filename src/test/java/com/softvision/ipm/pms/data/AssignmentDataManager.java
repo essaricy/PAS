@@ -6,18 +6,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
-import com.softvision.ipm.pms.appraisal.service.AppraisalService;
-import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
-import com.softvision.ipm.pms.assign.repo.CycleAssignmentDataRepository;
-import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
-import com.softvision.ipm.pms.assign.service.AssignmentService;
-import com.softvision.ipm.pms.assign.service.ManagerAssignmentService;
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
-import com.softvision.ipm.pms.employee.service.EmployeeService;
-import com.softvision.ipm.pms.role.constant.Roles;
-import com.softvision.ipm.pms.template.model.TemplateDto;
-import com.softvision.ipm.pms.template.service.TemplateService;
+import com.softvision.digital.pms.appraisal.model.AppraisalCycleDto;
+import com.softvision.digital.pms.appraisal.service.AppraisalService;
+import com.softvision.digital.pms.assign.model.BulkAssignmentDto;
+import com.softvision.digital.pms.assign.repo.CycleAssignmentDataRepository;
+import com.softvision.digital.pms.assign.repo.PhaseAssignmentDataRepository;
+import com.softvision.digital.pms.assign.service.AssignmentService;
+import com.softvision.digital.pms.assign.service.ManagerAssignmentService;
+import com.softvision.digital.pms.employee.model.EmployeeDto;
+import com.softvision.digital.pms.employee.service.EmployeeService;
+import com.softvision.digital.pms.role.constant.Roles;
+import com.softvision.digital.pms.template.model.TemplateDto;
+import com.softvision.digital.pms.template.service.TemplateService;
 
 @Component
 public class AssignmentDataManager implements AbstractDataManager {

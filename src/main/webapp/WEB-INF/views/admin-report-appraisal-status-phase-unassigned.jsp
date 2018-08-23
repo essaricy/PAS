@@ -82,6 +82,7 @@
                              <th>First Name</th>
                              <th>Last Name</th>
                              <th>Employment Type</th>
+                             <th>Org</th>
                              <th>Band</th>
                              <th>Designation</th>
                              <th>Location</th>
@@ -92,7 +93,7 @@
                        </table>
                      </div>
                    </div>
-                                      </div>
+               </div>
           </div>
         </div>
       </div>
@@ -182,6 +183,7 @@
           { "data": "firstName" },
           { "data": "lastName" },
           { "data": "employmentType" },
+          { "data": "org" },
           { "data": "band" },
           { "data": "designation" },
           { "data": "location" },

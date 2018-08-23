@@ -9,11 +9,11 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.softvision.ipm.pms.common.model.Result;
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
-import com.softvision.ipm.pms.employee.service.EmployeeService;
-import com.softvision.ipm.pms.role.constant.Roles;
-import com.softvision.ipm.pms.role.service.RoleService;
+import com.softvision.digital.pms.common.model.Result;
+import com.softvision.digital.pms.employee.model.EmployeeDto;
+import com.softvision.digital.pms.employee.service.EmployeeService;
+import com.softvision.digital.pms.role.constant.Roles;
+import com.softvision.digital.pms.role.service.RoleService;
 
 @Component
 public class EmployeeDataManager implements AbstractDataManager {

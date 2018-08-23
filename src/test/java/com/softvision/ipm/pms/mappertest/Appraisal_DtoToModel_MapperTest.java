@@ -16,13 +16,13 @@ import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 import org.modelmapper.ModelMapper;
 
-import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
-import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
-import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
-import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
-import com.softvision.ipm.pms.appraisal.model.AppraisalPhaseDto;
-import com.softvision.ipm.pms.web.config.MyModelMapper;
+import com.softvision.digital.pms.appraisal.constant.AppraisalCycleStatus;
+import com.softvision.digital.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.digital.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.digital.pms.appraisal.mapper.AppraisalMapper;
+import com.softvision.digital.pms.appraisal.model.AppraisalCycleDto;
+import com.softvision.digital.pms.appraisal.model.AppraisalPhaseDto;
+import com.softvision.digital.pms.web.config.MyModelMapper;
 
 public class Appraisal_DtoToModel_MapperTest {
 
