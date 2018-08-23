@@ -87,7 +87,7 @@
 $(function () {
   $('.container-fluid').scoreReport({
     contextPath: '<%=request.getContextPath()%>',
-    url: '<%=request.getContextPath()%>/manager/report/phase/score',
+    url: '<%=request.getContextPath()%>/api/manager/report/phase/score',
   });
 });
 

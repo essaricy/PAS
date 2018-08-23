@@ -200,7 +200,7 @@ $(function () {
 
     function showTemplate(templateId) {
       $.fn.ajaxGet({
-        url: settings.contextPath + '/template/list/' + templateId,
+        url: settings.contextPath + '/api/template/list/' + templateId,
         onSuccess: function(template) {
           $('#TemplateModal_Title').text(template.name);
 
@@ -323,7 +323,7 @@ $(function () {
         closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         $.fn.ajaxPut({
-          url: settings.contextPath + '/assignment/manager/change/phase-status/enable/' + id
+          url: settings.contextPath + '/api/assignment/manager/change/phase-status/enable/' + id
         });
       });
     }
@@ -335,7 +335,7 @@ $(function () {
         confirmButtonText: "Yes, Send Reminder!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         $.fn.ajaxPut({
-          url: settings.contextPath + '/assignment/manager/reminder/tosubmit/' + id
+          url: settings.contextPath + '/api/assignment/manager/reminder/tosubmit/' + id
         });
       });
     }
@@ -346,7 +346,7 @@ $(function () {
         confirmButtonText: "Yes, Revert!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
         $.fn.ajaxPut({
-          url: settings.contextPath + '/assignment/manager/change/phase-status/revert/' + id
+          url: settings.contextPath + '/api/assignment/manager/change/phase-status/revert/' + id
         });
       });
     }
@@ -357,7 +357,7 @@ $(function () {
         showCancelButton: true, confirmButtonColor: "#DD6B55",
         confirmButtonText: "Yes, Delete!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
-        var url=settings.contextPath + '/assignment/manager/delete/' + id
+        var url=settings.contextPath + '/api/assignment/manager/delete/' + id
         $.fn.ajaxDelete({ url: url });
       });
     }
@@ -368,7 +368,7 @@ $(function () {
         showCancelButton: true, confirmButtonColor: "#DD6B55",
         confirmButtonText: "Yes, Conclude!", closeOnConfirm: false, showLoaderOnConfirm: true
       }, function () {
-        var url=settings.contextPath + '/assignment/manager/change/phase-status/conclude/' + id
+        var url=settings.contextPath + '/api/assignment/manager/change/phase-status/conclude/' + id
         $.fn.ajaxPut({
           url: url
         });

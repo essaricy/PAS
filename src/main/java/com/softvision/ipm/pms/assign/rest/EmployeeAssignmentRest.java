@@ -19,7 +19,7 @@ import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
 
 @RestController
-@RequestMapping(value="assignment/employee", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/assignment/employee", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeAssignmentRest {
 
 	@Autowired private EmployeeAssignmentService employeeAssignmentService;
@@ -46,7 +46,8 @@ public class EmployeeAssignmentRest {
 			@PathVariable(required=true) @Min(1) long phaseAssignId) {
 		Result result = new Result();
 		try {
-			phaseAssessmentService.agree(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			phaseAssessmentService.agree(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
+			result.setMessage("Your appraisal form has been marked as AGREED and has been sent to your manager for conclusion");
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);
@@ -60,7 +61,8 @@ public class EmployeeAssignmentRest {
 			@PathVariable(required=true) @Min(1) long phaseAssignId) {
 		Result result = new Result();
 		try {
-			phaseAssessmentService.escalate(phaseAssignId, RestUtil.getLoggedInEmployeeId());
+			phaseAssessmentService.disagree(phaseAssignId, RestUtil.getLoggedInEmployeeId(), null);
+			result.setMessage("Your appraisal form has been marked as DISAGREED");
 			result.setCode(Result.SUCCESS);
 		} catch (Exception exception) {
 			result.setCode(Result.FAILURE);

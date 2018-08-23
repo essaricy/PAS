@@ -45,4 +45,10 @@ public class EmployeeDto implements Serializable {
 	@NotBlank(message="Login Id is required")
 	private String loginId;
 
+	private String department;
+
+    private String division;
+
+    private String org;
+
 }

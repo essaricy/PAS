@@ -78,7 +78,10 @@
                     </div>
                   </div>
                   <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6">
-                    <button type="button" id="GoalParam_Add" class="btn btn-primary btn-lg m-l-15 waves-effect">Add</button>
+                    <button type="button" id="GoalParam_Add" class="btn btn-primary waves-effect">
+                      <i class="material-icons">add</i>
+                      <span>Add</span>
+                    </button>
                   </div>
 
                   <table id="GoalParam_Table" class="table table-striped">
@@ -153,13 +156,13 @@
           params[params.length]=param;
    		});
      	goal.params=params;
-      	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/goal/update', data: goal});
+      	$.fn.ajaxPost({url : '<%=request.getContextPath()%>/api/goal/update', data: goal});
       }
     });
 
     if (id != 0) {
       $.fn.ajaxGet({
-      	url: '<%=request.getContextPath()%>/goal/list/' + id,
+      	url: '<%=request.getContextPath()%>/api/goal/list/' + id,
       	onSuccess: function(result) {
           if (result) {
         	$('#Goal_Name').val(result.name);

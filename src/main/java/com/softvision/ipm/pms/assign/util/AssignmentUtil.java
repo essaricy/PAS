@@ -11,14 +11,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AssignmentUtil {
 
-	private static final String ERROR_MESSAGE = "Cannot change the status from {0} to {1}";
+	private static final String ERROR_MESSAGE = "Cannot change the status from \"{0}\" to \"{1}\"";
 
 	public static PhaseAssignmentStatus validateStatus(int status, String desiredState,
 			PhaseAssignmentStatus... statusesToAllow) throws ServiceException {
 		PhaseAssignmentStatus currentStatus = PhaseAssignmentStatus.get(status);
 		boolean found = Arrays.stream(statusesToAllow).anyMatch(o -> o==currentStatus);
 		if (!found) {
-			String message = MessageFormat.format(ERROR_MESSAGE, currentStatus, desiredState);
+			String message = MessageFormat.format(ERROR_MESSAGE, currentStatus.getName(), desiredState);
 			log.error(message);
 			throw new ServiceException(message);
 		}

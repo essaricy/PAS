@@ -38,6 +38,8 @@ public class AssessHeader implements Serializable {
 
 	private int assessedBy;
 
+	private int stage;
+
 	@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "assess_header_id", nullable = false)
 	@LazyCollection(LazyCollectionOption.FALSE)

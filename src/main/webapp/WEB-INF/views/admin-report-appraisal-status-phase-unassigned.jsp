@@ -12,8 +12,6 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap/css/bootstrap.css">
     <!-- Waves Effect Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.css"/>
-    <!-- Bootstrap Material Datetime Picker Css -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" />
     <!-- Animation Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/animate-css/animate.css"/>
     <!-- Sweetalert Css -->
@@ -26,9 +24,6 @@
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/css/themes/all-themes.css">
      <!-- Bootstrap Select Css -->
     <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/css/bootstrap-select.css"  />
-    <!-- EasyAutocomplete-1.3.5 -->
-    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/easy-autocomplete.min.css"/>
-    
   </head>
   <style>
   .list-group-item {
@@ -87,6 +82,7 @@
                              <th>First Name</th>
                              <th>Last Name</th>
                              <th>Employment Type</th>
+                             <th>Org</th>
                              <th>Band</th>
                              <th>Designation</th>
                              <th>Location</th>
@@ -97,7 +93,7 @@
                        </table>
                      </div>
                    </div>
-                                      </div>
+               </div>
           </div>
         </div>
       </div>
@@ -112,34 +108,24 @@
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-select/js/bootstrap-select.js"></script>
   <!-- Slimscroll Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-  <!-- Jquery Validation Plugin Css -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-validation/jquery.validate.js"></script>
-  <!-- JQuery Steps Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-steps/jquery.steps.js"></script>
   <!-- Sweet Alert Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/sweetalert/sweetalert.min.js"></script>
   <!-- Waves Effect Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/node-waves/waves.js"></script>
   <!-- Jquery DataTable Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
-  <%-- <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script> --%>
   <!-- Autosize Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/autosize/autosize.js"></script>
   <!-- Moment Plugin Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/momentjs/moment.js"></script>
-  <!-- Bootstrap Material Datetime Picker Plugin Js -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
   <!-- Custom Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/admin.js"></script>
   <!-- Demo Js -->
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
   
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/form-validator.js"></script>
   <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
-  <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
-  <!-- EasyAutocomplete-1.3.5 -->
-  <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/EasyAutocomplete-1.3.5/jquery.easy-autocomplete.min.js"></script>
+
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
   <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/extensions/export/buttons.flash.min.js"></script>
@@ -152,7 +138,7 @@
 
   <script>
   $(function () {
-	 var url = '<%=request.getContextPath()%>/appraisal/list/';
+	 var url = '<%=request.getContextPath()%>/api/appraisal/list/';
      $.get(url, {sid: new Date().getTime()}, function() {}).done(function(result) {
 		$.each(result,function(index, value) {
 			$('#cyclesPhaseSelecUnassignedtId').append('<option value="'+value.id+'">'+value.name+'</option>');
@@ -166,7 +152,7 @@
          if (id != 0) {
         	 $('#phaseSelectUnassignedId').html('');
         	 $('#phaseSelectUnassignedId').append('<option value="-1">&nbsp;</option>');
-	         var url_phase = '<%=request.getContextPath()%>/appraisal/list/' + id;
+	         var url_phase = '<%=request.getContextPath()%>/api/appraisal/list/' + id;
 	         $.get(url_phase, {sid: new Date().getTime()}, function() {})
 	         .done(function(result) {
 	           if (result) {
@@ -190,13 +176,14 @@
 	  searching: true,
 	  ordering: true,
 	  info: true,
-      "ajax": "<%=request.getContextPath()%>/assignment/admin/phase/unassigned/" + cycleId+"/"+phaseId,
+      "ajax": "<%=request.getContextPath()%>/api/admin/report/phase/unassigned/" + cycleId+"/"+phaseId,
       "sAjaxDataProp":"",
       "columns": [
           { "data": "employeeId" },
           { "data": "firstName" },
           { "data": "lastName" },
           { "data": "employmentType" },
+          { "data": "org" },
           { "data": "band" },
           { "data": "designation" },
           { "data": "location" },
@@ -212,15 +199,15 @@
     var phaseSelectId=$('#phaseSelectUnassignedId');
     cycleId=$.trim(cyclesPhaseSelectId.val());
     phaseId=$.trim(phaseSelectId.val());
-    if (cycleId ==-1) {
-      	$(cyclesPhaseSelectId).focus();
+    if (cycleId == -1) {
+      $(cyclesPhaseSelectId).focus();
     } else {
-	  	var table = $('#SearchPhaseTableUnassigned').DataTable();
-	  	if(phaseId>0){
-	  		table.ajax.url("<%=request.getContextPath()%>/assignment/admin/phase/unassigned/" + cycleId+"/"+phaseId).load();
-	  	}else{
-	  		$(phaseSelectId).focus();	  	  	
-	  	}
+	  var table = $('#SearchPhaseTableUnassigned').DataTable();
+	  if (phaseId > 0) {
+	  	table.ajax.url("<%=request.getContextPath()%>/api/admin/report/phase/unassigned/" + cycleId+"/"+phaseId).load();
+	  } else {
+  		$(phaseSelectId).focus();
+  	  }
     }
   });
 

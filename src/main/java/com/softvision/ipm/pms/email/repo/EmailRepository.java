@@ -18,11 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import com.softvision.ipm.pms.appraisal.constant.AppraisalCycleStatus;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalCycle;
 import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
-import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalPhaseDataRepository;
+import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
 import com.softvision.ipm.pms.common.constants.EmailType;
 import com.softvision.ipm.pms.email.entity.EMailTemplate;
 import com.softvision.ipm.pms.employee.entity.Employee;
@@ -37,9 +36,9 @@ public class EmailRepository {
 	@Autowired private Session session;
 
 	@Autowired private EmailTemplateRepository emailTemplateEngine;
-	
-	@Autowired private AppraisalCycleDataRepository appraisalCycleDataRepository;
-	
+
+	@Autowired private AppraisalRepository appraisalRepository;
+
 	@Autowired private AppraisalPhaseDataRepository appraisalPhaseDataRepository;
 	
 	@Autowired private EmployeeDataRepository employeeRepository;
@@ -111,7 +110,7 @@ public class EmailRepository {
 				EmailType.CHANGE_MANAGER, phaseId, fromManagerId, employeeId);
 		try {
 			AppraisalPhase appraisalPhase= appraisalPhaseDataRepository.findById(phaseId);
-			AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+			AppraisalCycle appraisalCycle = appraisalRepository.getActiveCycle();
 			Employee employee=employeeRepository.findByEmployeeId(employeeId);
 			Employee manager=employeeRepository.findByEmployeeId(fromManagerId);
 			Employee tManager=employeeRepository.findByEmployeeId(toManagerId);
@@ -245,7 +244,7 @@ public class EmailRepository {
 				emailType, phaseId, managerId, employeeId);
 		try {
 			AppraisalPhase appraisalPhase = appraisalPhaseDataRepository.findById(phaseId);
-			AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+			AppraisalCycle appraisalCycle = appraisalRepository.getActiveCycle();
 			Employee manager = employeeRepository.findByEmployeeId(managerId);
 			Employee employee = employeeRepository.findByEmployeeId(employeeId);
 
@@ -281,7 +280,7 @@ public class EmailRepository {
 				emailType, phaseId, employeeId, managerId);
 		try {
 			AppraisalPhase appraisalPhase = appraisalPhaseDataRepository.findById(phaseId);
-			AppraisalCycle appraisalCycle = appraisalCycleDataRepository.findOneByStatus(AppraisalCycleStatus.ACTIVE.toString());
+			AppraisalCycle appraisalCycle = appraisalRepository.getActiveCycle();
 			Employee manager = employeeRepository.findByEmployeeId(managerId);
 			Employee employee = employeeRepository.findByEmployeeId(employeeId);
 
@@ -289,8 +288,8 @@ public class EmailRepository {
 			String templateFile = emailTemplate.getFileName();
 			String subject = emailTemplate.getSubject();
 			String url = emailTemplate.getButtonUrl();
-			String emailFrom = manager.getLoginId() + domain;
-			String emailTo = employee.getLoginId() + domain;
+			String emailFrom = employee.getLoginId() + domain;
+			String emailTo = manager.getLoginId() + domain;
 
 			String managerName = manager.getFirstName();
 			String empName = employee.getFirstName();

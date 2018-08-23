@@ -3,25 +3,29 @@ var AppraisalCycleStatus = {
     code : "DRAFT",
     name : "Draft",
     label : "Draft",
-    colorClass : "bg-amber"
+    colorClass : "bg-amber",
+    icon: "drafts"
   },
   READY : {
     code : "READY",
     name : "Ready",
     label : "Ready",
-    colorClass : "bg-lime"
+    colorClass : "bg-lime",
+    icon: "mail"
   },
   ACTIVE : {
     code : "ACTIVE",
     name : "Active",
     label : "Activate",
-    colorClass : "bg-green"
+    colorClass : "bg-green",
+    icon: "flag"
   },
   COMPLETE : {
     code : "COMPLETE",
     name : "Complete",
     label : "Mark Complete",
-    colorClass : "bg-blue-grey"
+    colorClass : "bg-blue-grey",
+    icon: "archive"
   },
 };
 
@@ -44,7 +48,7 @@ var PhaseAssignmentStatus = {
   },
   SELF_APPRAISAL_SAVED : {
     code : 100,
-    name : "Self-Appraisal in Progess",
+    name : "Self-Appraisal in Progress",
     colorClass : "bg-lime",
     icon : "assignment_late",
     progressCode : 2,

@@ -33,7 +33,7 @@ public class Employee implements Serializable {
 
 	private String location;
 
-	@Column(unique=true)
+	@Column(unique=true, updatable=false)
 	private String loginId;
 
 	private String department;

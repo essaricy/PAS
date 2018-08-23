@@ -17,6 +17,9 @@ public interface EmployeeDataRepository extends CrudRepository<Employee, Integer
 	@Query("select e from Employee e where active='Y'")
 	List<Employee> findAll();
 
+	@Query("select e from Employee e")
+	List<Employee> findEveryone();
+
 	List<Employee> findAll(Specification<Employee> spec);
 
 	Employee findByEmployeeId(@Param("employeeId") Integer employeeId);

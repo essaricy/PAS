@@ -5,9 +5,9 @@ import org.springframework.data.repository.query.Param;
 
 import com.softvision.ipm.pms.email.entity.EMailTemplate;
 
-public interface EmailTemplateDataRepository extends CrudRepository<EMailTemplate, Integer>{
+public interface EmailTemplateDataRepository extends CrudRepository<EMailTemplate, Integer> {
 
-	EMailTemplate findById(@Param("id") Integer id);
+	//EMailTemplate findById(@Param("id") Integer id);
 	
 	EMailTemplate findByName(@Param("name") String name);
 

@@ -12,25 +12,28 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum PhaseAssignmentStatus {
 
-	NOT_INITIATED(0, "Not Initiated", "Appraisal Form has not been initiated"),
+	NOT_INITIATED(0, 0, "Not Initiated", "Appraisal Form has not been initiated"),
 
-	SELF_APPRAISAL_PENDING(50, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
+	SELF_APPRAISAL_PENDING(0, 50, "Self-Appraisal Pending", "Initiated and self-appraisal is pending"),
 
-	SELF_APPRAISAL_SAVED(100, "Self-Appraisal in Progess", "Self-Appraisal is saved but not submitted"),
+	SELF_APPRAISAL_SAVED(0, 100, "Self-Appraisal in Progress", "Self-Appraisal is saved but not submitted"),
 
-	SELF_APPRAISAL_REVERTED(125, "Self-Appraisal is reverted", "Self-Appraisal is completed but reverted by the manager"),
+	SELF_APPRAISAL_REVERTED(0, 125, "Self-Appraisal is reverted", "Self-Appraisal is completed but reverted by the manager"),
 
-	MANAGER_REVIEW_PENDING(150, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
+	MANAGER_REVIEW_PENDING(0, 150, "Review Pending", "Self-Appraisal is completed and manager review is pending"),
 
-	MANAGER_REVIEW_SAVED(200, "Review in Progress", "Manager review is saved but not concluded"),
+	MANAGER_REVIEW_SAVED(1, 200, "Review in Progress", "Manager review is saved but not concluded"),
 
-	MANAGER_REVIEW_SUBMITTED(250, "Reviewed", "Manager review is completed and awaiting employee agreement"),
+	MANAGER_REVIEW_SUBMITTED(1, 250, "Reviewed", "Manager review is completed and awaiting employee agreement"),
 
-	EMPLOYEE_AGREED(300, "Agreed with Review", "Employee Agreed to the review"),
+	EMPLOYEE_AGREED(1, 300, "Agreed with Review", "Employee Agreed to the review"),
 
-	EMPLOYEE_ESCALATED(350, "Escalated", "Employee disagreed with the review and escalated"),
+	EMPLOYEE_ESCALATED(1, 350, "Escalated", "Employee disagreed with the review and escalated"),
 
-	CONCLUDED(500, "Concluded", "Assessment is concluded");
+	CONCLUDED(1, 500, "Concluded", "Assessment is concluded");
+
+	@Getter
+	private int stage;
 
 	@Getter
 	private int code;

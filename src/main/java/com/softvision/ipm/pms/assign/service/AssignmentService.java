@@ -18,16 +18,12 @@ import com.softvision.ipm.pms.assign.entity.PhaseAssignment;
 import com.softvision.ipm.pms.assign.model.BulkAssignmentDto;
 import com.softvision.ipm.pms.assign.repo.AssignmentRepository;
 import com.softvision.ipm.pms.assign.repo.PhaseAssignmentDataRepository;
+import com.softvision.ipm.pms.assign.validator.EligibilityValidator;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.DateUtil;
 import com.softvision.ipm.pms.common.util.ValidationUtil;
-import com.softvision.ipm.pms.employee.constant.EmployeeLocation;
-import com.softvision.ipm.pms.employee.constant.EmployeeOrg;
-import com.softvision.ipm.pms.employee.constant.EmploymentType;
 import com.softvision.ipm.pms.employee.entity.Employee;
-import com.softvision.ipm.pms.employee.mapper.EmployeeMapper;
-import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.repo.EmployeeDataRepository;
 import com.softvision.ipm.pms.template.entity.Template;
 import com.softvision.ipm.pms.template.repo.TemplateDataRepository;
@@ -49,16 +45,6 @@ public class AssignmentService {
 	@Autowired private TemplateDataRepository templateDataRepository;
 
 	@Autowired private EmployeeDataRepository employeeRepository;
-
-	@Autowired private EmployeeMapper employeeMapper;
-
-	private String NOT_ELIGIBLE_BY_CUTOFF_DATE = "{0} - Not eligible for this appraisal. He/She has joined on {1} which is after the appraisal eligibility cut off date ({2})";
-
-	private String NOT_ELIGIBLE_BY_EMPLOYEE_TYPE = "{0} - Not eligible for this appraisal. His/Her employement type is {1}";
-
-	private String NOT_ELIGIBLE_BY_EMPLOYEE_TYPE_ORG = "{0} - Not eligible for this appraisal. His/Her employement type is {1} and org is {2}";
-
-	private String NOT_ELIGIBLE_BY_LOCATION = "{0} - Not eligible for this appraisal. His/Her location is {1}";
 
 	private String CANNOT_ASSIGN_TO_SELF = "{0} - Cannot assign an appraisal to self";
 
@@ -108,32 +94,13 @@ public class AssignmentService {
 				if (employee == null) {
 					throw new ServiceException("Employee does not exist");
 				}
-				EmployeeDto employeeDto = employeeMapper.getEmployeeDto(employee);
-				String employeeName = employeeDto.getFullName();
+				String employeeName = employee.getFirstName() + " " + employee.getLastName();
 				if (employeeId == assignedBy) {
-                    throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
-                }
-				EmployeeLocation employeeLocation = EmployeeLocation.get(employee.getLocation());
-				if (employeeLocation != EmployeeLocation.INDIA && employeeLocation != EmployeeLocation.AUSTRALIA) {
-				    throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_LOCATION, employeeName, employee.getLocation()));
+				    throw new ServiceException(MessageFormat.format(CANNOT_ASSIGN_TO_SELF, employeeName));
 				}
-				EmployeeOrg employeeOrg = EmployeeOrg.get(employee.getOrg());
-				EmploymentType employmentType = EmploymentType.get(employee.getEmploymentType());
-		        if (employmentType != EmploymentType.REGULAR_EMPLOYEE && employmentType != EmploymentType.PROJECT_EMPLOYEE) {
-		            throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE, employeeName,
-                            (employmentType == null) ? "UNKNOWN" : employmentType.getName()));
-		        }
-		        if (employmentType == EmploymentType.PROJECT_EMPLOYEE && (employeeOrg != EmployeeOrg.IT && employeeOrg != EmployeeOrg.BPO)) {
-		            throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_EMPLOYEE_TYPE_ORG, employeeName,
-                            (employmentType == null) ? "UNKNOWN" : employmentType.getName(), employeeOrg));
-		        }
-                Date hiredOn = employee.getHiredOn();
-                Date cutoffDate = cycle.getCutoffDate();
-                // check if employee hired date should be before cutoff date
-                if (hiredOn.after(cutoffDate)) {
-                    throw new ServiceException(MessageFormat.format(NOT_ELIGIBLE_BY_CUTOFF_DATE, employeeName,
-                            DateUtil.getIndianDateFormat(hiredOn), DateUtil.getIndianDateFormat(cutoffDate)));
-                }
+				//EmployeeDto employeeDto = employeeMapper.getEmployeeDto(employee);
+				EligibilityValidator.checkEligibility(employee, cycle);
+
 				PhaseAssignment phaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeId(phaseId, employeeId);
 				if (phaseAssignment != null) {
 					throw new ServiceException(MessageFormat.format(ALREADY_ASSIGNED, employeeName, assignedBy, DateUtil.getIndianDateFormat(assignedAt)));

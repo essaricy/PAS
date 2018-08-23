@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.ResultUtil;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.employee.service.EmployeeService;
 
 @RestController
-@RequestMapping(value="employee", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/employee", produces=MediaType.APPLICATION_JSON_VALUE)
 public class EmployeeRest {
 
 	@Autowired private EmployeeService employeeService;
@@ -54,16 +55,12 @@ public class EmployeeRest {
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="sync", method=RequestMethod.PUT)
     public @ResponseBody Result syncEmployees() {
-		Result result = new Result();
 		try {
 			List<Result> syncEmployees = employeeService.syncEmployees();
-			result.setCode(Result.SUCCESS);
-			result.setContent(syncEmployees);
+			return ResultUtil.getSuccess("Employee SYNC has been completed successfully", syncEmployees);
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 	
 

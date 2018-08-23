@@ -19,9 +19,10 @@ import com.softvision.ipm.pms.appraisal.model.AppraisalCycleDto;
 import com.softvision.ipm.pms.appraisal.service.AppraisalService;
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.ResultUtil;
 
 @RestController
-@RequestMapping(value="appraisal", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/appraisal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class AppraisalRest {
 
 	@Autowired private AppraisalService appraisalService;
@@ -50,59 +51,54 @@ public class AppraisalRest {
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull AppraisalCycleDto dto) {
-		Result result = new Result();
 		try {
-			AppraisalCycleDto updated = appraisalService.update(dto);
-			result.setCode(Result.SUCCESS);
-			result.setContent(updated);
+			return ResultUtil.getSuccess("Apprisal cycle has been updated successfully", appraisalService.update(dto));
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="ready/{id}", method=RequestMethod.PUT)
     public Result ready(@PathVariable(required=true) @NotNull Integer id) {
-		return changeStatus(id, AppraisalCycleStatus.READY);
+		try {
+			appraisalService.changeStatus(id, AppraisalCycleStatus.READY);
+			return ResultUtil.getSuccess("Apprisal cycle has been changed to " + AppraisalCycleStatus.READY + " status");
+		} catch (Exception exception) {
+			return ResultUtil.getFailure(exception);
+		}
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="activate/{id}", method=RequestMethod.PUT)
     public Result activate(@PathVariable(required=true) @NotNull Integer id) {
-		return changeStatus(id, AppraisalCycleStatus.ACTIVE);
+		try {
+			appraisalService.changeStatus(id, AppraisalCycleStatus.ACTIVE);
+			return ResultUtil.getSuccess("Apprisal cycle has been changed to " + AppraisalCycleStatus.ACTIVE + " status");
+		} catch (Exception exception) {
+			return ResultUtil.getFailure(exception);
+		}
     }
 
 	@RequestMapping(value="complete/{id}", method=RequestMethod.PUT)
     public Result complete(@PathVariable(required=true) @NotNull Integer id) {
-		return changeStatus(id, AppraisalCycleStatus.COMPLETE);
-    }
-
-    public Result changeStatus(Integer id, AppraisalCycleStatus desiredStatus) {
-		Result result = new Result();
 		try {
-			appraisalService.changeStatus(id, desiredStatus);
-			result.setCode(Result.SUCCESS);
+			appraisalService.changeStatus(id, AppraisalCycleStatus.COMPLETE);
+			return ResultUtil.getSuccess("Apprisal cycle has been changed to " + AppraisalCycleStatus.COMPLETE + " status");
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="delete/{id}", method=RequestMethod.DELETE)
     public Result delete(@PathVariable(required=true) @NotNull Integer id) {
-		Result result = new Result();
 		try {
 			appraisalService.delete(id);
-			result.setCode(Result.SUCCESS);
+			return ResultUtil.getSuccess("Apprisal cycle has been deleted succesfully");
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
-    }
+	}
 
 }

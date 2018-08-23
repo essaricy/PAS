@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.softvision.ipm.pms.goal.entity.Goal;
 
-public interface GoalDataRepository extends CrudRepository<Goal, Long>{
+public interface GoalDataRepository extends CrudRepository<Goal, Long> {
 
 	List<Goal> findAll();
 

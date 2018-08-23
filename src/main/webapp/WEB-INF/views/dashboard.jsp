@@ -126,7 +126,7 @@
 
     var getPhasewiseStatusCount=function() {
    	  $.fn.ajaxGet({
-        url: '<%=request.getContextPath()%>/manager/report/phase/status/count',
+        url: '<%=request.getContextPath()%>/api/manager/report/phase/status/count',
         onSuccess: function(phasewiseEmployeeStatusCounts) {
       	var phasewiseEmployeeStatusCountRow = $('.PhasewiseEmployeeStatusCount_Row');
       	  $(phasewiseEmployeeStatusCounts).each(function(index, phasewiseEmployeeStatusCount) {
@@ -161,7 +161,7 @@
 
     var getCurrentAppraisalStatus=function() {
    	  $.fn.ajaxGet({
-        url: '<%=request.getContextPath()%>/report/employee/cycle/status',
+        url: '<%=request.getContextPath()%>/api/employee/report/cycle/status',
         onSuccess: function(phaseAssignments) {
           var currentAppraisalStatus_Table = $('#CurrentAppraisalStatus_Table');
           var tbody=$(currentAppraisalStatus_Table).find('tbody');

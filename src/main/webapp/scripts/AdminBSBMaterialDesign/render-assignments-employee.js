@@ -188,7 +188,7 @@ $(function () {
 
     function showTemplate(templateId) {
       $.fn.ajaxGet({
-        url: settings.contextPath + '/template/list/' + templateId,
+        url: settings.contextPath + '/api/template/list/' + templateId,
         onSuccess: function(template) {
           $('#TemplateModal_Title').text(template.name);
 
@@ -264,7 +264,7 @@ $(function () {
             showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Agree!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          var url=settings.contextPath + '/assignment/employee/change/phase-status/agree/' + id
+          var url=settings.contextPath + '/api/assignment/employee/change/phase-status/agree/' + id
           $.fn.ajaxPut({
             url: url
           });
@@ -277,7 +277,7 @@ $(function () {
             showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Escalate!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          var url=settings.contextPath + '/assignment/employee/change/phase-status/escalate/' + id
+          var url=settings.contextPath + '/api/assignment/employee/change/phase-status/escalate/' + id
           $.fn.ajaxPut({
             url: url
           });

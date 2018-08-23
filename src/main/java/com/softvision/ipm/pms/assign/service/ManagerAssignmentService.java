@@ -14,8 +14,6 @@ import com.softvision.ipm.pms.appraisal.entity.AppraisalPhase;
 import com.softvision.ipm.pms.appraisal.mapper.AppraisalMapper;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalCycleDataRepository;
 import com.softvision.ipm.pms.appraisal.repo.AppraisalRepository;
-import com.softvision.ipm.pms.assess.model.PhaseAssessmentDto;
-import com.softvision.ipm.pms.assess.service.PhaseAssessmentService;
 import com.softvision.ipm.pms.assign.constant.CycleAssignmentStatus;
 import com.softvision.ipm.pms.assign.constant.PhaseAssignmentStatus;
 import com.softvision.ipm.pms.assign.entity.CycleAssignment;
@@ -56,8 +54,6 @@ public class ManagerAssignmentService {
     @Autowired private AppraisalRepository appraisalRepository;
 
     @Autowired private AppraisalMapper appraisalMapper;
-
-    @Autowired private PhaseAssessmentService phaseAssessmentService;
 
     @PreSecureAssignment(permitManager = true)
     public void changeManager(long assignmentId, int fromEmployeeId, int toEmployeeId)
@@ -176,7 +172,7 @@ public class ManagerAssignmentService {
         log.info("submitCycle: END cycleAssignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
     }
 
-    public List<ManagerCycleAssignmentDto> getSubmittedCycles(int employeeId) {
+    public List<ManagerCycleAssignmentDto> getSubmittedCycles(int requestedEmployeeId) {
         List<ManagerCycleAssignmentDto> cycleAssignments = new ArrayList<>();
         List<AppraisalCycle> allCycles = appraisalCycleDataRepository.findAllByOrderByStartDateDesc();
         // Get all the cycles, ignore DRAFT cycles
@@ -190,36 +186,25 @@ public class ManagerAssignmentService {
             ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
             cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
             List<EmployeeAssignmentDto> employeeAssignments = managerAssignmentRepository
-                    .getAssignmentsBySubmittedToByCycle(employeeId, cycleId);
+                    .getAssignmentsBySubmittedToByCycle(cycleId, requestedEmployeeId);
             cycleAssignment.setEmployeeAssignments(employeeAssignments);
             cycleAssignments.add(cycleAssignment);
         }
         return cycleAssignments;
     }
 
-    public List<PhaseAssessmentDto> getAllPhaseAssessments(long assignId, int employeeId, int requestedEmployeeId)
-            throws ServiceException {
-        log.info("getAllPhaseAssessments: START assignId={}, employeeId={}, requestedEmployeeId={}", assignId, employeeId, requestedEmployeeId);
-        CycleAssignment cycleAssignment = cycleAssignmentDataRepository.findById(assignId);
-        if (cycleAssignment == null) {
-            throw new ServiceException("Invalid assignment");
-        }
-        Integer submittedTo = cycleAssignment.getSubmittedTo();
-        if (submittedTo == null || submittedTo != requestedEmployeeId) {
-            throw new ServiceException("UNAUTHORIZED ACCESS ATTEMPTED");
-        }
+	public ManagerCycleAssignmentDto getSubmittedCycleByEmployeeId(int cycleId, int employeeId,
+			int requestedEmployeeId) {
+    	ManagerCycleAssignmentDto cycleAssignment = new ManagerCycleAssignmentDto();
 
-        List<PhaseAssessmentDto> phaseAssessments = new ArrayList<>();
-        // Get all the phases
-        List<EmployeePhaseAssignmentDto> phaseAssignmentsInCycle = managerAssignmentRepository
-                .getPhaseAssignmentsByCycleByEmployeeId(cycleAssignment.getCycleId(), employeeId);
-        if (phaseAssignmentsInCycle != null && !phaseAssignmentsInCycle.isEmpty()) {
-            for (EmployeePhaseAssignmentDto phaseAssignment : phaseAssignmentsInCycle) {
-                PhaseAssessmentDto phaseAssessment = phaseAssessmentService.getByAssignment(phaseAssignment.getAssignmentId(), employeeId);
-                phaseAssessments.add(phaseAssessment);
-            }
+    	AppraisalCycle cycle = appraisalCycleDataRepository.findById(cycleId);
+    	AppraisalCycleStatus appraisalCycleStatus = AppraisalCycleStatus.get(cycle.getStatus());
+    	if (appraisalCycleStatus != AppraisalCycleStatus.DRAFT) {
+    		List<EmployeePhaseAssignmentDto> employeePhaseAssignments = managerAssignmentRepository.getPhaseAssignmentsByCycleByEmployeeId(cycleId, employeeId);
+    		cycleAssignment.setCycle(appraisalMapper.getCycle(cycle));
+    		cycleAssignment.setEmployeeAssignments(employeePhaseAssignments);
         }
-        return phaseAssessments;
+    	return cycleAssignment;
     }
 
     @PreSecureAssignment(permitManager = true)

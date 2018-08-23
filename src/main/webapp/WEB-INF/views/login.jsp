@@ -181,12 +181,15 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215;
 }
   </style>
+  <script src='https://www.google.com/recaptcha/api.js'></script>
   </head>
   <body class="login-page">
     <div class="login-box">
       <div class="logo">
        	<img src="<%=request.getContextPath()%>/images/logo.png"  style="float: left;" width="82px" />
-       	<a href="javascript:void(0);"><b>SOFTVISION</b></a>
+       	<a href="javascript:void(0);" class="m-b-10">
+       	  <img src="<%=request.getContextPath()%>/images/softvision-logo-white-150.svg" alt="Logo" style="width: 70%;">
+       	</a>
         <small>PMS - Performance Management System</small>
       </div>
       <div class="card">
@@ -214,12 +217,21 @@
                 <input type="password" class="form-control" name="password" placeholder="Password" required value="">
               </div>
             </div>
+            <!-- <div class="input-group">
+              <span class="input-group-addon">&nbsp;</span>
+              <div class="">
+                <div class="g-recaptcha" data-sitekey="6Lfrs1sUAAAAAKz_iWuRAK9IWKqGCiX6WnbbucU_"></div>
+              </div>
+            </div> -->
             <div class="row">
               <div class="col-xs-8 p-t-5">
                 &nbsp;
               </div>
               <div class="col-xs-4 align-right">
-                <button class="btn btn-block bg-pink waves-effect" type="submit">SIGN IN</button>
+                <button class="btn bg-pink waves-effect" type="submit">
+                  <i class="material-icons">subdirectory_arrow_right</i>
+                  <span>SIGN IN</span>
+                </button>
               </div>
             </div>
           </form>

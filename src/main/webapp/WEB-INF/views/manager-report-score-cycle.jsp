@@ -46,42 +46,11 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Employee Assignments
-          <small>View status of the current employees those are assigned to you, change manager, enable forms, view assessment or conclude</small>
+        <h2>Cycle-wise report of Employees
+          <small>View report of employees for the appraisal cycles, click to see phase-wise break up of each employee</small>
         </h2>
       </div>
       <%@include file="common/no-cycle.jsp" %>
-      <!-- Large Size -->
-      <div class="modal fade" id="EmployeePhaseAssignments_Modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title" id="EmployeePhaseAssignments_Title"></h4>
-            </div>
-            <div class="modal-body">
-              <div class="row clearfix">
-                <div class="table-responsive">
-                  <table id="EmployeePhaseAssignments_Table" class="table table-bordered table-striped table-hover dataTable">
-                    <thead>
-                      <tr>
-                        <th>&nbsp;</th>
-                        <th>Phase</th>
-                        <th>Assessed By</th>
-                        <th>Status</th>
-                        <th>Score</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="assessment_div row clearfix">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </body>
@@ -114,17 +83,17 @@
 <!-- Demo Js -->
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/demo.js"></script>
 <script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-card.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-report-score-cycle.js"></script>
-<script src="<%=request.getContextPath()%>/AdminBSBMaterialDesign/js/pages/ui/modals.js"></script>
 <script>
 $(function () {
   $('.container-fluid').scoreReport({
     contextPath: '<%=request.getContextPath()%>',
-    url: '<%=request.getContextPath()%>/manager/report/cycle/score',
+    url: '<%=request.getContextPath()%>/api/manager/report/cycle/score',
   });
 });
 

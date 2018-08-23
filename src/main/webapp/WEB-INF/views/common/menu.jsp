@@ -69,7 +69,7 @@
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/template/assign">Template Assignment</a>
+              <a href="<%=request.getContextPath()%>/manager/template/assign">Template Assignment</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/manager/assignment/list">Manage Assignments</a>
@@ -110,7 +110,7 @@
               <a href="<%=request.getContextPath()%>/admin/template/list">Template Management</a>
             </li>
             <li>
-              <a href="<%=request.getContextPath()%>/admin/employee/manage">Employee Management</a>
+              <a href="<%=request.getContextPath()%>/admin/employee/mgmt">Employee Management</a>
             </li>
             <li>
               <a href="<%=request.getContextPath()%>/admin/reports">Reports</a>
@@ -126,8 +126,11 @@
           </a>
           <ul class="ml-menu">
             <li>
-              <a href="<%=request.getContextPath()%>/support/list">Active Users</a>
+              <a href="<%=request.getContextPath()%>/support/sessions/active">Active Sessions</a>
             </li>
+            <%-- <li>
+              <a href="<%=request.getContextPath()%>/support/cache/objects">Cached Objects</a>
+            </li> --%>
           </ul>
         </li>
         </sec:authorize>
@@ -189,7 +192,7 @@
 		  </ul>
 		  <p>Version</p>
 		  <ul class="setting-list">
-			<li><span>2.8</span></li>
+			<li><span>2.12</span></li>
 		  </ul>
 		</div>
       </div>

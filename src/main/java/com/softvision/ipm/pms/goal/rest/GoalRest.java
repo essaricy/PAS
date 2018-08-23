@@ -16,11 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.model.Result;
+import com.softvision.ipm.pms.common.util.ResultUtil;
 import com.softvision.ipm.pms.goal.model.GoalDto;
 import com.softvision.ipm.pms.goal.service.GoalService;
 
 @RestController
-@RequestMapping(value="goal", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/goal", produces=MediaType.APPLICATION_JSON_VALUE)
 public class GoalRest {
 
 	@Autowired private GoalService goalService;
@@ -38,16 +39,11 @@ public class GoalRest {
 	@PreAuthorize(AuthorizeConstant.IS_ADMIN)
 	@RequestMapping(value="update", method=RequestMethod.POST)
     public Result update(@RequestBody(required=true) @NotNull GoalDto goal) {
-		Result result = new Result();
 		try {
-			GoalDto updated = goalService.update(goal);
-			result.setCode(Result.SUCCESS);
-			result.setContent(updated);
+			return ResultUtil.getSuccess("Goal template has been saved successfully", goalService.update(goal));
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 
 }

@@ -20,12 +20,13 @@ import com.softvision.ipm.pms.common.constants.AuthorizeConstant;
 import com.softvision.ipm.pms.common.exception.ServiceException;
 import com.softvision.ipm.pms.common.model.Result;
 import com.softvision.ipm.pms.common.util.RestUtil;
+import com.softvision.ipm.pms.common.util.ResultUtil;
 import com.softvision.ipm.pms.employee.model.EmployeeDto;
 import com.softvision.ipm.pms.template.model.TemplateDto;
 import com.softvision.ipm.pms.template.service.TemplateService;
 
 @RestController
-@RequestMapping(value="template", produces=MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value="api/template", produces=MediaType.APPLICATION_JSON_VALUE)
 public class TemplateRest {
 
 	@Autowired private TemplateService templateService;
@@ -54,7 +55,6 @@ public class TemplateRest {
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
 	@RequestMapping(value="save", method=RequestMethod.POST)
     public Result save(@RequestBody(required=true) @NotNull TemplateDto template) {
-		Result result = new Result();
 		try {
 			// set updatedBy & updatedAt
 			int loggedInEmployeeId = RestUtil.getLoggedInEmployeeId();
@@ -63,13 +63,10 @@ public class TemplateRest {
 			template.setUpdatedBy(updatedBy);
 			template.setUpdatedAt(new Date());
 			TemplateDto updated = templateService.update(template);
-			result.setCode(Result.SUCCESS);
-			result.setContent(updated);
+			return ResultUtil.getSuccess("Template has been saved successfully", updated);
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 
 	@RequestMapping(value="search/byName/{searchString}", method=RequestMethod.GET)
@@ -81,15 +78,12 @@ public class TemplateRest {
 	@PreAuthorize(AuthorizeConstant.IS_MANAGER_OR_ADMIN)
 	@RequestMapping(value="delete/{id}", method=RequestMethod.DELETE)
     public @ResponseBody Result delete(@PathVariable(required=true) @NotNull @Min(1) long id) {
-		Result result = new Result();
 		try {
 			templateService.delete(id);
-			result.setCode(Result.SUCCESS);
+			return ResultUtil.getSuccess("Template has been deleted successfully");
 		} catch (Exception exception) {
-			result.setCode(Result.FAILURE);
-			result.setMessage(exception.getMessage());
+			return ResultUtil.getFailure(exception);
 		}
-		return result;
     }
 
 }
