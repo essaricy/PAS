@@ -1,0 +1,109 @@
+package com.softvision.digital.pms.assess.service;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.softvision.digital.pms.appraisal.entity.AppraisalCycle;
+import com.softvision.digital.pms.appraisal.entity.AppraisalPhase;
+import com.softvision.digital.pms.appraisal.repo.AppraisalRepository;
+import com.softvision.digital.pms.assign.constant.CycleAssignmentStatus;
+import com.softvision.digital.pms.assign.constant.PhaseAssignmentStatus;
+import com.softvision.digital.pms.assign.entity.CycleAssignment;
+import com.softvision.digital.pms.assign.entity.PhaseAssignment;
+import com.softvision.digital.pms.assign.repo.CycleAssignmentDataRepository;
+import com.softvision.digital.pms.assign.repo.PhaseAssignmentDataRepository;
+import com.softvision.digital.pms.common.exception.ServiceException;
+import com.softvision.digital.pms.role.service.RoleService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class CycleAssessmentService {
+
+	@Autowired private RoleService roleService;
+
+	@Autowired private AppraisalRepository appraisalRepository;
+
+	@Autowired private CycleAssignmentDataRepository cycleAssignmentDataRepository;
+
+	@Autowired private PhaseAssignmentDataRepository phaseAssignmentDataRepository;
+
+	public void abridgeQuietly(int employeeId) {
+		try {
+			log.info("abridgeQuietly: START {} ", employeeId);
+			abridge(employeeId);
+			log.info("abridgeQuietly: END {} ", employeeId);
+		} catch (Exception exception) {
+			log.warn("abridgeQuietly: FAILED {} ERROR=", employeeId, "Abridge Failed due to the error=" + exception.getMessage());
+		}
+	}
+
+	@Transactional
+	public void abridge(int employeeId) throws ServiceException {
+	    log.info("abridge: START {} ", employeeId);
+		AppraisalCycle activeCycle = appraisalRepository.getActiveCycle();
+		Integer cycleId = activeCycle.getId();
+		List<AppraisalPhase> phases = activeCycle.getPhases();
+
+		// If all phases are done then update the cycle assignment with score
+		double cycleScore=0;
+		int assignedBy=0;
+		int numberOfPhases=phases.size();
+		// Check if all the assignments are concluded.
+		for (AppraisalPhase phase : phases) {
+			PhaseAssignment employeePhaseAssignment = phaseAssignmentDataRepository.findByPhaseIdAndEmployeeIdAndStatus(phase.getId(), employeeId, PhaseAssignmentStatus.CONCLUDED.getCode());
+			if (employeePhaseAssignment == null) {
+				throw new ServiceException("There is a missing assignment for the phase " + phase.getName() + " for the employee " + employeeId);
+			}
+			cycleScore+=employeePhaseAssignment.getScore();
+			assignedBy=employeePhaseAssignment.getAssignedBy();
+		}
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findByCycleIdAndEmployeeId(cycleId, employeeId);
+		if (employeeCycleAssignment == null) {
+			// There is a missing cycle assignment. create one.
+			employeeCycleAssignment = new CycleAssignment();
+			employeeCycleAssignment.setAssignedAt(new Date());
+			employeeCycleAssignment.setAssignedBy(assignedBy);
+			employeeCycleAssignment.setCycleId(cycleId);
+			employeeCycleAssignment.setEmployeeId(employeeId);
+		}
+		employeeCycleAssignment.setScore(cycleScore/numberOfPhases);
+		employeeCycleAssignment.setStatus(CycleAssignmentStatus.ABRIDGED.getCode());
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		log.info("abridge: END {} ", employeeId);
+	}
+
+	@Transactional
+	public void assignCycleToNextLevelManager(long cycleAssignId, int fromEmployeeId, int toEmployeeId)
+			throws ServiceException {
+		log.warn("assignCycleToNextLevelManager: START assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+		CycleAssignment employeeCycleAssignment = cycleAssignmentDataRepository.findById(cycleAssignId);
+		if (employeeCycleAssignment == null) {
+			throw new ServiceException("Assignment does not exist.");
+		}
+		// he must be the same employee who has been assigned
+		int assignedBy = employeeCycleAssignment.getAssignedBy();
+		if (assignedBy != fromEmployeeId) {
+			throw new ServiceException("The manager who assessed the last phase can only assign it to the next level manager");
+		}
+		int status = employeeCycleAssignment.getStatus();
+		CycleAssignmentStatus cycleAssignmentStatus = CycleAssignmentStatus.get(status);
+		if (status != CycleAssignmentStatus.ABRIDGED.getCode()) {
+			throw new ServiceException("Assignment is in '" + cycleAssignmentStatus.getName() + "' status. Cannot change the manager now");
+		}
+		if (!roleService.isManager(toEmployeeId)) {
+			throw new ServiceException("The employee that you are trying to assign to, is not a manager");
+		}
+		employeeCycleAssignment.setAssignedBy(toEmployeeId);
+		employeeCycleAssignment.setStatus(CycleAssignmentStatus.CONCLUDED.getCode());
+		cycleAssignmentDataRepository.save(employeeCycleAssignment);
+		log.warn("assignCycleToNextLevelManager: END assignId={}, from={}, to={}", cycleAssignId, fromEmployeeId, toEmployeeId);
+	}
+
+}

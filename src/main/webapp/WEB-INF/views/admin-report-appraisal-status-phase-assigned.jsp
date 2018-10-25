@@ -73,8 +73,10 @@
 						  <th>Employee</th>
 						  <th>Manager</th>
 						  <th>Template</th>
-						  <th>Assigned On</th>
 						  <th>Status</th>
+						  <th>Assigned On</th>
+						  <th>Emp Type</th>
+						  <th>Org</th>
 						</tr>
 					  </thead>
 					  <tbody>
@@ -166,8 +168,10 @@
           { "data": "assignedTo.fullName" },
           { "data": "assignedBy" },
           { "data": "template.name" },
-          { "data": "assignedAt" },
           { "data": "status" },
+          { "data": "assignedAt" },
+          { "data": "assignedTo.employmentType" },
+          { "data": "assignedTo.org" },
       ],
       columnDefs: [
     	  { 
@@ -175,11 +179,11 @@
               searchable: true,
               orderable: true,
               render: function(data, type, full, meta){
-                 return data.employeeId + '-'+data.fullName;
+            	 return data.employeeId + '-'+data.fullName;
               }
           },
           { 
-              targets: 5,
+              targets: 4,
               searchable: true,
               orderable: true,
               render: function(data, type, full, meta){

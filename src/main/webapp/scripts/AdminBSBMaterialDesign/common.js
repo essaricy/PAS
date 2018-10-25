@@ -48,7 +48,7 @@ var PhaseAssignmentStatus = {
   },
   SELF_APPRAISAL_SAVED : {
     code : 100,
-    name : "Self-Appraisal in Progess",
+    name : "Self-Appraisal in Progress",
     colorClass : "bg-lime",
     icon : "assignment_late",
     progressCode : 2,

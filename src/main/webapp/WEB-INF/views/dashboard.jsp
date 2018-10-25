@@ -209,9 +209,6 @@
     	getPhasewiseStatusCount();
     }
    	getCurrentAppraisalStatus();
-    <%-- $.fn.ajaxGet({
-  	  url: '<%=request.getContextPath()%>/dummy/delay/SUCCESS/5'
-    }); --%>
   });
   </script>
 </body>

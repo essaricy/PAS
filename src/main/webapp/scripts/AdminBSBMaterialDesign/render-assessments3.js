@@ -1,19 +1,20 @@
 $(function () {
   var ROLE_EMPLOYEE='Employee';
   var ROLE_MANAGER='Manager';
+  var ROLE_ADMIN='Admin';
   var ASI_BASE='/api/assessment'
 
   var AssessmentAction = {
-	  EMPLOYEE_SAVE:		{ label: 'Save', 		icon: 'done'},
-	  EMPLOYEE_SUBMIT:		{ label: 'Submit', 		icon: 'done_all'},
-	  EMPLOYEE_AGREE:		{ label: 'Agree', 		icon: 'mood'},
-	  EMPLOYEE_DISAGREE:	{ label: 'Disagree', 	icon: 'mood_bad'},
+	  EMPLOYEE_SAVE:		{ label: 'Save', 		icon: 'done',		url: '/phase/save'},
+	  EMPLOYEE_SUBMIT:		{ label: 'Submit', 		icon: 'done_all',	url: '/phase/submit'},
+	  EMPLOYEE_AGREE:		{ label: 'Agree', 		icon: 'mood',		url: '/phase/agree'},
+	  EMPLOYEE_DISAGREE:	{ label: 'Disagree', 	icon: 'mood_bad',	url: '/phase/disagree'},
 
-	  MANAGER_REVERT:		{ label: 'Revert', 		icon: 'undo'},
-	  MANAGER_SAVE: 		{ label: 'Save', 		icon: 'done'},
-	  MANAGER_SUBMIT:		{ label: 'Submit', 		icon: 'done_all'},
-	  MANAGER_UPDATE:		{ label: 'Update', 		icon: 'update'},
-	  MANAGER_CONCLUDE:		{ label: 'Conclude', 	icon: 'lock'},
+	  MANAGER_REVERT:		{ label: 'Revert', 		icon: 'undo',		url: '/phase/revert'},
+	  MANAGER_SAVE: 		{ label: 'Save', 		icon: 'done',		url: '/phase/save-review'},
+	  MANAGER_SUBMIT:		{ label: 'Submit', 		icon: 'done_all',	url: '/phase/submit-review'},
+	  MANAGER_UPDATE:		{ label: 'Update', 		icon: 'update',		url: '/phase/update-review'},
+	  MANAGER_CONCLUDE:		{ label: 'Conclude', 	icon: 'lock',		url: '/phase/conclude'},
   };
 
   var RATING_TYPES=[
@@ -26,6 +27,7 @@ $(function () {
       contextPath: null,
       url: null,
       role: ROLE_EMPLOYEE,
+      showSeeGoals: true,
     }, options );
 
     var card=$(this);
@@ -66,6 +68,8 @@ $(function () {
       renderAssessmentDetails();
       renderOverallScore();
       renderActionButtons();
+      
+      enableAutoSave();
     }
 
     function renderTitles() {
@@ -113,6 +117,7 @@ $(function () {
 		var goalId=templateHeader.goalId;
 	    var goalName=templateHeader.goalName;
 	    var weightage=templateHeader.weightage;
+	    var showSeeGoals=(settings.showSeeGoals == true);
 		    
 	    var headingId="Heading_" + goalId;
 	    var collapseId="Collapse_" + goalId;
@@ -123,25 +128,30 @@ $(function () {
         var panelTitleLink=$('<a role="button" style="display: inline-block;" data-toggle="collapse" href="#' + collapseId + '" aria-expanded="true" aria-controls="' + collapseId + '">');
         var spanWeightage=$('<span class="p-t-5 p-r-5" style="float: right;">');
         var spanWeightageValue=$('<span class="weightage">');
-        var seeGoalsLink=$('<small style="cursor: pointer; font-size: 50%;" data-toggle="modal" data-target="#' + $(modal).attr('id') + '">');
-        $(seeGoalsLink).click(function() {
-          $(modal).find('.modal-title').text(goalName);
-          $(modal).find('.modal-body').empty();
-          var ol=$('<ol>');
-          $(modal).find('.modal-body').append(ol);
-          $(templateHeader.details).each(function (index, detail) {
-            if (detail != null && detail.apply=='Y') {
-              $(ol).append('<li>' + detail.paramName + "</li>");
-            }
+
+        if (showSeeGoals) {
+          var seeGoalsLink=$('<small style="cursor: pointer; font-size: 50%;" data-toggle="modal" data-target="#' + $(modal).attr('id') + '">');
+          $(seeGoalsLink).click(function() {
+        	$(modal).find('.modal-title').text(goalName);
+        	$(modal).find('.modal-body').empty();
+        	var ol=$('<ol>');
+        	$(modal).find('.modal-body').append(ol);
+        	$(templateHeader.details).each(function (index, detail) {
+        	  if (detail != null && detail.apply=='Y') {
+        		$(ol).append('<li>' + detail.paramName + "</li>");
+        	  }
+        	});
           });
-        });
+        }
 
 	    $(panelGroupDiv).append(panelDiv);
 	    $(panelDiv).append(panelHeading);
         $(panelHeading).append(panelTitleHeading);
 	    $(panelTitleHeading).append(panelTitleLink);
-	    $(panelTitleHeading).append(seeGoalsLink);
-	    $(seeGoalsLink).append('See Goals');
+	    if (showSeeGoals) {
+	      $(panelTitleHeading).append(seeGoalsLink);
+	      $(seeGoalsLink).append('See Goals');
+	    }
         $(panelTitleHeading).append(spanWeightage);
         $(spanWeightage).append(spanWeightageValue);
         $(spanWeightageValue).append(weightage);
@@ -327,6 +337,8 @@ $(function () {
     		|| status != PhaseAssignmentStatus.SELF_APPRAISAL_SAVED) {
         	addManagerScore=true;
         }	
+      } else if (role == ROLE_ADMIN) {
+    	addManagerScore=true;
       }
 	  if (addManagerScore) {
 	  	var mgrRow=$('<tr>');
@@ -371,18 +383,18 @@ $(function () {
 
    	  var ratingContainer=$('<span class="' + rClass + '">');
 	  rateYoOptions.readOnly=!enable;
-	  if (value >=0) {
-	    rateYoOptions.rating=value;
-	  }
-	  rateYoOptions.onSet=function (rating, rateYoInstance) {
-	    var currentWeightage=$(ratingContainer).closest('.panel').find('.panel-heading').find('.weightage').text();
-	    var weightedRating=(rating==0)? 0: ((rating*currentWeightage)/100);
-	    $(ratingContainer).closest('tr').find('.' + sClass).text(weightedRating.toFixed(2));
-	    updateOverallScores(sClass);
+	  rateYoOptions.rating=(value > 0) ? value : 0;
 
-	    // Update modal
-	    assessDetail.rating=rating;
-	    assessDetail.score=weightedRating.toFixed(2);
+	  if (enable) {
+		rateYoOptions.onSet=function (rating, rateYoInstance) {
+		  var currentWeightage=$(ratingContainer).closest('.panel').find('.panel-heading').find('.weightage').text();
+		  var weightedRating=(rating==0)? 0: ((rating*currentWeightage)/100);
+		  $(ratingContainer).closest('tr').find('.' + sClass).text(weightedRating.toFixed(2));
+		  updateOverallScores(sClass);
+		  // Update modal
+		  assessDetail.rating=rating;
+		  assessDetail.score=weightedRating.toFixed(2);
+		}
 	  }
 	  $(ratingContainer).rateYo(rateYoOptions);
 	  return ratingContainer;
@@ -404,30 +416,10 @@ $(function () {
 	  $(commentsTd).append('<label class="assess-heading">' + cName + '</label>');
 	  $(commentsTd).append('<br/>');
 
-	  /*console.log('<textarea id="' + id + '" ' + (enable? "": "readonly") + ' class="' + cClass
-			  + '" style="width:100%;">' + (value==null?"":value) + '</textarea>');*/
-
 	  var comments=$('<textarea id="' + id + '" ' + (enable? "": "readonly") + ' class="' + cClass
 			  + '" style="width:100%;">' + (value==null?"":value) + '</textarea>');
-      /*$(comments).bind('input propertychange', function() {
-        // Update modal
-        assessDetail.comments=this.value;
-        console.log('CKEDITOR DATA=' + CKEDITOR.instances[id].getData());
-      });*/
       $(commentsTd).append(comments);
       // CKEDITOR.replace('CKEDITOR_2532');
-      /*if (enable) {
-        var comments=$('<textarea class="' + cClass + '" rows="5" maxlength="2000" style="width:100%;">' + (value==null?"":value) + '</textarea>');
-        $(comments).bind('input propertychange', function() {
-          // Update modal
-          assessDetail.comments=this.value;
-        });
-        $(commentsTd).append(comments);
-      } else {
-        var valueSpan=$('<span>');
-        $(valueSpan).text(value);
-        $(commentsTd).append(valueSpan);
-      }*/
       return commentsTd;
     }
 
@@ -454,23 +446,53 @@ $(function () {
         assessDetail.score=0;
         assessDetails[assessDetails.length]=assessDetail;
       });
-      //assessHeaders[assessHeaders.length]=assessHeader;
       return assessHeader;
     }
 
-    function sendAssessmentForm(buttonAction) {
-      var url=null;
-      var currentForm=assessHeaders[assessHeaders.length-1];
-      $(currentForm.assessDetails).each(function (index, assessDetail) {
-    	var id='CKEDITOR_' + assessDetail.id + '_' + assessDetail.templateHeaderId;
-    	assessDetail.comments=CKEDITOR.instances[id].getData();
+    function enableAutoSave() {
+      var render=assignment.render;
+
+      var saveButtons=$.grep(render.buttons, function(button) {
+    	return button == AssessmentAction.EMPLOYEE_SAVE || button == AssessmentAction.MANAGER_SAVE;
       });
 
+      if (saveButtons != null && saveButtons.length != 0) {
+    	var buttonAction=saveButtons[0];
+        $(card).enableAutoSave({ status: status, saveFunction: function () {
+          var url=options.contextPath + ASI_BASE + buttonAction.url;
+          var currentForm=getCurrentForm();
+          var autoSaveDate=moment(new Date()).format("DD/MM/YYYY hh:mm:ss");
+          $.fn.ajaxPost({ url: url, data: currentForm,
+        	  onSuccess: function() { 
+        		console.log('AutoSave successful');
+        		$(cardBody).find('.alert i').text('AutoSaved at: ' + autoSaveDate);
+        	  },
+        	  onFail: function() {
+        		console.log('AutoSave failed');
+        		$(cardBody).find('.alert i').text('AutoSave failed at: ' + autoSaveDate);
+              }
+          });
+        }});
+    	// $(card).enableAutoSave({ status: status, saveFunction: function () { sendAssessmentForm(saveButtons[0]); } });
+      }
+    }
+
+    function getCurrentForm() {
+      var currentForm=assessHeaders[assessHeaders.length-1];
+        $(currentForm.assessDetails).each(function (index, assessDetail) {
+      	var id='CKEDITOR_' + assessDetail.id + '_' + assessDetail.templateHeaderId;
+      	assessDetail.comments=CKEDITOR.instances[id].getData();
+      });
+      return currentForm;
+    }
+
+    function sendAssessmentForm(buttonAction) {
+      var url=options.contextPath + ASI_BASE + buttonAction.url;
+      var currentForm=getCurrentForm();
+
       if(buttonAction==AssessmentAction.EMPLOYEE_SAVE) {
-        url=options.contextPath + ASI_BASE + '/phase/save';
         $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonAction==AssessmentAction.EMPLOYEE_SUBMIT) {
-        url=options.contextPath + ASI_BASE + '/phase/submit';
         swal({
           title: "Are you sure?", text: "Do you want to submit your appraisal form to your Manager? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -479,7 +501,6 @@ $(function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_REVERT) {
-        url=options.contextPath + ASI_BASE + '/phase/revert';
         swal({
           title: "Are you sure?", text: "This allows the employee to modify his/her appraisal form which includes ratings and comments. Do you want to revert this appraisal form?", type: "warning",
             showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -488,10 +509,8 @@ $(function () {
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_SAVE) {
-          url=options.contextPath + ASI_BASE + '/phase/save-review';
-          $.fn.ajaxPost({ url: url, data: currentForm });
+        $.fn.ajaxPost({ url: url, data: currentForm });
       } else if(buttonAction==AssessmentAction.MANAGER_SUBMIT) {
-        url=options.contextPath + ASI_BASE + '/phase/submit-review';
         swal({
           title: "Are you sure?", text: "Do you want to submit your review? Please make sure that you have completed everything. Once submitted, this cannot be undone.", type: "warning",
           showCancelButton: true, confirmButtonColor: "#DD6B55",
@@ -505,7 +524,6 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Agree!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + ASI_BASE + '/phase/agree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.EMPLOYEE_DISAGREE) {
@@ -514,7 +532,6 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Escalate!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + ASI_BASE + '/phase/disagree';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if(buttonAction==AssessmentAction.MANAGER_UPDATE) {
@@ -523,7 +540,6 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Update!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + ASI_BASE + '/phase/update-review';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       } else if (buttonAction==AssessmentAction.MANAGER_CONCLUDE) {
@@ -532,7 +548,6 @@ $(function () {
           showCancelButton: true, confirmButtonColor: "#DD6B55",
           confirmButtonText: "Yes, Conclude!", closeOnConfirm: false, showLoaderOnConfirm: true
         }, function () {
-          url=options.contextPath + ASI_BASE + '/phase/conclude';
           $.fn.ajaxPost({ url: url, data: currentForm });
         });
       }

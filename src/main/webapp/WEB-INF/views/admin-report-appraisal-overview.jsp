@@ -38,7 +38,9 @@
   <section class="content">
     <div class="container-fluid">
       <div class="block-header">
-        <h2>Overview</h2>
+		<h2>Appraisal Overview Report
+		  <small>This report contains all the employees scores for all cycles. This report shows only those employees who have been submitted to you as a second level manager.</small>
+		</h2>
       </div>
  	  <div class="row clearfix PhasewiseEmployeeStatusCount_Div">
 	  </div>

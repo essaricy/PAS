@@ -89,6 +89,7 @@
 
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/common.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/ajax-wrapper.js"></script>
+<script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/autosave.js"></script>
 <script src="<%=request.getContextPath()%>/scripts/AdminBSBMaterialDesign/render-assessments3.js"></script>
 <script>
 $(function () {
